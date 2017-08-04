@@ -2,7 +2,7 @@ package seng202.team1;
 
 /**
  * Hello world!
- * An example program
+ * An example program to demonstrate stuff
  */
 public class App 
 {
