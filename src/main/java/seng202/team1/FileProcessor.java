@@ -10,7 +10,14 @@ import java.util.ArrayList;
  */
 public class FileProcessor {
 
-    public ArrayList<String> loadCSV(String filename) throws FileNotFoundException {
+    /*
+    * Returns an ArrayList of Strings from the filename given.
+    *
+    * @param filename The filename of the file to get data from.
+    * @throws FileNotFoundException If the file can't be found.
+    * @return ArrayList of Strings, where each string is a line from the file.
+     */
+    private static ArrayList<String> getDataFromFile(String filename) throws FileNotFoundException {
 
         ArrayList<String> data = new ArrayList<String>();
         String line;
@@ -20,7 +27,7 @@ public class FileProcessor {
 
             BufferedReader bufferReader = new BufferedReader(inputFile);
 
-            while ((line = bufferReader.readLine()) != null) {
+            while ((line = bufferReader.readLine()) != null){ //read file line by line
                 data.add(line);
             }
 
@@ -36,6 +43,23 @@ public class FileProcessor {
 
     }
 
+    /*
+    * Takes a file named filename, which should be a csv, and processes it.
+    * @todo return an object of type Entry (or whatever the class is called)
+    *
+    * @param filename The filename of the file to get data from.
+    * @throws FileNotFoundException If the file can't be found.
+     */
+    public void loadCSV(String filename) throws FileNotFoundException{
+        ArrayList<String> data = getDataFromFile(filename);
+
+        for (int i = 0; i < data.size(); i++) {
+            //do something
+            //maybe there is an existing way to parse csvs we should implement?
+        }
+
+    }
+
     public void saveCSV(String filename) {
 
 
@@ -48,13 +72,14 @@ public class FileProcessor {
         ArrayList<String> data = new ArrayList<String>();
         FileProcessor fp = new FileProcessor();
         try {
-            data = fp.loadCSV(filename);
+            data = getDataFromFile(filename);
         }
         catch(FileNotFoundException e) {
             System.out.println("Error");
         }
-        for (int i = 0; i < data.size(); i++)
-        System.out.println(data.get(i));
+        for (int i = 0; i < data.size(); i++) {
+            System.out.println(data.get(i));
+        }
     }
 
 }
