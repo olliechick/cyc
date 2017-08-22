@@ -14,5 +14,16 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.wildfly.swarm/javafx -->
+    <dependency>
+      <groupId>org.wildfly.swarm</groupId>
+      <artifactId>javafx</artifactId>
+      <version>2017.8.1</version>
+    </dependency>
   </dependencies>
 </project>
+
+
+
+
+
