@@ -17,11 +17,12 @@ import java.nio.charset.Charset;
 public class CSVLoader {
 
     /*
-    * Takes a file named filename, which should be a csv, and processes it.
+    * Takes a file named filename, which should be a csv, and returns a CSVRecord.
+    * This can be queried using the get(index) or get(columnName).
     *
     * @author Ollie Chick
     * @param filename The filename of the file to get data from.
-    * @throws FileNotFoundException If the file can't be found.
+    * @throws IOException If an IO error occurs.
      */
     public static void loadCSV(String filename) throws IOException {
         File csvData = new File(filename);
