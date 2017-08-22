@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
-
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.View.TableController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -54,9 +51,10 @@
             <Label text="Filter 1:" GridPane.columnIndex="1" />
             <Label text="Filter 2:" GridPane.columnIndex="2" />
             <Label text="Filter 3:" GridPane.columnIndex="3" />
-            <ComboBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ComboBox fx:id="filterAComboBox" onAction="#filterA" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <ComboBox prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <ComboBox prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Label fx:id="nameLabel" text="Name placeholder" visible="false" GridPane.rowIndex="2" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
