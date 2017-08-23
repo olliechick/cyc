@@ -8,6 +8,9 @@ package seng202.team1;
 public class RetailerLocation extends DataPoint {
 
     private String name;
+    private String address;
+    private String primaryFunction;
+    private String secondaryFunction;
 
     public RetailerLocation(String name, String address, String primaryFunction, String secondaryFunction) {
         this.name = name;
@@ -15,10 +18,6 @@ public class RetailerLocation extends DataPoint {
         this.primaryFunction = primaryFunction;
         this.secondaryFunction = secondaryFunction;
     }
-
-    private String address;
-    private String primaryFunction;
-    private String secondaryFunction;
 
 
     public String getName() {
