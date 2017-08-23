@@ -1,6 +1,9 @@
 package seng202.team1.View;
 
 /**
+ * Dummy model class
+ * For testing only
+ *
  * Created by jbe113 on 22/08/17.
  */
 public class Model {
