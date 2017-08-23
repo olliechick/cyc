@@ -6,10 +6,11 @@ package seng202.team1;
  * @author Josh Burt
  */
 public class BikeTrip extends DataPoint {
+
     private String tripDuration;
     private String startTime;
     private String stopTime;
-    private String startLongitude; //I've bought these in as strings but may need to make these Int tuples later
+    private String startLongitude; //I've brought these in as strings but may need to make these Int tuples later
     private String startLatitude;
     private String endLongitude;
     private String endLatitude;
@@ -24,6 +25,7 @@ public class BikeTrip extends DataPoint {
         this.endLongitude = endLongitude;
         this.endLatitude = endLatitude;
     }
+
 
     public String getTripDuration() {
         return tripDuration;

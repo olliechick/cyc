@@ -3,8 +3,9 @@ package seng202.team1;
 /***
  * Class for type of Wifi Points. Has a single constructor which sets all the values of the point.
  * CSV files contain more points but these are the important ones for the app.
- * All the methods in here are getters and setters.
+ * All the methods in here are getters and setters (and toString).
  * @author Josh Burt
+ * @author Ollie Chick
  */
 public class WifiPoint extends DataPoint {
 
@@ -33,6 +34,7 @@ public class WifiPoint extends DataPoint {
     public void setThe_geom(String the_geom) {
         this.the_geom = the_geom;
     }
+
     public String getObjectId() {
         return objectId;
     }
@@ -65,7 +67,6 @@ public class WifiPoint extends DataPoint {
         this.latitude = latitude;
     }
 
-
     public String getLongitude() {
         return longitude;
     }
@@ -82,6 +83,16 @@ public class WifiPoint extends DataPoint {
         this.location = location;
     }
 
+
+    public String toString() {
+        return "WiFi point: " + objectId +
+        ", the_geom: " + the_geom +
+        ", borough: " + borough +
+        ", cost: " + cost +
+        ", latitude: " +latitude +
+        ", longitude: " + longitude +
+        ", location: " + location + ".";
+    }
 
 
 }

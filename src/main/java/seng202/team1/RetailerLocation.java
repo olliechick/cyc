@@ -54,4 +54,12 @@ public class RetailerLocation extends DataPoint {
     }
 
 
+    public String toString() {
+        return "Retailer: " + name +
+                ", address: " + address +
+                ", primary function: " + primaryFunction +
+                ", secondary function: " + secondaryFunction;
+    }
+
+
 }
