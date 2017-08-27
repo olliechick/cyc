@@ -1,4 +1,4 @@
-package seng202.team1.View;
+package seng202.team1.Controller;
 
 /**
  * Dummy model class
@@ -6,7 +6,7 @@ package seng202.team1.View;
  *
  * Created by jbe113 on 22/08/17.
  */
-public class Model {
+public class DummyModel {
 
     private String name;
 

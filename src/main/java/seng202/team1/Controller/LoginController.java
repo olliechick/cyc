@@ -1,4 +1,4 @@
-package seng202.team1.View;
+package seng202.team1.Controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,10 +27,10 @@ public class LoginController {
     @FXML
     private TextField usernameTextField;
 
-    private Model model;
+    private DummyModel model;
 
-    public void initModel(Model model) {
-        this.model = model;
+    public void initModel(DummyModel dummyModel) {
+        this.model = dummyModel;
     }
 
     public void login() {
@@ -53,7 +53,7 @@ public class LoginController {
 
         try {
             // Changes to the table GUI
-            FXMLLoader tableLoader = new FXMLLoader(getClass().getResource("/table.fxml"));
+            FXMLLoader tableLoader = new FXMLLoader(getClass().getResource("/fxml/table.fxml"));
             Parent tableView = tableLoader.load();
             TableController tableController = tableLoader.getController();
 

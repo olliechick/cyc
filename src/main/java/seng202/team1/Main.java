@@ -1,12 +1,13 @@
-package seng202.team1.View;
+package seng202.team1;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import seng202.team1.Controller.LoginController;
+import seng202.team1.Controller.DummyModel;
 
 import java.io.IOException;
 
@@ -35,11 +36,11 @@ public class Main extends Application {
 
         BorderPane root = new BorderPane(); //Any pane would work here, used only as a container
 
-        FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
+        FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
         root.setCenter((Node) loginLoader.load());
         LoginController loginController = loginLoader.getController(); //Needed to be able to call methods below
 
-        Model model = new Model(); //Create dummy model to hold login info
+        DummyModel model = new DummyModel(); //Create dummy model to hold login info
         loginController.initModel(model);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();

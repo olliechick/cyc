@@ -1,4 +1,4 @@
-package seng202.team1.View;
+package seng202.team1.Controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -18,7 +18,7 @@ public class TableController {
     @FXML
     private Label nameLabel;
 
-    private Model model;
+    private DummyModel model;
 
     public void initialize() {
         /**
@@ -42,7 +42,7 @@ public class TableController {
         System.out.println(filterAComboBox.getValue());
     }
 
-    public void initModel(Model model) {
-        this.model = model;
+    public void initModel(DummyModel dummyModel) {
+        this.model = dummyModel;
     }
 }
