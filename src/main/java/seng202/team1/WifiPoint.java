@@ -84,15 +84,16 @@ public class WifiPoint extends DataPoint {
     }
 
 
+    @Override
     public String toString() {
-        return "WiFi point: " + objectId +
-        ", the_geom: " + the_geom +
-        ", borough: " + borough +
-        ", cost: " + cost +
-        ", latitude: " +latitude +
-        ", longitude: " + longitude +
-        ", location: " + location + ".";
+        return "WifiPoint{" +
+                "objectId='" + objectId + '\'' +
+                ", the_geom='" + the_geom + '\'' +
+                ", borough='" + borough + '\'' +
+                ", cost='" + cost + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", location='" + location + '\'' +
+                '}';
     }
-
-
 }

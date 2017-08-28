@@ -53,12 +53,13 @@ public class RetailerLocation extends DataPoint {
     }
 
 
+    @Override
     public String toString() {
-        return "Retailer: " + name +
-                ", address: " + address +
-                ", primary function: " + primaryFunction +
-                ", secondary function: " + secondaryFunction;
+        return "RetailerLocation{" +
+                "name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", primaryFunction='" + primaryFunction + '\'' +
+                ", secondaryFunction='" + secondaryFunction + '\'' +
+                '}';
     }
-
-
 }
