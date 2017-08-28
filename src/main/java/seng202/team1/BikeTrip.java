@@ -83,6 +83,16 @@ public class BikeTrip extends DataPoint {
         this.endLatitude = endLatitude;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "BikeTrip{" +
+                "tripDuration='" + tripDuration + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", stopTime='" + stopTime + '\'' +
+                ", startLongitude='" + startLongitude + '\'' +
+                ", startLatitude='" + startLatitude + '\'' +
+                ", endLongitude='" + endLongitude + '\'' +
+                ", endLatitude='" + endLatitude + '\'' +
+                '}';
+    }
 }
