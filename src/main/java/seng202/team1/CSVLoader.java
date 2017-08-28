@@ -4,9 +4,12 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -39,9 +42,22 @@ public class CSVLoader {
 
 
     /**
-     * Calls the load CSV method and populates an array list with a set of BikeTrip objects
+     * Calls the load CSV method and populates an array list with a set of BikeTrip objects from biketrips.csv.
+     * If the file does not exist, then the error message is printed.
+     * @author Ollie Chick
+     * @return ArrayList<DataPoint>
+     */
+    public static ArrayList<DataPoint> populateBikeTrips() {
+        String filename = "src/main/resources/csv/biketrips.csv";
+        return populateBikeTrips(filename);
+    }
+
+    /**
+     * Calls the load CSV method and populates an array list with a set of BikeTrip objects from a given filename.
+     * If the filename does not exist, then the error message is printed.
      * @param filename name of the file the data is to be loaded from.
      * @author Josh Burt
+     * @author Ollie Chick
      * @return ArrayList<DataPoint>
      */
     public static ArrayList<DataPoint> populateBikeTrips(String filename){ //
@@ -49,15 +65,23 @@ public class CSVLoader {
         try {
             ArrayList<CSVRecord> tripData = loadCSV(filename);
             for (CSVRecord record : tripData){
+                long tripDuration = new Long(record.get(0));
+                LocalDateTime startTime = LocalDateTime.parse(record.get(1), DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss"));
+                LocalDateTime stopTime = LocalDateTime.parse(record.get(2), DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss"));
+                Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(5)), Float.parseFloat(record.get(6)));
+                Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(9)), Float.parseFloat(record.get(10)));
+                int bikeID = Integer.parseInt(record.get(11));
+                char gender;
+                if (record.get(14).equals("1")) {
+                    gender = 'm';
+                } else if (record.get(14).equals("2")) {
+                    gender = 'f';
+                } else {
+                    gender = 'u';
+                }
+                int birthyear = Integer.parseInt(record.get(13));
 
-                String startTime = record.get(1);
-                String tripDuration = record.get(0);
-                String stopTime = record.get(2);
-                String startLongitude = record.get(6); // pulls the records from the correct spot in the csv record
-                String startLatitude = record.get(5); // and sets to variables for more readability in the call to BikeTrip
-                String endLongitude = record.get(10);
-                String endLatitude = record.get(9);
-                trips.add(new BikeTrip(tripDuration,startTime,stopTime,startLongitude,startLatitude,endLongitude,endLatitude));
+                trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint, endPoint, bikeID, gender, birthyear));
 
             }
         } catch (IOException e) {
