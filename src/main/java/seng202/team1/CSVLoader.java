@@ -119,6 +119,9 @@ public class CSVLoader {
                 }
                 String primaryFunction = record.get(7);
                 String secondaryFunction = record.get(8);
+                if (secondaryFunction.length() > 2) {
+                    secondaryFunction = secondaryFunction.substring(2);
+                }
                 retailers.add(new RetailerLocation(name, address, primaryFunction, secondaryFunction));
             }
         } catch (IOException e) {
