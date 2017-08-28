@@ -15,7 +15,9 @@ import seng202.team1.DataPoint;
 
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.StringTokenizer;
 
+import static seng202.team1.CSVLoader.populateBikeTrips;
 import static seng202.team1.CSVLoader.populateRetailers;
 
 /**
@@ -33,7 +35,7 @@ public class TableController {
     private Label nameLabel;
 
     @FXML
-    private MenuItem openMenuItem;
+    private MenuItem importRetailerMenu;
 
     @FXML
     private ProgressIndicator progressSpinner;
@@ -69,25 +71,23 @@ public class TableController {
         System.out.println(filterAComboBox.getValue());
     }
 
-    public void getCsvFilename() {
+    public String getCsvFilename() {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open CSV file");
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files", "*.csv");
         fileChooser.getExtensionFilters().add(extFilter);
         stage = (Stage) filterAComboBox.getScene().getWindow();
-        System.out.println(fileChooser.showOpenDialog(stage));
+        String filename = fileChooser.showOpenDialog(stage).getAbsolutePath();
+        //TODO needs error handling on cancel.
+
+        return filename;
 
     }
 
-    public void loadCsv() {
-        /**
-         * Testing out opening a csv file concurrently.
-         * Opens the ret csv for now, but can be refactored to be generic and
-         * take input from the getCsvFilename method above.
-         */
+    private void importCsv(final String csvType, final String filename) {
 
-        Task<Void> task = new Task<Void>() {
+        Task<Void> loadCsv = new Task<Void>() {
             /**
              * Defines the task to be run on another thread.
              * runLater is then invoked on the UI thread once the code above it,
@@ -96,12 +96,12 @@ public class TableController {
              */
             @Override
             protected Void call() {
-                final ArrayList<DataPoint> dataPoints = populateRetailers("ret.csv");
+                final ArrayList<DataPoint> dataPoints = populateBikeTrips(filename);
 
                 Platform.runLater(new Runnable() {
                     public void run() {
                         System.out.println("Run later");
-                        setTableViewColumns("Retailer", dataPoints);
+                        setTableViewColumns(csvType, dataPoints);
                     }
                 });
                 return null;
@@ -111,7 +111,7 @@ public class TableController {
         loadLabel.setVisible(true);
         progressSpinner.setProgress(-1);
 
-        task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+        loadCsv.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             /**
              * Fairly certain this won't get called until the runLater in the task completes.
              * So should be safe spot to stop the loading animations.
@@ -124,10 +124,26 @@ public class TableController {
             }
         });
 
-        new Thread(task).start();
+        new Thread(loadCsv).start();
     }
 
-    public void setTableViewColumns(String csvType, ArrayList<DataPoint> data) {
+    public void importRetailer() {
+        /**
+         * Testing out opening a csv file concurrently.
+         * Opens the ret csv for now, but can be refactored to be generic and
+         * take input from the getCsvFilename method above.
+         */
+        String filename = getCsvFilename();
+        importCsv("Retailer", filename);
+    }
+
+    public void importBike() {
+        String filename = getCsvFilename();
+        importCsv("Bike", filename);
+    }
+
+
+    private void setTableViewColumns(String csvType, ArrayList<DataPoint> data) {
         /**
          * Pretty much straight from http://docs.oracle.com/javafx/2/ui_controls/table-view.htm
          */
@@ -149,6 +165,18 @@ public class TableController {
 
             table.setItems(dataPoints);
             table.getColumns().addAll(nameCol, addressCol, primaryCol, secondaryCol);
+        }
+
+        if (csvType.equals("Bike")) {
+            TableColumn durationCol = new TableColumn("Duration");
+            TableColumn startCol = new TableColumn("Start time");
+            TableColumn finishCol = new TableColumn("Finish time");
+            table.getColumns().clear();
+
+            durationCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("tripDuration"));
+
+            table.setItems(dataPoints);
+            table.getColumns().addAll(durationCol);
         }
     }
 

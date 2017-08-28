@@ -6,13 +6,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.TableController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.TableController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#getCsvFilename" text="Open" />
+                  <Menu mnemonicParsing="false" text="Import CSV">
+                    <items>
+                      <MenuItem fx:id="importRetailerMenu" mnemonicParsing="false" onAction="#importRetailer" text="Retailers" />
+                        <MenuItem mnemonicParsing="false" onAction="#importBike" text="Bike Trips" />
+                        <MenuItem mnemonicParsing="false" text="WiFi" />
+                    </items>
+                  </Menu>
               <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
@@ -24,7 +30,6 @@
           <Menu mnemonicParsing="false" text="Help">
             <items>
               <MenuItem mnemonicParsing="false" text="About" />
-                  <MenuItem mnemonicParsing="false" onAction="#loadCsv" text="Test load conncurent" />
             </items>
           </Menu>
         </menus>
