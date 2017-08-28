@@ -39,7 +39,7 @@ public class CSVLoader {
 
 
     /**
-     * Calls the load CSV method and populates an array list with a set of biketrip objects
+     * Calls the load CSV method and populates an array list with a set of BikeTrip objects
      * @param filename name of the file the data is to be loaded from.
      * @author Josh Burt
      * @return ArrayList<DataPoint>
