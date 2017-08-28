@@ -96,7 +96,7 @@ public class TableController {
              */
             @Override
             protected Void call() {
-                final ArrayList<DataPoint> dataPoints = populateBikeTrips(filename);
+                final ArrayList<DataPoint> dataPoints = populateRetailers(filename);
 
                 Platform.runLater(new Runnable() {
                     public void run() {
