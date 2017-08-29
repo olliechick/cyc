@@ -26,6 +26,31 @@ public class BikeTrip extends DataPoint {
         this.endLatitude = endLatitude;
     }
 
+    /**
+     * Overides the equals method for bike trip and checks to see if a trip starts and ends at the same co-ordinates.
+     * If the Coords match the two trips are equal.
+     * @param b1
+     * @param b2
+     * @return boolean
+     */
+    //@Override
+    public boolean equals(BikeTrip b1, BikeTrip b2){
+        double b1StartLong = Double.parseDouble(b1.getStartLongitude());
+        double b1StartLat = Double.parseDouble(b1.getStartLatitude());
+        double b1EndLong = Double.parseDouble(b1.getEndLongitude());
+        double b1EndLat = Double.parseDouble(b1.getEndLatitude());
+        double b2StartLong = Double.parseDouble(b2.getStartLongitude());
+        double b2StartLat = Double.parseDouble(b2.getStartLatitude());
+        double b2EndLong = Double.parseDouble(b2.getEndLongitude());
+        double b2EndLat = Double.parseDouble(b2.getEndLatitude());
+        boolean StartsMatch = (b1StartLat == b2StartLat) && (b1StartLong == b2StartLong);
+        boolean EndMatch = (b1EndLat == b2EndLat) && (b1EndLong == b2EndLong);
+        if (StartsMatch && EndMatch){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public String getTripDuration() {
         return tripDuration;
