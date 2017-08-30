@@ -14,11 +14,10 @@ import javafx.stage.Stage;
 import seng202.team1.DataPoint;
 
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.StringTokenizer;
 
 import static seng202.team1.CSVLoader.populateBikeTrips;
 import static seng202.team1.CSVLoader.populateRetailers;
+import static seng202.team1.CSVLoader.populateWifiHotspots;
 
 /**
  * Logic for the table GUI
@@ -56,7 +55,7 @@ public class TableController {
         filterAComboBox.getItems().addAll("A", "B", "C", "D");
     }
 
-    public void setName() {
+    protected void setName() {
         /**
          * Can't be included in the init method as the model needs to be init first
          */
@@ -71,7 +70,7 @@ public class TableController {
         System.out.println(filterAComboBox.getValue());
     }
 
-    public String getCsvFilename() {
+    private String getCsvFilename() {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open CSV file");
@@ -85,102 +84,142 @@ public class TableController {
 
     }
 
-    private void importCsv(final String csvType, final String filename) {
+    private void importBikeCsv(final String filename) {
 
-        Task<Void> loadCsv = new Task<Void>() {
+        final Task<ArrayList<DataPoint>> loadBikeCsv = new Task<ArrayList<DataPoint>>() {
             /**
              * Defines the task to be run on another thread.
              * runLater is then invoked on the UI thread once the code above it,
              * ie the loading of the csv, has completed.
-             * @return
              */
             @Override
-            protected Void call() {
-                final ArrayList<DataPoint> dataPoints = populateRetailers(filename);
+            protected ArrayList<DataPoint> call() {
 
-                Platform.runLater(new Runnable() {
-                    public void run() {
-                        System.out.println("Run later");
-                        setTableViewColumns(csvType, dataPoints);
-                    }
-                });
-                return null;
+                final ArrayList<DataPoint> dataPoints = populateBikeTrips(filename);
+
+                return dataPoints;
             }
         };
-        progressSpinner.setVisible(true);
-        loadLabel.setVisible(true);
-        progressSpinner.setProgress(-1);
 
-        loadCsv.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+        startLoadingAni();
+
+        loadBikeCsv.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             /**
              * Fairly certain this won't get called until the runLater in the task completes.
              * So should be safe spot to stop the loading animations.
              *
              */
             public void handle(WorkerStateEvent event) {
-                System.out.println("Task succeeded");
-                progressSpinner.setVisible(false);
-                loadLabel.setVisible(false);
+
+                setTableViewBike(loadBikeCsv.getValue());
+                stopLoadingAni();
             }
         });
 
-        new Thread(loadCsv).start();
+        new Thread(loadBikeCsv).start();
+    }
+
+    private void importRetailerCsv(final String filename) {
+
+        final Task<ArrayList<DataPoint>> loadRetailerCsv = new Task<ArrayList<DataPoint>>() {
+            /**
+             * Defines the task to be run on another thread.
+             * runLater is then invoked on the UI thread once the code above it,
+             * ie the loading of the csv, has completed.
+             */
+            @Override
+            protected ArrayList<DataPoint> call() {
+
+                final ArrayList<DataPoint> dataPoints = populateRetailers(filename);
+
+                return dataPoints;
+            }
+        };
+
+        startLoadingAni();
+
+        loadRetailerCsv.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            /**
+             * Fairly certain this won't get called until the runLater in the task completes.
+             * So should be safe spot to stop the loading animations.
+             *
+             */
+            public void handle(WorkerStateEvent event) {
+
+                setTableViewRetailer(loadRetailerCsv.getValue());
+                stopLoadingAni();
+            }
+        });
+
+        new Thread(loadRetailerCsv).start();
+    }
+
+    private void startLoadingAni() {
+
+        progressSpinner.setVisible(true);
+        loadLabel.setVisible(true);
+        progressSpinner.setProgress(-1);
+    }
+
+    private void stopLoadingAni() {
+
+        progressSpinner.setVisible(false);
+        loadLabel.setVisible(false);
     }
 
     public void importRetailer() {
-        /**
-         * Testing out opening a csv file concurrently.
-         * Opens the ret csv for now, but can be refactored to be generic and
-         * take input from the getCsvFilename method above.
-         */
+
         String filename = getCsvFilename();
-        importCsv("Retailer", filename);
+        importRetailerCsv(filename);
     }
 
     public void importBike() {
+
         String filename = getCsvFilename();
-        importCsv("Bike", filename);
+        importBikeCsv(filename);
     }
 
 
-    private void setTableViewColumns(String csvType, ArrayList<DataPoint> data) {
+    private void setTableViewRetailer(ArrayList<DataPoint> data) {
         /**
          * Pretty much straight from http://docs.oracle.com/javafx/2/ui_controls/table-view.htm
          */
 
         ObservableList<DataPoint> dataPoints = FXCollections.observableArrayList(data);
-        System.out.println(data.get(1));
 
-        if (csvType.equals("Retailer")) {
-            TableColumn nameCol = new TableColumn("Name");
-            TableColumn addressCol = new TableColumn("Address");
-            TableColumn primaryCol = new TableColumn("Primary Function");
-            TableColumn secondaryCol = new TableColumn("Secondary Function");
-            table.getColumns().clear();
 
-            nameCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("name"));
-            addressCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("address"));
-            primaryCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("primaryFunction"));
-            secondaryCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("secondaryFunction"));
+        TableColumn nameCol = new TableColumn("Name");
+        TableColumn addressCol = new TableColumn("Address");
+        TableColumn primaryCol = new TableColumn("Primary Function");
+        TableColumn secondaryCol = new TableColumn("Secondary Function");
+        table.getColumns().clear();
 
-            table.setItems(dataPoints);
-            table.getColumns().addAll(nameCol, addressCol, primaryCol, secondaryCol);
-        }
+        nameCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("name"));
+        addressCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("address"));
+        primaryCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("primaryFunction"));
+        secondaryCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("secondaryFunction"));
 
-        if (csvType.equals("Bike")) {
-            TableColumn durationCol = new TableColumn("Duration");
-            TableColumn startCol = new TableColumn("Start time");
-            TableColumn finishCol = new TableColumn("Finish time");
-            table.getColumns().clear();
-
-            durationCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("tripDuration"));
-
-            table.setItems(dataPoints);
-            table.getColumns().addAll(durationCol);
-        }
+        table.setItems(dataPoints);
+        table.getColumns().addAll(nameCol, addressCol, primaryCol, secondaryCol);
     }
 
-    public void initModel(DummyModel dummyModel) {
+    private void setTableViewBike(ArrayList<DataPoint> data) {
+
+        ObservableList<DataPoint> dataPoints = FXCollections.observableArrayList(data);
+        TableColumn durationCol = new TableColumn("Duration");
+        TableColumn startCol = new TableColumn("Start time");
+        TableColumn finishCol = new TableColumn("Finish time");
+        table.getColumns().clear();
+
+        durationCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("tripDuration"));
+        startCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("startTime"));
+        finishCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("stopTime"));
+
+        table.setItems(dataPoints);
+        table.getColumns().addAll(durationCol, startCol, finishCol);
+    }
+
+    protected void initModel(DummyModel dummyModel) {
         this.model = dummyModel;
     }
 }
