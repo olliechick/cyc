@@ -4,6 +4,7 @@ import com.sun.org.apache.bcel.internal.generic.BIPUSH;
 import javafx.beans.property.DoubleProperty;
 import seng202.team1.*;
 
+import javax.xml.transform.dom.DOMLocator;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -36,7 +37,7 @@ public final class DataAnaliser {
            endingLat = Math.toRadians(Double.parseDouble(b2.getStartLatitude()));
         }
         //the below line uses the formula of haversines to find distances using lat and long.
-        double distance = 2* RADIUS_OF_EARTH * Math.asin(Math.sqrt(haversine((endingLat-startingLat))+Math.cos(startingLat)*Math.cos(endingLat)*haversine(endingLong-startingLong)));
+        double distance = calculateDistance(startingLat,startingLong,endingLat,endingLong);
         return distance;
     }
 
@@ -91,7 +92,7 @@ public final class DataAnaliser {
         return results;
 
     }
-    /* locations are not provided for retaliers in GPS Coords so the current approch wont work 
+    /* locations are not provided for retaliers in GPS Coords so the current approch wont work
     public static ArrayList<RetailerLocation> searchRetailerLocations(double searchLat, double searchLong, double delta) {
         ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers();
         ArrayList<RetailerLocation> results  = new ArrayList<RetailerLocation>();
@@ -109,6 +110,112 @@ public final class DataAnaliser {
         return results;
     }*/
 
+    /**
+     * Takes a Biketrip and returns the closest  WifiPoint, within 1000m, to the start of the bike trip.
+     * returns null if no wifiPoint is found
+     * @param trip
+     * @return
+     */
+    public static WifiPoint findClosestWifiToBikeRouteStart(BikeTrip trip) {
+        double tripLong = Double.parseDouble(trip.getStartLongitude());
+        double tripLat = Double.parseDouble(trip.getStartLatitude());
+        double searchDistance = 100;
+        ArrayList<WifiPoint> closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance);
+        ;
+        while (closeHotspots.size() == 0 && searchDistance <= 1000) {
+            searchDistance += 100; //add 100m to the search distance until at least one point is found or search extends further than 1000m
+            closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance); //finds all WifiPoints within given distance of given coords
+        }
+        WifiPoint closestPoint = null;
+        if (closeHotspots.size() > 0) { //only searchList if at least one point is found
+            closestPoint = closeHotspots.get(0);
+            double closestDistance = calculateDistance(tripLat, tripLong, Double.parseDouble(closestPoint.getLatitude()), Double.parseDouble(closestPoint.getLongitude()));
+            for (WifiPoint canidatePoint : closeHotspots) {
+                double canidateDistance = calculateDistance(tripLat, tripLong, Double.parseDouble(canidatePoint.getLatitude()), Double.parseDouble(canidatePoint.getLongitude()));
+                if (canidateDistance < closestDistance) {
+                    closestPoint = canidatePoint;
+                    closestDistance = canidateDistance;
+                }
+            }
+        }
+        return closestPoint;
+    }
+    /**
+     * Takes a Biketrip and returns the closest  WifiPoint, within 1000m, to the end of the bike trip.
+     * returns null if no wifiPoint is found
+     * @param trip
+     * @return
+     */
+    public static WifiPoint findClosestWifiToBikeRouteEnd(BikeTrip trip) {
+        double tripLong = Double.parseDouble(trip.getEndLongitude());
+        double tripLat = Double.parseDouble(trip.getEndLatitude());
+        double searchDistance = 100;
+        ArrayList<WifiPoint> closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance);
+        ;
+        while (closeHotspots.size() == 0 && searchDistance <= 1000) {
+            searchDistance += 100; //add 100m to the search distance until at least one point is found or search extends further than 1000m
+            closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance); //finds all WifiPoints within given distance of given coords
+        }
+        WifiPoint closestPoint = null;
+        if (closeHotspots.size() > 0) { //only searchList if at least one point is found
+            closestPoint = closeHotspots.get(0);
+            double closestDistance = calculateDistance(tripLat, tripLong, Double.parseDouble(closestPoint.getLatitude()), Double.parseDouble(closestPoint.getLongitude()));
+            for (WifiPoint canidatePoint : closeHotspots) {
+                double canidateDistance = calculateDistance(tripLat, tripLong, Double.parseDouble(canidatePoint.getLatitude()), Double.parseDouble(canidatePoint.getLongitude()));
+                if (canidateDistance < closestDistance) {
+                    closestPoint = canidatePoint;
+                    closestDistance = canidateDistance;
+                }
+            }
+        }
+        return closestPoint;
+    }
+
+    /**
+     * Takes a BikeTrip and returns the closest point to the either the start or end of the trip
+     * If both closest points are the same distance apart the one closest to the start is returned.
+     * If no such point exists null is returned
+     * @param trip
+     * @return
+     */
+    public static WifiPoint findClosestWifiPointToTrip(BikeTrip trip){
+        double tripLong = Double.parseDouble(trip.getEndLongitude());
+        double tripLat = Double.parseDouble(trip.getEndLatitude());
+        WifiPoint closestToStart = findClosestWifiToBikeRouteStart(trip);
+        WifiPoint closestToEnd = findClosestWifiToBikeRouteEnd(trip);
+        if (closestToEnd == null) {
+            return closestToStart;
+        }
+        if (closestToStart == null) {
+            return closestToEnd;
+        }
+        double distanceToStart = calculateDistance(tripLat,tripLong,Double.parseDouble(closestToStart.getLatitude()),Double.parseDouble(closestToStart.getLongitude()));
+        double distanceToEnd = calculateDistance(tripLat,tripLong,Double.parseDouble(closestToEnd.getLatitude()), Double.parseDouble(closestToEnd.getLongitude()));
+        if (distanceToEnd > distanceToStart) {
+            return closestToStart;
+        } else {
+            return closestToEnd;
+        }
+    }
+    
+
+    /**
+     * Generic version of calculate distance using Latitude and Longitude.
+     * Takes the start and end coords as arguments and then using the rule of haversines calculates an approximation to the distance.
+     * Given the non-spherical aspect of the planet it is only an approximaiton.
+     * Distance is calculated as the crow flies.
+     * @param startLat
+     * @param startLong
+     * @param endLat
+     * @param endLong
+     * @return
+     */
+    public static double calculateDistance(double startLat, double startLong, double endLat, double endLong){
+
+        //the below line uses the formula of haversines to find distances using lat and long.
+        double distance = 2* RADIUS_OF_EARTH * Math.asin(Math.sqrt(haversine((endLat-startLat))+Math.cos(startLat)*Math.cos(endLat)*haversine(endLong-startLong)));
+        return distance;
+    }
 
     /**
      * Takes an angle in radian and returns the haversine function of it.
