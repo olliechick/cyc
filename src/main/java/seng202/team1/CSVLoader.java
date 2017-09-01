@@ -32,6 +32,12 @@ public class CSVLoader {
     * @throws IOException If an IO error occurs.
      *
      */
+
+    final static String DEFAULT_BIKE_TRIPS_FILENAME = "src/main/resources/csv/biketrip.csv";
+    final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/wifipoint.csv";
+    final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "src/main/resources/csv/retailerlocation.csv";
+
+
     public static ArrayList<CSVRecord> loadCSV(String filename) throws IOException {
         File csvData = new File(filename);
         CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
@@ -48,12 +54,11 @@ public class CSVLoader {
      * @return ArrayList<DataPoint>
      */
     public static ArrayList<DataPoint> populateBikeTrips() {
-        String filename = "src/main/resources/csv/biketrips.csv";
-        return populateBikeTrips(filename);
+        return populateBikeTrips(DEFAULT_BIKE_TRIPS_FILENAME);
     }
 
     /**
-     * Calls the load CSV method and populates an array list with a set of BikeTrip objects from a given filename.
+     * Calls the load CSV method and populates an ArrayList with a set of BikeTrip objects from a given filename.
      * If the filename does not exist, then the error message is printed.
      * @param filename name of the file the data is to be loaded from.
      * @author Josh Burt
@@ -68,8 +73,8 @@ public class CSVLoader {
                 long tripDuration = new Long(record.get(0));
                 LocalDateTime startTime = LocalDateTime.parse(record.get(1), DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss"));
                 LocalDateTime stopTime = LocalDateTime.parse(record.get(2), DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss"));
-                Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(5)), Float.parseFloat(record.get(6)));
-                Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(9)), Float.parseFloat(record.get(10)));
+                Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(6)), Float.parseFloat(record.get(5)));
+                Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(10)), Float.parseFloat(record.get(9)));
                 int bikeID = Integer.parseInt(record.get(11));
                 char gender;
                 if (record.get(14).equals("1")) {
@@ -92,9 +97,22 @@ public class CSVLoader {
 
 
     /**
-     * Calls the load CSV method and populates an array list with a set of WifiPoint objects
+     * Calls the load CSV method and populates an ArrayList with a set of WifiPoint objects from a given filename.
+     * If the filename does not exist, then the error message is printed.
+     * @author Josh Burt
+     * @author Ollie Chick
+     * @return ArrayList<DataPoint>
+     */
+    public static ArrayList<DataPoint> populateWifiHotspots() {
+        return populateWifiHotspots(DEFAULT_WIFI_HOTSPOTS_FILENAME);
+    }
+
+    /**
+     * Calls the load CSV method and populates an ArrayList with a set of WifiPoint objects from a given filename.
+     * If the filename does not exist, then the error message is printed.
      * @param filename name of the file the data is to be loaded from.
      * @author Josh Burt
+     * @author Ollie Chick
      * @return ArrayList<DataPoint>
      */
     public static ArrayList<DataPoint> populateWifiHotspots(String filename){
@@ -102,14 +120,23 @@ public class CSVLoader {
         try {
             ArrayList<CSVRecord> wifiData = loadCSV(filename);
             for(CSVRecord record : wifiData){
-                String objectId = record.get(0);
-                String the_geom = record.get(1);
-                String borough = record.get(2);
-                String cost = record.get(3);
+                int objectId = Integer.parseInt(record.get(0));
+                Point.Float coords = new Point.Float(Float.parseFloat(record.get(8)), Float.parseFloat(record.get(7)));;
+                String name = record.get(5);
                 String location = record.get(6);
-                String latitude = record.get(7);
-                String longitude = record.get(8);
-                wifiSpots.add(new WifiPoint(objectId, the_geom, borough, cost, latitude, longitude, location));
+                String locationType = record.get(11);
+                String hood = record.get(20);
+                String borough = record.get(18);
+                String city = record.get(13);
+                int zipcode = Integer.parseInt(record.get(22));
+                String cost = record.get(3);
+                String provider = record.get(4);
+                String remarks = record.get(12);
+                String ssid = record.get(14);
+                String sourceId = record.get(15);
+                LocalDateTime datetimeActivated = LocalDateTime.parse(record.get(16), DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss"));
+                wifiSpots.add(new WifiPoint(objectId, coords, name, location, locationType, hood,
+                        borough, city, zipcode, cost, provider, remarks, ssid, sourceId, datetimeActivated));
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -119,7 +146,7 @@ public class CSVLoader {
 
 
     /**
-     * Calls the load CSV method and populates an array list with a set of RetailerLocation objects
+     * Calls the load CSV method and populates an array list with a set of RetailerLocation objects.
      * @param filename name of the file the data is to be loaded from.
      * @author Ollie Chick
      * @return ArrayList<DataPoint>

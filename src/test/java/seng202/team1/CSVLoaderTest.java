@@ -62,7 +62,11 @@ public class CSVLoaderTest extends TestCase {
     public void testPopulateWifiHotspots() throws Exception {
         String filename = csv_resource_dir + "testWifi.csv";
         ArrayList<DataPoint> wifiSpots = populateWifiHotspots(filename);
-        WifiPoint modelWifiHotspot = new WifiPoint("334", "POINT (-73.74567356126445 40.67695272804687)", "QU", "Free", "40.676952728", "-73.7456735613", "134-26 225 STREET");
+        WifiPoint modelWifiHotspot = new WifiPoint(334,
+                new Point.Float((float) -73.74567356126445, (float) 40.6769527280),
+                "Laurelton", "134-26 225 STREET",
+                "Library", "Laurelton", "Queens", "Laurelton", 11413, "Free",
+                "QPL", "", "QBPL_WIRELESS", "", null);
         assertEquals(modelWifiHotspot, wifiSpots.get(0));
 
     }
