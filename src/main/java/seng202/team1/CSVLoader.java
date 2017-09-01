@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -36,6 +37,9 @@ public class CSVLoader {
     final static String DEFAULT_BIKE_TRIPS_FILENAME = "src/main/resources/csv/biketrip.csv";
     final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/wifipoint.csv";
     final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "src/main/resources/csv/retailerlocation.csv";
+
+    //any date before this will be replaced with null
+    final static LocalDateTime EARLIEST_POSSIBLE_DATE = LocalDateTime.of(1900, Month.JANUARY, 1, 0, 0);
 
 
     public static ArrayList<CSVRecord> loadCSV(String filename) throws IOException {
@@ -134,7 +138,11 @@ public class CSVLoader {
                 String remarks = record.get(12);
                 String ssid = record.get(14);
                 String sourceId = record.get(15);
-                LocalDateTime datetimeActivated = LocalDateTime.parse(record.get(16), DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss"));
+                LocalDateTime datetimeActivated = LocalDateTime.parse(record.get(16), DateTimeFormatter.ofPattern("M/d/yyyy hh:mm:ss a Z"));
+                if (datetimeActivated.isBefore(EARLIEST_POSSIBLE_DATE)) {
+                    // dates earlier than this means that this data is not available
+                    datetimeActivated = null;
+                }
                 wifiSpots.add(new WifiPoint(objectId, coords, name, location, locationType, hood,
                         borough, city, zipcode, cost, provider, remarks, ssid, sourceId, datetimeActivated));
             }

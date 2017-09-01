@@ -54,8 +54,8 @@ public class CSVLoaderTest extends TestCase {
         BikeTrip modelBikeTrip = new BikeTrip(551,
                 LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 8, 53),
                 LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 18, 05),
-                new Point.Float((float) 40.76727216, (float) -73.99392888),
-                new Point.Float((float) 40.75992262, (float) -73.97648516), 22307, 'm', 1980);
+                new Point.Float((float) -73.99392888, (float) 40.76727216),
+                new Point.Float((float) -73.97648516, (float) 40.75992262), 22307, 'm', 1980);
         assertEquals(modelBikeTrip, trips.get(0));
     }
 
