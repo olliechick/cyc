@@ -1,127 +1,113 @@
 package seng202.team1;
 
-import java.awt.Point;
-import java.awt.geom.Point2D;
-import java.time.Duration;
-import java.time.LocalDateTime;
-
 /**
- * Bike Trip data class. This will likely change during development as we need to do more.
- * So far it just builds a bike trip from given data.
+ * Bike Trip data class. This will likely change during development as we need to do more./
+ * So far it just builds a bike trip from CSV files
  * @author Josh Burt
- * @author Ollie Chick
  */
 public class BikeTrip extends DataPoint {
 
-    private long tripDuration; //in seconds
-    private LocalDateTime startTime; //example usage: LocalDateTime aDateTime = LocalDateTime.of(2015, Month.JULY, 29, 19, 30, 40);
-    private LocalDateTime stopTime;
-    private Point.Float startPoint;
-    private Point.Float endPoint;
-    private int bikeID;
-    private char gender; //u for unknown, m for male, f for female
-    private int birthyear;
+    private String tripDuration;
+    private String startTime;
+    private String stopTime;
+    private String startLongitude; //I've brought these in as strings but may need to make these Int tuples later
+    private String startLatitude;
+    private String endLongitude;
+    private String endLatitude;
 
-    //default constructor
-    public BikeTrip(long tripDuration, LocalDateTime startTime, LocalDateTime stopTime, Point.Float startPoint, Point.Float endPoint, int bikeID, char gender, int birthyear) {
+
+    public BikeTrip(String tripDuration, String startTime, String stopTime, String startLongitude, String startLatitude, String endLongitude, String endLatitude) {
         this.tripDuration = tripDuration;
         this.startTime = startTime;
         this.stopTime = stopTime;
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
-        this.bikeID = bikeID;
-        this.gender = gender;
-        this.birthyear = birthyear;
+        this.startLongitude = startLongitude;
+        this.startLatitude = startLatitude;
+        this.endLongitude = endLongitude;
+        this.endLatitude = endLatitude;
     }
 
-    //constructor that calculates tripDuration
-    public BikeTrip(LocalDateTime startTime, LocalDateTime stopTime, Point.Float startPoint, Point.Float endPoint, int bikeID, char gender, int birthyear) {
-        this.tripDuration = Duration.between(startTime, stopTime).getSeconds();
-        this.startTime = startTime;
-        this.stopTime = stopTime;
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
-        this.bikeID = bikeID;
-        this.gender = gender;
-        this.birthyear = birthyear;
+    /**
+     * Overides the equals method for bike trip and checks to see if a trip starts and ends at the same co-ordinates.
+     * If the Coords match the two trips are equal.
+     * @param b1
+     * @param b2
+     * @return boolean
+     */
+    //@Override
+    public boolean equals(BikeTrip b1, BikeTrip b2){
+        double b1StartLong = Double.parseDouble(b1.getStartLongitude());
+        double b1StartLat = Double.parseDouble(b1.getStartLatitude());
+        double b1EndLong = Double.parseDouble(b1.getEndLongitude());
+        double b1EndLat = Double.parseDouble(b1.getEndLatitude());
+        double b2StartLong = Double.parseDouble(b2.getStartLongitude());
+        double b2StartLat = Double.parseDouble(b2.getStartLatitude());
+        double b2EndLong = Double.parseDouble(b2.getEndLongitude());
+        double b2EndLat = Double.parseDouble(b2.getEndLatitude());
+        boolean StartsMatch = (b1StartLat == b2StartLat) && (b1StartLong == b2StartLong);
+        boolean EndMatch = (b1EndLat == b2EndLat) && (b1EndLong == b2EndLong);
+        if (StartsMatch && EndMatch){
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public long getTripDuration() {
+    public String getTripDuration() {
         return tripDuration;
     }
 
-    public void setTripDuration(long tripDuration) {
+    public void setTripDuration(String tripDuration) {
         this.tripDuration = tripDuration;
     }
 
-    public LocalDateTime getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getStopTime() {
+    public String getStopTime() {
         return stopTime;
     }
 
-    public void setStopTime(LocalDateTime stopTime) {
+    public void setStopTime(String stopTime) {
         this.stopTime = stopTime;
     }
 
-    public Point.Float getStartPoint() {
-        return startPoint;
+    public String getStartLongitude() {
+        return startLongitude;
     }
 
-    public void setStartPoint(Point.Float startPoint) {
-        this.startPoint = startPoint;
+    public void setStartLongitude(String startLongitude) {
+        this.startLongitude = startLongitude;
     }
 
-    public Point.Float getEndPoint() {
-        return endPoint;
+    public String getStartLatitude() {
+        return startLatitude;
     }
 
-    public void setEndPoint(Point.Float endPoint) {
-        this.endPoint = endPoint;
+    public void setStartLatitude(String startLatitude) {
+        this.startLatitude = startLatitude;
     }
 
-    public int getBikeID() {
-        return bikeID;
+    public String getEndLongitude() {
+        return endLongitude;
     }
 
-    public void setBikeID(int bikeID) {
-        this.bikeID = bikeID;
+    public void setEndLongitude(String endLongitude) {
+        this.endLongitude = endLongitude;
     }
 
-    public char getGender() {
-        return gender;
+    public String getEndLatitude() {
+        return endLatitude;
     }
 
-    public void setGender(char gender) {
-        this.gender = gender;
+    public void setEndLatitude(String endLatitude) {
+        this.endLatitude = endLatitude;
     }
 
-    public int getBirthyear() {
-        return birthyear;
-    }
 
-    public void setBirthyear(int birthyear) {
-        this.birthyear = birthyear;
-    }
-
-    @Override
-    public String toString() {
-        return "BikeTrip{" +
-                "tripDuration=" + tripDuration +
-                ", startTime=" + startTime +
-                ", stopTime=" + stopTime +
-                ", startPoint=" + startPoint +
-                ", endPoint=" + endPoint +
-                ", bikeID=" + bikeID +
-                ", gender=" + gender +
-                ", birthyear=" + birthyear +
-                '}';
-    }
 
 }
