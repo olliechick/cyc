@@ -1,6 +1,5 @@
 package seng202.team1.Controller;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -11,13 +10,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import seng202.team1.BikeTrip;
 import seng202.team1.DataPoint;
+import seng202.team1.RetailerLocation;
 
 import java.util.ArrayList;
 
 import static seng202.team1.CSVLoader.populateBikeTrips;
 import static seng202.team1.CSVLoader.populateRetailers;
-import static seng202.team1.CSVLoader.populateWifiHotspots;
 
 /**
  * Logic for the table GUI
@@ -86,16 +86,16 @@ public class TableController {
 
     private void importBikeCsv(final String filename) {
 
-        final Task<ArrayList<DataPoint>> loadBikeCsv = new Task<ArrayList<DataPoint>>() {
+        final Task<ArrayList<BikeTrip>>loadBikeCsv = new Task<ArrayList<BikeTrip>>() {
             /**
              * Defines the task to be run on another thread.
              * runLater is then invoked on the UI thread once the code above it,
              * ie the loading of the csv, has completed.
              */
-            @Override
-            protected ArrayList<DataPoint> call() {
+            //@Override
+            protected ArrayList<BikeTrip> call() {
 
-                final ArrayList<DataPoint> dataPoints = populateBikeTrips(filename);
+                final ArrayList<BikeTrip> dataPoints = populateBikeTrips(filename);
 
                 return dataPoints;
             }
@@ -121,16 +121,16 @@ public class TableController {
 
     private void importRetailerCsv(final String filename) {
 
-        final Task<ArrayList<DataPoint>> loadRetailerCsv = new Task<ArrayList<DataPoint>>() {
+        final Task<ArrayList<RetailerLocation>> loadRetailerCsv = new Task<ArrayList<RetailerLocation>>() {
             /**
              * Defines the task to be run on another thread.
              * runLater is then invoked on the UI thread once the code above it,
              * ie the loading of the csv, has completed.
              */
             @Override
-            protected ArrayList<DataPoint> call() {
+            protected ArrayList<RetailerLocation> call() {
 
-                final ArrayList<DataPoint> dataPoints = populateRetailers(filename);
+                final ArrayList<RetailerLocation> dataPoints = populateRetailers(filename);
 
                 return dataPoints;
             }
@@ -180,7 +180,7 @@ public class TableController {
     }
 
 
-    private void setTableViewRetailer(ArrayList<DataPoint> data) {
+    private void setTableViewRetailer(ArrayList<RetailerLocation> data) {
         /**
          * Pretty much straight from http://docs.oracle.com/javafx/2/ui_controls/table-view.htm
          */
@@ -203,7 +203,7 @@ public class TableController {
         table.getColumns().addAll(nameCol, addressCol, primaryCol, secondaryCol);
     }
 
-    private void setTableViewBike(ArrayList<DataPoint> data) {
+    private void setTableViewBike(ArrayList<BikeTrip> data) {
 
         ObservableList<DataPoint> dataPoints = FXCollections.observableArrayList(data);
         TableColumn durationCol = new TableColumn("Duration");

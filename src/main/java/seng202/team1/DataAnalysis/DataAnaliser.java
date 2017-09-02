@@ -5,6 +5,8 @@ import javafx.beans.property.DoubleProperty;
 import seng202.team1.*;
 
 import javax.xml.transform.dom.DOMLocator;
+import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -26,15 +28,19 @@ public final class DataAnaliser {
     public static double calculateDistOfBikeTrips(BikeTrip b1, BikeTrip b2){
         double endingLat;
         double endingLong;
-        double startingLat =  Math.toRadians(Double.parseDouble(b1.getStartLatitude()));
-        double startingLong = Math.toRadians(Double.parseDouble(b1.getStartLongitude()));
+        Point.Float startPoint = b1.getStartPoint();
+        Point.Float endPoint;
+        double startingLat =  Math.toRadians(startPoint.getX());
+        double startingLong = Math.toRadians(startPoint.getY());
 
         if(b1 == b2){
-            endingLat = Math.toRadians(Double.parseDouble(b2.getEndLatitude()));
-            endingLong = Math.toRadians(Double.parseDouble(b2.getEndLongitude()));
+            endPoint = b2.getEndPoint();
+            endingLat = Math.toRadians(endPoint.getX());
+            endingLong = Math.toRadians(endPoint.getY());
         } else { // If the two biketrips are the same the distance is from the starting points
-           endingLong = Math.toRadians(Double.parseDouble(b2.getStartLongitude()));
-           endingLat = Math.toRadians(Double.parseDouble(b2.getStartLatitude()));
+           endPoint = b2.getStartPoint();
+           endingLong = Math.toRadians(endPoint.getX());
+           endingLat = Math.toRadians(endPoint.getY());
         }
         //the below line uses the formula of haversines to find distances using lat and long.
         double distance = calculateDistance(startingLat,startingLong,endingLat,endingLong);
@@ -55,8 +61,9 @@ public final class DataAnaliser {
         ArrayList<BikeTrip> results = new ArrayList<BikeTrip>();
         double deltaDecimals = BASEDELTA * delta; //This is the range we will search for in the dataset
         for (BikeTrip trip : trips) { //unfortunalty an 0(n) with the current data set. Perhaps we need to sort based on Lat and long to decrease time complexity
-            double tripLong = Double.parseDouble(trip.getStartLongitude());
-            double tripLat = Double.parseDouble(trip.getStartLatitude());
+            Point.Float tripPoint = trip.getStartPoint();
+            double tripLong = tripPoint.getX();
+            double tripLat = tripPoint.getY();
             if ((tripLong >= (searchLong - deltaDecimals)) && (tripLong <= (searchLong + deltaDecimals))){ //can safely assume all given longitudes in decimal form will be negative
                 if ((tripLat >= (searchLat - deltaDecimals)) && (tripLat <= (searchLat + deltaDecimals))){ //nasty double if loop to improve readbility
                     results.add(trip);
@@ -117,8 +124,8 @@ public final class DataAnaliser {
      * @return
      */
     public static WifiPoint findClosestWifiToBikeRouteStart(BikeTrip trip) {
-        double tripLong = Double.parseDouble(trip.getStartLongitude());
-        double tripLat = Double.parseDouble(trip.getStartLatitude());
+        double tripLong = trip.getStartPoint().getX();
+        double tripLat = trip.getStartPoint().getY();
         double searchDistance = 100;
         ArrayList<WifiPoint> closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance);
         ;
@@ -147,8 +154,8 @@ public final class DataAnaliser {
      * @return
      */
     public static WifiPoint findClosestWifiToBikeRouteEnd(BikeTrip trip) {
-        double tripLong = Double.parseDouble(trip.getEndLongitude());
-        double tripLat = Double.parseDouble(trip.getEndLatitude());
+        double tripLong = trip.getEndPoint().getX();
+        double tripLat = trip.getEndPoint().getY();
         double searchDistance = 100;
         ArrayList<WifiPoint> closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance);
         ;
@@ -179,8 +186,8 @@ public final class DataAnaliser {
      * @return
      */
     public static WifiPoint findClosestWifiPointToTrip(BikeTrip trip){
-        double tripLong = Double.parseDouble(trip.getEndLongitude());
-        double tripLat = Double.parseDouble(trip.getEndLatitude());
+        double tripLong = trip.getEndPoint().getX();
+        double tripLat = trip.getEndPoint().getY();
         WifiPoint closestToStart = findClosestWifiToBikeRouteStart(trip);
         WifiPoint closestToEnd = findClosestWifiToBikeRouteEnd(trip);
         if (closestToEnd == null) {

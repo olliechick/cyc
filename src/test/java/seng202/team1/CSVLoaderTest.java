@@ -50,7 +50,7 @@ public class CSVLoaderTest extends TestCase {
 
     public void testPopulateBikeTrips() throws Exception {
         String filename = csv_resource_dir + "testBiketrip.csv";
-        ArrayList<DataPoint> trips = populateBikeTrips(filename);
+        ArrayList<BikeTrip> trips = populateBikeTrips(filename);
         BikeTrip modelBikeTrip = new BikeTrip(551,
                 LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 8, 53),
                 LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 18, 05),
@@ -61,7 +61,7 @@ public class CSVLoaderTest extends TestCase {
 
     public void testPopulateWifiHotspots() throws Exception {
         String filename = csv_resource_dir + "testWifi.csv";
-        ArrayList<DataPoint> wifiSpots = populateWifiHotspots(filename);
+        ArrayList<WifiPoint> wifiSpots = populateWifiHotspots(filename);
         WifiPoint modelWifiHotspot = new WifiPoint("334", "POINT (-73.74567356126445 40.67695272804687)", "QU", "Free", "40.676952728", "-73.7456735613", "134-26 225 STREET");
         assertEquals(modelWifiHotspot, wifiSpots.get(0));
 
@@ -69,7 +69,7 @@ public class CSVLoaderTest extends TestCase {
 
     public void testPopulateRetailers() throws Exception {
         String filename = csv_resource_dir + "testRetailers.csv";
-        ArrayList<DataPoint> retailers = populateRetailers(filename);
+        ArrayList<RetailerLocation> retailers = populateRetailers(filename);
         RetailerLocation modelRetailer = new RetailerLocation("Candy Plus", "16 Beaver Street, New York, NY 10004", "Shopping", "Candy & Chocolate");
         assertEquals(modelRetailer, retailers.get(0));
     }

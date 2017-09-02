@@ -47,7 +47,7 @@ public class CSVLoader {
      * @author Ollie Chick
      * @return ArrayList<DataPoint>
      */
-    public static ArrayList<DataPoint> populateBikeTrips() {
+    public static ArrayList<BikeTrip> populateBikeTrips() {
         String filename = "src/main/resources/csv/biketrips.csv";
         return populateBikeTrips(filename);
     }
