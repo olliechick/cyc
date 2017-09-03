@@ -8,12 +8,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng202.team1.BikeTrip;
 import seng202.team1.DataPoint;
 import seng202.team1.RetailerLocation;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static seng202.team1.CSVLoader.populateBikeTrips;
@@ -53,6 +55,19 @@ public class TableController {
          * Run automatically when the fxml is loaded by an FXMLLoader
          */
         filterAComboBox.getItems().addAll("A", "B", "C", "D");
+
+        // Get the selected row on double click and run the data popup
+        table.setRowFactory( tv -> {
+            TableRow<DataPoint> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    DataPoint rowData = row.getItem();
+                    System.out.println(rowData);
+                    showDataPopup(table.getSelectionModel().getSelectedItem());
+                }
+            });
+            return row ;
+        });
     }
 
     protected void setName() {
@@ -72,13 +87,17 @@ public class TableController {
 
     private String getCsvFilename() {
 
+        String filename = null;
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open CSV file");
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files", "*.csv");
         fileChooser.getExtensionFilters().add(extFilter);
         stage = (Stage) filterAComboBox.getScene().getWindow();
-        String filename = fileChooser.showOpenDialog(stage).getAbsolutePath();
-        //TODO needs error handling on cancel.
+        File file = fileChooser.showOpenDialog(stage);
+        if (file != null) {
+            filename = file.getAbsolutePath();
+        }
 
         return filename;
 
@@ -170,13 +189,17 @@ public class TableController {
     public void importRetailer() {
 
         String filename = getCsvFilename();
-        importRetailerCsv(filename);
+        if (filename != null) {
+            importRetailerCsv(filename);
+        }
     }
 
     public void importBike() {
 
         String filename = getCsvFilename();
-        importBikeCsv(filename);
+        if (filename != null) {
+            importBikeCsv(filename);
+        }
     }
 
 
@@ -217,6 +240,22 @@ public class TableController {
 
         table.setItems(dataPoints);
         table.getColumns().addAll(durationCol, startCol, finishCol);
+    }
+
+    private void showDataPopup(Object data) {
+        /**
+         * Opens a modal popup with the toString of the object
+         * as the text.
+         * If we change the toString of the different data points
+         * this will print nice.
+         */
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Detailed Information");
+        alert.setHeaderText(null);
+        alert.setContentText(data.toString());
+
+        alert.showAndWait();
     }
 
     protected void initModel(DummyModel dummyModel) {
