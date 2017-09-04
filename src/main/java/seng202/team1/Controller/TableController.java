@@ -95,7 +95,9 @@ public class TableController {
             //@Override
             protected ArrayList<BikeTrip> call() {
 
+                System.out.println("Loading bike trips");
                 final ArrayList<BikeTrip> dataPoints = populateBikeTrips(filename);
+                System.out.println("Loaded bike trips");
 
                 return dataPoints;
             }
@@ -130,6 +132,7 @@ public class TableController {
             @Override
             protected ArrayList<RetailerLocation> call() {
 
+                System.out.println("Loading retailers");
                 final ArrayList<RetailerLocation> dataPoints = populateRetailers(filename);
 
                 return dataPoints;
