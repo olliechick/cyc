@@ -52,7 +52,8 @@ public class CSVLoader {
 
 
     /**
-     * Calls the load CSV method and populates an array list with a set of BikeTrip objects from biketrips.csv.
+     * Calls the load CSV method and populates an array list with a set of
+     * BikeTrip objects from the default filename.
      * If the file does not exist, then the error message is printed.
      * @author Ollie Chick
      * @return ArrayList<BikeTrip>
@@ -101,7 +102,8 @@ public class CSVLoader {
 
 
     /**
-     * Calls the load CSV method and populates an ArrayList with a set of WifiPoint objects from a given filename.
+     * Calls the load CSV method and populates an ArrayList with a set of
+     * WifiPoint objects from the default filename.
      * If the filename does not exist, then the error message is printed.
      * @author Josh Burt
      * @author Ollie Chick
@@ -152,6 +154,16 @@ public class CSVLoader {
         return wifiSpots;
     }
 
+
+    /**
+     * Calls the load CSV method and populates an array list with a set of
+     * RetailerLocation objects from the default filename.
+     * @author Ollie Chick
+     * @return ArrayList<RetailerLocation>
+     */
+    public static ArrayList<RetailerLocation> populateRetailers() {
+        return populateRetailers(DEFAULT_RETAILER_LOCATIONS_FILENAME);
+    }
 
     /**
      * Calls the load CSV method and populates an array list with a set of RetailerLocation objects.
