@@ -55,9 +55,9 @@ public class CSVLoader {
      * Calls the load CSV method and populates an array list with a set of BikeTrip objects from biketrips.csv.
      * If the file does not exist, then the error message is printed.
      * @author Ollie Chick
-     * @return ArrayList<DataPoint>
+     * @return ArrayList<BikeTrip>
      */
-    public static ArrayList<DataPoint> populateBikeTrips() {
+    public static ArrayList<BikeTrip> populateBikeTrips() {
         return populateBikeTrips(DEFAULT_BIKE_TRIPS_FILENAME);
     }
 
@@ -67,10 +67,10 @@ public class CSVLoader {
      * @param filename name of the file the data is to be loaded from.
      * @author Josh Burt
      * @author Ollie Chick
-     * @return ArrayList<DataPoint>
+     * @return ArrayList<BikeTrip>
      */
-    public static ArrayList<DataPoint> populateBikeTrips(String filename){ //
-        ArrayList<DataPoint> trips = new ArrayList<DataPoint>();
+    public static ArrayList<BikeTrip> populateBikeTrips(String filename){ //
+        ArrayList<BikeTrip> trips = new ArrayList<BikeTrip>();
         try {
             ArrayList<CSVRecord> tripData = loadCSV(filename);
             for (CSVRecord record : tripData){
@@ -105,9 +105,9 @@ public class CSVLoader {
      * If the filename does not exist, then the error message is printed.
      * @author Josh Burt
      * @author Ollie Chick
-     * @return ArrayList<DataPoint>
+     * @return ArrayList<WifiPoint>
      */
-    public static ArrayList<DataPoint> populateWifiHotspots() {
+    public static ArrayList<WifiPoint> populateWifiHotspots() {
         return populateWifiHotspots(DEFAULT_WIFI_HOTSPOTS_FILENAME);
     }
 
@@ -117,10 +117,10 @@ public class CSVLoader {
      * @param filename name of the file the data is to be loaded from.
      * @author Josh Burt
      * @author Ollie Chick
-     * @return ArrayList<DataPoint>
+     * @return ArrayList<WifiPoint>
      */
-    public static ArrayList<DataPoint> populateWifiHotspots(String filename){
-        ArrayList<DataPoint> wifiSpots = new ArrayList<DataPoint>();
+    public static ArrayList<WifiPoint> populateWifiHotspots(String filename){
+        ArrayList<WifiPoint> wifiSpots = new ArrayList<WifiPoint>();
         try {
             ArrayList<CSVRecord> wifiData = loadCSV(filename);
             for(CSVRecord record : wifiData){
@@ -157,10 +157,10 @@ public class CSVLoader {
      * Calls the load CSV method and populates an array list with a set of RetailerLocation objects.
      * @param filename name of the file the data is to be loaded from.
      * @author Ollie Chick
-     * @return ArrayList<DataPoint>
+     * @return ArrayList<RetailerLocation>
      */
-    public static ArrayList<DataPoint> populateRetailers(String filename){
-        ArrayList<DataPoint> retailers = new ArrayList<DataPoint>(); //array list of retailers
+    public static ArrayList<RetailerLocation> populateRetailers(String filename){
+        ArrayList<RetailerLocation> retailers = new ArrayList<RetailerLocation>(); //array list of retailers
         try {
             ArrayList<CSVRecord> retailerData = loadCSV(filename);
             for(CSVRecord record : retailerData){
@@ -190,7 +190,7 @@ public class CSVLoader {
     * Just used for testing
     * @author Ollie Chick
      */
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         String filename = "wifiTester.csv";
         //populateBikeTrips(filename);
 
@@ -204,6 +204,6 @@ public class CSVLoader {
             System.out.println(retailer);
         }
 
-    }
+    }*/
 
 }
