@@ -55,7 +55,8 @@ public class CSVLoaderTest extends TestCase {
                 LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 8, 53),
                 LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 18, 05),
                 new Point.Float((float) -73.99392888, (float) 40.76727216),
-                new Point.Float((float) -73.97648516, (float) 40.75992262), 22307, 'm', 1980);
+                new Point.Float((float) -73.97648516, (float) 40.75992262),
+                22307, 'm', 1980);
         assertEquals(modelBikeTrip, trips.get(0));
     }
 
@@ -65,8 +66,9 @@ public class CSVLoaderTest extends TestCase {
         WifiPoint modelWifiHotspot = new WifiPoint(334,
                 new Point.Float((float) -73.74567356126445, (float) 40.6769527280),
                 "Laurelton", "134-26 225 STREET",
-                "Library", "Laurelton", "Queens", "Laurelton", 11413, "Free",
-                "QPL", "", "QBPL_WIRELESS", "", null);
+                "Library", "Laurelton", "Queens",
+                "Laurelton", 11413, "Free", "QPL",
+                "", "QBPL_WIRELESS", "",  null);
         assertEquals(modelWifiHotspot, wifiSpots.get(0));
 
     }
@@ -74,7 +76,10 @@ public class CSVLoaderTest extends TestCase {
     public void testPopulateRetailers() throws Exception {
         String filename = csv_resource_dir + "testRetailers.csv";
         ArrayList<DataPoint> retailers = populateRetailers(filename);
-        RetailerLocation modelRetailer = new RetailerLocation("Candy Plus", "16 Beaver Street, New York, NY 10004", "Shopping", "Candy & Chocolate");
+        RetailerLocation modelRetailer = new RetailerLocation("Candy Plus",
+                "16 Beaver Street", "", "New York",
+                "NY" , 10004, "11-7", "Shopping",
+                "Candy & Chocolate");
         assertEquals(modelRetailer, retailers.get(0));
     }
 

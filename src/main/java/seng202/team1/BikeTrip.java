@@ -1,7 +1,6 @@
 package seng202.team1;
 
 import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -23,7 +22,8 @@ public class BikeTrip extends DataPoint {
     private int birthyear;
 
     //default constructor
-    public BikeTrip(long tripDuration, LocalDateTime startTime, LocalDateTime stopTime, Point.Float startPoint, Point.Float endPoint, int bikeID, char gender, int birthyear) {
+    public BikeTrip(long tripDuration, LocalDateTime startTime, LocalDateTime stopTime,
+                    Point.Float startPoint, Point.Float endPoint, int bikeID, char gender, int birthyear) {
         this.tripDuration = tripDuration;
         this.startTime = startTime;
         this.stopTime = stopTime;
@@ -35,7 +35,8 @@ public class BikeTrip extends DataPoint {
     }
 
     //constructor that calculates tripDuration
-    public BikeTrip(LocalDateTime startTime, LocalDateTime stopTime, Point.Float startPoint, Point.Float endPoint, int bikeID, char gender, int birthyear) {
+    public BikeTrip(LocalDateTime startTime, LocalDateTime stopTime, Point.Float startPoint,
+                    Point.Float endPoint, int bikeID, char gender, int birthyear) {
         this.tripDuration = Duration.between(startTime, stopTime).getSeconds();
         this.startTime = startTime;
         this.stopTime = stopTime;

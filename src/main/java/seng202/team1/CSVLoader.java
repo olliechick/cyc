@@ -38,7 +38,7 @@ public class CSVLoader {
     final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/wifipoint.csv";
     final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "src/main/resources/csv/retailerlocation.csv";
 
-    //any date before this will be replaced with null
+    //Earliest date that a Wifi point can be set up -- any date before this will be replaced with null
     final static LocalDateTime EARLIEST_POSSIBLE_DATE = LocalDateTime.of(1900, Month.JANUARY, 1, 0, 0);
 
 
@@ -165,23 +165,19 @@ public class CSVLoader {
             ArrayList<CSVRecord> retailerData = loadCSV(filename);
             for(CSVRecord record : retailerData){
                 String name = record.get(0);
-                String street_address = record.get(1);
-                String address_line2 = record.get(2);
+                String addressLine1 = record.get(1);
+                String addressLine2 = record.get(2);
                 String city = record.get(3);
                 String state = record.get(4);
-                String zipcode = record.get(5);
-                String address;
-                if (address_line2.isEmpty()) {
-                    address = street_address + ", " + city + ", " + state + " " + zipcode;
-                } else {
-                    address = street_address + ", " + address_line2 + ", " + city + ", " + state + " " + zipcode;
-                }
+                int zipcode = Integer.parseInt(record.get(5));
+                String blockLot = record.get(6);
                 String primaryFunction = record.get(7);
                 String secondaryFunction = record.get(8);
                 if (secondaryFunction.length() > 2) {
                     secondaryFunction = secondaryFunction.substring(2);
                 }
-                retailers.add(new RetailerLocation(name, address, primaryFunction, secondaryFunction));
+                retailers.add(new RetailerLocation(name, addressLine1, addressLine2, city,
+                        state, zipcode, blockLot, primaryFunction, secondaryFunction));
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -198,9 +194,9 @@ public class CSVLoader {
         String filename = "wifiTester.csv";
         //populateBikeTrips(filename);
 
-        ArrayList<DataPoint> trips = populateWifiHotspots(filename);//populateBikeTrips(filename);
-        for (DataPoint trip :trips) {
-            System.out.println(trip);
+        ArrayList<DataPoint> wifis = populateWifiHotspots(filename);//populateBikeTrips(filename);
+        for (DataPoint wifi : wifis) {
+            System.out.println(wifi);
         }
 
         ArrayList<DataPoint> retailers = populateRetailers("ret.csv");//populateBikeTrips(filename);
