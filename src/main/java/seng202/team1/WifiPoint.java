@@ -64,6 +64,22 @@ public class WifiPoint extends DataPoint {
         this.coords = coords;
     }
 
+    public float getLongitude() {
+        return coords.x;
+    }
+
+    public void setLongitude(float longitude) {
+        this.coords.x = longitude;
+    }
+
+    public float getLatitude() {
+        return coords.y;
+    }
+
+    public void setLatitude(float latitude) {
+        this.coords.y = latitude;
+    }
+
     public String getName() {
         return name;
     }

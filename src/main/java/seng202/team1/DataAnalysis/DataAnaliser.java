@@ -1,14 +1,11 @@
 package seng202.team1.DataAnalysis;
 
-import com.sun.org.apache.bcel.internal.generic.BIPUSH;
-import javafx.beans.property.DoubleProperty;
-import seng202.team1.*;
+import seng202.team1.BikeTrip;
+import seng202.team1.CSVLoader;
+import seng202.team1.WifiPoint;
 
-import javax.xml.transform.dom.DOMLocator;
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Static class that handles all of the data analysis required
@@ -83,12 +80,13 @@ public final class DataAnaliser {
      * @return
      */
     public static ArrayList<WifiPoint> searchWifiPoints(double searchLat, double searchLong, double delta) {
-        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
+        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots
+                ("wifiTester" + ".csv");
         ArrayList<WifiPoint> results = new ArrayList<WifiPoint>();
         double deltaDecimals = BASEDELTA * delta; //This is the range we will search for in the dataset
         for (WifiPoint hotspot : hotspots) { //unfortunalty an 0(n) with the current data set. Perhaps we need to sort based on Lat and long to decrease time complexity
-            double spotLong = Double.parseDouble(hotspot.getLongitude());
-            double spotLat = Double.parseDouble(hotspot.getLatitude());
+            double spotLong = hotspot.getLongitude();
+            double spotLat = hotspot.getLatitude();
             if ((spotLong >= (searchLong - deltaDecimals)) && (spotLong <= (searchLong + deltaDecimals))){ //can safely assume all given longitudes in decimal form will be negative
                 if ((spotLat >= (searchLat - deltaDecimals)) && (spotLat <= (searchLat + deltaDecimals))){ //nasty double if loop to improve readbility
                     results.add(hotspot);
@@ -136,9 +134,9 @@ public final class DataAnaliser {
         WifiPoint closestPoint = null;
         if (closeHotspots.size() > 0) { //only searchList if at least one point is found
             closestPoint = closeHotspots.get(0);
-            double closestDistance = calculateDistance(tripLat, tripLong, Double.parseDouble(closestPoint.getLatitude()), Double.parseDouble(closestPoint.getLongitude()));
+            double closestDistance = calculateDistance(tripLat, tripLong, closestPoint.getLatitude(), closestPoint.getLongitude());
             for (WifiPoint canidatePoint : closeHotspots) {
-                double canidateDistance = calculateDistance(tripLat, tripLong, Double.parseDouble(canidatePoint.getLatitude()), Double.parseDouble(canidatePoint.getLongitude()));
+                double canidateDistance = calculateDistance(tripLat, tripLong, canidatePoint.getLatitude(),canidatePoint.getLongitude());
                 if (canidateDistance < closestDistance) {
                     closestPoint = canidatePoint;
                     closestDistance = canidateDistance;
@@ -166,9 +164,9 @@ public final class DataAnaliser {
         WifiPoint closestPoint = null;
         if (closeHotspots.size() > 0) { //only searchList if at least one point is found
             closestPoint = closeHotspots.get(0);
-            double closestDistance = calculateDistance(tripLat, tripLong, Double.parseDouble(closestPoint.getLatitude()), Double.parseDouble(closestPoint.getLongitude()));
+            double closestDistance = calculateDistance(tripLat, tripLong, closestPoint.getLatitude(), closestPoint.getLongitude());
             for (WifiPoint canidatePoint : closeHotspots) {
-                double canidateDistance = calculateDistance(tripLat, tripLong, Double.parseDouble(canidatePoint.getLatitude()), Double.parseDouble(canidatePoint.getLongitude()));
+                double canidateDistance = calculateDistance(tripLat, tripLong, canidatePoint.getLatitude(), canidatePoint.getLongitude());
                 if (canidateDistance < closestDistance) {
                     closestPoint = canidatePoint;
                     closestDistance = canidateDistance;
@@ -196,8 +194,10 @@ public final class DataAnaliser {
         if (closestToStart == null) {
             return closestToEnd;
         }
-        double distanceToStart = calculateDistance(tripLat,tripLong,Double.parseDouble(closestToStart.getLatitude()),Double.parseDouble(closestToStart.getLongitude()));
-        double distanceToEnd = calculateDistance(tripLat,tripLong,Double.parseDouble(closestToEnd.getLatitude()), Double.parseDouble(closestToEnd.getLongitude()));
+        double distanceToStart = calculateDistance(tripLat,tripLong,
+        closestToStart.getLatitude(), closestToStart.getLongitude());
+        double distanceToEnd = calculateDistance(tripLat,tripLong,
+        closestToEnd.getLatitude(), closestToEnd.getLongitude());
         if (distanceToEnd > distanceToStart) {
             return closestToStart;
         } else {
