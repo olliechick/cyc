@@ -73,6 +73,8 @@ public class BikeTrip extends DataPoint {
         this.stopTime = stopTime;
     }
 
+    // Start point
+
     public Point.Float getStartPoint() {
         return startPoint;
     }
@@ -81,6 +83,24 @@ public class BikeTrip extends DataPoint {
         this.startPoint = startPoint;
     }
 
+    public float getStartLongitude() {
+        return startPoint.x;
+    }
+
+    public void setStartLongitude(float startLongitude) {
+        this.startPoint.x = startLongitude;
+    }
+
+    public float getStartLatitude() {
+        return startPoint.y;
+    }
+
+    public void setStartLatitude(float startLatitude) {
+        this.startPoint.y = startLatitude;
+    }
+
+    // End point
+
     public Point.Float getEndPoint() {
         return endPoint;
     }
@@ -88,6 +108,24 @@ public class BikeTrip extends DataPoint {
     public void setEndPoint(Point.Float endPoint) {
         this.endPoint = endPoint;
     }
+
+    public float getEndLongitude() {
+        return endPoint.x;
+    }
+
+    public void setEndLongitude(float endLongitude) {
+        this.endPoint.x = endLongitude;
+    }
+
+    public float getEndLatitude() {
+        return endPoint.y;
+    }
+
+    public void setEndLatitude(float endLatitude) {
+        this.endPoint.y = endLatitude;
+    }
+
+    //Other
 
     public int getBikeID() {
         return bikeID;
