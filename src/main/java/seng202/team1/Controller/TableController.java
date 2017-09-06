@@ -1,5 +1,6 @@
 package seng202.team1.Controller;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -30,19 +31,16 @@ import static seng202.team1.CSVLoader.populateRetailers;
 public class TableController {
 
     @FXML
-    private ComboBox filterAComboBox;
+    private ComboBox filterPrimaryComboBox;
 
     @FXML
     private TextField streetSearchField;
 
     @FXML
-    private ComboBox filterCComboBox;
+    private ComboBox filterZipComboBox;
 
     @FXML
     private Label nameLabel;
-
-    @FXML
-    private MenuItem importRetailerMenu;
 
     @FXML
     private ProgressIndicator progressSpinner;
@@ -56,7 +54,7 @@ public class TableController {
     private DummyModel model;
     private Stage stage;
 
-    private FilteredList<DataPoint> filteredData;
+    private FilteredList<RetailerLocation> filteredData;
 
     public void initialize() {
         /**
@@ -75,24 +73,6 @@ public class TableController {
             });
             return row ;
         });
-
-        streetSearchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(dataPoint -> {
-                RetailerLocation location = (RetailerLocation) dataPoint;
-
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-
-                String lowerCaseFilter = newValue.toLowerCase();
-
-                if (location.getAddressLine1().toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-        });
     }
 
     protected void setName() {
@@ -100,40 +80,67 @@ public class TableController {
         nameLabel.setVisible(true);
     }
 
-    public void filterA() {
+    private void setPredicate() {
         /**
-         * Called each time the user chooses an option in the first filter combobox
-         * Uses the filteredList to filter out the rows that don't match the criteria.
-         * More logic can be added for further filtering.
+         * Checks the combo boxes and street field for data and filters the displayed
+         * data accordingly.
+         * The first section of the lambda generates a boolean on each table entry, depending if they fit the
+         * criteria.
+         *
+         * The second section contains the observable properties that it watches for changes on,
+         * updating the filter each time one changes.
+         * TODO leave in for credit?
+         * https://stackoverflow.com/questions/33016064/javafx-multiple-textfields-should-filter-one-tableview
          */
-        System.out.println(filterAComboBox.getValue());
-        String filter = (String) filterAComboBox.getValue();
+        filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
+                        retailerLocation -> checkStreet(retailerLocation)
+                                && checkPrimary(retailerLocation),
 
-        //Set the filtering criteria, TODO learn lambda in java
-        filteredData.setPredicate(dataPoint -> {
-            RetailerLocation location = (RetailerLocation) dataPoint;
+                streetSearchField.textProperty(),
+                filterPrimaryComboBox.valueProperty()
+        ));
+    }
 
-            if (((RetailerLocation) dataPoint).getSecondaryFunction().equals(filter)) {
-                return true;
-            } else {
-                return false;
-            }
-        });
+    private boolean checkPrimary(RetailerLocation retailerLocation) {
+        /**
+         * checks the given retailerLocation against the filter in the primary function ComboBox.
+         */
+        if ("All".equals(filterPrimaryComboBox.getValue())) {
+            return true;
+        } else {
+            return retailerLocation.getSecondaryFunction().equals(filterPrimaryComboBox.getValue());
+        }
+    }
 
+    private boolean checkStreet(RetailerLocation retailerLocation) {
+        /**
+         * Checks the address line 1 of the given retailerLocation against the text in the street
+         * search field.
+         */
+        if (streetSearchField.getText().isEmpty()) {
+            return true;
+        } else {
+            String lowerCaseFilter = streetSearchField.getText().toLowerCase();
+            return retailerLocation.getAddressLine1().toLowerCase().contains(lowerCaseFilter);
+        }
     }
 
     private void setFilters() {
         /**
-         * not what it's supposed to filter on, just playing around
-         * testing only at the moment
+         * Sets the filter options
+         * TODO fix to be right
          */
-        filterAComboBox.getItems().addAll("Candy & Chocolate", "Newsstands", "Nail Salon");
+        filterPrimaryComboBox.getItems().addAll("All", "Candy & Chocolate", "Newsstands", "Nail Salon");
+        filterPrimaryComboBox.getSelectionModel().selectFirst();
+
+        filterZipComboBox.getItems().addAll("All", "123");
+        filterZipComboBox.getSelectionModel().selectFirst();
 
     }
 
     private String getCsvFilename() {
         /**
-         * Opens a filechooser popup, allowing the user to choose a file.
+         * Opens a FileChooser popup, allowing the user to choose a file.
          * Only allows for opening of .csv files
          */
 
@@ -143,7 +150,7 @@ public class TableController {
         fileChooser.setTitle("Open CSV file");
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files", "*.csv");
         fileChooser.getExtensionFilters().add(extFilter);
-        stage = (Stage) filterAComboBox.getScene().getWindow();
+        stage = (Stage) filterPrimaryComboBox.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             filename = file.getAbsolutePath();
@@ -169,9 +176,7 @@ public class TableController {
             //@Override
             protected ArrayList<BikeTrip> call() {
 
-                final ArrayList<BikeTrip> dataPoints = populateBikeTrips(filename);
-
-                return dataPoints;
+                return populateBikeTrips(filename);
             }
         };
 
@@ -192,6 +197,7 @@ public class TableController {
         new Thread(loadBikeCsv).start();
     }
 
+    //TODO move to own class
     private void importRetailerCsv(final String filename) {
         /**
          * Same as importBikeCsv but is needed as it was the only way to get the task
@@ -207,9 +213,7 @@ public class TableController {
             @Override
             protected ArrayList<RetailerLocation> call() {
 
-                final ArrayList<RetailerLocation> dataPoints = populateRetailers(filename);
-
-                return dataPoints;
+                return populateRetailers(filename);
             }
         };
 
@@ -242,6 +246,9 @@ public class TableController {
 
         progressSpinner.setVisible(false);
         loadLabel.setVisible(false);
+
+        //TODO move to more appropriate spot
+        setPredicate();
     }
 
     public void importRetailer() {
@@ -252,6 +259,7 @@ public class TableController {
         }
     }
 
+    //TODO refactor out into separate class
     public void importBike() {
 
         String filename = getCsvFilename();
@@ -265,7 +273,7 @@ public class TableController {
          * Pretty much straight from http://docs.oracle.com/javafx/2/ui_controls/table-view.htm
          */
 
-        ObservableList<DataPoint> dataPoints = FXCollections.observableArrayList(data);
+        ObservableList<RetailerLocation> dataPoints = FXCollections.observableArrayList(data);
 
         // Create the columns
         TableColumn nameCol = new TableColumn("Name");
@@ -283,25 +291,26 @@ public class TableController {
         table.getColumns().clear();
 
         //Sets up each column to get the correct entry in each dataPoint
-        nameCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("name"));
-        addressCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("addressLine1"));
-        primaryCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("primaryFunction"));
-        secondaryCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("secondaryFunction"));
+        nameCol.setCellValueFactory( new PropertyValueFactory<RetailerLocation, String>("name"));
+        addressCol.setCellValueFactory( new PropertyValueFactory<RetailerLocation, String>("addressLine1"));
+        primaryCol.setCellValueFactory( new PropertyValueFactory<RetailerLocation, String>("primaryFunction"));
+        secondaryCol.setCellValueFactory( new PropertyValueFactory<RetailerLocation, String>("secondaryFunction"));
 
         // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
-        filteredData = new FilteredList<DataPoint>(dataPoints, p -> true);
+        filteredData = new FilteredList<>(dataPoints, p -> true);
 
-        SortedList<DataPoint> sortedData = new SortedList<DataPoint>(filteredData);
+        SortedList<DataPoint> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(table.comparatorProperty());
 
         // Add the sorted and filtered data to the table.
         table.setItems(sortedData);
         table.getColumns().addAll(nameCol, addressCol, primaryCol, secondaryCol);
 
-        // Initialise the values in the filter comboboxes now that we have data to work with
+        // Initialise the values in the filter combo boxes now that we have data to work with
         setFilters();
     }
 
+    //TODO move into own class
     private void setTableViewBike(ArrayList<BikeTrip> data) {
         /**
          * Fairly similar to Retailer setup, but for a bike trip

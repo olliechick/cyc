@@ -26,7 +26,7 @@
             <items>
                   <Menu mnemonicParsing="false" text="Import CSV">
                     <items>
-                      <MenuItem fx:id="importRetailerMenu" mnemonicParsing="false" onAction="#importRetailer" text="Retailers" />
+                      <MenuItem mnemonicParsing="false" onAction="#importRetailer" text="Retailers" />
                         <MenuItem mnemonicParsing="false" onAction="#importBike" text="Bike Trips" />
                         <MenuItem mnemonicParsing="false" text="WiFi" />
                     </items>
@@ -69,16 +69,16 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Filters:" />
-            <Label text="Filter 1:" GridPane.columnIndex="1" />
-            <Label text="Street" GridPane.columnIndex="2" />
-            <Label text="Filter 3:" GridPane.columnIndex="3" />
-            <ComboBox fx:id="filterAComboBox" onAction="#filterA" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <ComboBox fx:id="filterCComboBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Label text="Filter:" />
+            <Label text="Primary Function:" GridPane.columnIndex="1" />
+            <Label text="Street" GridPane.columnIndex="3" />
+            <Label text="ZIP:" GridPane.columnIndex="2" />
+            <ComboBox fx:id="filterPrimaryComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ComboBox fx:id="filterZipComboBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <Label fx:id="nameLabel" text="Name placeholder" visible="false" GridPane.columnSpan="2" GridPane.rowIndex="2" />
             <Label fx:id="loadLabel" text="Loading:" visible="false" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
             <ProgressIndicator fx:id="progressSpinner" progress="0.0" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-            <TextField fx:id="streetSearchField" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField fx:id="streetSearchField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
