@@ -193,7 +193,10 @@ public class CSVLoader {
     }
 
     /**
-     * Calls the load CSV method and populates an array list with a set of RetailerLocation objects.
+     * Calls the load CSV method and populates an array list with a set of
+     * RetailerLocation objects.
+     * If there are columns (9 and 10) for coords, these are loaded,
+     * otherwise they are set to null.
      * @param filename name of the file the data is to be loaded from.
      * @author Ollie Chick
      * @return ArrayList<RetailerLocation>
@@ -221,11 +224,21 @@ public class CSVLoader {
                     String blockLot = record.get(6);
                     String primaryFunction = record.get(7);
                     String secondaryFunction = record.get(8);
+                    // try to get coords
+                    Point.Float coords =  new Point.Float();
+                    try {
+                        coords.y = Float.parseFloat(record.get(9)); //latitude
+                        coords.x = Float.parseFloat(record.get(10)); //longitude
+                    } catch (ArrayIndexOutOfBoundsException e){
+                        //no such column as latitude/longitude
+                        coords = null;
+                    }
                     if (secondaryFunction.length() > 2) {
                         secondaryFunction = secondaryFunction.substring(2);
                     }
                     retailers.add(new RetailerLocation(name, addressLine1, addressLine2, city,
-                            state, zipcode, blockLot, primaryFunction, secondaryFunction));
+                            state, zipcode, blockLot, primaryFunction,
+                            secondaryFunction, coords));
                 }
             }
         } catch (IOException e) {
