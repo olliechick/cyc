@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.BikeTableController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.RetailerTableController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -26,9 +26,7 @@
             <items>
                   <Menu mnemonicParsing="false" text="Import CSV">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Retailers" />
-                        <MenuItem mnemonicParsing="false" text="Bike Trips" />
-                        <MenuItem mnemonicParsing="false" text="WiFi" />
+                      <MenuItem mnemonicParsing="false" onAction="#importRetailer" text="Retailers" />
                     </items>
                   </Menu>
               <MenuItem mnemonicParsing="false" text="Close" />
