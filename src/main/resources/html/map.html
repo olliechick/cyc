@@ -27,7 +27,8 @@
 
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 12,
-          center: myLatLng
+          center: myLatLng,
+          disableDefaultUI: true
         });
 
         var oldZoom = null;
@@ -46,15 +47,15 @@
             icon: iconBase + 'departmentstore.png'
           }
         };
-    var marker = new google.maps.Marker({
-          position: myLatLng,
-          map: map,
-          icon: 'WIFI.png',
-          title: 'Hello World!'
-        });
 
-
-
+    document.addMarker = function addMarker(latlng, icon, title) {
+        var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            icon: icon,
+            title: title
+           });
+          }
 
     document.zoomIn = function zoomIn() {
         var zoomLevel = map.getZoom();

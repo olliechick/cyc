@@ -29,8 +29,9 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </padding>
          <children>
-            <Button fx:id="ZoomInButton" mnemonicParsing="false" onAction="#zoomIn"  text="Zoom In" GridPane.columnIndex="3" />
-            <Button fx:id="ZoomOutButton" mnemonicParsing="false" onAction="#zoomOut"  text="Zoom Out" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Button fx:id="ZoomInButton" mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" GridPane.columnIndex="3" />
+            <Button fx:id="ZoomOutButton" mnemonicParsing="false" onAction="#zoomOut" text="Zoom Out" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+             <Button fx:id="WIFIButton" mnemonicParsing="false" onAction="#loadAllWifi" text="WIFI icon test" GridPane.columnIndex="2" />
          </children>
         </GridPane>
     </bottom>
