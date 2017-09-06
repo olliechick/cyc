@@ -8,14 +8,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -40,7 +33,7 @@ public class TableController {
     private ComboBox filterAComboBox;
 
     @FXML
-    private ComboBox filterBComboBox;
+    private TextField streetSearchField;
 
     @FXML
     private ComboBox filterCComboBox;
@@ -81,6 +74,24 @@ public class TableController {
                 }
             });
             return row ;
+        });
+
+        streetSearchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(dataPoint -> {
+                RetailerLocation location = (RetailerLocation) dataPoint;
+
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (location.getAddressLine1().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
         });
     }
 
@@ -273,7 +284,7 @@ public class TableController {
 
         //Sets up each column to get the correct entry in each dataPoint
         nameCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("name"));
-        addressCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("address"));
+        addressCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("addressLine1"));
         primaryCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("primaryFunction"));
         secondaryCol.setCellValueFactory( new PropertyValueFactory<DataPoint, String>("secondaryFunction"));
 
