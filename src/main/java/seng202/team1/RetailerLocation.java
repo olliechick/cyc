@@ -135,6 +135,24 @@ public class RetailerLocation extends DataPoint {
         this.coords = coords;
     }
 
+    /*
+    * Returns the full address of the retailer.
+    * @author Ollie Chick
+     */
+    public String getAddress() {
+
+        String address; //address to return
+
+        // Check if the address has a line 2
+        if (addressLine2.isEmpty()) {
+            address = addressLine1 + ", " + city + ", " + state + " " + zipcode;
+        } else {
+            address = addressLine1 + ", " + addressLine2 + ", " + city + ", " + state + " " + zipcode;
+        }
+
+        return address;
+    }
+
     @Override
     public String toString() {
         return "RetailerLocation{" +
