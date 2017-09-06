@@ -6,6 +6,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.stage.Stage;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.paint.Color;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -75,8 +84,27 @@ public class LoginController {
          * Will handle sign up button clicks
          *
          * @author Josh Bernasconi
+         * currently loads map GUI
          */
 
         System.out.println("Sign in button clicked");
+        try {
+            // Changes to the map GUI
+
+            FXMLLoader mapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+            Parent mapView = mapLoader.load();
+            MapController mapController = mapLoader.getController();
+
+           // mapController.initModel(model);
+            //mapController.setName();
+
+            Stage stage = (Stage) signUpButton.getScene().getWindow(); //gets the current stage so that Map can take over
+
+            stage.setScene(new Scene(mapView));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace(); //File not found
+        }
     }
 }
