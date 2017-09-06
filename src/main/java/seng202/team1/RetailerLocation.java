@@ -1,5 +1,7 @@
 package seng202.team1;
 
+import java.awt.*;
+
 /**
  * Class for the retailer locations. Has a single constructor that sets the values for the points.
  * All methods are getters and setters.
@@ -16,7 +18,29 @@ public class RetailerLocation extends DataPoint {
     private String blockLot;
     private String primaryFunction;
     private String secondaryFunction;
+    private Point.Float coords;
 
+    public RetailerLocation(String name, String addressLine1, String
+            addressLine2, String city, String state,  int zipcode, String
+            blockLot, String primaryFunction, String secondaryFunction, Point
+            .Float coords) {
+        this.name = name;
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.city = city;
+        this.state = state;
+        this.zipcode = zipcode;
+        this.blockLot = blockLot;
+        this.primaryFunction = primaryFunction;
+        this.secondaryFunction = secondaryFunction;
+        this.coords = coords;
+    }
+
+    /*
+    * Overloaded constructor without coords.
+    * Coords are set to null.
+    * @author Ollie Chick
+     */
     public RetailerLocation(String name, String addressLine1, String addressLine2, String city, String state,
                             int zipcode, String blockLot, String primaryFunction, String secondaryFunction) {
         this.name = name;
@@ -28,6 +52,7 @@ public class RetailerLocation extends DataPoint {
         this.blockLot = blockLot;
         this.primaryFunction = primaryFunction;
         this.secondaryFunction = secondaryFunction;
+        this.coords = null;
     }
 
     public String getName() {
@@ -102,6 +127,14 @@ public class RetailerLocation extends DataPoint {
         this.secondaryFunction = secondaryFunction;
     }
 
+    public Point.Float getCoords() {
+        return coords;
+    }
+
+    public void setCoords(Point.Float coords) {
+        this.coords = coords;
+    }
+
     @Override
     public String toString() {
         return "RetailerLocation{" +
@@ -110,10 +143,11 @@ public class RetailerLocation extends DataPoint {
                 ", addressLine2='" + addressLine2 + '\'' +
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
-                ", zipcode='" + zipcode + '\'' +
+                ", zipcode=" + zipcode +
                 ", blockLot='" + blockLot + '\'' +
                 ", primaryFunction='" + primaryFunction + '\'' +
                 ", secondaryFunction='" + secondaryFunction + '\'' +
+                ", coords=" + coords +
                 '}';
     }
 }
