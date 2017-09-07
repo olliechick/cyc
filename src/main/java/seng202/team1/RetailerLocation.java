@@ -147,7 +147,7 @@ public class RetailerLocation extends DataPoint {
         if (addressLine2.isEmpty()) {
             address = addressLine1 + ", " + city + ", " + state + " " + zipcode;
         } else {
-            address = addressLine1 + ", " + addressLine2 + ", " + city + ", " + state + " " + zipcode;
+            address = addressLine2 + ", " + addressLine1 + ", " + city + ", " + state + " " + zipcode;
         }
 
         return address;
