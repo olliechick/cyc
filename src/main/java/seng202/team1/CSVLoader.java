@@ -85,6 +85,8 @@ public class CSVLoader {
                 }
                 if (!isHeaderRow) {
                     long tripDuration = new Long(record.get(0));
+
+                    // Set start time
                     LocalDateTime startTime;
                     try {
                         startTime = LocalDateTime.parse(record.get
@@ -95,16 +97,20 @@ public class CSVLoader {
                                 DateTimeFormatter.ofPattern
                                         ("yyyy-MM-dd HH:mm:ss"));
                     }
+
+                    // Set stop time
                     LocalDateTime stopTime;
                     try {
                         stopTime = LocalDateTime.parse(record.get
-                                (1), DateTimeFormatter.ofPattern
+                                (2), DateTimeFormatter.ofPattern
                                 ("M/d/yyyy HH:mm:ss"));
                     } catch (Exception e) {
-                        stopTime = LocalDateTime.parse(record.get(1),
+                        stopTime = LocalDateTime.parse(record.get(2),
                                 DateTimeFormatter.ofPattern
                                 ("yyyy-MM-dd HH:mm:ss"));
                     }
+
+                    // Other stuff
                     Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(6)), Float.parseFloat(record.get(5)));
                     Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(10)), Float.parseFloat(record.get(9)));
                     int bikeID = Integer.parseInt(record.get(11));
