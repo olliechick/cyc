@@ -60,6 +60,19 @@ public class CSVLoaderTest extends TestCase {
         assertEquals(modelBikeTrip, trips.get(0));
     }
 
+    public void testPopulateBikeTripsNoDurationGiven() throws Exception {
+        String filename = csv_resource_dir + "testBiketrip.csv";
+        ArrayList<BikeTrip> trips = populateBikeTrips(filename);
+        BikeTrip modelBikeTrip = new BikeTrip(LocalDateTime.of(2015, Month
+                .DECEMBER, 1, 8, 8, 53),
+                LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 18, 05),
+                new Point.Float((float) -73.99392888, (float) 40.76727216),
+                new Point.Float((float) -73.97648516, (float) 40.75992262),
+                22307, 'm', 1980);
+        assertEquals(modelBikeTrip.getTripDuration(), trips.get(0)
+                .getTripDuration(), 1);
+    }
+
     public void testPopulateWifiHotspots() throws Exception {
         String filename = csv_resource_dir + "testWifi.csv";
         ArrayList<WifiPoint> wifiSpots = populateWifiHotspots(filename);
