@@ -79,14 +79,32 @@ public class CSVLoader {
                 boolean isHeaderRow = false;
                 try {
                     Integer.parseInt(record.get(11));
-                } catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
                     //Header row - bike id is not an int
                     isHeaderRow = true;
                 }
                 if (!isHeaderRow) {
                     long tripDuration = new Long(record.get(0));
-                    LocalDateTime startTime = LocalDateTime.parse(record.get(1), DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss"));
-                    LocalDateTime stopTime = LocalDateTime.parse(record.get(2), DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss"));
+                    LocalDateTime startTime;
+                    try {
+                        startTime = LocalDateTime.parse(record.get
+                                (1), DateTimeFormatter.ofPattern
+                                ("M/d/yyyy HH:mm:ss"));
+                    } catch (Exception e) {
+                        startTime = LocalDateTime.parse(record.get(1),
+                                DateTimeFormatter.ofPattern
+                                        ("yyyy-MM-dd HH:mm:ss"));
+                    }
+                    LocalDateTime stopTime;
+                    try {
+                        stopTime = LocalDateTime.parse(record.get
+                                (1), DateTimeFormatter.ofPattern
+                                ("M/d/yyyy HH:mm:ss"));
+                    } catch (Exception e) {
+                        stopTime = LocalDateTime.parse(record.get(1),
+                                DateTimeFormatter.ofPattern
+                                ("yyyy-MM-dd HH:mm:ss"));
+                    }
                     Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(6)), Float.parseFloat(record.get(5)));
                     Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(10)), Float.parseFloat(record.get(9)));
                     int bikeID = Integer.parseInt(record.get(11));
