@@ -23,6 +23,8 @@ public class MapController {
     @FXML
     private WebEngine webEngine;
 
+    private DummyModel model;
+
     @FXML
     private void initialize()
     {
@@ -56,5 +58,7 @@ public class MapController {
 
         }
     }
-
+    protected void initModel(DummyModel dummyModel) {
+        this.model = dummyModel;
+    }
 }

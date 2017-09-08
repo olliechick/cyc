@@ -20,6 +20,16 @@
     <name>SENG202Group1</name>
   <url>http://maven.apache.org</url>
   <dependencies>
+      <dependency>
+          <groupId>com.google.maps</groupId>
+          <artifactId>google-maps-services</artifactId>
+          <version>0.2.2</version>
+      </dependency>
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-nop</artifactId>
+          <version>1.7.25</version>
+      </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

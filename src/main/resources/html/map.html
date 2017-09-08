@@ -31,14 +31,19 @@
           disableDefaultUI: true
         });
 
+        var bikeLayer = new google.maps.BicyclingLayer();
+        bikeLayer.setMap(map);
+
         var oldZoom = null;
         var oldCenter = null;
         google.maps.event.addListenerOnce(map, "zoom_changed", function() { oldZoom = map.getZoom(); });
         google.maps.event.addListenerOnce(map, "center_changed", function() { oldCenter = map.getCenter(); });
+        
+        var labels = '123456789';
+        var labelIndex = 0;
+        var markerArray = [];
 
-
-
-    var iconBase = '';
+        var iconBase = '';
         var icons = {
           wifi: {
             icon: iconBase + 'WIFI.png'
@@ -48,26 +53,79 @@
           }
         };
 
-    document.addMarker = function addMarker(latlng, icon, title) {
-        var marker = new google.maps.Marker({
-            position: latlng,
-            map: map,
-            icon: icon,
-            title: title
-           });
-          }
 
-    document.zoomIn = function zoomIn() {
+
+
+
+      // Adds a marker to the map.
+      function addMarkerUser(location, map) {
+        // Add the marker at the clicked location, and add the next-available label
+        // from the array of alphabetical characters.
+        var marker = new google.maps.Marker({
+          position: location,
+          label: labels[labelIndex++ % labels.length],
+          map: map
+        });
+
+        markerArray[markerArray.length] = marker.position;
+        if (markerArray.length > 1) document.drawRoute(markerArray);
+        }
+
+      document.drawRoute = function drawRoute(coordinateArray)
+    {
+      var newRoute = new google.maps.Polyline({
+        path: coordinateArray,
+        geodesic: true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+        });
+        newRoute.setMap(map);
+    }
+
+
+
+
+
+
+
+
+
+    
+
+
+    // This event listener calls addMarker() when the map is clicked.
+    google.maps.event.addListener(map, 'click', function(event) {
+          addMarkerUser(event.latLng, map);
+        });  
+
+
+
+    document.addMarker = function addMarker(latlng, icon, title) 
+    {
+        var marker = new google.maps.Marker({
+          position: latlng,
+          map: map,
+          icon: icon,
+          title: title
+           });
+    }
+
+
+
+    document.zoomIn = function zoomIn() 
+    {
         var zoomLevel = map.getZoom();
         if (zoomLevel <= 20) map.setZoom(zoomLevel + 1);
     }
 
-    document.zoomOut = function zoomOut() {
+    document.zoomOut = function zoomOut() 
+    {
         var zoomLevel = map.getZoom();
         if (zoomLevel > 0) map.setZoom(zoomLevel - 1);
     }
 
-
+    google.maps.event.addDomListener(window, 'load', initialize);
 
     }
     </script>
