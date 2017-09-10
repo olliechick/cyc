@@ -36,7 +36,6 @@ public class LandingController {
 
             retailerTableController.initModel(model);
             retailerTableController.setName();
-            retailerTableController.importDefaultRetailerCsv();
 
             stage = (Stage) openRetailerButton.getScene().getWindow();
 
@@ -71,6 +70,24 @@ public class LandingController {
     }
 
     public void openWifiTable() {
+        System.out.println("Wifi table clicked");
+        try {
+            // Changes to the table GUI
+            FXMLLoader wifiTableLoader = new FXMLLoader(getClass().getResource("/fxml/WifiTableView.fxml"));
+            Parent wifiTableView = wifiTableLoader.load();
+            WifiTableController wifiTableController = wifiTableLoader.getController();
+
+            wifiTableController.initModel(model);
+            wifiTableController.setName();
+
+            stage = (Stage) openRetailerButton.getScene().getWindow();
+
+            stage.setScene(new Scene(wifiTableView));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace(); //File not found
+        }
 
     }
 }

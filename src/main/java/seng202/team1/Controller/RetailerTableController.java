@@ -107,12 +107,12 @@ public class RetailerTableController {
     private boolean checkPrimary(RetailerLocation retailerLocation) {
         /**
          * checks the given retailerLocation against the filter in the primary function ComboBox.
-         * TODO change to primary function
+         *
          */
         if ("All".equals(filterPrimaryComboBox.getValue())) {
             return true;
         } else {
-            return retailerLocation.getSecondaryFunction().equals(filterPrimaryComboBox.getValue());
+            return retailerLocation.getPrimaryFunction().equals(filterPrimaryComboBox.getValue());
         }
     }
 
@@ -142,7 +142,7 @@ public class RetailerTableController {
          * Sets the filter options
          * TODO don't hard code
          */
-        filterPrimaryComboBox.getItems().addAll("All", "Candy & Chocolate", "Newsstands", "Nail Salon");
+        filterPrimaryComboBox.getItems().addAll("All", "Shopping", "Personal and Professional Services");
         filterPrimaryComboBox.getSelectionModel().selectFirst();
 
         filterZipComboBox.getItems().addAll("All", 10004, 10005, 10038, 10007);
@@ -172,7 +172,6 @@ public class RetailerTableController {
 
     }
 
-    //TODO move to own class
     private void importRetailerCsv(final String filename) {
         /**
          * Same as importBikeCsv but is needed as it was the only way to get the task
@@ -204,6 +203,7 @@ public class RetailerTableController {
 
                 setTableViewRetailer(loadRetailerCsv.getValue());
                 stopLoadingAni();
+                setPredicate();
             }
         });
 
@@ -222,8 +222,6 @@ public class RetailerTableController {
         progressSpinner.setVisible(false);
         loadLabel.setVisible(false);
 
-        //TODO move to more appropriate spot
-        setPredicate();
     }
 
     public void importRetailer() {
@@ -232,10 +230,6 @@ public class RetailerTableController {
         if (filename != null) {
             importRetailerCsv(filename);
         }
-    }
-
-    public void importDefaultRetailerCsv() {
-        importRetailerCsv("/home/cosc/student/jbe113/Documents/SENG202/project/Seng202group1/src/main/resources/csv/retailerlocation.csv");
     }
 
     private void setTableViewRetailer(ArrayList<RetailerLocation> data) {

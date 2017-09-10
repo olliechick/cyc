@@ -73,9 +73,11 @@ public class BikeTableController extends TableController{
          * https://stackoverflow.com/questions/33016064/javafx-multiple-textfields-should-filter-one-tableview
          */
         filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
-                        bikeTrip -> searchBikeId(bikeTrip),
+                        bikeTrip -> searchBikeId(bikeTrip) &&
+                                    checkGender(bikeTrip),
 
-                bikeSearchField.textProperty()
+                bikeSearchField.textProperty(),
+                filterGenderComboBox.valueProperty()
         ));
     }
 
@@ -88,6 +90,14 @@ public class BikeTableController extends TableController{
         }
     }
 
+    private boolean checkGender(BikeTrip bikeTrip) {
+        if (filterGenderComboBox.getValue().equals("All")) {
+            return true;
+        } else {
+            return ((char) filterGenderComboBox.getValue() == bikeTrip.getGender());
+        }
+    }
+
     protected void setName() {
         nameLabel.setText("Logged in as: " + model.getName());
         nameLabel.setVisible(true);
@@ -95,12 +105,17 @@ public class BikeTableController extends TableController{
 
     private void setFilters() {
         /**
-         * Sets the filter options
-         * TODO fix to be right
+         * Sets the filter options.
          */
 
-        filterGenderComboBox.getItems().addAll("All", "123");
+        filterGenderComboBox.getItems().addAll("All", 'm', 'f', 'u');
         filterGenderComboBox.getSelectionModel().selectFirst();
+
+        filterStartComboBox.getItems().addAll("Not yet implemented");
+        filterStartComboBox.getSelectionModel().selectFirst();;
+
+        filterEndComboBox.getItems().addAll("Not yet implemented");
+        filterEndComboBox.getSelectionModel().selectFirst();
 
     }
 
@@ -153,21 +168,24 @@ public class BikeTableController extends TableController{
     private void setTableViewBike(ArrayList<BikeTrip> data) {
         /**
          * Fairly similar to Retailer setup, but for a bike trip
-         * TODO finish
+         * TODO add more relevant columns
          */
 
         ObservableList<BikeTrip> dataPoints = FXCollections.observableArrayList(data);
 
         TableColumn bikeIdCol = new TableColumn("Bike ID");
+        TableColumn genderCol = new TableColumn("Gender");
         TableColumn durationCol = new TableColumn("Duration");
         TableColumn startLocCol = new TableColumn("Start Location");
         TableColumn endLocCol = new TableColumn("End Location");
         table.getColumns().clear();
 
         bikeIdCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Integer>("bikeID"));
+        genderCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Character>("gender"));
         durationCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, String>("tripDuration"));
         startLocCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("startPoint"));
         endLocCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("endPoint"));
+
 
         filteredData = new FilteredList<>(dataPoints, p -> true);
 
@@ -175,7 +193,9 @@ public class BikeTableController extends TableController{
         sortedData.comparatorProperty().bind(table.comparatorProperty());
 
         table.setItems(sortedData);
-        table.getColumns().addAll(bikeIdCol, durationCol, startLocCol, endLocCol);
+        table.getColumns().addAll(bikeIdCol, genderCol, durationCol, startLocCol, endLocCol);
+
+        setFilters();
     }
 
     protected void initModel(DummyModel dummyModel) {

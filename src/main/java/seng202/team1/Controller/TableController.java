@@ -54,7 +54,6 @@ public class TableController {
          * Opens a FileChooser popup, allowing the user to choose a file.
          * Only allows for opening of .csv files
          */
-
         String filename = null;
 
         FileChooser fileChooser = new FileChooser();

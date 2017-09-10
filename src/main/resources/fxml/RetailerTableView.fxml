@@ -67,9 +67,9 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Filter:" />
+            <Label text="Retailer Filters:" />
             <Label text="Primary Function:" GridPane.columnIndex="1" />
-            <Label text="Street" GridPane.columnIndex="3" />
+            <Label text="Address:" GridPane.columnIndex="3" />
             <Label text="ZIP:" GridPane.columnIndex="2" />
             <ComboBox fx:id="filterPrimaryComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <ComboBox fx:id="filterZipComboBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
