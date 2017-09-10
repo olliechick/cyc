@@ -53,16 +53,15 @@ public class LoginController {
 
         try {
             // Changes to the table GUI
-            FXMLLoader tableLoader = new FXMLLoader(getClass().getResource("/fxml/table.fxml"));
-            Parent tableView = tableLoader.load();
-            TableController tableController = tableLoader.getController();
+            FXMLLoader landingLoader = new FXMLLoader(getClass().getResource("/fxml/landingView.fxml"));
+            Parent landingView = landingLoader.load();
+            LandingController landingController = landingLoader.getController();
 
-            tableController.initModel(model);
-            tableController.setName();
+            landingController.initModel(model);
 
             Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Table can take over
 
-            stage.setScene(new Scene(tableView));
+            stage.setScene(new Scene(landingView));
             stage.show();
 
         } catch (IOException e) {
