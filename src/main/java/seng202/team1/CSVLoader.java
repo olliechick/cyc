@@ -22,17 +22,6 @@ import java.util.ArrayList;
  */
 public class CSVLoader {
 
-    /**
-    * Takes a file named filename, which should be a csv, and returns an Arraylist of type CSVRecord.
-    * This can be queried using the get(index) or get(columnName) [haven't figured out columnName though]
-    *
-    * @author Ollie Chick
-    * @author Josh Burt
-    * @param filename The filename of the file to get data from.
-    * @return CSVRecord
-    * @throws IOException If an IO error occurs.
-     *
-     */
 
     final static String DEFAULT_BIKE_TRIPS_FILENAME = "src/main/resources/csv/biketrip.csv";
     final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/wifipoint.csv";
@@ -42,6 +31,15 @@ public class CSVLoader {
     final static LocalDateTime EARLIEST_POSSIBLE_DATE = LocalDateTime.of(1900, Month.JANUARY, 1, 0, 0);
 
 
+    /**
+     * Takes a file named filename, which should be a csv, and returns an Arraylist of type CSVRecord.
+     * This can be queried using the get(index) or get(columnName) [haven't figured out columnName though]
+     *
+     * @param filename The filename of the file to get data from.
+     * @return CSVRecord
+     * @throws IOException If an IO error occurs.
+     *
+     */
     public static ArrayList<CSVRecord> loadCSV(String filename) throws IOException {
         File csvData = new File(filename);
         CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
@@ -55,7 +53,6 @@ public class CSVLoader {
      * Calls the load CSV method and populates an array list with a set of
      * BikeTrip objects from the default filename.
      * If the file does not exist, then the error message is printed.
-     * @author Ollie Chick
      * @return ArrayList<BikeTrip>
      */
     public static ArrayList<BikeTrip> populateBikeTrips() {
@@ -66,8 +63,6 @@ public class CSVLoader {
      * Calls the load CSV method and populates an ArrayList with a set of BikeTrip objects from a given filename.
      * If the filename does not exist, then the error message is printed.
      * @param filename name of the file the data is to be loaded from.
-     * @author Josh Burt
-     * @author Ollie Chick
      * @return ArrayList<BikeTrip>
      */
     public static ArrayList<BikeTrip> populateBikeTrips(String filename){ //
@@ -145,8 +140,6 @@ public class CSVLoader {
      * Calls the load CSV method and populates an ArrayList with a set of
      * WifiPoint objects from the default filename.
      * If the filename does not exist, then the error message is printed.
-     * @author Josh Burt
-     * @author Ollie Chick
      * @return ArrayList<WifiPoint>
      */
     public static ArrayList<WifiPoint> populateWifiHotspots() {
@@ -157,8 +150,6 @@ public class CSVLoader {
      * Calls the load CSV method and populates an ArrayList with a set of WifiPoint objects from a given filename.
      * If the filename does not exist, then the error message is printed.
      * @param filename name of the file the data is to be loaded from.
-     * @author Josh Burt
-     * @author Ollie Chick
      * @return ArrayList<WifiPoint>
      */
     public static ArrayList<WifiPoint> populateWifiHotspots(String filename){
@@ -209,7 +200,6 @@ public class CSVLoader {
     /**
      * Calls the load CSV method and populates an array list with a set of
      * RetailerLocation objects from the default filename.
-     * @author Ollie Chick
      * @return ArrayList<RetailerLocation>
      */
     public static ArrayList<RetailerLocation> populateRetailers() {
@@ -222,7 +212,6 @@ public class CSVLoader {
      * If there are columns (9 and 10) for coords, these are loaded,
      * otherwise they are set to null.
      * @param filename name of the file the data is to be loaded from.
-     * @author Ollie Chick
      * @return ArrayList<RetailerLocation>
      */
     public static ArrayList<RetailerLocation> populateRetailers(String filename){
@@ -271,11 +260,7 @@ public class CSVLoader {
         return retailers;
     }
 
-    /**
-    * Main class
-    * Just used for testing
-    * @author Ollie Chick
-     */
+    // Main class (for testing)
     /*public static void main(String[] args) {
         String filename = "wifiTester.csv";
         //populateBikeTrips(filename);
