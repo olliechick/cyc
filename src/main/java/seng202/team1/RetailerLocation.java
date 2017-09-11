@@ -39,7 +39,6 @@ public class RetailerLocation extends DataPoint {
     /**
     * Overloaded constructor without coords.
     * Coords are set to null.
-    * @author Ollie Chick
      */
     public RetailerLocation(String name, String addressLine1, String addressLine2, String city, String state,
                             int zipcode, String blockLot, String primaryFunction, String secondaryFunction) {
@@ -137,7 +136,6 @@ public class RetailerLocation extends DataPoint {
 
     /**
     * Returns the full address of the retailer.
-    * @author Ollie Chick
      * @return retailer's address
      */
     public String getAddress() {
@@ -156,7 +154,6 @@ public class RetailerLocation extends DataPoint {
 
     /**
      * Returns a description of the retailer.
-     * @author Ollie Chick
      * @return description of retailer
      */
     public String getDescription() {
