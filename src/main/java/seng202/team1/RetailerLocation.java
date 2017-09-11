@@ -36,10 +36,9 @@ public class RetailerLocation extends DataPoint {
         this.coords = coords;
     }
 
-    /*
+    /**
     * Overloaded constructor without coords.
     * Coords are set to null.
-    * @author Ollie Chick
      */
     public RetailerLocation(String name, String addressLine1, String addressLine2, String city, String state,
                             int zipcode, String blockLot, String primaryFunction, String secondaryFunction) {
@@ -135,9 +134,8 @@ public class RetailerLocation extends DataPoint {
         this.coords = coords;
     }
 
-    /*
+    /**
     * Returns the full address of the retailer.
-    * @author Ollie Chick
      */
     public String getAddress() {
 
@@ -147,7 +145,7 @@ public class RetailerLocation extends DataPoint {
         if (addressLine2.isEmpty()) {
             address = addressLine1 + ", " + city + ", " + state + " " + zipcode;
         } else {
-            address = addressLine1 + ", " + addressLine2 + ", " + city + ", " + state + " " + zipcode;
+            address = addressLine2 + ", " + addressLine1 + ", " + city + ", " + state + " " + zipcode;
         }
 
         return address;
