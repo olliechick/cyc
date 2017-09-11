@@ -2,26 +2,58 @@ package seng202.team1;
 
 import junit.framework.TestCase;
 
+import java.awt.Point;
+
 public class RetailerLocationTest extends TestCase {
 
-    public void testGetAddress(){
-        RetailerLocation retailerLocation = new RetailerLocation("Pearl " +
-                "Bodywork", "60 Pearl Street", "Floor 2", "New York",
-                "NY", 10004, "7-38", "Personal and Professional Services",
-                "Spa");
+    String name;
+    String addressLine1;
+    String addressLine2;
+    String city;
+    String state;
+    int zipcode;
+    String blockLot;
+    String primaryFunction;
+    String secondaryFunction;
+    Point.Float coords;
+    RetailerLocation retailerLocation;
+
+    public void setUp() throws Exception {
+        super.setUp();
+        name = "Pearl Bodywork";
+        addressLine1 = "60 Pearl Street";
+        addressLine2 = "Floor 2";
+        city = "New York";
+        state = "NY";
+        zipcode = 10004;
+        blockLot = "7-38";
+        primaryFunction = "Personal and Professional Services";
+        secondaryFunction = "Spa";
+        coords = new Point.Float((float) -74.011071, (float) 40.703417);
+        retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city, state,
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords);
+    }
+
+    public void testGetAddress() {
         String expectedAddress = "Floor 2, 60 Pearl Street, New York, NY 10004";
         assertEquals(expectedAddress, retailerLocation.getAddress());
     }
 
-    public void testGetAddressNoAddressLine2(){
-        RetailerLocation retailerLocation = new RetailerLocation("Candy Plus",
-                "16 Beaver Street", "", "New York",
-                "NY" , 10004, "11-7", "Shopping",
-                "Candy & Chocolate");
-        String expectedAddress = "16 Beaver Street, New York, NY 10004";
+    public void testGetAddressNoAddressLine2() {
+        addressLine2 = "";
+        RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2,
+                city, state, zipcode, blockLot, primaryFunction, secondaryFunction);
+        String expectedAddress = "60 Pearl Street, New York, NY 10004";
         assertEquals(expectedAddress, retailerLocation.getAddress());
     }
 
+    public void testCoordlessConstructor() {
+        assertEquals(null, retailerLocation.getCoords());
+    }
+
+    public void testGetDescription() {
+
+    }
 
 
 }

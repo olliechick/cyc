@@ -36,7 +36,7 @@ public class RetailerLocation extends DataPoint {
         this.coords = coords;
     }
 
-    /*
+    /**
     * Overloaded constructor without coords.
     * Coords are set to null.
     * @author Ollie Chick
@@ -135,9 +135,10 @@ public class RetailerLocation extends DataPoint {
         this.coords = coords;
     }
 
-    /*
+    /**
     * Returns the full address of the retailer.
     * @author Ollie Chick
+     * @return retailer's address
      */
     public String getAddress() {
 
@@ -151,6 +152,16 @@ public class RetailerLocation extends DataPoint {
         }
 
         return address;
+    }
+
+    /**
+     * Returns a description of the retailer.
+     * @author Ollie Chick
+     * @return description of retailer
+     */
+    public String getDescription() {
+
+        return "to code";
     }
 
     @Override

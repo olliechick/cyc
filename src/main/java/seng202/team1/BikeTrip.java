@@ -3,6 +3,7 @@ package seng202.team1;
 import java.awt.Point;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Bike Trip data class. This will likely change during development as we need to do more.
@@ -149,6 +150,77 @@ public class BikeTrip extends DataPoint {
 
     public void setBirthYear(int birthYear) {
         this.birthYear = birthYear;
+    }
+
+    /**
+     * Returns the duration of the trip, contextualised.
+     * Either in seconds, minutes, hours, or days (rounded down).
+     */
+    public String getDuration() {
+        String duration;
+        // first find the unit of time and how many units
+        String unit;
+        long unitCount;
+        if (tripDuration < 60) {
+            unit = "second";
+            unitCount = tripDuration;
+        } else if (tripDuration < 60*60) {
+            unit = "minute";
+            unitCount = tripDuration / 60;
+        } else if (tripDuration < 60*60*24) {
+            unit = "hour";
+            unitCount = tripDuration / (60*60);
+        } else {
+            unit = "day";
+            unitCount = tripDuration / (60 * 60 * 24);
+        }
+
+        duration = unitCount + " " + unit;
+
+        // then check if it's plural
+        if (unitCount != 1) {
+            duration += "s";
+        }
+
+        return duration;
+    }
+
+    /**
+     * Returns a description of the bike trip.
+     */
+    public String getDescription() {
+        String start = startTime.format(DateTimeFormatter.ofPattern("h:mm a d MMMM yyyy"))
+                .replace("AM", "am").replace("PM","pm");
+
+        // end: check if including the date (or year) is necessary
+        String end;
+        if (startTime.getYear() != stopTime.getYear()) {
+            // different years
+            end = stopTime.format(DateTimeFormatter.ofPattern("h:mm a d MMMM yyyy"));
+        } else if (startTime.getDayOfYear() != stopTime.getDayOfYear()) {
+            //different days
+            end = stopTime.format(DateTimeFormatter.ofPattern("h:mm a d MMMM"));
+        } else {
+            //same day
+            end = stopTime.format(DateTimeFormatter.ofPattern("h:mm a"));
+        }
+        end = end.replace("AM", "am").replace("PM","pm");
+
+        // Resolve genderDescription
+        String genderDescription;
+        if (gender == 'm') {
+            genderDescription = "male";
+        } else if (gender == 'f') {
+            genderDescription = "female";
+        } else {
+            genderDescription = "unknown gender";
+        }
+
+        // Put together description
+        String description =  String.format("Started at %s and ended %s later at %s. " +
+                        "ID %d, %s, born in %d.", start, getDuration(), end, bikeID, genderDescription,
+                birthYear);
+        return description;
     }
 
     @Override
