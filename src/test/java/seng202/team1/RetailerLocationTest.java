@@ -44,11 +44,13 @@ public class RetailerLocationTest extends TestCase {
         RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2,
                 city, state, zipcode, blockLot, primaryFunction, secondaryFunction);
         String expectedAddress = "60 Pearl Street, New York, NY 10004";
-        assertEquals(expectedAddress, retailerLocation.getAddress());
+        assertEquals(expectedAddress, retailerLocation1.getAddress());
     }
 
     public void testCoordlessConstructor() {
-        assertEquals(null, retailerLocation.getCoords());
+        RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2,
+                city, state, zipcode, blockLot, primaryFunction, secondaryFunction);
+        assertEquals(null, retailerLocation1.getCoords());
     }
 
     public void testGetDescription() {
