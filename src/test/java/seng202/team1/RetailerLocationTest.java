@@ -54,7 +54,9 @@ public class RetailerLocationTest extends TestCase {
     }
 
     public void testGetDescription() {
-
+        String expectedString = "Address: Floor 2, 60 Pearl Street, New York, NY 10004. Function: Personal and " +
+                "Professional Services (Spa).";
+        assertEquals(expectedString, retailerLocation.getDescription());
     }
 
 

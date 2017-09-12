@@ -158,7 +158,7 @@ public class RetailerLocation extends DataPoint {
      */
     public String getDescription() {
 
-        return "to code";
+        return String.format("Address: %s. Function: %s (%s).", getAddress(), primaryFunction, secondaryFunction);
     }
 
     @Override

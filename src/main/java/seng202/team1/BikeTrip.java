@@ -152,6 +152,7 @@ public class BikeTrip extends DataPoint {
         this.birthYear = birthYear;
     }
 
+
     /**
      * Returns the duration of the trip, contextualised.
      * Either in seconds, minutes, hours, or days (rounded down).
@@ -185,6 +186,26 @@ public class BikeTrip extends DataPoint {
         return duration;
     }
 
+
+    /**
+     * Returns the gender description (male, female, or unknown).
+     */
+    public String getGenderDescription() {
+
+        String genderDescription;
+
+        if (gender == 'm') {
+            genderDescription = "male";
+        } else if (gender == 'f') {
+            genderDescription = "female";
+        } else {
+            genderDescription = "unknown";
+        }
+
+        return genderDescription;
+    }
+
+
     /**
      * Returns a description of the bike trip.
      */
@@ -206,22 +227,13 @@ public class BikeTrip extends DataPoint {
         }
         end = end.replace("AM", "am").replace("PM","pm");
 
-        // Resolve genderDescription
-        String genderDescription;
-        if (gender == 'm') {
-            genderDescription = "male";
-        } else if (gender == 'f') {
-            genderDescription = "female";
-        } else {
-            genderDescription = "unknown gender";
-        }
-
         // Put together description
-        String description =  String.format("Started at %s and ended %s later at %s. " +
-                        "ID %d, %s, born in %d.", start, getDuration(), end, bikeID, genderDescription,
-                birthYear);
+        String description =  String.format("Started at %s and ended %s later at %s. ID %d, %s, born in %d.",
+                start, getDuration(), end, bikeID, getGenderDescription(), birthYear);
+
         return description;
     }
+
 
     @Override
     public String toString() {
