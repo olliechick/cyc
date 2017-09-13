@@ -1,5 +1,7 @@
 package seng202.team1;
 
+import java.awt.*;
+
 /**
  * Class for the retailer locations. Has a single constructor that sets the values for the points.
  * All methods are getters and setters.
@@ -12,13 +14,14 @@ public class RetailerLocation extends DataPoint {
     private String addressLine2;
     private String city;
     private String state;
-    private int zipcode;
+    private String zipcode;
     private String blockLot;
     private String primaryFunction;
     private String secondaryFunction;
+    private Point.Float coords;
 
     public RetailerLocation(String name, String addressLine1, String addressLine2, String city, String state,
-                            int zipcode, String blockLot, String primaryFunction, String secondaryFunction) {
+                            String zipcode, String blockLot, String primaryFunction, String secondaryFunction, Point.Float coords) {
         this.name = name;
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
@@ -28,6 +31,7 @@ public class RetailerLocation extends DataPoint {
         this.blockLot = blockLot;
         this.primaryFunction = primaryFunction;
         this.secondaryFunction = secondaryFunction;
+        this.coords = coords;
     }
 
     public String getName() {
@@ -70,11 +74,11 @@ public class RetailerLocation extends DataPoint {
         this.state = state;
     }
 
-    public int getZipcode() {
+    public String getZipcode() {
         return zipcode;
     }
 
-    public void setZipcode(int zipcode) {
+    public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
     }
 
@@ -102,6 +106,30 @@ public class RetailerLocation extends DataPoint {
         this.secondaryFunction = secondaryFunction;
     }
 
+    public Point.Float getCoords() {
+        return coords;
+    }
+
+    public void setCoords(Point.Float coords) {
+        this.coords = coords;
+    }
+
+    public float getLongitude() {
+        return coords.x;
+    }
+
+    public void setLongitude(float longitude) {
+        this.coords.x = longitude;
+    }
+
+    public float getLatitude() {
+        return coords.y;
+    }
+
+    public void setLatitude(float latitude) {
+        this.coords.y = latitude;
+    }
+
     @Override
     public String toString() {
         return "RetailerLocation{" +
@@ -115,5 +143,13 @@ public class RetailerLocation extends DataPoint {
                 ", primaryFunction='" + primaryFunction + '\'' +
                 ", secondaryFunction='" + secondaryFunction + '\'' +
                 '}';
+    }
+
+    public String toInfoString() {
+        return "Name: " + name + "\\n" +
+                "Type: " + primaryFunction + "\\n" +
+                "Subtype: " + secondaryFunction + "\\n";
+
+
     }
 }

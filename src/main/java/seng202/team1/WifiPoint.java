@@ -20,7 +20,7 @@ public class WifiPoint extends DataPoint {
     private String hood;         // neighbourhood
     private String borough;
     private String city;
-    private int zipcode;
+    private String zipcode;
     private String cost;         // e.g. Free, Limited Free
     private String provider;
     private String remarks;
@@ -29,7 +29,7 @@ public class WifiPoint extends DataPoint {
     private LocalDateTime datetimeActivated;
 
     public WifiPoint(int objectId, Point.Float coords, String name, String location, String locationType, String hood,
-                     String borough, String city, int zipcode, String cost, String provider, String remarks, String ssid,
+                     String borough, String city, String zipcode, String cost, String provider, String remarks, String ssid,
                      String sourceId, LocalDateTime datetimeActivated) {
         this.objectId = objectId;
         this.coords = coords;
@@ -128,11 +128,11 @@ public class WifiPoint extends DataPoint {
         this.city = city;
     }
 
-    public int getZipcode() {
+    public String getZipcode() {
         return zipcode;
     }
 
-    public void setZipcode(int zipcode) {
+    public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
     }
 
@@ -203,5 +203,14 @@ public class WifiPoint extends DataPoint {
                 ", sourceId='" + sourceId + '\'' +
                 ", datetimeActivated=" + datetimeActivated +
                 '}';
+    }
+
+    public String toInfoString() {
+        return "Name: " + name + "\\n" +
+                "Cost: " + cost + "\\n" +
+                "Provider: " + provider + "\\n" +
+                "SSID: " + ssid + "\\n" +
+                "Since: " + datetimeActivated;
+
     }
 }

@@ -132,7 +132,7 @@ public class CSVLoader {
                 String hood = record.get(20);
                 String borough = record.get(18);
                 String city = record.get(13);
-                int zipcode = Integer.parseInt(record.get(22));
+                String zipcode = record.get(22);
                 String cost = record.get(3);
                 String provider = record.get(4);
                 String remarks = record.get(12);
@@ -169,15 +169,16 @@ public class CSVLoader {
                 String addressLine2 = record.get(2);
                 String city = record.get(3);
                 String state = record.get(4);
-                int zipcode = Integer.parseInt(record.get(5));
+                String zipcode = record.get(5);
                 String blockLot = record.get(6);
                 String primaryFunction = record.get(7);
                 String secondaryFunction = record.get(8);
+                Point.Float coords = new Point.Float(Float.parseFloat(record.get(10)), Float.parseFloat(record.get(9)));;
                 if (secondaryFunction.length() > 2) {
                     secondaryFunction = secondaryFunction.substring(2);
                 }
                 retailers.add(new RetailerLocation(name, addressLine1, addressLine2, city,
-                        state, zipcode, blockLot, primaryFunction, secondaryFunction));
+                        state, zipcode, blockLot, primaryFunction, secondaryFunction, coords));
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());

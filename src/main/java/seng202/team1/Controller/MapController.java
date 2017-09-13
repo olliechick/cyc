@@ -4,10 +4,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import seng202.team1.RetailerLocation;
 import seng202.team1.WifiPoint;
 
 import java.util.ArrayList;
 
+import static seng202.team1.CSVLoader.populateRetailers;
 import static seng202.team1.CSVLoader.populateWifiHotspots;
 
 /**
@@ -48,13 +50,28 @@ public class MapController {
         webView.getEngine().executeScript(scriptStr);
 
     }
+    private void addRetailer(float lat, float lng, String title) {
+        String scriptStr = "document.addMarker({lat: " + lat + ", lng:  " + lng + "}, 'departmentstore.png', " + "'" + title + "')";
+        webView.getEngine().executeScript(scriptStr);
+
+    }
     @FXML
     private void loadAllWifi() {
         ArrayList<WifiPoint> wifiPoints =  populateWifiHotspots("src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv");
         WifiPoint point = null;
         for (int i = 0; i < wifiPoints.size(); i++) {
             point = wifiPoints.get(i);
-            addWifi(point.getLatitude(), point.getLongitude(), point.getCost());
+            addWifi(point.getLatitude(), point.getLongitude(), point.toInfoString());
+
+        }
+    }
+    @FXML
+    private void loadAllRetailers() {
+        ArrayList<RetailerLocation> retailerPoints =  populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
+        RetailerLocation point = null;
+        for (int i = 0; i < retailerPoints.size(); i++) {
+            point = retailerPoints.get(i);
+            addRetailer(point.getLatitude(), point.getLongitude(), point.toInfoString());
 
         }
     }

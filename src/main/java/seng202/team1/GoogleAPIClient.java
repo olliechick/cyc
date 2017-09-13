@@ -14,6 +14,10 @@ import com.google.maps.model.LatLng;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+
+import static seng202.team1.CSVLoader.populateRetailers;
+import static seng202.team1.CSVLoader.populateWifiHotspots;
 
 public class GoogleAPIClient {
 
@@ -30,6 +34,30 @@ public class GoogleAPIClient {
         latLng.setLocation(Double.parseDouble(gson.toJson(results[0].geometry.location.lat)), Double.parseDouble(gson.toJson(results[0].geometry.location.lng)));
         return latLng;
     }
+
+    public static void getRetailerGeocode() {
+        ArrayList<RetailerLocation> retailerPoints =  populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
+        RetailerLocation point = null;
+        String address;
+        for (int i = 665; i < retailerPoints.size(); i++) {
+
+            point = retailerPoints.get(i);
+            address = point.getAddressLine1() + point.getAddressLine2() + ", " + point.getCity() + ", " + point.getZipcode();
+            //System.out.println(address);
+            try {
+                Point.Double  latlng  = googleGeocode(address);
+                System.out.println(latlng.getX() + ", " + latlng.getY());
+            } catch (InterruptedException e) {
+                //e.printStackTrace();
+            } catch (ApiException e) {
+                //e.printStackTrace();
+            } catch (IOException e) {
+                //e.printStackTrace();
+            }
+
+        }
+    }
+
     // THIS IS A WORK IN PROGRESS
     public static void googleGetDirections(double latOrigin, double lngOrigin, double latDest, double lngDest) throws InterruptedException, ApiException, IOException {
         LatLng origin =  new LatLng(latOrigin, lngOrigin);
@@ -54,7 +82,7 @@ public class GoogleAPIClient {
        // googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
         //example
         //System.out.println(googleGeocode("1600 Amphitheatre Parkway Mountain View, CA 94043"));
-
+        getRetailerGeocode();
 
     }
 }

@@ -67,7 +67,7 @@ public class CSVLoaderTest extends TestCase {
                 new Point.Float((float) -73.74567356126445, (float) 40.6769527280),
                 "Laurelton", "134-26 225 STREET",
                 "Library", "Laurelton", "Queens",
-                "Laurelton", 11413, "Free", "QPL",
+                "Laurelton", "11413", "Free", "QPL",
                 "", "QBPL_WIRELESS", "",  null);
         assertEquals(modelWifiHotspot, wifiSpots.get(0));
 
@@ -78,8 +78,8 @@ public class CSVLoaderTest extends TestCase {
         ArrayList<RetailerLocation> retailers = populateRetailers(filename);
         RetailerLocation modelRetailer = new RetailerLocation("Candy Plus",
                 "16 Beaver Street", "", "New York",
-                "NY" , 10004, "11-7", "Shopping",
-                "Candy & Chocolate");
+                "NY" , "10004", "11-7", "Shopping",
+                "Candy & Chocolate", new Point.Float((float) -73.74567356126445, (float) 40.6769527280));
         assertEquals(modelRetailer, retailers.get(0));
     }
 

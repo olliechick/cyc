@@ -32,6 +32,7 @@
             <Button fx:id="ZoomInButton" mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" GridPane.columnIndex="3" />
             <Button fx:id="ZoomOutButton" mnemonicParsing="false" onAction="#zoomOut" text="Zoom Out" GridPane.columnIndex="3" GridPane.rowIndex="1" />
              <Button fx:id="WIFIButton" mnemonicParsing="false" onAction="#loadAllWifi" text="WIFI icon test" GridPane.columnIndex="2" />
+             <Button fx:id="RetailerButton" mnemonicParsing="false" onAction="#loadAllRetailers" text="retailer icon test" GridPane.columnIndex="1" />
          </children>
         </GridPane>
     </bottom>
