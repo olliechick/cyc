@@ -136,6 +136,7 @@ public class RetailerLocation extends DataPoint {
 
     /**
     * Returns the full address of the retailer.
+     * @return retailer's address
      */
     public String getAddress() {
 
@@ -149,6 +150,15 @@ public class RetailerLocation extends DataPoint {
         }
 
         return address;
+    }
+
+    /**
+     * Returns a description of the retailer.
+     * @return description of retailer
+     */
+    public String getDescription() {
+
+        return String.format("Address: %s. Function: %s (%s).", getAddress(), primaryFunction, secondaryFunction);
     }
 
     @Override

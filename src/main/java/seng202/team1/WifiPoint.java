@@ -2,6 +2,7 @@ package seng202.team1;
 
 import java.awt.Point;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /***
  * Class for type of Wifi Points. Has a single constructor which sets all the values of the point.
@@ -183,6 +184,19 @@ public class WifiPoint extends DataPoint {
     public void setDatetimeActivated(LocalDateTime datetimeActivated) {
         this.datetimeActivated = datetimeActivated;
     }
+
+
+    /**
+     * Returns a description of the WiFi point.
+     */
+    public String getDescription() {
+        String description =  String.format("ID %d. Location: $s - %s, %s, %s, %s %d (%f, %f). Cost: %s. " +
+                "Provider: %s. SSID: %s. SourceID: %s. Activated: %s.", objectId, locationType, location, hood, borough,
+                city, zipcode, getLatitude(), getLongitude(), cost, provider, ssid, sourceId,
+                datetimeActivated.format(DateTimeFormatter.ofPattern("h:mm:ss a d/M/yyyy")));
+        return description;
+    }
+
 
     @Override
     public String toString() {
