@@ -23,6 +23,7 @@ public class BikeTrip extends DataPoint {
     private int bikeID;
     private char gender; //u for unknown, m for male, f for female
     private int birthYear;
+    private String googleData;
 
     //default constructor
     public BikeTrip(long tripDuration, LocalDateTime startTime, LocalDateTime stopTime,
