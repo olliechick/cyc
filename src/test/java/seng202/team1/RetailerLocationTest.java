@@ -16,8 +16,9 @@ public class RetailerLocationTest extends TestCase {
     String primaryFunction;
     String secondaryFunction;
     Point.Float coords;
-    RetailerLocation retailerLocation;
     boolean isUserDefinedPoint;
+
+    RetailerLocation retailerLocation;
 
     public void setUp() throws Exception {
         super.setUp();
@@ -55,8 +56,8 @@ public class RetailerLocationTest extends TestCase {
     }
 
     public void testGetDescription() {
-        String expectedString = "Address: Floor 2, 60 Pearl Street, New York, NY 10004. Function: Personal and " +
-                "Professional Services (Spa).";
+        String expectedString = "Address: Floor 2, 60 Pearl Street, New York, NY 10004\nFunction: Personal and " +
+                "Professional Services (Spa)";
         assertEquals(expectedString, retailerLocation.getDescription());
     }
 

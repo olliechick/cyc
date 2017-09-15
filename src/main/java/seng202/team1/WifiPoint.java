@@ -76,6 +76,7 @@ public class WifiPoint extends DataPoint {
 
     public float getLatitude() {
         return coords.y;
+
     }
 
     public void setLatitude(float latitude) {

@@ -16,13 +16,14 @@ public class BikeTripTest extends TestCase {
     int bikeID;
     char gender;
     int birthYear;
-    BikeTrip bikeTrip;
     boolean isUserDefinedPoint;
+
+    BikeTrip bikeTrip;
 
 
     public void setUp() throws Exception {
         super.setUp();
-        startTime =  LocalDateTime.of(2015, Month.DECEMBER, 30,23, 50, 0);
+        startTime =  LocalDateTime.of(2015, Month.DECEMBER, 30, 23, 50, 0);
         stopTime = LocalDateTime.of(2015, Month.DECEMBER, 30, 23, 50, 10);
         duration = 10;
         startPoint = new Point.Float((float) 172.581153, (float) -43.522610);
