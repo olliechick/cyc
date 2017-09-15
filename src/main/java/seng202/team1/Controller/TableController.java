@@ -94,7 +94,7 @@ public class TableController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(data.getName());
         alert.setHeaderText(null);
-        alert.setContentText("random stuffdata.getDescription()");
+        alert.setContentText(data.getDescription());
 
         alert.showAndWait();
     }

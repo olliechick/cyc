@@ -17,7 +17,7 @@
             </plugin>
         </plugins>
     </build>
-    <name>SENG202Group1</name>
+    <placeName>SENG202Group1</placeName>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
