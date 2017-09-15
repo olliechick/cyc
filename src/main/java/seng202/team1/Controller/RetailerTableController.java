@@ -15,9 +15,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng202.team1.DataPoint;
 import seng202.team1.RetailerLocation;
+
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import static seng202.team1.CSVLoader.populateRetailers;
 
@@ -67,7 +67,7 @@ public class RetailerTableController {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     DataPoint rowData = row.getItem();
                     System.out.println(rowData);
-                    showDataPopup(table.getSelectionModel().getSelectedItem());
+                    showDataPopup((DataPoint) table.getSelectionModel().getSelectedItem());
                 }
             });
             return row ;
@@ -277,7 +277,7 @@ public class RetailerTableController {
         setFilters();
     }
 
-    private void showDataPopup(Object data) {
+    private void showDataPopup(DataPoint data) {
         /**
          * Opens a modal popup with the toString of the object
          * as the text.
@@ -286,9 +286,9 @@ public class RetailerTableController {
          */
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Detailed Information");
+        alert.setTitle(data.getName());
         alert.setHeaderText(null);
-        alert.setContentText(data.toString());
+        alert.setContentText(data.getDescription());
 
         alert.showAndWait();
     }

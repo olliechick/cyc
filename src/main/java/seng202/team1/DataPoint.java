@@ -17,4 +17,22 @@ public class DataPoint {
             return this.toString().equals(otherObject.toString());
         }
     }
+
+
+    /**
+     * Returns the name of the data point. This should be overridden.
+     * @return "Datapoint name"
+     */
+    public String getName() {
+        return "Datapoint name";
+    }
+
+
+    /**
+     * Returns a description of the data point. This should be overridden.
+     * @return "A datapoint."
+     */
+    public String getDescription() {
+        return "A datapoint.";
+    }
 }
