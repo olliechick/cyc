@@ -2,10 +2,8 @@ package seng202.team1;
 
 import org.junit.Test;
 
-import java.awt.Point;
+import java.awt.*;
 import java.time.LocalDateTime;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by och26 on 12/09/17.
@@ -27,6 +25,7 @@ public class WifiPointTest {
     String ssid;
     String sourceId;
     LocalDateTime datetimeActivated;
+    boolean isUserDefinedPoint;
 
 
     public void setUp() throws Exception {

@@ -56,7 +56,7 @@ public class CSVLoaderTest extends TestCase {
                 LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 18, 05),
                 new Point.Float((float) -73.99392888, (float) 40.76727216),
                 new Point.Float((float) -73.97648516, (float) 40.75992262),
-                22307, 'm', 1980);
+                22307, 'm', 1980, false);
         assertEquals(modelBikeTrip, trips.get(0));
     }
 
@@ -68,7 +68,7 @@ public class CSVLoaderTest extends TestCase {
                 "Laurelton", "134-26 225 STREET",
                 "Library", "Laurelton", "Queens",
                 "Laurelton", 11413, "Free", "QPL",
-                "", "QBPL_WIRELESS", "",  null);
+                "", "QBPL_WIRELESS", "",  null, false);
         assertEquals(modelWifiHotspot, wifiSpots.get(0));
 
     }
@@ -79,7 +79,7 @@ public class CSVLoaderTest extends TestCase {
         RetailerLocation modelRetailer = new RetailerLocation("Candy Plus",
                 "16 Beaver Street", "", "New York",
                 "NY" , 10004, "11-7", "Shopping",
-                "Candy & Chocolate");
+                "Candy & Chocolate", false);
         assertEquals(modelRetailer, retailers.get(0));
     }
 

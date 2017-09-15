@@ -125,7 +125,8 @@ public class CSVLoader {
                     } else {
                         birthYear = Integer.parseInt(birthYearString);
                     }
-                    trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint, endPoint, bikeID, gender, birthYear));
+                    trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint, endPoint, bikeID, gender,
+                            birthYear, false));
                 }
 
             }
@@ -187,7 +188,7 @@ public class CSVLoader {
                         datetimeActivated = null;
                     }
                     wifiSpots.add(new WifiPoint(objectId, coords, name, location, locationType, hood,
-                            borough, city, zipcode, cost, provider, remarks, ssid, sourceId, datetimeActivated));
+                            borough, city, zipcode, cost, provider, remarks, ssid, sourceId, datetimeActivated, false));
                 }
             }
         } catch (IOException e) {
@@ -251,7 +252,7 @@ public class CSVLoader {
                     }
                     retailers.add(new RetailerLocation(name, addressLine1, addressLine2, city,
                             state, zipcode, blockLot, primaryFunction,
-                            secondaryFunction, coords));
+                            secondaryFunction, coords, false));
                 }
             }
         } catch (IOException e) {

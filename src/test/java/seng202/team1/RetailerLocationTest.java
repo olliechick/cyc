@@ -17,6 +17,7 @@ public class RetailerLocationTest extends TestCase {
     String secondaryFunction;
     Point.Float coords;
     RetailerLocation retailerLocation;
+    boolean isUserDefinedPoint;
 
     public void setUp() throws Exception {
         super.setUp();
@@ -31,7 +32,7 @@ public class RetailerLocationTest extends TestCase {
         secondaryFunction = "Spa";
         coords = new Point.Float((float) -74.011071, (float) 40.703417);
         retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city, state,
-                zipcode, blockLot, primaryFunction, secondaryFunction, coords);
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
     }
 
     public void testGetAddress() {
@@ -42,14 +43,14 @@ public class RetailerLocationTest extends TestCase {
     public void testGetAddressNoAddressLine2() {
         addressLine2 = "";
         RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2,
-                city, state, zipcode, blockLot, primaryFunction, secondaryFunction);
+                city, state, zipcode, blockLot, primaryFunction, secondaryFunction, isUserDefinedPoint);
         String expectedAddress = "60 Pearl Street, New York, NY 10004";
         assertEquals(expectedAddress, retailerLocation1.getAddress());
     }
 
     public void testCoordlessConstructor() {
         RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2,
-                city, state, zipcode, blockLot, primaryFunction, secondaryFunction);
+                city, state, zipcode, blockLot, primaryFunction, secondaryFunction, isUserDefinedPoint);
         assertEquals(null, retailerLocation1.getCoords());
     }
 
