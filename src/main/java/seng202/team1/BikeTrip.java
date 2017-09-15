@@ -238,7 +238,7 @@ public class BikeTrip extends DataPoint {
         end = end.replace("AM", "am").replace("PM","pm");
 
         // Put together description
-        String description =  String.format("Started at %s and ended %s later at %s\nBike ID: %d\nCyclist: %s, born in %d.",
+        String description =  String.format("Started at %s and ended %s later at %s\nBike ID: %d\nCyclist: %s, born in %d",
                 start, getDuration(), end, bikeID, getGenderDescription(), birthYear); //TODO refine for when unknown gender/birthyear
 
         return description;
