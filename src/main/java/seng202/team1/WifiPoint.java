@@ -15,7 +15,7 @@ public class WifiPoint extends DataPoint {
 
     private int objectId;
     private Point.Float coords;
-    private String name;
+    private String placeName;
     private String location;     // not as helpful as it suggests, some are addresses some are not
     private String locationType;
     private String hood;         // neighbourhood
@@ -29,12 +29,12 @@ public class WifiPoint extends DataPoint {
     private String sourceId;
     private LocalDateTime datetimeActivated;
 
-    public WifiPoint(int objectId, Point.Float coords, String name, String location, String locationType, String hood,
+    public WifiPoint(int objectId, Point.Float coords, String placeName, String location, String locationType, String hood,
                      String borough, String city, int zipcode, String cost, String provider, String remarks, String ssid,
                      String sourceId, LocalDateTime datetimeActivated) {
         this.objectId = objectId;
         this.coords = coords;
-        this.name = name;
+        this.placeName = placeName;
         this.location = location;
         this.locationType = locationType;
         this.hood = hood;
@@ -81,12 +81,12 @@ public class WifiPoint extends DataPoint {
         this.coords.y = latitude;
     }
 
-    public String getName() {
-        return name;
+    public String getPlaceName() {
+        return placeName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
     }
 
     public String getLocation() {
@@ -186,12 +186,22 @@ public class WifiPoint extends DataPoint {
     }
 
 
+
+    /**
+     * Returns the name of the WiFi point (SSID chosen as this is what will appear on the user's device
+     * for them to connect to).
+     */
+    public String getName() {
+        return ssid;
+    }
+
+
     /**
      * Returns a description of the WiFi point.
      */
     public String getDescription() {
-        String description =  String.format("ID %d. Location: $s - %s, %s, %s, %s %d (%f, %f). Cost: %s. " +
-                "Provider: %s. SSID: %s. SourceID: %s. Activated: %s.", objectId, locationType, location, hood, borough,
+        String description =  String.format("ID %d\nLocation: %s (%s) - %s, %s, %s, %s %d (%f, %f)\nCost: %s\n" +
+                "Provider: %s\nSSID: %s\nSourceID: %s\nActivated: %s", objectId, location, locationType, placeName, hood, borough,
                 city, zipcode, getLatitude(), getLongitude(), cost, provider, ssid, sourceId,
                 datetimeActivated.format(DateTimeFormatter.ofPattern("h:mm:ss a d/M/yyyy")));
         return description;
@@ -203,7 +213,7 @@ public class WifiPoint extends DataPoint {
         return "WifiPoint{" +
                 "objectId=" + objectId +
                 ", coords=" + coords +
-                ", name='" + name + '\'' +
+                ", placeName='" + placeName + '\'' +
                 ", location='" + location + '\'' +
                 ", locationType='" + locationType + '\'' +
                 ", hood='" + hood + '\'' +

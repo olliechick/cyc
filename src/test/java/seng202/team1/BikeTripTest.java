@@ -44,7 +44,7 @@ public class BikeTripTest extends TestCase {
 
     public void testGetDescriptionSameDay() {
         String expectedString = "Started at 11:50 pm 30 December 2015 and ended 10 seconds later " +
-                "at 11:50 pm. ID 1, female, born in 2000.";
+                "at 11:50 pm\nBike ID: 1\nCyclist: female, born in 2000";
         assertEquals(expectedString, bikeTrip.getDescription());
     }
 
@@ -53,7 +53,7 @@ public class BikeTripTest extends TestCase {
         BikeTrip bikeTrip1 = new BikeTrip(startTime, stopTime.plusMinutes(20), startPoint,
                 endPoint, bikeID, gender, birthYear);
         String expectedString = "Started at 11:50 pm 30 December 2015 and ended 20 minutes later " +
-                "at 12:10 am 31 December. ID 1, female, born in 2000.";
+                "at 12:10 am 31 December\nBike ID: 1\nCyclist: female, born in 2000";
         assertEquals(expectedString, bikeTrip1.getDescription());
     }
 
@@ -62,7 +62,7 @@ public class BikeTripTest extends TestCase {
         BikeTrip bikeTrip1 = new BikeTrip(startTime, stopTime.plusDays(1).plusMinutes(20),
                 startPoint, endPoint, bikeID, gender, birthYear);
         String expectedString = "Started at 11:50 pm 30 December 2015 and ended 1 day later at " +
-                "12:10 am 1 January 2016. ID 1, female, born in 2000.";
+                "12:10 am 1 January 2016\nBike ID: 1\nCyclist: female, born in 2000";
         assertEquals(expectedString, bikeTrip1.getDescription());
     }
 

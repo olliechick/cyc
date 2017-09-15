@@ -42,7 +42,7 @@ public class TableController {
                 if (event.getClickCount() == 2) {
                     DataPoint rowData = row.getItem();
                     System.out.println(rowData);
-                    showDataPopup(table.getSelectionModel().getSelectedItem());
+                    showDataPopup((DataPoint) table.getSelectionModel().getSelectedItem());
                 }
             });
             return row ;
@@ -83,7 +83,7 @@ public class TableController {
         loadLabel.setVisible(false);
     }
 
-    private void showDataPopup(Object data) {
+    private void showDataPopup(DataPoint data) {
         /**
          * Opens a modal popup with the toString of the object
          * as the text.
@@ -92,9 +92,9 @@ public class TableController {
          */
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Detailed Information");
+        alert.setTitle(data.getName());
         alert.setHeaderText(null);
-        alert.setContentText(data.toString());
+        alert.setContentText(data.getDescription());
 
         alert.showAndWait();
     }
