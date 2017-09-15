@@ -31,7 +31,7 @@ public class WifiPoint extends DataPoint {
 
     public WifiPoint(int objectId, Point.Float coords, String placeName, String location, String locationType, String hood,
                      String borough, String city, int zipcode, String cost, String provider, String remarks, String ssid,
-                     String sourceId, LocalDateTime datetimeActivated) {
+                     String sourceId, LocalDateTime datetimeActivated, boolean isUserDefinedPoint) {
         this.objectId = objectId;
         this.coords = coords;
         this.placeName = placeName;
@@ -47,6 +47,7 @@ public class WifiPoint extends DataPoint {
         this.ssid = ssid;
         this.sourceId = sourceId;
         this.datetimeActivated = datetimeActivated;
+        this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
     public int getObjectId() {

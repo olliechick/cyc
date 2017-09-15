@@ -7,6 +7,16 @@ package seng202.team1;
  */
 public class DataPoint {
 
+    protected boolean isUserDefinedPoint;
+
+    public boolean isUserDefinedPoint() {
+        return isUserDefinedPoint;
+    }
+
+    public void setUserDefinedPoint(boolean userDefinedPoint) {
+        isUserDefinedPoint = userDefinedPoint;
+    }
+
     @Override
     public boolean equals(Object otherObject) {
         if (this == otherObject) {

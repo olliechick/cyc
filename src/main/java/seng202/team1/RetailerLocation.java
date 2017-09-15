@@ -20,10 +20,9 @@ public class RetailerLocation extends DataPoint {
     private String secondaryFunction;
     private Point.Float coords;
 
-    public RetailerLocation(String name, String addressLine1, String
-            addressLine2, String city, String state,  int zipcode, String
-            blockLot, String primaryFunction, String secondaryFunction, Point
-            .Float coords) {
+    public RetailerLocation(String name, String addressLine1, String addressLine2,
+                            String city, String state,  int zipcode, String blockLot, String primaryFunction,
+                            String secondaryFunction, Point.Float coords, boolean isUserDefinedPoint) {
         this.name = name;
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
@@ -34,14 +33,15 @@ public class RetailerLocation extends DataPoint {
         this.primaryFunction = primaryFunction;
         this.secondaryFunction = secondaryFunction;
         this.coords = coords;
+        this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
     /**
     * Overloaded constructor without coords.
-    * Coords are set to null.
      */
     public RetailerLocation(String name, String addressLine1, String addressLine2, String city, String state,
-                            int zipcode, String blockLot, String primaryFunction, String secondaryFunction) {
+                            int zipcode, String blockLot, String primaryFunction, String secondaryFunction,
+                            boolean isUserDefinedPoint) {
         this.name = name;
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
@@ -51,7 +51,7 @@ public class RetailerLocation extends DataPoint {
         this.blockLot = blockLot;
         this.primaryFunction = primaryFunction;
         this.secondaryFunction = secondaryFunction;
-        this.coords = null;
+        this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
     public String getName() {

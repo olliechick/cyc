@@ -27,7 +27,8 @@ public class BikeTrip extends DataPoint {
 
     //default constructor
     public BikeTrip(long tripDuration, LocalDateTime startTime, LocalDateTime stopTime,
-                    Point.Float startPoint, Point.Float endPoint, int bikeID, char gender, int birthYear) {
+                    Point.Float startPoint, Point.Float endPoint, int bikeID, char gender, int birthYear,
+                    boolean isUserDefinedPoint) {
         this.tripDuration = tripDuration;
         this.startTime = startTime;
         this.stopTime = stopTime;
@@ -36,11 +37,12 @@ public class BikeTrip extends DataPoint {
         this.bikeID = bikeID;
         this.gender = gender;
         this.birthYear = birthYear;
+        this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
     //constructor that calculates tripDuration
     public BikeTrip(LocalDateTime startTime, LocalDateTime stopTime, Point.Float startPoint,
-                    Point.Float endPoint, int bikeID, char gender, int birthYear) {
+                    Point.Float endPoint, int bikeID, char gender, int birthYear, boolean isUserDefinedPoint) {
         this.tripDuration = Duration.between(startTime, stopTime).getSeconds();
         this.startTime = startTime;
         this.stopTime = stopTime;
@@ -49,6 +51,7 @@ public class BikeTrip extends DataPoint {
         this.bikeID = bikeID;
         this.gender = gender;
         this.birthYear = birthYear;
+        this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
     public long getTripDuration() {
@@ -153,6 +156,13 @@ public class BikeTrip extends DataPoint {
         this.birthYear = birthYear;
     }
 
+    public String getGoogleData() {
+        return googleData;
+    }
+
+    public void setGoogleData(String googleData) {
+        this.googleData = googleData;
+    }
 
     /**
      * Returns the duration of the trip, contextualised.
