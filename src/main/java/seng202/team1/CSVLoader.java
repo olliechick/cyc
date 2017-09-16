@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 /**
@@ -65,9 +66,16 @@ public class CSVLoader {
         try {
             ArrayList<CSVRecord> tripData = loadCSV(filename);
             for (CSVRecord record : tripData){
-                long tripDuration = new Long(record.get(0));
-                LocalDateTime startTime = LocalDateTime.parse(record.get(1), DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss"));
-                LocalDateTime stopTime = LocalDateTime.parse(record.get(2), DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss"));
+                long tripDuration = new Long(record.get(0).trim());
+                LocalDateTime startTime;
+                LocalDateTime stopTime;
+                try {
+                    startTime = LocalDateTime.parse(record.get(1), DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss"));
+                    stopTime = LocalDateTime.parse(record.get(2), DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss"));
+                } catch (DateTimeParseException e) { // catches the few differant date time formats present in the CSV files
+                    startTime = LocalDateTime.parse(record.get(1), DateTimeFormatter.ofPattern("yyyy-M-dd HH:mm:ss"));
+                    stopTime = LocalDateTime.parse(record.get(2), DateTimeFormatter.ofPattern("yyyy-M-dd HH:mm:ss"));
+                }
                 Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(5)), Float.parseFloat(record.get(6)));
                 Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(9)), Float.parseFloat(record.get(10)));
                 int bikeID = Integer.parseInt(record.get(11));
@@ -80,6 +88,7 @@ public class CSVLoader {
                     gender = 'u';
                 }
                 int birthyear = Integer.parseInt(record.get(13));
+
 
                 trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint, endPoint, bikeID, gender, birthyear));
 

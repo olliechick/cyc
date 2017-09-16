@@ -8,6 +8,9 @@ import javax.xml.transform.dom.DOMLocator;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -16,7 +19,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public final class DataAnaliser {
     private static final int RADIUS_OF_EARTH = 6371000; //Mean value for the average of earth in m
-    private  static final double BASEDELTA = 0.00001;// this is roughly a meter. Very hard to get an accurate answer as the earth isn't a sphere
     /**
      * Calaculates the distance, as the crow flies between two points on a bike trip.
      * If the same bike trip is passed in twice the length of the bike trip is calculated
@@ -30,17 +32,18 @@ public final class DataAnaliser {
         double endingLong;
         Point.Float startPoint = b1.getStartPoint();
         Point.Float endPoint;
-        double startingLat =  Math.toRadians(startPoint.getX());
-        double startingLong = Math.toRadians(startPoint.getY());
+        double startingLat =  startPoint.getX();
+        double startingLong = startPoint.getY();
+
 
         if(b1 == b2){
             endPoint = b2.getEndPoint();
-            endingLat = Math.toRadians(endPoint.getX());
-            endingLong = Math.toRadians(endPoint.getY());
+            endingLat = endPoint.getX();
+            endingLong = endPoint.getY();
         } else { // If the two biketrips are the same the distance is from the starting points
            endPoint = b2.getStartPoint();
-           endingLong = Math.toRadians(endPoint.getX());
-           endingLat = Math.toRadians(endPoint.getY());
+           endingLong = endPoint.getY();
+           endingLat = endPoint.getX();
         }
         //the below line uses the formula of haversines to find distances using lat and long.
         double distance = calculateDistance(startingLat,startingLong,endingLat,endingLong);
@@ -57,17 +60,14 @@ public final class DataAnaliser {
      */
     public static ArrayList<BikeTrip> searchBikeTrips(double searchLat, double searchLong, double delta){
         ArrayList<BikeTrip> trips = CSVLoader.populateBikeTrips("bikeTripTestData.csv"); // only for dev purposes needs to be changed to a database call
-        trips.remove(0); // removes the heading information from index 0
         ArrayList<BikeTrip> results = new ArrayList<BikeTrip>();
-        double deltaDecimals = BASEDELTA * delta; //This is the range we will search for in the dataset
         for (BikeTrip trip : trips) { //unfortunalty an 0(n) with the current data set. Perhaps we need to sort based on Lat and long to decrease time complexity
             Point.Float tripPoint = trip.getStartPoint();
-            double tripLong = tripPoint.getX();
-            double tripLat = tripPoint.getY();
-            if ((tripLong >= (searchLong - deltaDecimals)) && (tripLong <= (searchLong + deltaDecimals))){ //can safely assume all given longitudes in decimal form will be negative
-                if ((tripLat >= (searchLat - deltaDecimals)) && (tripLat <= (searchLat + deltaDecimals))){ //nasty double if loop to improve readbility
-                    results.add(trip);
-                }
+            double tripLong = tripPoint.getY();
+            double tripLat = tripPoint.getX();
+            if (calculateDistance(searchLat,searchLong,tripLat,tripLong) < delta + 10) {
+                results.add(trip);
+
             }
 
         }
@@ -85,17 +85,15 @@ public final class DataAnaliser {
     public static ArrayList<WifiPoint> searchWifiPoints(double searchLat, double searchLong, double delta) {
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         ArrayList<WifiPoint> results = new ArrayList<WifiPoint>();
-        double deltaDecimals = BASEDELTA * delta; //This is the range we will search for in the dataset
         for (WifiPoint hotspot : hotspots) { //unfortunalty an 0(n) with the current data set. Perhaps we need to sort based on Lat and long to decrease time complexity
             double spotLong = Double.parseDouble(hotspot.getLongitude());
             double spotLat = Double.parseDouble(hotspot.getLatitude());
-            if ((spotLong >= (searchLong - deltaDecimals)) && (spotLong <= (searchLong + deltaDecimals))){ //can safely assume all given longitudes in decimal form will be negative
-                if ((spotLat >= (searchLat - deltaDecimals)) && (spotLat <= (searchLat + deltaDecimals))){ //nasty double if loop to improve readbility
+            if (calculateDistance(searchLat,searchLong,spotLat,spotLong) < delta){
                     results.add(hotspot);
                 }
             }
 
-        }
+
         return results;
 
     }
@@ -218,11 +216,32 @@ public final class DataAnaliser {
      * @return
      */
     public static double calculateDistance(double startLat, double startLong, double endLat, double endLong){
-
+        startLat = Math.toRadians(startLat);
+        startLong = Math.toRadians(startLong);
+        endLat = Math.toRadians(endLat);
+        endLong = Math.toRadians(endLong);
         //the below line uses the formula of haversines to find distances using lat and long.
         double distance = 2* RADIUS_OF_EARTH * Math.asin(Math.sqrt(haversine((endLat-startLat))+Math.cos(startLat)*Math.cos(endLat)*haversine(endLong-startLong)));
         return distance;
     }
+
+
+    /**
+     * Takes a list of Biketrips and sorts it in place based on trip distance
+     * Uses the default java sort and a comparator on the tripDistance
+     * @param toSort
+     */
+    public static void sortTripsByDistance(ArrayList<
+            BikeTrip> toSort){
+        Collections.sort(toSort, new Comparator<BikeTrip>() {
+            @Override
+            public int compare(BikeTrip o1, BikeTrip o2) {
+                return o1.getTripDistance().compareTo(o2.getTripDistance());
+            }
+        });
+
+    }
+
 
     /**
      * Takes an angle in radian and returns the haversine function of it.

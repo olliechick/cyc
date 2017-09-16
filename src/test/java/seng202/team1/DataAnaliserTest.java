@@ -5,6 +5,8 @@ package seng202.team1;
 import org.junit.Test;
 import seng202.team1.DataAnalysis.DataAnaliser;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -12,7 +14,7 @@ import static org.junit.Assert.*;
  * Unit test for simple App.
  */
 public class DataAnaliserTest{
-/* I think an import method is broken somewhere will fix on a branch rather than master
+
 
     @Test
     public void TestDistanceBikeTripsDifferant(){
@@ -20,8 +22,7 @@ public class DataAnaliserTest{
         BikeTrip trip1 = testData.get(1);
         BikeTrip trip2 = testData.get(2);
         double distance = DataAnaliser.calculateDistOfBikeTrips(trip1,trip2);
-        System.out.println(distance);
-        assertEquals(distance,608.0 , 10.0);
+        assertEquals(1190, distance , 10.0);
 
     }
 
@@ -31,8 +32,7 @@ public class DataAnaliserTest{
         BikeTrip trip1 = testData.get(1);
         BikeTrip trip2 = testData.get(1);
         double distance = DataAnaliser.calculateDistOfBikeTrips(trip1,trip2);
-        System.out.println(distance);
-        assertEquals(distance,981 , 10.0);
+        assertEquals(922, distance , 10.0);
 
     }
 
@@ -41,11 +41,29 @@ public class DataAnaliserTest{
         ArrayList<BikeTrip> results = DataAnaliser.searchBikeTrips(40.732,-73.9925,600); // should be in the middle of the test data
         assertEquals(2, results.size());
     }
-*/
+
     @Test
     public void TestSearchWifiPoints(){ //Needs better data to be checked with #TODO
-        ArrayList<WifiPoint> results = DataAnaliser.searchWifiPoints(40.755, -73.985,500);
-        assertEquals(2, results.size());
+        ArrayList<WifiPoint> results = DataAnaliser.searchWifiPoints(40.755, -73.985,600);
+        assertEquals(3, results.size());
+    }
+
+    @Test
+    public void TestCalculateDistance(){
+        double distance = DataAnaliser.calculateDistance(40.767, -73.933,40.77,-73.94);
+        assertEquals(680, distance, 3);
+    }
+
+    @Test
+    public void TestSortTripsByDistance() {
+        ArrayList<BikeTrip> testData = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
+        ArrayList<BikeTrip> oldData = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
+        Collections.shuffle(testData, new Random(2132154541));
+        Collections.shuffle(oldData, new Random(2132154541));
+        DataAnaliser.sortTripsByDistance(testData);// sorts in place
+        assertEquals(testData.get(0), oldData.get(2));
+        assertEquals(testData.get(1), oldData.get(0));
+        assertEquals(testData.get(2), oldData.get(1));
     }
 /*
     @Test
