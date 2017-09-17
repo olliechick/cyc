@@ -4,7 +4,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import java.awt.Point;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Class that will pull in our CSV files and then call the appropriate constructor.
@@ -95,6 +96,7 @@ public class CSVLoader {
      */
     public static ArrayList<BikeTrip> populateBikeTrips(String filename){ //
         ArrayList<BikeTrip> trips = new ArrayList<BikeTrip>();
+        HashSet<Character> genders = new HashSet<Character>();
         try {
             ArrayList<CSVRecord> tripData = loadCSV(filename);
             for (CSVRecord record : tripData){
@@ -140,10 +142,13 @@ public class CSVLoader {
                     char gender;
                     if (record.get(14).equals("1")) {
                         gender = 'm';
+                        genders.add('m');
                     } else if (record.get(14).equals("2")) {
                         gender = 'f';
+                        genders.add('f');
                     } else {
                         gender = 'u';
+                        genders.add('u');
                     }
                     String birthYearString = record.get(13);
                     int birthYear;
@@ -161,6 +166,7 @@ public class CSVLoader {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        //TODO do something with genders
         return trips;
     }
 
