@@ -2,6 +2,7 @@ package seng202.team1.DataAnalysis;
 
 import com.sun.org.apache.bcel.internal.generic.BIPUSH;
 import javafx.beans.property.DoubleProperty;
+import javafx.concurrent.WorkerStateEvent;
 import seng202.team1.*;
 
 import javax.xml.transform.dom.DOMLocator;
@@ -58,8 +59,7 @@ public final class DataAnaliser {
      * @param delta
      * @return
      */
-    public static ArrayList<BikeTrip> searchBikeTrips(double searchLat, double searchLong, double delta){
-        ArrayList<BikeTrip> trips = CSVLoader.populateBikeTrips("bikeTripTestData.csv"); // only for dev purposes needs to be changed to a database call
+    public static ArrayList<BikeTrip> searchBikeTrips(double searchLat, double searchLong, double delta, ArrayList<BikeTrip> trips){
         ArrayList<BikeTrip> results = new ArrayList<BikeTrip>();
         for (BikeTrip trip : trips) { //unfortunalty an 0(n) with the current data set. Perhaps we need to sort based on Lat and long to decrease time complexity
             Point.Float tripPoint = trip.getStartPoint();
@@ -80,10 +80,10 @@ public final class DataAnaliser {
      * @param searchLat
      * @param searchLong
      * @param delta
+     * @param hotspots
      * @return
      */
-    public static ArrayList<WifiPoint> searchWifiPoints(double searchLat, double searchLong, double delta) {
-        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
+    public static ArrayList<WifiPoint> searchWifiPoints(double searchLat, double searchLong, double delta, ArrayList<WifiPoint> hotspots) {
         ArrayList<WifiPoint> results = new ArrayList<WifiPoint>();
         for (WifiPoint hotspot : hotspots) { //unfortunalty an 0(n) with the current data set. Perhaps we need to sort based on Lat and long to decrease time complexity
             double spotLong = Double.parseDouble(hotspot.getLongitude());
@@ -121,15 +121,15 @@ public final class DataAnaliser {
      * @param trip
      * @return
      */
-    public static WifiPoint findClosestWifiToBikeRouteStart(BikeTrip trip) {
-        double tripLong = trip.getStartPoint().getX();
-        double tripLat = trip.getStartPoint().getY();
+    public static WifiPoint findClosestWifiToBikeRouteStart(BikeTrip trip, ArrayList<WifiPoint> hotspots) {
+        double tripLat = trip.getStartPoint().getX();
+        double tripLong = trip.getStartPoint().getY();
         double searchDistance = 100;
-        ArrayList<WifiPoint> closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance);
+        ArrayList<WifiPoint> closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance, hotspots);
         ;
         while (closeHotspots.size() == 0 && searchDistance <= 1000) {
             searchDistance += 100; //add 100m to the search distance until at least one point is found or search extends further than 1000m
-            closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance); //finds all WifiPoints within given distance of given coords
+            closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance, hotspots); //finds all WifiPoints within given distance of given coords
         }
         WifiPoint closestPoint = null;
         if (closeHotspots.size() > 0) { //only searchList if at least one point is found
@@ -151,15 +151,15 @@ public final class DataAnaliser {
      * @param trip
      * @return
      */
-    public static WifiPoint findClosestWifiToBikeRouteEnd(BikeTrip trip) {
-        double tripLong = trip.getEndPoint().getX();
-        double tripLat = trip.getEndPoint().getY();
+    public static WifiPoint findClosestWifiToBikeRouteEnd(BikeTrip trip, ArrayList<WifiPoint> hotspots) {
+        double tripLat = trip.getEndPoint().getX();
+        double tripLong = trip.getEndPoint().getY();
         double searchDistance = 100;
-        ArrayList<WifiPoint> closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance);
+        ArrayList<WifiPoint> closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance, hotspots);
         ;
         while (closeHotspots.size() == 0 && searchDistance <= 1000) {
             searchDistance += 100; //add 100m to the search distance until at least one point is found or search extends further than 1000m
-            closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance); //finds all WifiPoints within given distance of given coords
+            closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance, hotspots); //finds all WifiPoints within given distance of given coords
         }
         WifiPoint closestPoint = null;
         if (closeHotspots.size() > 0) { //only searchList if at least one point is found
@@ -183,11 +183,11 @@ public final class DataAnaliser {
      * @param trip
      * @return
      */
-    public static WifiPoint findClosestWifiPointToTrip(BikeTrip trip){
-        double tripLong = trip.getEndPoint().getX();
-        double tripLat = trip.getEndPoint().getY();
-        WifiPoint closestToStart = findClosestWifiToBikeRouteStart(trip);
-        WifiPoint closestToEnd = findClosestWifiToBikeRouteEnd(trip);
+    public static WifiPoint findClosestWifiPointToTrip(BikeTrip trip, ArrayList<WifiPoint> hotspots){
+        double tripLat = trip.getEndPoint().getX();
+        double tripLong = trip.getEndPoint().getY();
+        WifiPoint closestToStart = findClosestWifiToBikeRouteStart(trip, hotspots);
+        WifiPoint closestToEnd = findClosestWifiToBikeRouteEnd(trip, hotspots);
         if (closestToEnd == null) {
             return closestToStart;
         }
@@ -231,8 +231,7 @@ public final class DataAnaliser {
      * Uses the default java sort and a comparator on the tripDistance
      * @param toSort
      */
-    public static void sortTripsByDistance(ArrayList<
-            BikeTrip> toSort){
+    public static void sortTripsByDistance(ArrayList<BikeTrip> toSort){
         Collections.sort(toSort, new Comparator<BikeTrip>() {
             @Override
             public int compare(BikeTrip o1, BikeTrip o2) {
@@ -267,6 +266,57 @@ public final class DataAnaliser {
         return primaryFunctions;
     }
 
+    /**
+     * Takes a list of retailers and returns their secondary Functions.
+     * Speed can be improved by passing it a list consisting of only the same primary function
+     * Be aware this function is O(nm) so if too many secondary functions are found it will blow out time wise
+     * @param retailers
+     * @return
+     */
+    public static ArrayList<String> generateSecondaryFunctionsList(ArrayList<RetailerLocation> retailers){
+        ArrayList<String> secondaryFunctions = new ArrayList<String>();
+        for (RetailerLocation retailer : retailers){
+            boolean found = false;
+            for (String function :secondaryFunctions) {
+                if (function.equalsIgnoreCase(retailer.getSecondaryFunction())){
+                    found = true;
+                    break;
+                }
+
+            }
+            if (!found){
+                secondaryFunctions.add(retailer.getSecondaryFunction());
+            }
+        }
+        return secondaryFunctions;
+    }
+
+    /**
+     * Takes a list of retailers and the function name to sort them by and returns list that contains only retailers of the same function
+     * the isPrimary flag allows the function to be used either for the primary or secondary function to be selected
+     * with true meaning primary and false being secondary.
+     * @param retailers
+     * @param function
+     * @param isPrimary
+     * @return
+     */
+    public static ArrayList<RetailerLocation> generateListOfSameFunction(ArrayList<RetailerLocation> retailers, String function, boolean isPrimary){
+        ArrayList<RetailerLocation> sameFunction = new ArrayList<RetailerLocation>();
+        if(isPrimary){
+            for (RetailerLocation retailer : retailers){
+                if (retailer.getPrimaryFunction().equalsIgnoreCase(function)){
+                    sameFunction.add(retailer);
+                }
+            }
+        } else {
+            for (RetailerLocation retailer : retailers){
+                if (retailer.getSecondaryFunction().equalsIgnoreCase(function)){
+                    sameFunction.add(retailer);
+                }
+            }
+        }
+        return sameFunction;
+    }
 
     /**
      * Takes an angle in radian and returns the haversine function of it.

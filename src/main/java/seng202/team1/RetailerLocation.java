@@ -49,7 +49,11 @@ public class RetailerLocation extends DataPoint {
     }
 
     public void setPrimaryFunction(String primaryFunction) {
-        this.primaryFunction = primaryFunction;
+        if (primaryFunction.equalsIgnoreCase("")){
+            this.primaryFunction = "Other";
+        } else{
+            this.primaryFunction = primaryFunction;
+        }
     }
 
     public String getSecondaryFunction() {
@@ -57,7 +61,11 @@ public class RetailerLocation extends DataPoint {
     }
 
     public void setSecondaryFunction(String secondaryFunction) {
-        this.secondaryFunction = secondaryFunction;
+        if (secondaryFunction.equalsIgnoreCase("")){
+            this.secondaryFunction = "Other";
+        } else {
+            this.secondaryFunction = secondaryFunction;
+        }
     }
 
 
