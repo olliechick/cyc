@@ -53,6 +53,7 @@ public class RetailerTableController {
     private DummyModel model;
     private Stage stage;
 
+    private ObservableList<RetailerLocation> dataPoints;
     private FilteredList<RetailerLocation> filteredData;
 
     public void initialize() {
@@ -237,7 +238,7 @@ public class RetailerTableController {
          * Pretty much straight from http://docs.oracle.com/javafx/2/ui_controls/table-view.htm
          */
 
-        ObservableList<RetailerLocation> dataPoints = FXCollections.observableArrayList(data);
+        dataPoints = FXCollections.observableArrayList(data);
 
         // Create the columns
         TableColumn nameCol = new TableColumn("Name");
@@ -275,6 +276,10 @@ public class RetailerTableController {
 
         // Initialise the values in the filter combo boxes now that we have data to work with
         setFilters();
+    }
+
+    public void addPoint() {
+
     }
 
     private void showDataPopup(DataPoint data) {

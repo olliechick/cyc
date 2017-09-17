@@ -9,6 +9,8 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -16,9 +18,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.BikeTrip;
 import seng202.team1.DataPoint;
-import seng202.team1.RetailerLocation;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static seng202.team1.CSVLoader.populateBikeTrips;
@@ -53,6 +55,7 @@ public class BikeTableController extends TableController{
     private DummyModel model;
     private Stage stage;
 
+    private ObservableList<BikeTrip> dataPoints;
     private FilteredList<BikeTrip> filteredData;
 
     public void initialize() {
@@ -165,13 +168,32 @@ public class BikeTableController extends TableController{
         }
     }
 
+    public void addBikeTrip() {
+
+        try {
+            FXMLLoader addBikeLoader = new FXMLLoader(getClass().getResource("/fxml/AddBikeDialog.fxml"));
+            Parent root = addBikeLoader.load();
+            AddBikeDialogController addBikeDialog = addBikeLoader.getController();
+            Stage stage1 = new Stage();
+
+            addBikeDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+
+            BikeTrip test = addBikeDialog.getBikeTrip();
+            dataPoints.add(addBikeDialog.getBikeTrip());
+            System.out.println(test);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setTableViewBike(ArrayList<BikeTrip> data) {
         /**
          * Fairly similar to Retailer setup, but for a bike trip
          * TODO add more relevant columns
          */
 
-        ObservableList<BikeTrip> dataPoints = FXCollections.observableArrayList(data);
+        dataPoints = FXCollections.observableArrayList(data);
 
         TableColumn bikeIdCol = new TableColumn("Bike ID");
         TableColumn genderCol = new TableColumn("Gender");
