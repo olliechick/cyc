@@ -242,6 +242,31 @@ public final class DataAnaliser {
 
     }
 
+    /**
+     * Takes a list of retailers and returns all the unique primary functions.
+     * returns an empty list if no primary functions are found.
+     * Be aware this function is O(nm) so if too many primary functions are found it will blow out time wise
+     * @param retailers
+     * @return
+     */
+    public static ArrayList<String> generatePrimaryFunctionsList(ArrayList<RetailerLocation> retailers){
+        ArrayList<String> primaryFunctions = new ArrayList<String>();
+        for (RetailerLocation retailer : retailers){
+            boolean found = false;
+            for (String function :primaryFunctions) {
+                if (function.equalsIgnoreCase(retailer.getPrimaryFunction())){
+                    found = true;
+                    break;
+                }
+
+            }
+            if (!found){
+                primaryFunctions.add(retailer.getPrimaryFunction());
+            }
+        }
+        return primaryFunctions;
+    }
+
 
     /**
      * Takes an angle in radian and returns the haversine function of it.

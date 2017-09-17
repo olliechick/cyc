@@ -15,8 +15,16 @@ public class RetailerLocation extends DataPoint {
     public RetailerLocation(String name, String address, String primaryFunction, String secondaryFunction) {
         this.name = name;
         this.address = address;
-        this.primaryFunction = primaryFunction;
-        this.secondaryFunction = secondaryFunction;
+        if (primaryFunction.equalsIgnoreCase("")){
+            this.primaryFunction = "Other";
+        } else{
+            this.primaryFunction = primaryFunction;
+        }
+        if (secondaryFunction.equalsIgnoreCase("")){
+            this.secondaryFunction = "Other";
+        } else {
+            this.secondaryFunction = secondaryFunction;
+        }
     }
 
 

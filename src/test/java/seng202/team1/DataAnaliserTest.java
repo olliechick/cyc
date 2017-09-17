@@ -65,6 +65,20 @@ public class DataAnaliserTest{
         assertEquals(testData.get(1), oldData.get(0));
         assertEquals(testData.get(2), oldData.get(1));
     }
+
+    @Test
+    public void TestPrimaryFunctions(){
+        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("ret.csv");
+        ArrayList<String> primaryFunctions = DataAnaliser.generatePrimaryFunctionsList(retailers);
+        assertEquals(3,primaryFunctions.size());
+    }
+    @Test
+    public void TestPrimaryFunctionsLargeList(){
+        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("Lower_Manhattan_Retailers.csv");
+        ArrayList<String> primaryFunctions = DataAnaliser.generatePrimaryFunctionsList(retailers);
+        assertEquals(9,primaryFunctions.size());
+    }
+/*
 /*
     @Test
     public void TestFindClosestWifiPointToStartPointExists(){

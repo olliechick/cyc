@@ -103,7 +103,6 @@ public class CSVLoader {
     /**
      * Calls the load CSV method and populates an array list with a set of WifiPoint objects
      * @param filename name of the file the data is to be loaded from.
-     * @author Josh Burt
      * @return ArrayList<DataPoint>
      */
     public static ArrayList<WifiPoint> populateWifiHotspots(String filename){
