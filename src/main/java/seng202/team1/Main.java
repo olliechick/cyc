@@ -28,7 +28,7 @@ public class Main extends Application {
      * @author Josh Bernasconi
      * @author Cameron Auld
      * @param primaryStage main JavaFX stage, where scenes are displayed.
-     * @throws IOException
+     * @throws IOException TODO when?
      */
     @Override
     public void start(Stage primaryStage) throws IOException {

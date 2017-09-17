@@ -14,13 +14,14 @@ import static seng202.team1.CSVLoader.populateWifiHotspots;
 
 public class CSVLoaderTest extends TestCase {
 
-    String csv_resource_dir = "src/test/resources/";
+    private String csv_resource_dir = "src/test/resources/";
 
     public void setUp() throws Exception {
         super.setUp();
     }
 
     public void tearDown() throws Exception {
+        super.tearDown();
     }
 
     public void testLoadCSVAllEntries() throws Exception {
@@ -53,7 +54,7 @@ public class CSVLoaderTest extends TestCase {
         ArrayList<BikeTrip> trips = populateBikeTrips(filename);
         BikeTrip modelBikeTrip = new BikeTrip(551,
                 LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 8, 53),
-                LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 18, 05),
+                LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 18, 5),
                 new Point.Float((float) -73.99392888, (float) 40.76727216),
                 new Point.Float((float) -73.97648516, (float) 40.75992262),
                 22307, 'm', 1980, false);

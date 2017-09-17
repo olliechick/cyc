@@ -56,7 +56,7 @@ public class WifiPointTest {
 
     }
 
-    public void testGetDescription() throws Exception {
+    public void testGetDescription() {
         String expectedString = "ID 998\nLocation: 179 WEST 26 STREET - mn-05-123662 (Outdoor Kiosk), Midtown-Midtown South, "
         + "Manhattan, New York 10001 (40.745968, -73.994039)\nCost: Free\nProvider: LinkNYC - Citybridge\n"
         + "SSID: LinkNYC Free Wi-Fi\nSourceID: LINK-008695\nActivated: 12:00:00 am 1/18/2017";

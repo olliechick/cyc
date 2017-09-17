@@ -44,8 +44,7 @@ public class CSVLoader {
     public static ArrayList<CSVRecord> loadCSV(String filename) throws IOException {
         File csvData = new File(filename);
         CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
-        ArrayList<CSVRecord> records = (ArrayList<CSVRecord>) parser.getRecords();
-        return records;
+        return (ArrayList<CSVRecord>) parser.getRecords();
 
     }
 

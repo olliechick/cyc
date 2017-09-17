@@ -202,11 +202,10 @@ public class WifiPoint extends DataPoint {
      * Returns a description of the WiFi point.
      */
     public String getDescription() {
-        String description =  String.format("ID %d\nLocation: %s (%s) - %s, %s, %s, %s %d (%f, %f)\nCost: %s\n" +
+        return String.format("ID %d\nLocation: %s (%s) - %s, %s, %s, %s %d (%f, %f)\nCost: %s\n" +
                 "Provider: %s\nSSID: %s\nSourceID: %s\nActivated: %s", objectId, location, locationType, placeName, hood, borough,
                 city, zipcode, getLatitude(), getLongitude(), cost, provider, ssid, sourceId,
                 datetimeActivated.format(DateTimeFormatter.ofPattern("h:mm:ss a d/M/yyyy")));
-        return description;
     }
 
 

@@ -220,8 +220,7 @@ public class BikeTrip extends DataPoint {
     public String getName() {
         String start = startTime.format(DateTimeFormatter.ofPattern("h:mm a d MMMM yyyy"))
                 .replace("AM", "am").replace("PM","pm");
-        String name = String.format("Bike %d's trip at %s", bikeID, start);
-        return name;
+        return String.format("Bike %d's trip at %s", bikeID, start);
     }
 
 
@@ -248,10 +247,9 @@ public class BikeTrip extends DataPoint {
         end = end.replace("AM", "am").replace("PM","pm");
 
         // Put together description
-        String description =  String.format("Started at %s and ended %s later at %s\nBike ID: %d\nCyclist: %s, born in %d",
-                start, getDuration(), end, bikeID, getGenderDescription(), birthYear); //TODO refine for when unknown gender/birthyear
 
-        return description;
+        return String.format("Started at %s and ended %s later at %s\nBike ID: %d\nCyclist: %s, born in %d",
+                start, getDuration(), end, bikeID, getGenderDescription(), birthYear);
     }
 
 
