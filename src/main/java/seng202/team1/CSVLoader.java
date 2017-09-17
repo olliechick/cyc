@@ -101,8 +101,9 @@ public class CSVLoader {
             for (CSVRecord record : tripData){
                 //First check it is a header row
                 boolean isHeaderRow = false;
+                int bikeId = 0;
                 try {
-                    Integer.parseInt(record.get(11));
+                    bikeId = Integer.parseInt(record.get(11));
                 } catch (NumberFormatException e) {
                     //Header row - bike id is not an int
                     isHeaderRow = true;
@@ -137,7 +138,6 @@ public class CSVLoader {
                     // Other stuff
                     Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(6)), Float.parseFloat(record.get(5)));
                     Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(10)), Float.parseFloat(record.get(9)));
-                    int bikeID = Integer.parseInt(record.get(11));
                     char gender;
                     if (record.get(14).equals("1")) {
                         gender = 'm';
@@ -154,8 +154,8 @@ public class CSVLoader {
                     } else {
                         birthYear = Integer.parseInt(birthYearString);
                     }
-                    trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint, endPoint, bikeID, gender,
-                            birthYear, false));
+                    trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,
+                            endPoint, bikeId, gender, birthYear, false));
                 }
 
             }
@@ -189,8 +189,9 @@ public class CSVLoader {
             for(CSVRecord record : wifiData){
                 //First check it is a header row
                 boolean isHeaderRow = false;
+                int zipcode = 0;
                 try {
-                    Integer.parseInt(record.get(22));
+                    zipcode = Integer.parseInt(record.get(22));
                 } catch (NumberFormatException e){
                     //Header row - zipcode is not an int
                     isHeaderRow = true;
@@ -198,14 +199,12 @@ public class CSVLoader {
                 if (!isHeaderRow) {
                     int objectId = Integer.parseInt(record.get(0));
                     Point.Float coords = new Point.Float(Float.parseFloat(record.get(8)), Float.parseFloat(record.get(7)));
-                    ;
                     String name = record.get(5);
                     String location = record.get(6);
                     String locationType = record.get(11);
                     String hood = record.get(20);
                     String borough = record.get(18);
                     String city = record.get(13);
-                    int zipcode = Integer.parseInt(record.get(22));
                     String cost = record.get(3);
                     String provider = record.get(4);
                     String remarks = record.get(12);
@@ -251,8 +250,9 @@ public class CSVLoader {
             for(CSVRecord record : retailerData){
                 //First check it is a header row
                 boolean isHeaderRow = false;
+                int zipcode = 0;
                 try {
-                    Integer.parseInt(record.get(5));
+                    zipcode = Integer.parseInt(record.get(5));
                 } catch (NumberFormatException e){
                     //Header row - zipcode is not an int
                     isHeaderRow = true;
@@ -263,7 +263,6 @@ public class CSVLoader {
                     String addressLine2 = record.get(2);
                     String city = record.get(3);
                     String state = record.get(4);
-                    int zipcode = Integer.parseInt(record.get(5));
                     String blockLot = record.get(6);
                     String primaryFunction = record.get(7);
                     String secondaryFunction = record.get(8);
