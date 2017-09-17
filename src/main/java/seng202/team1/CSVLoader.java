@@ -33,7 +33,8 @@ public class CSVLoader {
 
     /**
      * Takes a file named filename, which should be a csv, and returns an Arraylist of type CSVRecord.
-     * This can be queried using the get(index) or get(columnName) [haven't figured out columnName though]
+     * This can be queried using the get(index) or get(columnName). [haven't figured out
+     * columnName though]
      *
      * @param filename The filename of the file to get data from.
      * @return CSVRecord
@@ -44,6 +45,34 @@ public class CSVLoader {
         File csvData = new File(filename);
         CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
         ArrayList<CSVRecord> records = (ArrayList<CSVRecord>) parser.getRecords();
+        return records;
+
+    }
+
+    /**
+     * Takes a file named filename, which should be a csv, and returns an Arraylist of type CSVRecord.
+     * This can be queried using the get(index).
+     * Only returns the first numberOfEntries entries (this may include header(s)).
+     *
+     * @param filename The filename of the file to get data from.
+     * @param numberOfEntries The number of entries to retrieve from the file.
+     * @return CSVRecord
+     * @throws IOException If an IO error occurs.
+     *
+     */
+    public static ArrayList<CSVRecord> loadCSV(String filename, int numberOfEntries) throws
+            IOException {
+        File csvData = new File(filename);
+        CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
+        ArrayList<CSVRecord> records = (ArrayList<CSVRecord>) parser.getRecords();
+
+        //Try to trim it - if numberOfEntries > records.size(), do nothing
+        try {
+            records.subList(numberOfEntries, records.size()).clear();
+        } catch (IndexOutOfBoundsException e) {
+            //there aren't that many items in the csv, so just return all of them
+        }
+
         return records;
 
     }
