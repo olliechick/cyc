@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -220,15 +221,24 @@ public class BikeTableController extends TableController{
         TableColumn genderCol = new TableColumn("Gender");
         TableColumn durationCol = new TableColumn("Duration");
         TableColumn startLocCol = new TableColumn("Start Location");
+        TableColumn startLatitudeCol = new TableColumn("Latitude");
+        TableColumn startLongitudeCol = new TableColumn("Longitude");
         TableColumn endLocCol = new TableColumn("End Location");
+        TableColumn endLatitudeCol = new TableColumn("Latitude");
+        TableColumn endLongitudeCol = new TableColumn("Longitude");
         table.getColumns().clear();
 
+        // Attempts to access public properties of name "Property", falls back to get<property>() methods if no property available
         bikeIdCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Integer>("bikeID"));
         genderCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Character>("gender"));
         durationCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, String>("tripDuration"));
-        startLocCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("startPoint"));
-        endLocCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("endPoint"));
+        startLatitudeCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("startLatitude"));
+        startLongitudeCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("startLongitude"));
+        endLatitudeCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("endLatitude"));
+        endLongitudeCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("endLongitude"));
 
+        startLocCol.getColumns().addAll(startLatitudeCol, startLongitudeCol);
+        endLocCol.getColumns().addAll(endLatitudeCol, endLongitudeCol);
 
         filteredData = new FilteredList<>(dataPoints, p -> true);
 

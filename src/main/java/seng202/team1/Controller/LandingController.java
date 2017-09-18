@@ -48,10 +48,11 @@ public class LandingController {
             retailerTableController.initModel(model);
             retailerTableController.setName();
 
-            stage = (Stage) openRetailerButton.getScene().getWindow();
-
-            stage.setScene(new Scene(retailerTableView));
-            stage.show();
+            Stage stage1 = new Stage();
+            retailerTableController.setStage(stage1);
+            stage1.setScene( new Scene(retailerTableView));
+            stage1.setTitle("Retailers");
+            stage1.show();
 
         } catch (IOException e) {
             e.printStackTrace(); //File not found
@@ -73,10 +74,11 @@ public class LandingController {
             bikeTableController.initModel(model);
             bikeTableController.setName();
 
-            stage = (Stage) openRetailerButton.getScene().getWindow();
-
-            stage.setScene(new Scene(bikeTableView));
-            stage.show();
+            Stage stage1 = new Stage();
+            bikeTableController.setStage(stage1);
+            stage1.setScene( new Scene(bikeTableView));
+            stage1.setTitle("Bike Trips");
+            stage1.show();
 
         } catch (IOException e) {
             e.printStackTrace(); //File not found
@@ -99,14 +101,17 @@ public class LandingController {
             wifiTableController.initModel(model);
             wifiTableController.setName();
 
-            stage = (Stage) openRetailerButton.getScene().getWindow();
-
-            stage.setScene(new Scene(wifiTableView));
-            stage.show();
+            Stage stage1 = new Stage();
+            wifiTableController.setStage(stage1);
+            stage1.setScene( new Scene(wifiTableView));
+            stage1.setTitle("Wifi");
+            stage1.show();
 
         } catch (IOException e) {
             e.printStackTrace(); //File not found
         }
 
     }
+
+
 }

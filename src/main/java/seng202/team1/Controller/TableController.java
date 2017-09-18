@@ -2,12 +2,16 @@ package seng202.team1.Controller;
 
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng202.team1.DataPoint;
 import java.io.File;
+import java.io.IOException;
 
 
 /**
@@ -118,5 +122,13 @@ public class TableController {
     protected void initModel(DummyModel dummyModel) {
         this.model = dummyModel;
         stage = (Stage) table.getScene().getWindow();
+    }
+
+    protected void setStage(Stage curStage) {
+        stage = curStage;
+    }
+
+    public void close() {
+        stage.close();
     }
 }

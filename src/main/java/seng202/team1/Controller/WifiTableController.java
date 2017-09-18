@@ -9,6 +9,9 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -17,6 +20,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.DataPoint;
 import seng202.team1.WifiPoint;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static seng202.team1.CSVLoader.populateWifiHotspots;
@@ -187,7 +192,7 @@ public class WifiTableController extends TableController{
         setFilters();
     }
 
-    @Override
+
     protected void initModel(DummyModel dummyModel) {
         /**
          * initialises the model for use in the rest of the View
