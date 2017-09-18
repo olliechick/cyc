@@ -16,15 +16,26 @@ public class WifiPoint extends DataPoint {
     private String latitude;
     private String longitude;
     private String location; // not as helpful as it suggests, some are addresses some are not
+    private String provider;
 
-    WifiPoint(String objectId, String the_geom, String borough, String cost, String latitude, String longitude, String location){
+    WifiPoint(String objectId, String the_geom, String borough, String cost, String latitude, String longitude, String location, String provider){
         this.objectId = objectId;
         this.the_geom = the_geom;
         this.borough = borough;
-        this.cost = cost;
+        if (cost.equalsIgnoreCase("TYPE")){
+            this.cost = "Unknown";
+        } else {
+            this.cost = cost;
+        }
         this.latitude = latitude;
         this.longitude = longitude;
         this.location = location;
+        if (provider.equalsIgnoreCase("PROVIDER")){
+            this.provider = "Unknown";
+        } else {
+            this.provider = provider;
+        }
+
     }
 
     public String getThe_geom() {
@@ -83,6 +94,13 @@ public class WifiPoint extends DataPoint {
         this.location = location;
     }
 
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
 
     @Override
     public String toString() {
@@ -91,6 +109,7 @@ public class WifiPoint extends DataPoint {
                 ", the_geom='" + the_geom + '\'' +
                 ", borough='" + borough + '\'' +
                 ", cost='" + cost + '\'' +
+                ", provider="+ provider +'\'' +
                 ", latitude='" + latitude + '\'' +
                 ", longitude='" + longitude + '\'' +
                 ", location='" + location + '\'' +
