@@ -1,10 +1,13 @@
 package seng202.team1.Controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -26,6 +29,17 @@ public class LoginController {
 
     @FXML
     private TextField usernameTextField;
+
+    @FXML
+    private ChoiceBox genderBox;
+
+    ObservableList<String> genderList = FXCollections.observableArrayList("test", "Male", "Female");
+
+    @FXML
+    private void initialise() {
+        genderBox.setValue("test");
+        genderBox.setItems(genderList);
+    }
 
     private DummyModel model;
 
