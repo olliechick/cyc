@@ -114,10 +114,11 @@ public class CSVLoader {
                 String the_geom = record.get(1);
                 String borough = record.get(2);
                 String cost = record.get(3);
+                String provider = record.get(4);
                 String location = record.get(6);
                 String latitude = record.get(7);
                 String longitude = record.get(8);
-                wifiSpots.add(new WifiPoint(objectId, the_geom, borough, cost, latitude, longitude, location));
+                wifiSpots.add(new WifiPoint(objectId, the_geom, borough, cost, latitude, longitude, location,provider));
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());

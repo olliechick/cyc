@@ -1,4 +1,4 @@
-package seng202.team1.DataAnalysis;
+package seng202.team1;
 
 import com.sun.org.apache.bcel.internal.generic.BIPUSH;
 import javafx.beans.property.DoubleProperty;
@@ -255,83 +255,6 @@ public final class DataAnaliser {
             }
         });
 
-    }
-
-    /**
-     * Takes a list of retailers and returns all the unique primary functions.
-     * returns an empty list if no primary functions are found.
-     * Be aware this function is O(nm) so if too many primary functions are found it will blow out time wise
-     * @param retailers ArrayList Of RetailerLocations that need to have primary functions extracted
-     * @return ArrayList<String>
-     */
-    public static ArrayList<String> generatePrimaryFunctionsList(ArrayList<RetailerLocation> retailers){
-        ArrayList<String> primaryFunctions = new ArrayList<String>();
-        for (RetailerLocation retailer : retailers){
-            boolean found = false;
-            for (String function :primaryFunctions) {
-                if (function.equalsIgnoreCase(retailer.getPrimaryFunction())){
-                    found = true;
-                    break;
-                }
-
-            }
-            if (!found){
-                primaryFunctions.add(retailer.getPrimaryFunction());
-            }
-        }
-        return primaryFunctions;
-    }
-
-    /**
-     * Takes a list of retailers and returns their secondary Functions.
-     * Speed can be improved by passing it a list consisting of only the same primary function
-     * Be aware this function is O(nm) so if too many secondary functions are found it will blow out time wise
-     * @param retailers ArrayList Of RetailerLocations that need to have secondary functions extracted
-     * @return ArrayList<String>
-     */
-    public static ArrayList<String> generateSecondaryFunctionsList(ArrayList<RetailerLocation> retailers){
-        ArrayList<String> secondaryFunctions = new ArrayList<String>();
-        for (RetailerLocation retailer : retailers){
-            boolean found = false;
-            for (String function :secondaryFunctions) {
-                if (function.equalsIgnoreCase(retailer.getSecondaryFunction())){
-                    found = true;
-                    break;
-                }
-
-            }
-            if (!found){
-                secondaryFunctions.add(retailer.getSecondaryFunction());
-            }
-        }
-        return secondaryFunctions;
-    }
-
-    /**
-     * Takes a list of retailers and the function name to sort them by and returns list that contains only retailers of the same function
-     * the isPrimary flag allows the function to be used either for the primary or secondary function to be selected
-     * with true meaning primary and false being secondary.
-     * @param retailers List of reatailer that need the functions checked against
-     * @param function Type of retailer that needs to be found
-     * @param isPrimary Flag for weather to find the primary or secondary function
-     * @return ArrayList<RetailerLocation>
-     */
-    public static ArrayList<RetailerLocation> generateListOfSameFunction(ArrayList<RetailerLocation> retailers, String function, boolean isPrimary){
-        ArrayList<RetailerLocation> sameFunction = new ArrayList<RetailerLocation>();
-        if(isPrimary){
-            for (RetailerLocation retailer : retailers){
-                if (retailer.getPrimaryFunction().equalsIgnoreCase(function)){
-                    sameFunction.add(retailer);
-                }
-            }
-        } else {
-            for (RetailerLocation retailer : retailers){
-                if (retailer.getSecondaryFunction().equalsIgnoreCase(function)){
-                    sameFunction.add(retailer);
-                }
-            }
-        }
-        return sameFunction;
     }
 
     /**

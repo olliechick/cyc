@@ -1,10 +1,8 @@
 package seng202.team1;
 
 import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import seng202.team1.DataAnalysis.DataAnaliser;
 
 /**
  * Bike Trip data class. This will likely change during development as we need to do more.

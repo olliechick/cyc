@@ -4,7 +4,12 @@ package seng202.team1;
 ;
 import org.junit.Test;
 import org.junit.runner.notification.RunListener;
-import seng202.team1.DataAnalysis.DataAnaliser;
+import seng202.team1.DataAnaliser;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.Arc2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -71,49 +76,6 @@ public class DataAnaliserTest{
     }
 
     @Test
-    public void TestPrimaryFunctions(){
-        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("ret.csv");
-        ArrayList<String> primaryFunctions = DataAnaliser.generatePrimaryFunctionsList(retailers);
-        assertEquals(3,primaryFunctions.size());
-    }
-    @Test
-    public void TestPrimaryFunctionsLargeList(){
-        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("Lower_Manhattan_Retailers.csv");
-        ArrayList<String> primaryFunctions = DataAnaliser.generatePrimaryFunctionsList(retailers);
-        assertEquals(9,primaryFunctions.size());
-    }
-
-    @Test
-    public void TestSecondaryFunctions(){
-        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("ret.csv");
-        ArrayList<String> secondaryFunctions = DataAnaliser.generateSecondaryFunctionsList(retailers);
-        assertEquals(4, secondaryFunctions.size());
-    }
-
-    @Test
-    public void TestSecondaryFunctionsLargeList(){
-        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("Lower_Manhattan_Retailers.csv");
-        ArrayList<String> secondaryFunctions = DataAnaliser.generateSecondaryFunctionsList(retailers);
-        assertEquals(93, secondaryFunctions.size());
-    }
-
-    @Test
-    public void TestSameTypeListPrimary(){
-        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("ret.csv");
-        ArrayList<String> primaryFunctions = DataAnaliser.generatePrimaryFunctionsList(retailers);
-        ArrayList<RetailerLocation> results = DataAnaliser.generateListOfSameFunction(retailers, primaryFunctions.get(0),true );
-        assertEquals(8, results.size());
-    }
-    @Test
-    public void TestSameTypeListSecondary(){
-        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("ret.csv");
-        ArrayList<String> secondaryFunctions = DataAnaliser.generateSecondaryFunctionsList(retailers);
-        ArrayList<RetailerLocation> results = DataAnaliser.generateListOfSameFunction(retailers, secondaryFunctions.get(0),false );
-        assertEquals(8, results.size());
-    }
-
-
-    @Test
     public void TestFindClosestWifiPointToStartPointExists(){
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
@@ -165,4 +127,19 @@ public class DataAnaliserTest{
         WifiPoint testPoint = DataAnaliser.findClosestWifiPointToTrip(testTrip,hotspots);
         assertEquals(null, testPoint);
     }
+
+    @Test
+    public void TestFindClosestWifiPointToRoute(){
+        ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
+        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
+        ArrayList<Point2D.Float> waypoints = new ArrayList<Point2D.Float>();
+        for(BikeTrip trip : bikeTrips){
+            Point2D.Float point = trip.getStartPoint();
+             waypoints.add(point);
+        }
+        WifiPoint closestPoint = DataAnaliser.findClosestWifiToRoute(waypoints,hotspots);
+        assertEquals(hotspots.get(1),closestPoint);
+    }
+
+
 }
