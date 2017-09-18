@@ -60,6 +60,8 @@ public class BikeTableController extends TableController{
     private ObservableList<BikeTrip> dataPoints;
     private FilteredList<BikeTrip> filteredData;
 
+    final static String DEFAULT_BIKE_TRIPS_FILENAME = "src/main/resources/csv/biketrip.csv";
+
     public void initialize() {
         super.initialize();
 
@@ -151,7 +153,6 @@ public class BikeTableController extends TableController{
              */
             //@Override
             protected ArrayList<BikeTrip> call() {
-
                 return populateBikeTrips(filename);
             }
         };
@@ -259,5 +260,6 @@ public class BikeTableController extends TableController{
          * Will allow for accessing user data once implemented
          */
         this.model = dummyModel;
+        importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME);
     }
 }

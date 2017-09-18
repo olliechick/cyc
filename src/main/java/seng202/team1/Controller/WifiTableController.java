@@ -54,6 +54,8 @@ public class WifiTableController extends TableController{
 
     private FilteredList<WifiPoint> filteredData;
 
+    final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/wifipoint.csv";
+
     public void initialize() {
         super.initialize();
     }
@@ -199,6 +201,7 @@ public class WifiTableController extends TableController{
          * Will allow for accessing user data once implemented
          */
         this.model = dummyModel;
+        importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME);
     }
 
 }

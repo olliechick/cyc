@@ -58,6 +58,8 @@ public class RetailerTableController extends TableController{
     private ObservableList<RetailerLocation> dataPoints;
     private FilteredList<RetailerLocation> filteredData;
 
+    final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "src/main/resources/csv/retailerlocation.csv";
+
     /**
      * Run automatically when the fxml is loaded by an FXMLLoader
      */
@@ -260,5 +262,6 @@ public class RetailerTableController extends TableController{
     @Override
     protected void initModel(DummyModel dummyModel) {
         this.model = dummyModel;
+        importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME);
     }
 }
