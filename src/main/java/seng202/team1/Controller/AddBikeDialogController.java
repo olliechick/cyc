@@ -153,7 +153,7 @@ public class AddBikeDialogController {
 //                    new Point.Float(1, 1), new Point.Float(2, 2), 123, 'm', 1997);
 //            //System.out.println(bikeTrip);
 //            stage.close();
-            bikeTrip = new BikeTrip(startDateTime, stopDateTime, startPoint, endPoint, bikeID, gender, birthYear);
+            bikeTrip = new BikeTrip(startDateTime, stopDateTime, startPoint, endPoint, bikeID, gender, birthYear, false);
             stage.close();
         }
     }
