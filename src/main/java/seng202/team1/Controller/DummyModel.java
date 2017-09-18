@@ -6,17 +6,20 @@ import seng202.team1.WifiPoint;
 
 import java.util.ArrayList;
 
-import static seng202.team1.CSVLoader.populateWifiHotspots;
-
 /**
  * Dummy model class
  * For testing only
  *
- * Created by jbe113 on 22/08/17.
+ * Created on 22/08/17.
+ * @author Josh Bernasconi
  */
 public class DummyModel {
 
     private String name;
+
+    private ArrayList<BikeTrip> customBikeTrips = new ArrayList<>();
+    private ArrayList<RetailerLocation> customRetailerLocations = new ArrayList<>();
+    private ArrayList<WifiPoint> customWifiPoints = new ArrayList<>();
 
     public void setName(String inName) {
         name = inName;
@@ -30,15 +33,28 @@ public class DummyModel {
         return name;
     }
 
-    public ArrayList<BikeTrip> bikeTrips = new ArrayList<BikeTrip>();
-
-    public ArrayList<WifiPoint> wifiPoints = new ArrayList<WifiPoint>();
-
-    public ArrayList<RetailerLocation> retailerLocations = new ArrayList<RetailerLocation>();
-
-    public void loadAllWifiPoints() {
-        wifiPoints =  populateWifiHotspots("src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv");
+    public ArrayList<BikeTrip> getCustomBikeTrips() {
+        return customBikeTrips;
     }
 
+    public ArrayList<RetailerLocation> getCustomRetailerLocations() {
+        return customRetailerLocations;
+    }
+
+    public ArrayList<WifiPoint> getCustomWifiPoints() {
+        return customWifiPoints;
+    }
+
+    public void addCustomBikeTrip(BikeTrip bikeTrip) {
+        customBikeTrips.add(bikeTrip);
+    }
+
+    public void addCustomRetailerLocation(RetailerLocation retailerLocation) {
+        customRetailerLocations.add(retailerLocation);
+    }
+
+    public void addCustomWifiLocation(WifiPoint wifiPoint) {
+        customWifiPoints.add(wifiPoint);
+    }
 
 }
