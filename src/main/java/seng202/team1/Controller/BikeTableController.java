@@ -236,7 +236,7 @@ public class BikeTableController extends TableController{
         // Attempts to access public properties of name "Property", falls back to get<property>() methods if no property available
         bikeIdCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Integer>("bikeID"));
         genderCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Character>("gender"));
-        durationCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, String>("tripDuration"));
+        durationCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, String>("Duration"));
         startLatitudeCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("startLatitude"));
         startLongitudeCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("startLongitude"));
         endLatitudeCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("endLatitude"));
@@ -244,6 +244,7 @@ public class BikeTableController extends TableController{
 
         startLocCol.getColumns().addAll(startLatitudeCol, startLongitudeCol);
         endLocCol.getColumns().addAll(endLatitudeCol, endLongitudeCol);
+        durationCol.setSortable(false);
 
         filteredData = new FilteredList<>(dataPoints, p -> true);
 
