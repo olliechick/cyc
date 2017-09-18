@@ -5,7 +5,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="403.0" prefWidth="740.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.AddBikeDialogController">
+<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="403.0" prefWidth="740.0" vgap="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.AddBikeDialogController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -22,85 +22,101 @@
       <Label text="Add a Custom Bike Trip" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" />
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Label text="Start Time:">
+            <Label fx:id="startTimeLabel" text="Start Time:">
                <padding>
                   <Insets right="10.0" top="5.0" />
                </padding>
             </Label>
-            <TextField prefHeight="25.0" prefWidth="110.0" />
+            <TextField fx:id="startTimeField" prefHeight="25.0" prefWidth="110.0" />
          </children></HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <children>
-            <Label prefHeight="20.0" prefWidth="85.0" text="Date:">
+            <Label fx:id="dateLabel" prefHeight="20.0" prefWidth="74.0" text="Date:">
                <padding>
                   <Insets right="10.0" top="5.0" />
                </padding>
             </Label>
-            <DatePicker prefHeight="25.0" prefWidth="133.0" />
+            <DatePicker fx:id="dat" prefHeight="25.0" prefWidth="142.0" />
          </children></HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
          <children>
-            <Label prefHeight="20.0" prefWidth="78.0" text="Bike ID:">
+            <Label fx:id="idLabel" prefHeight="20.0" prefWidth="78.0" text="Bike ID:">
                <padding>
                   <Insets right="10.0" top="5.0" />
                </padding>
             </Label>
-            <TextField prefHeight="25.0" prefWidth="110.0" />
+            <TextField fx:id="idField" prefHeight="25.0" prefWidth="110.0" />
          </children>
       </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="3">
-         <children>
-            <Label prefHeight="20.0" prefWidth="82.0" text="Duration:">
-               <padding>
-                  <Insets right="10.0" top="5.0" />
-               </padding>
-            </Label>
-            <TextField prefHeight="25.0" prefWidth="110.0" />
-         </children></HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <children>
-            <Label text="End Time:">
+            <Label fx:id="stopTimeLabel" text="Stop Time:">
                <padding>
                   <Insets right="10.0" top="5.0" />
                </padding>
             </Label>
-            <TextField prefHeight="25.0" prefWidth="110.0" />
+            <TextField fx:id="stopTimeField" prefHeight="25.0" prefWidth="110.0" />
          </children></HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
-         <children>
-            <Label text="Start Point">
-               <padding>
-                  <Insets right="10.0" top="5.0" />
-               </padding>
-            </Label>
-            <TextField prefHeight="25.0" prefWidth="110.0" />
-         </children>
-      </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-         <children>
-            <Label prefHeight="20.0" prefWidth="84.0" text="End Point:">
-               <padding>
-                  <Insets right="10.0" top="5.0" />
-               </padding>
-            </Label>
-            <TextField prefHeight="25.0" prefWidth="110.0" />
-         </children>
-      </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
          <children>
-            <Label prefHeight="20.0" prefWidth="76.0" text="Duration:">
+            <Label fx:id="durationLabel" prefHeight="20.0" prefWidth="76.0" text="Duration:">
                <padding>
                   <Insets right="10.0" top="5.0" />
                </padding>
             </Label>
-            <TextField prefHeight="25.0" prefWidth="110.0" />
+            <TextField fx:id="durationField" prefHeight="25.0" prefWidth="110.0" />
          </children>
       </HBox>
-      <HBox fx:id="buttonBox" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
          <children>
-            <Button fx:id="addButton" mnemonicParsing="false" onAction="#addBike" text="Add" />
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="startLatLabel" prefHeight="20.0" prefWidth="83.0" text="Start Lat:">
+                     <padding>
+                        <Insets right="10.0" top="5.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="startLatField" prefHeight="25.0" prefWidth="110.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="startLongLabel" text="Start Long:">
+                     <padding>
+                        <Insets right="10.0" top="5.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="startLongField" prefHeight="25.0" prefWidth="110.0" />
+               </children>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="endLatLabel" prefHeight="20.0" prefWidth="76.0" text="End Lat:">
+                     <padding>
+                        <Insets right="10.0" top="5.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="endLatField" prefHeight="25.0" prefWidth="110.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="endLongLabel" text="End Long:">
+                     <padding>
+                        <Insets right="10.0" top="5.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="endLongField" prefHeight="25.0" prefWidth="110.0" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Button fx:id="addButton" mnemonicParsing="false" onAction="#addBike" text="Add" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+      <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Cancel" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
    </children>
    <padding>
       <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />

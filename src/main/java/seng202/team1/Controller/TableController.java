@@ -46,8 +46,10 @@ public class TableController {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2) {
                     DataPoint rowData = row.getItem();
-                    System.out.println(rowData);
-                    showDataPopup(table.getSelectionModel().getSelectedItem());
+
+                    if (rowData != null) {
+                        showDataPopup(table.getSelectionModel().getSelectedItem());
+                    }
                 }
             });
             return row ;

@@ -202,7 +202,9 @@ public class BikeTableController extends TableController{
             stage1.showAndWait();
 
             BikeTrip test = addBikeDialog.getBikeTrip();
-            dataPoints.add(addBikeDialog.getBikeTrip());
+            if (test != null) {
+                dataPoints.add(addBikeDialog.getBikeTrip());
+            }
             System.out.println(test);
         } catch (IOException e) {
             e.printStackTrace();
