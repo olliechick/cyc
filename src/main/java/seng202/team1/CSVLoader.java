@@ -139,7 +139,7 @@ public class CSVLoader {
                     isHeaderRow = true;
                 }
                 if (!isHeaderRow) {
-                    long tripDuration = new Long(record.get(0));
+                    long tripDuration = new Long(record.get(0).trim());
 
                     // Set start time
                     LocalDateTime startTime;

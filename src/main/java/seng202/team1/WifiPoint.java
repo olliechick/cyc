@@ -39,18 +39,9 @@ public class WifiPoint extends DataPoint {
         this.locationType = locationType;
         this.hood = hood;
         this.borough = borough;
-        if (cost.equalsIgnoreCase("TYPE")){
-            this.cost = "Unknown";
-        } else {
-            this.cost = cost;
-        }
+        this.cost = cost;
         this.location = location;
-        if (provider.equalsIgnoreCase("PROVIDER")){
-            this.provider = "Unknown";
-        } else {
-            this.provider = provider;
-        }
-
+        this.provider = provider;
         this.city = city;
         this.zipcode = zipcode;
         this.cost = cost;
@@ -220,13 +211,6 @@ public class WifiPoint extends DataPoint {
                 objectId);
     }
 
-    public String getProvider() {
-        return provider;
-    }
-
-    public void setProvider(String provider) {
-        this.provider = provider;
-    }
 
     @Override
     public String toString() {

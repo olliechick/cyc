@@ -2,6 +2,7 @@ package seng202.team1;
 
 
 ;
+import com.sun.org.apache.bcel.internal.generic.BIPUSH;
 import org.junit.Test;
 import org.junit.runner.notification.RunListener;
 import seng202.team1.DataAnaliser;
@@ -69,9 +70,9 @@ public class DataAnaliserTest{
         Collections.shuffle(testData, new Random(2132154541));
         Collections.shuffle(oldData, new Random(2132154541));
         DataAnaliser.sortTripsByDistance(testData);// sorts in place
-        assertEquals(testData.get(0), oldData.get(2));
-        assertEquals(testData.get(1), oldData.get(0));
-        assertEquals(testData.get(2), oldData.get(3));
+        assertEquals(testData.get(0), oldData.get(0));
+        assertEquals(testData.get(1), oldData.get(3));
+        assertEquals(testData.get(2), oldData.get(2));
         assertEquals(testData.get(3), oldData.get(1));
     }
 

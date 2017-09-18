@@ -6,6 +6,7 @@ import javafx.concurrent.WorkerStateEvent;
 import seng202.team1.WifiPoint;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,18 +32,18 @@ public final class DataAnaliser {
         double endingLong;
         Point.Float startPoint = b1.getStartPoint();
         Point.Float endPoint;
-        double startingLat =  startPoint.getX();
-        double startingLong = startPoint.getY();
+        double startingLat =  startPoint.getY();
+        double startingLong = startPoint.getX();
 
 
         if(b1 == b2){
             endPoint = b2.getEndPoint();
-            endingLat = endPoint.getX();
-            endingLong = endPoint.getY();
+            endingLat = endPoint.getY();
+            endingLong = endPoint.getX();
         } else { // If the two biketrips are the same the distance is from the starting points
            endPoint = b2.getStartPoint();
-           endingLong = endPoint.getY();
-           endingLat = endPoint.getX();
+           endingLong = endPoint.getX();
+           endingLat = endPoint.getY();
         }
         //the below line uses the formula of haversines to find distances using lat and long.
         double distance = calculateDistance(startingLat,startingLong,endingLat,endingLong);
@@ -61,8 +62,8 @@ public final class DataAnaliser {
         ArrayList<BikeTrip> results = new ArrayList<BikeTrip>();
         for (BikeTrip trip : trips) { //unfortunalty an 0(n) with the current data set. Perhaps we need to sort based on Lat and long to decrease time complexity
             Point.Float tripPoint = trip.getStartPoint();
-            double tripLong = tripPoint.getY();
-            double tripLat = tripPoint.getX();
+            double tripLong = tripPoint.getX();
+            double tripLat = tripPoint.getY();
             if (calculateDistance(searchLat,searchLong,tripLat,tripLong) < delta + 10) {
                 results.add(trip);
 
@@ -84,8 +85,8 @@ public final class DataAnaliser {
     public static ArrayList<WifiPoint> searchWifiPoints(double searchLat, double searchLong, double delta, ArrayList<WifiPoint> hotspots) {
         ArrayList<WifiPoint> results = new ArrayList<WifiPoint>();
         for (WifiPoint hotspot : hotspots) { //unfortunalty an 0(n) with the current data set. Perhaps we need to sort based on Lat and long to decrease time complexity
-            double spotLong = Double.parseDouble(hotspot.getLongitude());
-            double spotLat = Double.parseDouble(hotspot.getLatitude());
+            double spotLong = hotspot.getLongitude();
+            double spotLat = hotspot.getLatitude();
             if (calculateDistance(searchLat,searchLong,spotLat,spotLong) < delta){
                     results.add(hotspot);
                 }
@@ -104,8 +105,8 @@ public final class DataAnaliser {
      * @return Wifipoint
      */
     public static WifiPoint findClosestWifiToBikeRouteStart(BikeTrip trip, ArrayList<WifiPoint> hotspots) {
-        double tripLat = trip.getStartPoint().getX();
-        double tripLong = trip.getStartPoint().getY();
+        double tripLat = trip.getStartPoint().getY();
+        double tripLong = trip.getStartPoint().getX();
         double searchDistance = 100;
         ArrayList<WifiPoint> closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance, hotspots);
         ;
@@ -135,8 +136,8 @@ public final class DataAnaliser {
      * @return Wifipoint
      */
     public static WifiPoint findClosestWifiToBikeRouteEnd(BikeTrip trip, ArrayList<WifiPoint> hotspots) {
-        double tripLat = trip.getEndPoint().getX();
-        double tripLong = trip.getEndPoint().getY();
+        double tripLat = trip.getEndPoint().getY();
+        double tripLong = trip.getEndPoint().getX();
         double searchDistance = 100;
         ArrayList<WifiPoint> closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance, hotspots);
         ;
@@ -168,8 +169,8 @@ public final class DataAnaliser {
      * @return Wifipoint
      */
     public static WifiPoint findClosestWifiPointToTrip(BikeTrip trip, ArrayList<WifiPoint> hotspots){
-        double tripLat = trip.getEndPoint().getX();
-        double tripLong = trip.getEndPoint().getY();
+        double tripLat = trip.getEndPoint().getY();
+        double tripLong = trip.getEndPoint().getX();
         WifiPoint closestToStart = findClosestWifiToBikeRouteStart(trip, hotspots);
         WifiPoint closestToEnd = findClosestWifiToBikeRouteEnd(trip, hotspots);
         if (closestToEnd == null) {
@@ -200,11 +201,11 @@ public final class DataAnaliser {
         WifiPoint closestPoint = null;
         double closestDistance = 0;
         for (Point2D.Float waypoint : waypoints){
-            double pointLat = waypoint.getX();
-            double pointLong = waypoint.getY();
+            double pointLat = waypoint.getY();
+            double pointLong = waypoint.getX();
             for (WifiPoint hotspot : hotspots){
-                double hotspotLat = Double.parseDouble(hotspot.getLatitude());
-                double hotspotLong  = Double.parseDouble(hotspot.getLongitude());
+                double hotspotLat = hotspot.getLatitude();
+                double hotspotLong  = hotspot.getLongitude();
                 double distance = calculateDistance(pointLat,pointLong,hotspotLat,hotspotLong);
                 if (closestPoint == null){
                     closestPoint = hotspot;

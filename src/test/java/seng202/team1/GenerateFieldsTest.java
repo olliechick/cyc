@@ -9,10 +9,11 @@ import static org.junit.Assert.*;
 
 public class GenerateFieldsTest {
 
+    private String csv_resource_dir = "src/test/resources/";
 
     @Test
     public void TestPrimaryFunctions(){
-        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("ret.csv");
+        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers(csv_resource_dir + "testRetailers.csv");
         ArrayList<String> primaryFunctions = GenerateFields.generatePrimaryFunctionsList(retailers);
         assertEquals(3,primaryFunctions.size());
     }
@@ -20,12 +21,13 @@ public class GenerateFieldsTest {
     public void TestPrimaryFunctionsLargeList(){
         ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("Lower_Manhattan_Retailers.csv");
         ArrayList<String> primaryFunctions = GenerateFields.generatePrimaryFunctionsList(retailers);
-        assertEquals(9,primaryFunctions.size());
+
+        assertEquals(8,primaryFunctions.size());
     }
 
     @Test
     public void TestSecondaryFunctions(){
-        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("ret.csv");
+        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers(csv_resource_dir + "testRetailers.csv");
         ArrayList<String> secondaryFunctions = GenerateFields.generateSecondaryFunctionsList(retailers);
         assertEquals(4, secondaryFunctions.size());
     }
@@ -34,19 +36,19 @@ public class GenerateFieldsTest {
     public void TestSecondaryFunctionsLargeList(){
         ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("Lower_Manhattan_Retailers.csv");
         ArrayList<String> secondaryFunctions = GenerateFields.generateSecondaryFunctionsList(retailers);
-        assertEquals(93, secondaryFunctions.size());
+        assertEquals(92, secondaryFunctions.size());
     }
 
     @Test
     public void TestSameTypeListPrimary(){
-        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("ret.csv");
+        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers(csv_resource_dir + "testRetailers.csv");
         ArrayList<String> primaryFunctions = GenerateFields.generatePrimaryFunctionsList(retailers);
         ArrayList<RetailerLocation> results = GenerateFields.generateListOfSameFunction(retailers, primaryFunctions.get(0),true );
         assertEquals(8, results.size());
     }
     @Test
     public void TestSameTypeListSecondary(){
-        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("ret.csv");
+        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers(csv_resource_dir + "testRetailers.csv");
         ArrayList<String> secondaryFunctions = GenerateFields.generateSecondaryFunctionsList(retailers);
         ArrayList<RetailerLocation> results = GenerateFields.generateListOfSameFunction(retailers, secondaryFunctions.get(0),false );
         assertEquals(8, results.size());
@@ -62,7 +64,7 @@ public class GenerateFieldsTest {
     public void TestGenerateWifiPointTypesLargeList(){
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("NYC_Free_Public_WiFi_03292017.csv");
         ArrayList<String> results = GenerateFields.generateWifiTypes(hotspots);
-        assertEquals(4,results.size());
+        assertEquals(3,results.size());
     }
     @Test
     public void TestFindWifiSpotsOfSameCost(){
@@ -81,7 +83,7 @@ public class GenerateFieldsTest {
     public void TestGenerateProvidersLargeList(){
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("NYC_Free_Public_WiFi_03292017.csv");
         ArrayList<String> providers = GenerateFields.generateWifiProviders(hotspots);
-        assertEquals(16, providers.size());
+        assertEquals(15, providers.size());
     }
 
 
