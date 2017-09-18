@@ -43,6 +43,10 @@
         var labelIndex = 0;
         var markerArray = [];
 
+        var wifiMarkerArray = [];
+        var bikeTripMarkerArray = [];
+        var retailerMarkerArray = [];
+
         var iconBase = '';
         var icons = {
           wifi: {
@@ -109,8 +113,44 @@
           icon: icon,
           title: title
            });
+        return marker;
     }
 
+    document.addWIFIMarker = function addWIFIMarker(latlng, icon, title)
+    {
+        var marker = document.addMarker(latlng, icon, title);
+        wifiMarkerArray.push(marker);
+    }
+
+    document.addRetailerMarker = function addRetailerMarker(latlng, icon, title)
+    {
+        var marker = document.addMarker(latlng, icon, title);
+        retailerMarkerArray.push(marker);
+    }
+
+
+    document.hideWIFIMarker = function hideWIFIMarker(index)
+    {
+        wifiMarkerArray[index].setVisible(false);
+
+    }
+
+    document.showWIFIMarker = function showWIFIMarker(index)
+    {
+        wifiMarkerArray[index].setVisible(true);
+    }
+
+
+    document.hideRetailerMarker = function hideRetailerMarker(index)
+    {
+        retailerMarkerArray[index].setVisible(false);
+
+    }
+
+    document.showRetailerMarker = function showRetailerMarker(index)
+    {
+        retailerMarkerArray[index].setVisible(true);
+    }
 
 
     document.zoomIn = function zoomIn() 
