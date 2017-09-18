@@ -14,7 +14,9 @@ import java.time.LocalDateTime;
 import java.time.Month;
 
 /**
- * Created by jbe113 on 17/09/17.
+ * Created on 17/09/17.
+ *
+ * @author Josh Bernasconi
  */
 public class AddBikeDialogController {
 
@@ -24,7 +26,13 @@ public class AddBikeDialogController {
     private BikeTrip bikeTrip;
     private Stage stage;
 
-    public void setDialog(Stage stage1, Parent root) {
+    /**
+     * Set up the window as a dialog.
+     *
+     * @param stage1 the new stage to use to display
+     * @param root root fxml node
+     */
+    protected void setDialog(Stage stage1, Parent root) {
         stage = stage1;
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
@@ -33,15 +41,20 @@ public class AddBikeDialogController {
         //stage = (Stage) addButton.getScene().getWindow();
     }
 
+    /**
+     * Check the fields for validity and if so, add the bike trip.
+     * Else warn of errors.
+     *
+     * TODO add checking and text field actual use
+     */
     public void addBike() {
-        //TODO add checking and text field actual use
         bikeTrip = new BikeTrip(new Long(600), LocalDateTime.of(2015, Month.JULY, 29, 19, 30, 40), LocalDateTime.of(2015, Month.JULY, 29, 19, 30, 40),
                 new Point.Float(1, 1), new Point.Float(2, 2), 123, 'm', 1997);
         //System.out.println(bikeTrip);
         stage.close();
     }
 
-    public BikeTrip getBikeTrip() {
+    protected BikeTrip getBikeTrip() {
         return bikeTrip;
     }
 }

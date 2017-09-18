@@ -22,7 +22,10 @@ import java.util.ArrayList;
 import static seng202.team1.CSVLoader.populateWifiHotspots;
 
 /**
- * Created by jbe113 on 10/09/17.
+ * Logic for the wifi table GUI
+ *
+ * Created on 10/09/17.
+ * @author Josh Bernasconi
  */
 public class WifiTableController extends TableController{
 
@@ -36,7 +39,7 @@ public class WifiTableController extends TableController{
     private ComboBox filterProviderComboBox;
 
     @FXML
-    private TableView table;
+    private TableView<DataPoint> table;
 
     @FXML
     private Label nameLabel;
@@ -55,6 +58,10 @@ public class WifiTableController extends TableController{
         nameLabel.setVisible(true);
     }
 
+    /**
+     * Set the filters in the combo boxes
+     * TODO don't hardcode
+     */
     private void setFilters() {
         filterBoroughComboBox.getItems().addAll("All");
         filterBoroughComboBox.getSelectionModel().selectFirst();
@@ -66,6 +73,10 @@ public class WifiTableController extends TableController{
         filterProviderComboBox.getSelectionModel().selectFirst();
     }
 
+    /**
+     * Checks each wifi point against the filters,
+     * setting them displayed or not depending on matching or not.
+     */
     private void setPredicate() {
 
         filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
@@ -76,6 +87,12 @@ public class WifiTableController extends TableController{
                 filterProviderComboBox.valueProperty()));
     }
 
+    /**
+     * Check the cost of the given wifi point matches the cost selected in the filter box.
+     *
+     * @param wifiPoint The wifi point to check against
+     * @return boolean True if matches or "All", False otherwise
+     */
     private boolean checkCost(WifiPoint wifiPoint) {
         if (filterCostComboBox.getValue().equals("All")) {
             return true;
@@ -84,13 +101,12 @@ public class WifiTableController extends TableController{
         }
     }
 
-
+    /**
+     * Creates a task to run on another thread to open the file,
+     * to stop GUI hangs.
+     * Also sets the loading animation going and stops when finished.
+     */
     private void importWifiCsv(final String filename) {
-        /**
-         * Creates a task to run on another thread to open the file,
-         * to stop GUI hangs.
-         * Also sets the loading animation going and stops when finished.
-         */
 
         final Task<ArrayList<WifiPoint>> loadWifiCsv = new Task<ArrayList<WifiPoint>>() {
             /**
@@ -123,6 +139,10 @@ public class WifiTableController extends TableController{
         new Thread(loadWifiCsv).start();
     }
 
+    /**
+     * Gets an absolute filepath to a chosen csv.
+     * TODO add file validity checking.
+     */
     public void importWifi() {
 
         String filename = getCsvFilename();
@@ -131,11 +151,11 @@ public class WifiTableController extends TableController{
         }
     }
 
+    /**
+     * Fairly similar to Retailer setup, but for a bike trip
+     * TODO add relevant columns
+     */
     private void setTableViewWifi(ArrayList<WifiPoint> data) {
-        /**
-         * Fairly similar to Retailer setup, but for a bike trip
-         * TODO finish
-         */
 
         ObservableList<WifiPoint> dataPoints = FXCollections.observableArrayList(data);
 
@@ -167,6 +187,7 @@ public class WifiTableController extends TableController{
         setFilters();
     }
 
+    @Override
     protected void initModel(DummyModel dummyModel) {
         /**
          * initialises the model for use in the rest of the View

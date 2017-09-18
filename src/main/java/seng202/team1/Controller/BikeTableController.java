@@ -27,10 +27,11 @@ import static seng202.team1.CSVLoader.populateBikeTrips;
 
 
 /**
- * Logic for the table GUI
+ * Logic for the bike table GUI
  *
  *
- * Created by jbe113 on 7/09/17.
+ * Created on 7/09/17.
+ * @author Josh Bernasconi
  */
 public class BikeTableController extends TableController{
 
@@ -47,7 +48,7 @@ public class BikeTableController extends TableController{
     private ComboBox filterGenderComboBox;
 
     @FXML
-    private TableView table;
+    private TableView<DataPoint> table;
 
     @FXML
     private Label nameLabel;
@@ -63,18 +64,19 @@ public class BikeTableController extends TableController{
 
     }
 
+    /**
+     * Checks the combo boxes and bike ID field for data and filters the displayed
+     * data accordingly.
+     * The first section of the lambda generates a boolean on each table entry, depending if they fit the
+     * criteria.
+     * The second section contains the observable properties that it watches for changes on,
+     * updating the filter each time one changes.
+     *
+     * TODO leave in for credit?
+     * https://stackoverflow.com/questions/33016064/javafx-multiple-textfields-should-filter-one-tableview
+     */
     private void setPredicate() {
-        /**
-         * Checks the combo boxes and street field for data and filters the displayed
-         * data accordingly.
-         * The first section of the lambda generates a boolean on each table entry, depending if they fit the
-         * criteria.
-         *
-         * The second section contains the observable properties that it watches for changes on,
-         * updating the filter each time one changes.
-         * TODO leave in for credit?
-         * https://stackoverflow.com/questions/33016064/javafx-multiple-textfields-should-filter-one-tableview
-         */
+
         filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
                         bikeTrip -> searchBikeId(bikeTrip) &&
                                     checkGender(bikeTrip),
@@ -84,6 +86,12 @@ public class BikeTableController extends TableController{
         ));
     }
 
+    /**
+     * Checks if the Bike ID of the given bike trip contains the entered bike ID anywhere in it's ID.
+     *
+     * @param bikeTrip Bike trip to check against
+     * @return boolean true if bike ID matches, or the text field is empty. False otherwise
+     */
     private boolean searchBikeId(BikeTrip bikeTrip) {
         if (bikeSearchField.getText().isEmpty()) {
             return true;
@@ -93,6 +101,11 @@ public class BikeTableController extends TableController{
         }
     }
 
+    /**
+     * Checks if the selected gender matches the gender of the given bike trip.
+     * @param bikeTrip Bike trip to check against
+     * @return boolean True if matches or "All" is selected. False otherwise.
+     */
     private boolean checkGender(BikeTrip bikeTrip) {
         if (filterGenderComboBox.getValue().equals("All")) {
             return true;
@@ -106,10 +119,11 @@ public class BikeTableController extends TableController{
         nameLabel.setVisible(true);
     }
 
+    /**
+     * Sets the filter options.
+     * TODO don't hard code
+     */
     private void setFilters() {
-        /**
-         * Sets the filter options.
-         */
 
         filterGenderComboBox.getItems().addAll("All", 'm', 'f', 'u');
         filterGenderComboBox.getSelectionModel().selectFirst();
@@ -122,12 +136,11 @@ public class BikeTableController extends TableController{
 
     }
 
+    /**
+     * Creates a task to run on another thread to open the file, to stop GUI hangs.
+     * Also sets the loading animation going and stops when finished.
+     */
     private void importBikeCsv(final String filename) {
-        /**
-         * Creates a task to run on another thread to open the file,
-         * to stop GUI hangs.
-         * Also sets the loading animation going and stops when finished.
-         */
 
         final Task<ArrayList<BikeTrip>>loadBikeCsv = new Task<ArrayList<BikeTrip>>() {
             /**
@@ -160,6 +173,10 @@ public class BikeTableController extends TableController{
         new Thread(loadBikeCsv).start();
     }
 
+    /**
+     * Get the path for a csv to load, open one if given
+     * TODO add file checking
+     */
     public void importBike() {
 
         String filename = getCsvFilename();
@@ -168,6 +185,10 @@ public class BikeTableController extends TableController{
         }
     }
 
+    /**
+     * Opens a dialog to add a bike trip, adds the trip if valid, otherwise does nothing.
+     * TODO handle null trips
+     */
     public void addBikeTrip() {
 
         try {
@@ -187,11 +208,11 @@ public class BikeTableController extends TableController{
         }
     }
 
+    /**
+     * Fairly similar to Retailer setup, but for a bike trip
+     * TODO add more relevant columns
+     */
     private void setTableViewBike(ArrayList<BikeTrip> data) {
-        /**
-         * Fairly similar to Retailer setup, but for a bike trip
-         * TODO add more relevant columns
-         */
 
         dataPoints = FXCollections.observableArrayList(data);
 

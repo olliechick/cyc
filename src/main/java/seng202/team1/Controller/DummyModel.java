@@ -4,7 +4,8 @@ package seng202.team1.Controller;
  * Dummy model class
  * For testing only
  *
- * Created by jbe113 on 22/08/17.
+ * Created on 22/08/17.
+ * @author Josh Bernasconi
  */
 public class DummyModel {
 

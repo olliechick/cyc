@@ -11,7 +11,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- * Created by jbe113 on 7/09/17.
+ * Gives the data analysis enabled users options on which table to open.
+ *
+ * Created on 7/09/17.
+ *
+ * @author Josh Bernasconi
  */
 public class LandingController {
 
@@ -21,11 +25,18 @@ public class LandingController {
     private DummyModel model;
     private Stage stage;
 
-
-    public void initModel(DummyModel model) {
+    /**
+     * Enables this controller to use the model.
+     * @param model the model object
+     */
+    protected void initModel(DummyModel model) {
         this.model = model;
     }
 
+    /**
+     * Changes the scene to a table view of retailer data
+     * TODO add default data
+     */
     public void openRetailerTable() {
 
         try {
@@ -47,6 +58,10 @@ public class LandingController {
         }
     }
 
+    /**
+     * Changes the scene to a table view of bike trips
+     * TODO add default data
+     */
     public void openBikeTable() {
 
         try {
@@ -69,6 +84,10 @@ public class LandingController {
 
     }
 
+    /**
+     * Changes the scene to a table view of wifi points
+     * TODO add default data
+     */
     public void openWifiTable() {
         System.out.println("Wifi table clicked");
         try {

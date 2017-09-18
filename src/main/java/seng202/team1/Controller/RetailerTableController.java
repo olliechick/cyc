@@ -11,23 +11,20 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng202.team1.DataPoint;
 import seng202.team1.RetailerLocation;
-
-import java.io.File;
 import java.util.ArrayList;
 
 import static seng202.team1.CSVLoader.populateRetailers;
 
 /**
- * Logic for the table GUI
+ * Logic for the retailer table GUI
  *
  *
  * Created by jbe113 on 7/09/17.
  */
-public class RetailerTableController {
+public class RetailerTableController extends TableController{
 
     @FXML
     private ComboBox filterPrimaryComboBox;
@@ -56,23 +53,12 @@ public class RetailerTableController {
     private ObservableList<RetailerLocation> dataPoints;
     private FilteredList<RetailerLocation> filteredData;
 
+    /**
+     * Run automatically when the fxml is loaded by an FXMLLoader
+     */
     public void initialize() {
-        /**
-         * Run automatically when the fxml is loaded by an FXMLLoader
-         */
 
-        // Get the selected row on double click and run the data popup
-        table.setRowFactory( tv -> {
-            TableRow<DataPoint> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                    DataPoint rowData = row.getItem();
-                    System.out.println(rowData);
-                    showDataPopup((DataPoint) table.getSelectionModel().getSelectedItem());
-                }
-            });
-            return row ;
-        });
+        super.initialize();
     }
 
     protected void setName() {
@@ -80,20 +66,22 @@ public class RetailerTableController {
         nameLabel.setVisible(true);
     }
 
+    /**
+     * Checks the combo boxes and street field for data and filters the displayed
+     * data accordingly.
+     *
+     * The first section of the lambda generates a boolean on each table entry, depending if they fit the
+     * criteria.
+     * The second section contains the observable properties that it watches for changes on,
+     * updating the filter each time one changes.
+     *
+     * TODO leave in for credit?
+     * https://stackoverflow.com/questions/33016064/javafx-multiple-textfields-should-filter-one-tableview
+     *
+     * TODO thread if slow
+     */
     private void setPredicate() {
-        /**
-         * Checks the combo boxes and street field for data and filters the displayed
-         * data accordingly.
-         * The first section of the lambda generates a boolean on each table entry, depending if they fit the
-         * criteria.
-         *
-         * The second section contains the observable properties that it watches for changes on,
-         * updating the filter each time one changes.
-         * TODO leave in for credit?
-         * https://stackoverflow.com/questions/33016064/javafx-multiple-textfields-should-filter-one-tableview
-         *
-         * TODO thread if slow
-         */
+
         filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
                         retailerLocation -> checkStreet(retailerLocation)
                                 && checkPrimary(retailerLocation)
@@ -105,11 +93,11 @@ public class RetailerTableController {
         ));
     }
 
+    /**
+     * checks the given retailerLocation against the filter in the primary function ComboBox.
+     */
     private boolean checkPrimary(RetailerLocation retailerLocation) {
-        /**
-         * checks the given retailerLocation against the filter in the primary function ComboBox.
-         *
-         */
+
         if ("All".equals(filterPrimaryComboBox.getValue())) {
             return true;
         } else {
@@ -117,11 +105,12 @@ public class RetailerTableController {
         }
     }
 
+    /**
+     * Checks the address line 1 of the given retailerLocation against the text in the street
+     * search field.
+     */
     private boolean checkStreet(RetailerLocation retailerLocation) {
-        /**
-         * Checks the address line 1 of the given retailerLocation against the text in the street
-         * search field.
-         */
+
         if (streetSearchField.getText().isEmpty()) {
             return true;
         } else {
@@ -130,6 +119,11 @@ public class RetailerTableController {
         }
     }
 
+    /**
+     * Check the zip code of the given RetailerLocation against the selected zip code
+     *
+     * @return boolean true if zip matches or "All" is selected, false otherwise.
+     */
     private boolean checkZip(RetailerLocation retailerLocation) {
         if (filterZipComboBox.getValue().equals("All")) {
             return true;
@@ -138,11 +132,12 @@ public class RetailerTableController {
         }
     }
 
+    /**
+     * Sets the filter options
+     * TODO don't hard code
+     */
     private void setFilters() {
-        /**
-         * Sets the filter options
-         * TODO don't hard code
-         */
+
         filterPrimaryComboBox.getItems().addAll("All", "Shopping", "Personal and Professional Services");
         filterPrimaryComboBox.getSelectionModel().selectFirst();
 
@@ -151,33 +146,12 @@ public class RetailerTableController {
 
     }
 
-    private String getCsvFilename() {
-        /**
-         * Opens a FileChooser popup, allowing the user to choose a file.
-         * Only allows for opening of .csv files
-         */
-
-        String filename = null;
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open CSV file");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-        stage = (Stage) filterPrimaryComboBox.getScene().getWindow();
-        File file = fileChooser.showOpenDialog(stage);
-        if (file != null) {
-            filename = file.getAbsolutePath();
-        }
-
-        return filename;
-
-    }
-
+    /**
+     * Creates a task to load the csv data, runs it on another thread.
+     * The loading animations are shown until load completes, then the UI is updated.
+     */
     private void importRetailerCsv(final String filename) {
-        /**
-         * Same as importBikeCsv but is needed as it was the only way to get the task
-         * to call the correct CSVLoader methods.
-         */
+
 
         final Task<ArrayList<RetailerLocation>> loadRetailerCsv = new Task<ArrayList<RetailerLocation>>() {
             /**
@@ -211,20 +185,10 @@ public class RetailerTableController {
         new Thread(loadRetailerCsv).start();
     }
 
-    private void startLoadingAni() {
-
-        progressSpinner.setVisible(true);
-        loadLabel.setVisible(true);
-        progressSpinner.setProgress(-1);
-    }
-
-    private void stopLoadingAni() {
-
-        progressSpinner.setVisible(false);
-        loadLabel.setVisible(false);
-
-    }
-
+    /**
+     * Get the path for a csv to load, open one if given
+     * TODO add file checking
+     */
     public void importRetailer() {
 
         String filename = getCsvFilename();
@@ -233,10 +197,16 @@ public class RetailerTableController {
         }
     }
 
+    /**
+     * Pretty much straight from http://docs.oracle.com/javafx/2/ui_controls/table-view.htm
+     *
+     * Creates the columns of the table.
+     * Sets their value factories so that the data is displayed correctly.
+     * Sets up the lists of data for filtering TODO move out
+     * Displays the columns
+     * Sets the filters based on the data
+     */
     private void setTableViewRetailer(ArrayList<RetailerLocation> data) {
-        /**
-         * Pretty much straight from http://docs.oracle.com/javafx/2/ui_controls/table-view.htm
-         */
 
         dataPoints = FXCollections.observableArrayList(data);
 
@@ -282,27 +252,9 @@ public class RetailerTableController {
 
     }
 
-    private void showDataPopup(DataPoint data) {
-        /**
-         * Opens a modal popup with the toString of the object
-         * as the text.
-         * If we change the toString of the different data points
-         * this will print nice.
-         */
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(data.getName());
-        alert.setHeaderText(null);
-        alert.setContentText(data.getDescription());
-
-        alert.showAndWait();
-    }
-
+    @Override
     protected void initModel(DummyModel dummyModel) {
-        /**
-         * initialises the model for use in the rest of the View
-         * Will allow for accessing user data once implemented
-         */
+
         this.model = dummyModel;
     }
 }

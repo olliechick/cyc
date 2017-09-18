@@ -13,7 +13,8 @@ import java.io.IOException;
 /**
  * Logic for the login GUI
  *
- * Created by jbe113 on 22/08/17.
+ * Created on 22/08/17.
+ * @author Josh Bernasconi
  */
 public class LoginController {
 
@@ -33,15 +34,13 @@ public class LoginController {
         this.model = dummyModel;
     }
 
+    /**
+     * At the moment, just grabs the username entered and sets it in the model,
+     * then hands over to the landing GUI.
+     *
+     * If no name is entered, name is set to "No username entered" as error handling isn't needed yet.
+     */
     public void login() {
-        /**
-         * At the moment, just grabs the username entered and sets it in the model,
-         * then hands over to the Table GUI.
-         *
-         * If no name is entered, name is set to "No username entered" as error handling isn't needed yet.
-         *
-         * @author Josh Bernasconi
-         */
 
         System.out.println("Login button clicked");
         if (!usernameTextField.getText().isEmpty()) {
@@ -52,7 +51,7 @@ public class LoginController {
 
 
         try {
-            // Changes to the table GUI
+            // Changes to the table choosing GUI
             FXMLLoader landingLoader = new FXMLLoader(getClass().getResource("/fxml/landingView.fxml"));
             Parent landingView = landingLoader.load();
             LandingController landingController = landingLoader.getController();
@@ -69,12 +68,10 @@ public class LoginController {
         }
     }
 
+    /**
+     * Will handle sign up button clicks
+     */
     public void signUp() {
-        /**
-         * Will handle sign up button clicks
-         *
-         * @author Josh Bernasconi
-         */
 
         System.out.println("Sign in button clicked");
     }
