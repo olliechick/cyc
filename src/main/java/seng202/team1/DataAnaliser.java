@@ -1,13 +1,11 @@
 package seng202.team1;
 
-import com.sun.org.apache.bcel.internal.generic.BIPUSH;
-import javafx.beans.property.DoubleProperty;
+import seng202.team1.BikeTrip;
+import seng202.team1.CSVLoader;
 import javafx.concurrent.WorkerStateEvent;
-import seng202.team1.*;
+import seng202.team1.WifiPoint;
 
-import javax.xml.transform.dom.DOMLocator;
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -118,9 +116,9 @@ public final class DataAnaliser {
         WifiPoint closestPoint = null;
         if (closeHotspots.size() > 0) { //only searchList if at least one point is found
             closestPoint = closeHotspots.get(0);
-            double closestDistance = calculateDistance(tripLat, tripLong, Double.parseDouble(closestPoint.getLatitude()), Double.parseDouble(closestPoint.getLongitude()));
+            double closestDistance = calculateDistance(tripLat, tripLong, closestPoint.getLatitude(), closestPoint.getLongitude());
             for (WifiPoint canidatePoint : closeHotspots) {
-                double canidateDistance = calculateDistance(tripLat, tripLong, Double.parseDouble(canidatePoint.getLatitude()), Double.parseDouble(canidatePoint.getLongitude()));
+                double canidateDistance = calculateDistance(tripLat, tripLong, canidatePoint.getLatitude(),canidatePoint.getLongitude());
                 if (canidateDistance < closestDistance) {
                     closestPoint = canidatePoint;
                     closestDistance = canidateDistance;
@@ -149,9 +147,9 @@ public final class DataAnaliser {
         WifiPoint closestPoint = null;
         if (closeHotspots.size() > 0) { //only searchList if at least one point is found
             closestPoint = closeHotspots.get(0);
-            double closestDistance = calculateDistance(tripLat, tripLong, Double.parseDouble(closestPoint.getLatitude()), Double.parseDouble(closestPoint.getLongitude()));
+            double closestDistance = calculateDistance(tripLat, tripLong, closestPoint.getLatitude(), closestPoint.getLongitude());
             for (WifiPoint canidatePoint : closeHotspots) {
-                double canidateDistance = calculateDistance(tripLat, tripLong, Double.parseDouble(canidatePoint.getLatitude()), Double.parseDouble(canidatePoint.getLongitude()));
+                double canidateDistance = calculateDistance(tripLat, tripLong, canidatePoint.getLatitude(), canidatePoint.getLongitude());
                 if (canidateDistance < closestDistance) {
                     closestPoint = canidatePoint;
                     closestDistance = canidateDistance;
@@ -180,8 +178,10 @@ public final class DataAnaliser {
         if (closestToStart == null) {
             return closestToEnd;
         }
-        double distanceToStart = calculateDistance(tripLat,tripLong,Double.parseDouble(closestToStart.getLatitude()),Double.parseDouble(closestToStart.getLongitude()));
-        double distanceToEnd = calculateDistance(tripLat,tripLong,Double.parseDouble(closestToEnd.getLatitude()), Double.parseDouble(closestToEnd.getLongitude()));
+        double distanceToStart = calculateDistance(tripLat,tripLong,
+        closestToStart.getLatitude(), closestToStart.getLongitude());
+        double distanceToEnd = calculateDistance(tripLat,tripLong,
+        closestToEnd.getLatitude(), closestToEnd.getLongitude());
         if (distanceToEnd > distanceToStart) {
             return closestToStart;
         } else {
@@ -218,7 +218,7 @@ public final class DataAnaliser {
         }
         return closestPoint;
     }
-    
+
 
     /**
      * Generic version of calculate distance using Latitude and Longitude.

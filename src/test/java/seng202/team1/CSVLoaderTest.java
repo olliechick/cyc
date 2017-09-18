@@ -14,13 +14,45 @@ import static seng202.team1.CSVLoader.populateWifiHotspots;
 
 public class CSVLoaderTest extends TestCase {
 
-    String csv_resource_dir = "src/test/resources/";
+    private String csv_resource_dir = "src/test/resources/";
 
     public void setUp() throws Exception {
         super.setUp();
     }
 
     public void tearDown() throws Exception {
+        super.tearDown();
+    }
+
+    public void testLoadCSVOneEntry() throws Exception {
+        String filename = csv_resource_dir + "testfile.csv";
+        ArrayList<CSVRecord> records = CSVLoader.loadCSV(filename, 1);
+        assertEquals(1, records.size());
+    }
+
+    public void testLoadCSVExtraEntries() throws Exception {
+        String filename = csv_resource_dir + "testfile.csv";
+        ArrayList<CSVRecord> records = CSVLoader.loadCSV(filename, 10);
+        assertEquals(2, records.size());
+    }
+
+    public void testLoadCSVSecondEntry() throws Exception {
+        String filename = csv_resource_dir + "testfile.csv";
+        ArrayList<CSVRecord> records = CSVLoader.loadCSV(filename, 1, 1);
+        assertEquals(1, records.size());
+        assertTrue(records.get(0).get(0).equals("l2c1"));
+        assertTrue(records.get(0).get(1).equals("l2c2"));
+    }
+
+    public void testLoadCSVSecondEntryOverrun() throws Exception {
+        String filename = csv_resource_dir + "testfile.csv";
+        try {
+            ArrayList<CSVRecord> records = CSVLoader.loadCSV(filename, 10, 1);
+            fail(); //should have thrown an error
+        } catch (IllegalArgumentException e) {
+            assertEquals("There are not 2 blocks.", e.getMessage());
+        }
+
     }
 
     public void testLoadCSVAllEntries() throws Exception {
@@ -53,16 +85,22 @@ public class CSVLoaderTest extends TestCase {
         ArrayList<BikeTrip> trips = populateBikeTrips(filename);
         BikeTrip modelBikeTrip = new BikeTrip(551,
                 LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 8, 53),
-                LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 18, 05),
-                new Point.Float((float) 40.76727216, (float) -73.99392888),
-                new Point.Float((float) 40.75992262, (float) -73.97648516), 22307, 'm', 1980);
+                LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 18, 5),
+                new Point.Float((float) -73.99392888, (float) 40.76727216),
+                new Point.Float((float) -73.97648516, (float) 40.75992262),
+                22307, 'm', 1980, false);
         assertEquals(modelBikeTrip, trips.get(0));
     }
 
     public void testPopulateWifiHotspots() throws Exception {
         String filename = csv_resource_dir + "testWifi.csv";
         ArrayList<WifiPoint> wifiSpots = populateWifiHotspots(filename);
-        WifiPoint modelWifiHotspot = new WifiPoint("334", "POINT (-73.74567356126445 40.67695272804687)", "QU", "Free", "40.676952728", "-73.7456735613", "134-26 225 STREET", "QPL");
+        WifiPoint modelWifiHotspot = new WifiPoint(334,
+                new Point.Float((float) -73.74567356126445, (float) 40.6769527280),
+                "Laurelton", "134-26 225 STREET",
+                "Library", "Laurelton", "Queens",
+                "Laurelton", 11413, "Free", "QPL",
+                "", "QBPL_WIRELESS", "",  null, false);
         assertEquals(modelWifiHotspot, wifiSpots.get(0));
 
     }
@@ -70,7 +108,10 @@ public class CSVLoaderTest extends TestCase {
     public void testPopulateRetailers() throws Exception {
         String filename = csv_resource_dir + "testRetailers.csv";
         ArrayList<RetailerLocation> retailers = populateRetailers(filename);
-        RetailerLocation modelRetailer = new RetailerLocation("Candy Plus", "16 Beaver Street, New York, NY 10004", "Shopping", "Candy & Chocolate");
+        RetailerLocation modelRetailer = new RetailerLocation("Candy Plus",
+                "16 Beaver Street", "", "New York",
+                "NY" , 10004, "11-7", "Shopping",
+                "Candy & Chocolate", false);
         assertEquals(modelRetailer, retailers.get(0));
     }
 
