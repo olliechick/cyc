@@ -19,7 +19,7 @@ public class GenerateFieldsTest {
     }
     @Test
     public void TestPrimaryFunctionsLargeList(){
-        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("Lower_Manhattan_Retailers.csv");
+        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers(csv_resource_dir + "Lower_Manhattan_Retailers.csv");
         ArrayList<String> primaryFunctions = GenerateFields.generatePrimaryFunctionsList(retailers);
 
         assertEquals(8,primaryFunctions.size());
@@ -34,7 +34,7 @@ public class GenerateFieldsTest {
 
     @Test
     public void TestSecondaryFunctionsLargeList(){
-        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("Lower_Manhattan_Retailers.csv");
+        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers(csv_resource_dir +"Lower_Manhattan_Retailers.csv");
         ArrayList<String> secondaryFunctions = GenerateFields.generateSecondaryFunctionsList(retailers);
         assertEquals(92, secondaryFunctions.size());
     }
@@ -56,32 +56,32 @@ public class GenerateFieldsTest {
 
     @Test
     public void TestGenerateWifiPointTypesSmallList(){
-        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
+        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots(csv_resource_dir +"wifiTester.csv");
         ArrayList<String> results = GenerateFields.generateWifiTypes(hotspots);
         assertEquals(1,results.size());
     }
     @Test
     public void TestGenerateWifiPointTypesLargeList(){
-        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("NYC_Free_Public_WiFi_03292017.csv");
+        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots(csv_resource_dir +"NYC_Free_Public_WiFi_03292017.csv");
         ArrayList<String> results = GenerateFields.generateWifiTypes(hotspots);
         assertEquals(3,results.size());
     }
     @Test
     public void TestFindWifiSpotsOfSameCost(){
-        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
+        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots(csv_resource_dir + "wifiTester.csv");
         ArrayList<WifiPoint> results = GenerateFields.findPointsOfSameCost("free", hotspots);
         assertEquals(hotspots.size(),results.size());
     }
     @Test
     public void TestGenerateProvidersSmallList(){
-        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
+        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots(csv_resource_dir + "wifiTester.csv");
         ArrayList<String> providers = GenerateFields.generateWifiProviders(hotspots);
         assertEquals(1, providers.size());
     }
 
     @Test
     public void TestGenerateProvidersLargeList(){
-        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("NYC_Free_Public_WiFi_03292017.csv");
+        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots(csv_resource_dir + "NYC_Free_Public_WiFi_03292017.csv");
         ArrayList<String> providers = GenerateFields.generateWifiProviders(hotspots);
         assertEquals(15, providers.size());
     }

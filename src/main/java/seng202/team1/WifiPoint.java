@@ -78,7 +78,6 @@ public class WifiPoint extends DataPoint {
 
     public float getLatitude() {
         return coords.y;
-
     }
 
     public void setLatitude(float latitude) {
@@ -231,5 +230,14 @@ public class WifiPoint extends DataPoint {
                 ", sourceId='" + sourceId + '\'' +
                 ", datetimeActivated=" + datetimeActivated +
                 '}';
+    }
+
+    public String toInfoString() {
+        return "Name: " + placeName + "\\n" +
+                "Cost: " + cost + "\\n" +
+                "Provider: " + provider + "\\n" +
+                "SSID: " + ssid + "\\n" +
+                "Since: " + datetimeActivated;
+
     }
 }

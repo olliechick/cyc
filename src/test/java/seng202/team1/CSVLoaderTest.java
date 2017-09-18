@@ -111,7 +111,8 @@ public class CSVLoaderTest extends TestCase {
         RetailerLocation modelRetailer = new RetailerLocation("Candy Plus",
                 "16 Beaver Street", "", "New York",
                 "NY" , 10004, "11-7", "Shopping",
-                "Candy & Chocolate", false);
+                "Candy & Chocolate",
+                new Point.Float((float) -74.0125066, (float) 40.7048083), false);
         assertEquals(modelRetailer, retailers.get(0));
     }
 
