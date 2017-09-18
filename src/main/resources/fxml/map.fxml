@@ -41,7 +41,7 @@
                            <Label text="Address:" GridPane.columnIndex="3" />
                            <Label text="ZIP:" GridPane.columnIndex="2" />
                            <ComboBox fx:id="filterPrimaryComboBox" onAction="#updateRetailers" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                           <ComboBox fx:id="filterZipComboBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                           <ComboBox fx:id="filterZipComboBox" onAction="#updateRetailers"  prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                            <Label fx:id="nameLabel" text="Name placeholder" visible="false" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                            <Label fx:id="loadLabel" text="Loading:" visible="false" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                            <ProgressIndicator fx:id="progressSpinner" progress="0.0" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="2" />
@@ -72,9 +72,9 @@
                            <Label text="Borough:" GridPane.columnIndex="1" />
                            <Label text="Provider:" GridPane.columnIndex="3" />
                            <Label text="Cost:" GridPane.columnIndex="2" />
-                           <ComboBox fx:id="filterBoroughComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           <ComboBox fx:id="filterBoroughComboBox" onAction="#updateWIFI" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                            <ComboBox fx:id="filterCostComboBox" onAction="#updateWIFI" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                           <ComboBox fx:id="filterProviderComboBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                           <ComboBox fx:id="filterProviderComboBox" onAction="#updateWIFI" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                        </children>
                        <padding>
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
