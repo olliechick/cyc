@@ -169,6 +169,7 @@ public class BikeTableController extends TableController{
                 setTableViewBike(loadBikeCsv.getValue());
                 stopLoadingAni();
                 setPredicate();
+                populateCustomBikeTrips();
             }
         });
 
@@ -205,6 +206,7 @@ public class BikeTableController extends TableController{
             BikeTrip test = addBikeDialog.getBikeTrip();
             if (test != null) {
                 dataPoints.add(addBikeDialog.getBikeTrip());
+                model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
             }
             System.out.println(test);
         } catch (IOException e) {
@@ -261,5 +263,16 @@ public class BikeTableController extends TableController{
          */
         this.model = dummyModel;
         importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME);
+    }
+
+    private void populateCustomBikeTrips() {
+        ArrayList<BikeTrip> customTrips = model.getCustomBikeTrips();
+
+        if (customTrips != null) {
+            for (BikeTrip trip : customTrips) {
+                System.out.println(trip);
+                dataPoints.add(trip);
+            }
+        }
     }
 }

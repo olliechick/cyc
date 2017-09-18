@@ -112,6 +112,8 @@ public class WifiTableController extends TableController{
      * Creates a task to run on another thread to open the file,
      * to stop GUI hangs.
      * Also sets the loading animation going and stops when finished.
+     *
+     * @param filename the absolute path to the csv file.
      */
     private void importWifiCsv(final String filename) {
 

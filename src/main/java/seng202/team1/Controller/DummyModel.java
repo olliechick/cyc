@@ -17,9 +17,9 @@ public class DummyModel {
 
     private String name;
 
-    private ArrayList<BikeTrip> customBikeTrips;
-    private ArrayList<RetailerLocation> customRetailerLocations;
-    private ArrayList<WifiPoint> customWifiPoints;
+    private ArrayList<BikeTrip> customBikeTrips = new ArrayList<>();
+    private ArrayList<RetailerLocation> customRetailerLocations = new ArrayList<>();
+    private ArrayList<WifiPoint> customWifiPoints = new ArrayList<>();
 
     public void setName(String inName) {
         name = inName;
