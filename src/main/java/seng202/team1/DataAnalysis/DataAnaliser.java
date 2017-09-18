@@ -24,9 +24,9 @@ public final class DataAnaliser {
      * Calaculates the distance, as the crow flies between two points on a bike trip.
      * If the same bike trip is passed in twice the length of the bike trip is calculated
      * Otherwise the distance between the two starting points is calculated.
-     * @param b1
-     * @param b2
-     * @return Double distance
+     * @param b1 first bike trip
+     * @param b2 second bike trip
+     * @return Double
      */
     public static double calculateDistOfBikeTrips(BikeTrip b1, BikeTrip b2){
         double endingLat;
@@ -54,10 +54,10 @@ public final class DataAnaliser {
     /**
      * Takes a latitude, longitude and distance delta and iterates through a list of bike trips
      * returning all trips within the distance delta in an arraylist.
-     * @param searchLat
-     * @param searchLong
-     * @param delta
-     * @return
+     * @param searchLat Latitude to start the search at
+     * @param searchLong Longitude to start the search at
+     * @param delta radius to search in
+     * @return ArrayList<BikeTrip>
      */
     public static ArrayList<BikeTrip> searchBikeTrips(double searchLat, double searchLong, double delta, ArrayList<BikeTrip> trips){
         ArrayList<BikeTrip> results = new ArrayList<BikeTrip>();
@@ -77,11 +77,11 @@ public final class DataAnaliser {
     /**
      * Takes a latitude, longitude and distance delta and iterates through a list of wifi points
      * Returns all points within the specified distance from the lat and long
-     * @param searchLat
-     * @param searchLong
-     * @param delta
-     * @param hotspots
-     * @return
+     * @param searchLat Latitude to start the search at
+     * @param searchLong Longitude to start the search at
+     * @param delta radius to search in
+     * @param hotspots ArrayList of wifipoints to search through
+     * @return ArrayList<WifiPoint>
      */
     public static ArrayList<WifiPoint> searchWifiPoints(double searchLat, double searchLong, double delta, ArrayList<WifiPoint> hotspots) {
         ArrayList<WifiPoint> results = new ArrayList<WifiPoint>();
@@ -97,29 +97,13 @@ public final class DataAnaliser {
         return results;
 
     }
-    /* locations are not provided for retaliers in GPS Coords so the current approch wont work
-    public static ArrayList<RetailerLocation> searchRetailerLocations(double searchLat, double searchLong, double delta) {
-        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers();
-        ArrayList<RetailerLocation> results  = new ArrayList<RetailerLocation>();
-        double deltaDecimals = BASEDELTA * delta; //This is the range we will search for in the dataset
-        for (RetailerLocation location : retailers) { //unfortunalty an 0(n) with the current data set. Perhaps we need to sort based on Lat and long to decrease time complexity
-            double spotLong = Double.parseDouble(location.getLongitude());
-            double spotLat = Double.parseDouble(location.getLatitude());
-            if ((spotLong >= (searchLong - deltaDecimals)) && (spotLong <= (searchLong + deltaDecimals))){ //can safely assume all given longitudes in decimal form will be negative
-                if ((spotLat >= (searchLat - deltaDecimals)) && (spotLat <= (searchLat + deltaDecimals))){ //nasty double if loop to improve readbility
-                    results.add(hotspot);
-                }
-            }
-
-        }
-        return results;
-    }*/
 
     /**
      * Takes a Biketrip and returns the closest  WifiPoint, within 1000m, to the start of the bike trip.
      * returns null if no wifiPoint is found
-     * @param trip
-     * @return
+     * @param trip Bike trip that needs to have the closest point found
+     * @param hotspots ArrayList of wifiPoints to search through
+     * @return Wifipoint
      */
     public static WifiPoint findClosestWifiToBikeRouteStart(BikeTrip trip, ArrayList<WifiPoint> hotspots) {
         double tripLat = trip.getStartPoint().getX();
@@ -148,8 +132,9 @@ public final class DataAnaliser {
     /**
      * Takes a Biketrip and returns the closest  WifiPoint, within 1000m, to the end of the bike trip.
      * returns null if no wifiPoint is found
-     * @param trip
-     * @return
+     * @param trip Bike trip that needs to have the closest point found
+     * @param hotspots ArrayList of wifiPoints to search through
+     * @return Wifipoint
      */
     public static WifiPoint findClosestWifiToBikeRouteEnd(BikeTrip trip, ArrayList<WifiPoint> hotspots) {
         double tripLat = trip.getEndPoint().getX();
@@ -180,8 +165,9 @@ public final class DataAnaliser {
      * Takes a BikeTrip and returns the closest point to the either the start or end of the trip
      * If both closest points are the same distance apart the one closest to the start is returned.
      * If no such point exists null is returned
-     * @param trip
-     * @return
+     * @param trip Bike trip that needs to have the closest point found
+     * @param hotspots ArrayList of wifiPoints to search through
+     * @return Wifipoint
      */
     public static WifiPoint findClosestWifiPointToTrip(BikeTrip trip, ArrayList<WifiPoint> hotspots){
         double tripLat = trip.getEndPoint().getX();
@@ -202,6 +188,36 @@ public final class DataAnaliser {
             return closestToEnd;
         }
     }
+
+    /**
+     * Takes a list of waypoints as points and then iterates through the points and discovers which is the closest point on the route
+     * It then returns the Wifi point
+     * @param waypoints ArrayList<point> of waypoint
+     * @param hotspots ArrayList<WifiPoint> of wifipoints to search through
+     * @return WifiPoint
+     */
+    public static WifiPoint findClosestWifiToRoute(ArrayList<Point2D.Float> waypoints, ArrayList<WifiPoint> hotspots){
+        WifiPoint closestPoint = null;
+        double closestDistance = 0;
+        for (Point2D.Float waypoint : waypoints){
+            double pointLat = waypoint.getX();
+            double pointLong = waypoint.getY();
+            for (WifiPoint hotspot : hotspots){
+                double hotspotLat = Double.parseDouble(hotspot.getLatitude());
+                double hotspotLong  = Double.parseDouble(hotspot.getLongitude());
+                double distance = calculateDistance(pointLat,pointLong,hotspotLat,hotspotLong);
+                if (closestPoint == null){
+                    closestPoint = hotspot;
+                    closestDistance = distance;
+                } else if(closestDistance > distance){
+                    closestDistance = distance;
+                    closestPoint = hotspot;
+
+                }
+            }
+        }
+        return closestPoint;
+    }
     
 
     /**
@@ -209,11 +225,11 @@ public final class DataAnaliser {
      * Takes the start and end coords as arguments and then using the rule of haversines calculates an approximation to the distance.
      * Given the non-spherical aspect of the planet it is only an approximaiton.
      * Distance is calculated as the crow flies.
-     * @param startLat
-     * @param startLong
-     * @param endLat
-     * @param endLong
-     * @return
+     * @param startLat Double Latitude to start the search at
+     * @param startLong Double Longitude to start the search at
+     * @param endLat Double Latitude to end the search at
+     * @param endLong  Double Longitude to end the search at
+     * @return Double
      */
     public static double calculateDistance(double startLat, double startLong, double endLat, double endLong){
         startLat = Math.toRadians(startLat);
@@ -229,7 +245,7 @@ public final class DataAnaliser {
     /**
      * Takes a list of Biketrips and sorts it in place based on trip distance
      * Uses the default java sort and a comparator on the tripDistance
-     * @param toSort
+     * @param toSort ArrayList of bike trips to be sorted
      */
     public static void sortTripsByDistance(ArrayList<BikeTrip> toSort){
         Collections.sort(toSort, new Comparator<BikeTrip>() {
@@ -245,8 +261,8 @@ public final class DataAnaliser {
      * Takes a list of retailers and returns all the unique primary functions.
      * returns an empty list if no primary functions are found.
      * Be aware this function is O(nm) so if too many primary functions are found it will blow out time wise
-     * @param retailers
-     * @return
+     * @param retailers ArrayList Of RetailerLocations that need to have primary functions extracted
+     * @return ArrayList<String>
      */
     public static ArrayList<String> generatePrimaryFunctionsList(ArrayList<RetailerLocation> retailers){
         ArrayList<String> primaryFunctions = new ArrayList<String>();
@@ -270,8 +286,8 @@ public final class DataAnaliser {
      * Takes a list of retailers and returns their secondary Functions.
      * Speed can be improved by passing it a list consisting of only the same primary function
      * Be aware this function is O(nm) so if too many secondary functions are found it will blow out time wise
-     * @param retailers
-     * @return
+     * @param retailers ArrayList Of RetailerLocations that need to have secondary functions extracted
+     * @return ArrayList<String>
      */
     public static ArrayList<String> generateSecondaryFunctionsList(ArrayList<RetailerLocation> retailers){
         ArrayList<String> secondaryFunctions = new ArrayList<String>();
@@ -295,10 +311,10 @@ public final class DataAnaliser {
      * Takes a list of retailers and the function name to sort them by and returns list that contains only retailers of the same function
      * the isPrimary flag allows the function to be used either for the primary or secondary function to be selected
      * with true meaning primary and false being secondary.
-     * @param retailers
-     * @param function
-     * @param isPrimary
-     * @return
+     * @param retailers List of reatailer that need the functions checked against
+     * @param function Type of retailer that needs to be found
+     * @param isPrimary Flag for weather to find the primary or secondary function
+     * @return ArrayList<RetailerLocation>
      */
     public static ArrayList<RetailerLocation> generateListOfSameFunction(ArrayList<RetailerLocation> retailers, String function, boolean isPrimary){
         ArrayList<RetailerLocation> sameFunction = new ArrayList<RetailerLocation>();
@@ -322,8 +338,8 @@ public final class DataAnaliser {
      * Takes an angle in radian and returns the haversine function of it.
      * Haversine is (1-Cos(theta))/2 or sin^2(theta/2)
      * This is here to clean up the math on distance calulations
-     * @param theta
-     * @return
+     * @param theta Angle that needs to have its haversine found must be in radians
+     * @return Double Haversine value
      */
     private static double haversine(double theta){
         return (1-Math.cos(theta))/2;
