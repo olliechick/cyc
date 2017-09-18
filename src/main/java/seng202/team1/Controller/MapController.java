@@ -191,7 +191,7 @@ public class MapController {
         if (filterZipComboBox.getValue().equals("All")) {
             return true;
         } else {
-            return retailerLocation.getZipcode() ==  filterZipComboBox.getValue();
+            return retailerLocation.getZipcode() == (int) filterZipComboBox.getValue();
         }
     }
 
