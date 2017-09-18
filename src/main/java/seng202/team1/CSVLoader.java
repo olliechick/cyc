@@ -49,10 +49,29 @@ public class CSVLoader {
 
     }
 
+
     /**
      * Takes a file named filename, which should be a csv, and returns an Arraylist of type CSVRecord.
      * This can be queried using the get(index).
      * Only returns the first numberOfEntries entries (this may include header(s)).
+     *
+     * @param filename The filename of the file to get data from.
+     * @param numberOfEntries The number of entries to retrieve from the file.
+     * @return CSVRecord
+     * @throws IOException If an IO error occurs.
+     * @throws IllegalArgumentException If there are not enough blocks in the file.
+     *
+     */
+    public static ArrayList<CSVRecord> loadCSV(String filename, int numberOfEntries) throws
+            IOException, IllegalArgumentException {
+        return loadCSV(filename, numberOfEntries, 0);
+    }
+
+
+    /**
+     * Takes a file named filename, which should be a csv, and returns an Arraylist of type CSVRecord.
+     * This can be queried using the get(index).
+     * Only returns the [blockNumber]th numberOfEntries entries (this may include header(s)).
      *
      * @param filename The filename of the file to get data from.
      * @param numberOfEntries The number of entries to retrieve from the file.
@@ -72,13 +91,13 @@ public class CSVLoader {
         try {
             records.subList(0, numberOfEntries*blockNumber).clear();
         } catch (IndexOutOfBoundsException e) {
-            throw new IllegalArgumentException("There are not " + blockNumber + "blocks.");
+            throw new IllegalArgumentException("There are not " + (blockNumber + 1) + " blocks.");
         }
 
         // Try to trim it - if numberOfEntries > records.size(), do nothing
         try {
             records.subList(numberOfEntries * (blockNumber+1), records.size()).clear();
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IllegalArgumentException e) {
             //there aren't that many items in the csv, so just return all of them
         }
 
@@ -302,22 +321,4 @@ public class CSVLoader {
         }
         return retailers;
     }
-
-    // Main class (for testing)
-    /*public static void main(String[] args) {
-        String filename = "wifiTester.csv";
-        //populateBikeTrips(filename);
-
-        ArrayList<DataPoint> wifis = populateWifiHotspots(filename);//populateBikeTrips(filename);
-        for (DataPoint wifi : wifis) {
-            System.out.println(wifi);
-        }
-
-        ArrayList<DataPoint> retailers = populateRetailers("ret.csv");//populateBikeTrips(filename);
-        for (DataPoint retailer : retailers) {
-            System.out.println(retailer);
-        }
-
-    }*/
-
 }

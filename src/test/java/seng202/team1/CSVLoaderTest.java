@@ -24,6 +24,37 @@ public class CSVLoaderTest extends TestCase {
         super.tearDown();
     }
 
+    public void testLoadCSVOneEntry() throws Exception {
+        String filename = csv_resource_dir + "testfile.csv";
+        ArrayList<CSVRecord> records = CSVLoader.loadCSV(filename, 1);
+        assertEquals(1, records.size());
+    }
+
+    public void testLoadCSVExtraEntries() throws Exception {
+        String filename = csv_resource_dir + "testfile.csv";
+        ArrayList<CSVRecord> records = CSVLoader.loadCSV(filename, 10);
+        assertEquals(2, records.size());
+    }
+
+    public void testLoadCSVSecondEntry() throws Exception {
+        String filename = csv_resource_dir + "testfile.csv";
+        ArrayList<CSVRecord> records = CSVLoader.loadCSV(filename, 1, 1);
+        assertEquals(1, records.size());
+        assertTrue(records.get(0).get(0).equals("l2c1"));
+        assertTrue(records.get(0).get(1).equals("l2c2"));
+    }
+
+    public void testLoadCSVSecondEntryOverrun() throws Exception {
+        String filename = csv_resource_dir + "testfile.csv";
+        try {
+            ArrayList<CSVRecord> records = CSVLoader.loadCSV(filename, 10, 1);
+            fail(); //should have thrown an error
+        } catch (IllegalArgumentException e) {
+            assertEquals("There are not 2 blocks.", e.getMessage());
+        }
+
+    }
+
     public void testLoadCSVAllEntries() throws Exception {
         String filename = csv_resource_dir + "testfile.csv";
         ArrayList<CSVRecord> records = CSVLoader.loadCSV(filename);
