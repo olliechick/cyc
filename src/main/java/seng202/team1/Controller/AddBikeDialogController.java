@@ -3,19 +3,21 @@ package seng202.team1.Controller;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import seng202.team1.BikeTrip;
 
 import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
 import java.time.Month;
 
@@ -51,10 +53,10 @@ public class AddBikeDialogController {
     private TextField endLongField;
 
     @FXML
-    private TextField durationField;
+    private DatePicker startDatePicker;
 
     @FXML
-    private DatePicker datePicker;
+    private DatePicker stopDatePicker;
 
     @FXML
     private Label idLabel;
@@ -78,14 +80,29 @@ public class AddBikeDialogController {
     private Label endLongLabel;
 
     @FXML
-    private Label durationLabel;
+    private Label startDateLabel;
 
     @FXML
-    private Label dateLabel;
+    private Label stopDateLabel;
+
+    @FXML
+    private RadioButton startAM;
+
+    @FXML
+    private RadioButton startPM;
+
+    @FXML
+    private RadioButton stopAM;
+
+    @FXML
+    private RadioButton stopPM;
 
 
     private BikeTrip bikeTrip;
     private Stage stage;
+
+    private final ToggleGroup startToggleGroup = new ToggleGroup();
+    private final ToggleGroup stopToggleGroup = new ToggleGroup();
 
     /**
      * Set up the window as a dialog.
@@ -99,7 +116,13 @@ public class AddBikeDialogController {
         stage.initStyle(StageStyle.UTILITY);
         stage.setTitle("Add Bike Trip");
         stage.setScene(new Scene(root));
-        //stage = (Stage) addButton.getScene().getWindow();
+        startAM.setToggleGroup(startToggleGroup);
+        startPM.setToggleGroup(startToggleGroup);
+        stopPM.setToggleGroup(stopToggleGroup);
+        stopAM.setToggleGroup(stopToggleGroup);
+
+        startAM.setSelected(true);
+        stopAM.setSelected(true);
     }
 
     /**
@@ -117,6 +140,11 @@ public class AddBikeDialogController {
         }
     }
 
+    /**
+     * Check the fields are filled with semi-valid data, turn all invalid fields red.
+     * TODO complete checks
+     * @return true only if all fields are valid
+     */
     private boolean checkFields() {
         boolean valid = true;
 
