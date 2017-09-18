@@ -220,7 +220,7 @@ public class BikeTrip extends DataPoint {
     public String getName() {
         String start = startTime.format(DateTimeFormatter.ofPattern("h:mm a d MMMM yyyy"))
                 .replace("AM", "am").replace("PM","pm");
-        return String.format("Bike %d's trip at %s", bikeID, start);
+        return String.format("Trip at %s", start);
     }
 
 

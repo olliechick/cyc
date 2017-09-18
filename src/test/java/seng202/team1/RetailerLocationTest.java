@@ -60,6 +60,4 @@ public class RetailerLocationTest extends TestCase {
                 "Professional Services (Spa)";
         assertEquals(expectedString, retailerLocation.getDescription());
     }
-
-
 }

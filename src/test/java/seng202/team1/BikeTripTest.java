@@ -38,10 +38,19 @@ public class BikeTripTest extends TestCase {
     }
 
 
-    public void testDurationlessConstructor(){
+    public void testDurationlessConstructor() {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint, bikeID,
                 gender, birthYear, isUserDefinedPoint);
         assertEquals(10, biketrip1.getTripDuration());
+    }
+
+    public void testGetGenderDescription() {
+        assertEquals("female", bikeTrip.getGenderDescription());
+    }
+
+    public void testGetName() {
+        String expectedString = "Trip at 11:50 pm 30 December 2015";
+        assertEquals(expectedString, bikeTrip.getName());
     }
 
 

@@ -56,6 +56,10 @@ public class WifiPointTest {
 
     }
 
+    public void testName() {
+        assertEquals(wifiPoint.getSsid(), wifiPoint.getName());
+    }
+
     public void testGetDescription() {
         String expectedString = "ID 998\nLocation: 179 WEST 26 STREET - mn-05-123662 (Outdoor Kiosk), Midtown-Midtown South, "
         + "Manhattan, New York 10001 (40.745968, -73.994039)\nCost: Free\nProvider: LinkNYC - Citybridge\n"
