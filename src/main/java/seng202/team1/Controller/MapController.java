@@ -1,7 +1,7 @@
 package seng202.team1.Controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import seng202.team1.RetailerLocation;
@@ -19,8 +19,30 @@ import static seng202.team1.CSVLoader.populateWifiHotspots;
  * Created by cga51 on 06/09/17.
  */
 public class MapController {
+
+    ArrayList<RetailerLocation> retailerPoints = null;
+    ArrayList<WifiPoint> wifiPoints = null;
+
     @FXML
     private WebView webView;
+
+    @FXML
+    private ComboBox filterPrimaryComboBox;
+
+    @FXML
+    private TextField streetSearchField;
+
+    @FXML
+    private ComboBox filterZipComboBox;
+
+    @FXML
+    private Label nameLabel;
+
+    @FXML
+    private ProgressIndicator progressSpinner;
+
+    @FXML
+    private Label loadLabel;
 
     @FXML
     private WebEngine webEngine;
@@ -33,6 +55,7 @@ public class MapController {
         webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
         webEngine.load(getClass().getResource("/html/map.html").toString());
+        setFilters();
     }
     @FXML
     private void zoomIn() {
@@ -46,6 +69,14 @@ public class MapController {
         }
 
 
+    }
+
+    private void showRetailer(int index) {
+        webView.getEngine().executeScript("document.showRetailerMarker(" + index + ")");
+    }
+
+    private void hideRetailer(int index) {
+        webView.getEngine().executeScript("document.hideRetailerMarker(" + index + ")");
     }
 
     private void addWifi(float lat, float lng, String title) {
@@ -72,7 +103,7 @@ public class MapController {
     }
     @FXML
     private void loadAllRetailers() {
-        ArrayList<RetailerLocation> retailerPoints =  populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
+        retailerPoints =  populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
         RetailerLocation point = null;
         for (int i = 0; i < retailerPoints.size(); i++) {
             point = retailerPoints.get(i);
@@ -82,6 +113,86 @@ public class MapController {
 
         }
     }
+
+    @FXML
+    private void updateRetailers() {
+        for (int i = 0; i < retailerPoints.size(); i++ ) {
+            RetailerLocation retailerLocation = retailerPoints.get(i);
+            if(retailerLocation.isUpdated((checkStreet(retailerLocation)
+                    && checkPrimary(retailerLocation)
+                    && checkZip(retailerLocation)))) {
+                if(retailerLocation.isVisible()) {
+                    showRetailer(i);
+                } else {
+                    hideRetailer(i);
+                }
+            }
+        }
+    }
+
+/*    @FXML
+    private void updateWIFI() {
+        for (int i = 0; i < wifiPoints.size(); i++ ) {
+            WifiPoint wifiPoint = wifiPoints.get(i);
+            if(wifiPoint.isUpdated((checkStreet(retailerLocation)
+                    && checkPrimary(retailerLocation)
+                    && checkZip(retailerLocation)))) {
+                if(retailerLocation.isVisible()) {
+                    showWIFI(i);
+                } else {
+                    hideWIFI(i);
+                }
+            }
+        }
+    }*/
+
+    private boolean checkPrimary(RetailerLocation retailerLocation) {
+        /**
+         * checks the given retailerLocation against the filter in the primary function ComboBox.
+         *
+         */
+        if ("All".equals(filterPrimaryComboBox.getValue())) {
+            return true;
+        } else {
+            return retailerLocation.getPrimaryFunction().equals(filterPrimaryComboBox.getValue());
+        }
+    }
+
+    private boolean checkStreet(RetailerLocation retailerLocation) {
+        /**
+         * Checks the address line 1 of the given retailerLocation against the text in the street
+         * search field.
+         */
+        if (streetSearchField.getText().isEmpty()) {
+            return true;
+        } else {
+            String lowerCaseFilter = streetSearchField.getText().toLowerCase();
+            return retailerLocation.getAddressLine1().toLowerCase().contains(lowerCaseFilter);
+        }
+    }
+
+    private boolean checkZip(RetailerLocation retailerLocation) {
+        if (filterZipComboBox.getValue().equals("All")) {
+            return true;
+        } else {
+            return retailerLocation.getZipcode() ==  filterZipComboBox.getValue();
+        }
+    }
+
+    private void setFilters() {
+        /**
+         * Sets the filter options
+         * TODO don't hard code
+         */
+        filterPrimaryComboBox.getItems().addAll("All", "Shopping", "Personal and Professional Services");
+        filterPrimaryComboBox.getSelectionModel().selectFirst();
+
+        filterZipComboBox.getItems().addAll("All", 10004, 10005, 10038, 10007);
+        filterZipComboBox.getSelectionModel().selectFirst();
+
+    }
+
+
     protected void initModel(DummyModel dummyModel) {
         this.model = dummyModel;
     }
