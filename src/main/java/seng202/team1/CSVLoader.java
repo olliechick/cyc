@@ -56,19 +56,28 @@ public class CSVLoader {
      *
      * @param filename The filename of the file to get data from.
      * @param numberOfEntries The number of entries to retrieve from the file.
+     * @param blockNumber The block number (e.g. 0 = first lot of n entries, 1 = second lot of n entries)
      * @return CSVRecord
      * @throws IOException If an IO error occurs.
+     * @throws IllegalArgumentException If there are not enough blocks in the file.
      *
      */
-    public static ArrayList<CSVRecord> loadCSV(String filename, int numberOfEntries) throws
-            IOException {
+    public static ArrayList<CSVRecord> loadCSV(String filename, int numberOfEntries, int blockNumber) throws
+            IOException, IllegalArgumentException {
         File csvData = new File(filename);
         CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
         ArrayList<CSVRecord> records = (ArrayList<CSVRecord>) parser.getRecords();
 
-        //Try to trim it - if numberOfEntries > records.size(), do nothing
+        // Try to remove the entries before the block selected.
         try {
-            records.subList(numberOfEntries, records.size()).clear();
+            records.subList(0, numberOfEntries*blockNumber).clear();
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("There are not " + blockNumber + "blocks.");
+        }
+
+        // Try to trim it - if numberOfEntries > records.size(), do nothing
+        try {
+            records.subList(numberOfEntries * (blockNumber+1), records.size()).clear();
         } catch (IndexOutOfBoundsException e) {
             //there aren't that many items in the csv, so just return all of them
         }
