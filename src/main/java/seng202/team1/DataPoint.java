@@ -8,6 +8,8 @@ package seng202.team1;
 public class DataPoint {
 
     protected boolean isUserDefinedPoint;
+    private boolean visible = true;
+    private int id = -1;
 
     public boolean isUserDefinedPoint() {
         return isUserDefinedPoint;
@@ -17,6 +19,22 @@ public class DataPoint {
         isUserDefinedPoint = userDefinedPoint;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public boolean isVisible() {
+
+        return visible;
+    }
     @Override
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
@@ -44,5 +62,18 @@ public class DataPoint {
      */
     public String getDescription() {
         return "A datapoint.";
+    }
+    /**
+     * Returns true if a dataPoints visible bool has changed
+     *
+     */
+    public boolean isUpdated(boolean update) {
+        if (visible != update) {
+            visible = update;
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }

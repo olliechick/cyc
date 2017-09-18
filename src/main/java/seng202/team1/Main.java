@@ -43,7 +43,7 @@ public class Main extends Application {
         DummyModel model = new DummyModel(); //Create dummy model to hold login info
         loginController.initModel(model);
         Scene scene = new Scene(root);
-        scene.getStylesheets().add("/css/style.css");
+        scene.getStylesheets().add("/css/loginStyle.css");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

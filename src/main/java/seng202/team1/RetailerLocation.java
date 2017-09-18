@@ -180,6 +180,22 @@ public class RetailerLocation extends DataPoint {
         return String.format("Address: %s\nFunction: %s (%s)", getAddress(), primaryFunction, secondaryFunction);
     }
 
+    public float getLongitude() {
+        return coords.x;
+    }
+
+    public void setLongitude(float longitude) {
+        this.coords.x = longitude;
+    }
+
+    public float getLatitude() {
+        return coords.y;
+    }
+
+    public void setLatitude(float latitude) {
+        this.coords.y = latitude;
+    }
+
     @Override
     public String toString() {
         return "RetailerLocation{" +
@@ -194,5 +210,13 @@ public class RetailerLocation extends DataPoint {
                 ", secondaryFunction='" + secondaryFunction + '\'' +
                 ", coords=" + coords +
                 '}';
+    }
+
+    public String toInfoString() {
+        return "Name: " + name + "\\n" +
+                "Type: " + primaryFunction + "\\n" +
+                "Subtype: " + secondaryFunction + "\\n";
+
+
     }
 }
