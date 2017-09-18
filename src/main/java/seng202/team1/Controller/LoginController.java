@@ -33,12 +33,19 @@ public class LoginController {
     @FXML
     private ChoiceBox genderBox;
 
-    ObservableList<String> genderList = FXCollections.observableArrayList("test", "Male", "Female");
+    @FXML
+    private ChoiceBox accountTypeBox;
+
+    ObservableList<String> genderList = FXCollections.observableArrayList("", "Male", "Female");
+    ObservableList<String> accountTypeList = FXCollections.observableArrayList("User", "Admin", "Analyst");
+
 
     @FXML
-    private void initialise() {
-        genderBox.setValue("test");
+    public void initialize() {
+        genderBox.setValue("");
         genderBox.setItems(genderList);
+        accountTypeBox.setValue("User");
+        accountTypeBox.setItems(accountTypeList);
     }
 
     private DummyModel model;
