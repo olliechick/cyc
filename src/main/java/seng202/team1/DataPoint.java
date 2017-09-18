@@ -17,4 +17,34 @@ public class DataPoint {
             return this.toString().equals(otherObject.toString());
         }
     }
+
+    private boolean visible = true;
+    private int id = -1;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public boolean isVisible() {
+
+        return visible;
+    }
+
+    public boolean isUpdated(boolean update) {
+        if (visible != update) {
+            visible = update;
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 }

@@ -54,7 +54,7 @@ public class MapController {
 
     }
     private void addRetailer(float lat, float lng, String title) {
-        String scriptStr = "document.addMarker({lat: " + lat + ", lng:  " + lng + "}, 'departmentstore.png', " + "'" + title + "')";
+        String scriptStr = "document.addRetailerMarker({lat: " + lat + ", lng:  " + lng + "}, 'departmentstore.png', " + "'" + title + "')";
         webView.getEngine().executeScript(scriptStr);
 
     }
@@ -64,6 +64,8 @@ public class MapController {
         WifiPoint point = null;
         for (int i = 0; i < wifiPoints.size(); i++) {
             point = wifiPoints.get(i);
+            point.setId(i);
+            point.setVisible(true);
             addWifi(point.getLatitude(), point.getLongitude(), point.toInfoString());
 
         }
@@ -74,6 +76,8 @@ public class MapController {
         RetailerLocation point = null;
         for (int i = 0; i < retailerPoints.size(); i++) {
             point = retailerPoints.get(i);
+            point.setId(i);
+            point.setVisible(true);
             addRetailer(point.getLatitude(), point.getLongitude(), point.toInfoString());
 
         }
