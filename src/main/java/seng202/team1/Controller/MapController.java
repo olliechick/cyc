@@ -41,12 +41,15 @@ public class MapController {
     }
     @FXML
     private void zoomOut() {
-        webView.getEngine().executeScript("document.zoomOut()");
+        for (int i = 0; i < 500; i++) {
+            webView.getEngine().executeScript("document.hideWIFIMarker(" + i + ")");
+        }
+
 
     }
 
     private void addWifi(float lat, float lng, String title) {
-        String scriptStr = "document.addMarker({lat: " + lat + ", lng:  " + lng + "}, 'WIFI.png', " + "'" + title + "')";
+        String scriptStr = "document.addWIFIMarker({lat: " + lat + ", lng:  " + lng + "}, 'WIFI.png', " + "'" + title + "')";
         webView.getEngine().executeScript(scriptStr);
 
     }
