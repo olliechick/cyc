@@ -76,10 +76,10 @@ public class CSVLoaderTest extends TestCase {
     public void testPopulateRetailers() throws Exception {
         String filename = csv_resource_dir + "testRetailers.csv";
         ArrayList<RetailerLocation> retailers = populateRetailers(filename);
-        RetailerLocation modelRetailer = new RetailerLocation("Candy Plus",
-                "16 Beaver Street", "", "New York",
-                "NY" , "10004", "11-7", "Shopping",
-                "Candy & Chocolate", new Point.Float((float) -73.74567356126445, (float) 40.6769527280));
+        RetailerLocation modelRetailer = new RetailerLocation("Starbucks Coffee",
+                "3 New York Plaza", "", "New York",
+                "NY" , "10004", "Aug-32", "Casual Eating & Takeout",
+                "Coffeehouse", new Point.Float((float) -73.74567356126445, (float) 40.6769527280));
         assertEquals(modelRetailer, retailers.get(0));
     }
 
