@@ -4,7 +4,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import java.awt.Point;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Class that will pull in our CSV files and then call the appropriate constructor.
@@ -48,6 +49,7 @@ public class CSVLoader {
 
     }
 
+
     /**
      * Takes a file named filename, which should be a csv, and returns an Arraylist of type CSVRecord.
      * This can be queried using the get(index).
@@ -57,18 +59,45 @@ public class CSVLoader {
      * @param numberOfEntries The number of entries to retrieve from the file.
      * @return CSVRecord
      * @throws IOException If an IO error occurs.
+     * @throws IllegalArgumentException If there are not enough blocks in the file.
      *
      */
     public static ArrayList<CSVRecord> loadCSV(String filename, int numberOfEntries) throws
-            IOException {
+            IOException, IllegalArgumentException {
+        return loadCSV(filename, numberOfEntries, 0);
+    }
+
+
+    /**
+     * Takes a file named filename, which should be a csv, and returns an Arraylist of type CSVRecord.
+     * This can be queried using the get(index).
+     * Only returns the [blockNumber]th numberOfEntries entries (this may include header(s)).
+     *
+     * @param filename The filename of the file to get data from.
+     * @param numberOfEntries The number of entries to retrieve from the file.
+     * @param blockNumber The block number (e.g. 0 = first lot of n entries, 1 = second lot of n entries)
+     * @return CSVRecord
+     * @throws IOException If an IO error occurs.
+     * @throws IllegalArgumentException If there are not enough blocks in the file.
+     *
+     */
+    public static ArrayList<CSVRecord> loadCSV(String filename, int numberOfEntries, int blockNumber) throws
+            IOException, IllegalArgumentException {
         File csvData = new File(filename);
         CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
         ArrayList<CSVRecord> records = (ArrayList<CSVRecord>) parser.getRecords();
 
-        //Try to trim it - if numberOfEntries > records.size(), do nothing
+        // Try to remove the entries before the block selected.
         try {
-            records.subList(numberOfEntries, records.size()).clear();
+            records.subList(0, numberOfEntries*blockNumber).clear();
         } catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("There are not " + (blockNumber + 1) + " blocks.");
+        }
+
+        // Try to trim it - if numberOfEntries > records.size(), do nothing
+        try {
+            records.subList(numberOfEntries * (blockNumber+1), records.size()).clear();
+        } catch (IllegalArgumentException e) {
             //there aren't that many items in the csv, so just return all of them
         }
 
@@ -95,6 +124,7 @@ public class CSVLoader {
      */
     public static ArrayList<BikeTrip> populateBikeTrips(String filename){ //
         ArrayList<BikeTrip> trips = new ArrayList<BikeTrip>();
+        HashSet<Character> genders = new HashSet<Character>();
         try {
             ArrayList<CSVRecord> tripData = loadCSV(filename);
             for (CSVRecord record : tripData){
@@ -140,10 +170,13 @@ public class CSVLoader {
                     char gender;
                     if (record.get(14).equals("1")) {
                         gender = 'm';
+                        genders.add('m');
                     } else if (record.get(14).equals("2")) {
                         gender = 'f';
+                        genders.add('f');
                     } else {
                         gender = 'u';
+                        genders.add('u');
                     }
                     String birthYearString = record.get(13);
                     int birthYear;
@@ -161,6 +194,7 @@ public class CSVLoader {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        //TODO do something with genders
         return trips;
     }
 
@@ -287,22 +321,4 @@ public class CSVLoader {
         }
         return retailers;
     }
-
-    // Main class (for testing)
-    /*public static void main(String[] args) {
-        String filename = "wifiTester.csv";
-        //populateBikeTrips(filename);
-
-        ArrayList<DataPoint> wifis = populateWifiHotspots(filename);//populateBikeTrips(filename);
-        for (DataPoint wifi : wifis) {
-            System.out.println(wifi);
-        }
-
-        ArrayList<DataPoint> retailers = populateRetailers("ret.csv");//populateBikeTrips(filename);
-        for (DataPoint retailer : retailers) {
-            System.out.println(retailer);
-        }
-
-    }*/
-
 }
