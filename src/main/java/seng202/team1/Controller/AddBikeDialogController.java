@@ -18,8 +18,13 @@ import javafx.stage.StageStyle;
 import seng202.team1.BikeTrip;
 
 import java.awt.Point;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 /**
  * Created on 17/09/17.
@@ -97,12 +102,23 @@ public class AddBikeDialogController {
     @FXML
     private RadioButton stopPM;
 
-
     private BikeTrip bikeTrip;
     private Stage stage;
 
     private final ToggleGroup startToggleGroup = new ToggleGroup();
     private final ToggleGroup stopToggleGroup = new ToggleGroup();
+
+    private int bikeID;
+    private LocalTime startTime;
+    private LocalTime stopTime;
+    private LocalDate startDate;
+    private LocalDate stopDate;
+    private LocalDateTime startDateTime;
+    private LocalDateTime stopDateTime;
+    private Point.Float startPoint;
+    private Point.Float endPoint;
+    private char gender = 'u';
+    private int birthYear = 1997;
 
     /**
      * Set up the window as a dialog.
@@ -133,9 +149,11 @@ public class AddBikeDialogController {
      */
     public void addBike() {
         if (checkFields()) {
-            bikeTrip = new BikeTrip(new Long(600), LocalDateTime.of(2015, Month.JULY, 29, 19, 30, 40), LocalDateTime.of(2015, Month.JULY, 29, 19, 30, 40),
-                    new Point.Float(1, 1), new Point.Float(2, 2), 123, 'm', 1997);
-            //System.out.println(bikeTrip);
+//            bikeTrip = new BikeTrip(new Long(600), LocalDateTime.of(2015, Month.JULY, 29, 19, 30, 40), LocalDateTime.of(2015, Month.JULY, 29, 19, 30, 40),
+//                    new Point.Float(1, 1), new Point.Float(2, 2), 123, 'm', 1997);
+//            //System.out.println(bikeTrip);
+//            stage.close();
+            bikeTrip = new BikeTrip(startDateTime, stopDateTime, startPoint, endPoint, bikeID, gender, birthYear);
             stage.close();
         }
     }
@@ -149,7 +167,7 @@ public class AddBikeDialogController {
         boolean valid = true;
 
         try {
-            Integer.parseInt(idField.getText());
+            bikeID = Integer.parseInt(idField.getText());
             idLabel.setTextFill(Color.BLACK);
         } catch (NumberFormatException e) {
             //bike id is not an int
@@ -158,7 +176,7 @@ public class AddBikeDialogController {
         }
 
         try {
-            Point.Float startPoint = new Point.Float(Float.parseFloat(startLatField.getText()), Float.parseFloat(startLongField.getText()));
+            startPoint = new Point.Float(Float.parseFloat(startLatField.getText()), Float.parseFloat(startLongField.getText()));
             startLatLabel.setTextFill(Color.BLACK);
             startLongLabel.setTextFill(Color.BLACK);
         } catch (NumberFormatException e) {
@@ -168,7 +186,7 @@ public class AddBikeDialogController {
         }
 
         try {
-            Point.Float endPoint = new Point.Float(Float.parseFloat(endLatField.getText()), Float.parseFloat(endLongField.getText()));
+            endPoint = new Point.Float(Float.parseFloat(endLatField.getText()), Float.parseFloat(endLongField.getText()));
             endLatLabel.setTextFill(Color.BLACK);
             endLongLabel.setTextFill(Color.BLACK);
         } catch (NumberFormatException e) {
@@ -176,6 +194,56 @@ public class AddBikeDialogController {
             endLongLabel.setTextFill(Color.RED);
             valid = false;
         }
+
+        try {
+            startTime = LocalTime.parse(startTimeField.getText(), DateTimeFormatter.ofPattern("HH:mm:ss"));
+            if (startPM.isSelected()) {
+                if (startTime.getHour() < 12 ) {
+                    startTime = startTime.plusHours(12);
+                }
+            }
+            startTimeLabel.setTextFill(Color.BLACK);
+        } catch (DateTimeParseException e) {
+            valid = false;
+            startTimeLabel.setTextFill(Color.RED);
+        }
+
+        try {
+            stopTime = LocalTime.parse(stopTimeField.getText(), DateTimeFormatter.ofPattern("HH:mm:ss"));
+            if (stopPM.isSelected()) {
+                if (stopTime.getHour() < 12) {
+                    stopTime = stopTime.plusHours(12);
+                }
+            }
+            stopTimeLabel.setTextFill(Color.BLACK);
+        } catch (DateTimeParseException e) {
+            stopTimeLabel.setTextFill(Color.RED);
+            valid = false;
+        }
+
+        if (startDatePicker.getValue() == null) {
+            valid = false;
+            startDateLabel.setTextFill(Color.RED);
+        } else {
+            startDate = startDatePicker.getValue();
+            startDateLabel.setTextFill(Color.BLACK);
+        }
+
+        try {
+            startDateTime = startDate.atTime(startTime);
+            stopDateTime = stopDate.atTime(stopTime);
+        } catch (NullPointerException e) {
+            valid = false;
+        }
+
+        if (stopDatePicker.getValue() == null) {
+            stopDateLabel.setTextFill(Color.RED);
+            valid = false;
+        } else {
+            stopDate = stopDatePicker.getValue();
+            stopDateLabel.setTextFill(Color.BLACK);
+        }
+
 
         return valid;
     }
