@@ -42,6 +42,15 @@ public class MapController {
     private ProgressIndicator progressSpinner;
 
     @FXML
+    private ComboBox filterBoroughComboBox;
+
+    @FXML
+    private ComboBox filterCostComboBox;
+
+    @FXML
+    private ComboBox filterProviderComboBox;
+
+    @FXML
     private Label loadLabel;
 
     @FXML
@@ -79,6 +88,14 @@ public class MapController {
         webView.getEngine().executeScript("document.hideRetailerMarker(" + index + ")");
     }
 
+    private void showWIFI(int index) {
+        webView.getEngine().executeScript("document.showWIFIMarker(" + index + ")");
+    }
+
+    private void hideWIFI(int index) {
+        webView.getEngine().executeScript("document.hideWIFIMarker(" + index + ")");
+    }
+
     private void addWifi(float lat, float lng, String title) {
         String scriptStr = "document.addWIFIMarker({lat: " + lat + ", lng:  " + lng + "}, 'WIFI.png', " + "'" + title + "')";
         webView.getEngine().executeScript(scriptStr);
@@ -91,7 +108,7 @@ public class MapController {
     }
     @FXML
     private void loadAllWifi() {
-        ArrayList<WifiPoint> wifiPoints =  populateWifiHotspots("src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv");
+        wifiPoints =  populateWifiHotspots("src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv");
         WifiPoint point = null;
         for (int i = 0; i < wifiPoints.size(); i++) {
             point = wifiPoints.get(i);
@@ -130,21 +147,20 @@ public class MapController {
         }
     }
 
-/*    @FXML
+    @FXML
     private void updateWIFI() {
-        for (int i = 0; i < wifiPoints.size(); i++ ) {
+        for (int i = 0; i < wifiPoints.size(); i++) {
             WifiPoint wifiPoint = wifiPoints.get(i);
-            if(wifiPoint.isUpdated((checkStreet(retailerLocation)
-                    && checkPrimary(retailerLocation)
-                    && checkZip(retailerLocation)))) {
-                if(retailerLocation.isVisible()) {
+            if (wifiPoint.isUpdated((checkCost(wifiPoint)))) {
+                if (wifiPoint.isVisible()) {
                     showWIFI(i);
                 } else {
                     hideWIFI(i);
                 }
             }
         }
-    }*/
+    }
+
 
     private boolean checkPrimary(RetailerLocation retailerLocation) {
         /**
@@ -179,6 +195,14 @@ public class MapController {
         }
     }
 
+    private boolean checkCost(WifiPoint wifiPoint) {
+        if (filterCostComboBox.getValue().equals("All")) {
+            return true;
+        } else {
+            return wifiPoint.getCost().equals(filterCostComboBox.getValue());
+        }
+    }
+
     private void setFilters() {
         /**
          * Sets the filter options
@@ -190,7 +214,17 @@ public class MapController {
         filterZipComboBox.getItems().addAll("All", 10004, 10005, 10038, 10007);
         filterZipComboBox.getSelectionModel().selectFirst();
 
+        filterBoroughComboBox.getItems().addAll("All");
+        filterBoroughComboBox.getSelectionModel().selectFirst();
+
+        filterCostComboBox.getItems().addAll("All", "Free", "Limited Free", "Partner Site");
+        filterCostComboBox.getSelectionModel().selectFirst();
+
+        filterProviderComboBox.getItems().addAll("All");
+        filterProviderComboBox.getSelectionModel().selectFirst();
+
     }
+
 
 
     protected void initModel(DummyModel dummyModel) {
