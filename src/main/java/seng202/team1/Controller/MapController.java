@@ -114,6 +114,7 @@ public class MapController {
             addWifi(point.getLatitude(), point.getLongitude(), point.toInfoString());
 
         }
+        webView.getEngine().executeScript("document.wifiCluster()");
     }
     @FXML
     private void loadAllRetailers() {
@@ -124,8 +125,8 @@ public class MapController {
             point.setId(i);
             point.setVisible(true);
             addRetailer(point.getLatitude(), point.getLongitude(), point.toInfoString());
-
         }
+        webView.getEngine().executeScript("document.retailerCluster()");
     }
 
     @FXML

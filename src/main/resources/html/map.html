@@ -30,6 +30,7 @@
           center: myLatLng,
           disableDefaultUI: true
         });
+
         directionsDisplay = new google.maps.DirectionsRenderer();
         var bikeLayer = new google.maps.BicyclingLayer();
         bikeLayer.setMap(map);
@@ -57,6 +58,7 @@
             icon: iconBase + 'departmentstore.png'
           }
         };
+
 
 
 
@@ -117,8 +119,17 @@
 
 
 
+        document.wifiCluster = function wifiCluster()
+        {
+        var wifiMarkerCluster = new MarkerClusterer(map, wifiMarkerArray,
+        {imagePath: 'wifiCluster/m'});
+        }
 
-    
+        document.retailerCluster = function retailerCluster()
+        {
+        var retailerMarkerCluster = new MarkerClusterer(map, retailerMarkerArray,
+        {imagePath: 'retailerCluster/m'});
+        }
 
 
     // This event listener calls addMarker() when the map is clicked.
@@ -192,6 +203,9 @@
 
     }
     </script>
+<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+</script>
+
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrALsvaGRKhQxRw6X5VvydPqA5wMfwDN8&callback=initMap">
 </script>
