@@ -6,9 +6,12 @@ import java.time.Period;
 import java.util.ArrayList;
 
 /**
- * Model class of a user. Has 4 constructors for various option including account type specification and optional gender
- * Flags any user who is under 13 for data usage laws. Implements Serializable to allow Users to be persistantly saved.
- *@author Josh Burt
+ * Model class of a user.
+ * Has 4 constructors for various options, including account type specification and optional gender.
+ * Flags any user who is under 13 (for data usage laws).
+ * Implements Serializable to allow Users to be persistently saved.
+ * @author Josh Burt
+ * @author Ollie Chick
  */
 public class UserAccountModel implements java.io.Serializable{
 
@@ -17,7 +20,7 @@ public class UserAccountModel implements java.io.Serializable{
     private LocalDate birthday;
     private boolean under13;
     private String userName;
-    private byte[] password; //This needs to change, super naughty
+    private byte[] password;
     private byte[] salt;
 
     /**

@@ -5,13 +5,14 @@ package seng202.team1;
 import java.io.*;
 
 /**
- *Static class to serialize  and deserialize the users.
+ * Static class to serialize and deserialize the users.
  *
  * @author Josh Burt
  */
 public final class SerializerImplementation {
 
-    private final static String USER_DIR = "src/main/resources/tmp/";
+    private final static String USER_DIR = "src/main/resources/users/";
+    private final static String USER_EXT = ".user";
 
     /**
      * Takes a UserAccountModel object and saves them in a .ser file in the resources/tmp folder.
@@ -21,14 +22,15 @@ public final class SerializerImplementation {
     public static void serializeUser(UserAccountModel user){
         try {
             FileOutputStream fileOut = new FileOutputStream(USER_DIR + user.getUserName() +
-                    ".ser");
+                    USER_EXT);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(user);
             out.close();
             fileOut.close();
-            System.out.println("User successfully serialized and stored in Tmp");
+            System.out.println("User successfully serialized and stored.");
         } catch (IOException e){
-            System.out.println("IO exception occurred while serializing User "+ user.getUserName());
+
+            System.out.println("IO exception occurred while serializing User " + user.getUserName());
         }
     }
 
@@ -44,7 +46,7 @@ public final class SerializerImplementation {
     public static UserAccountModel deserializeUser(String userName) throws IOException {
         UserAccountModel user = null;
         try {
-            FileInputStream inFile = new FileInputStream(USER_DIR + userName + ".ser");
+            FileInputStream inFile = new FileInputStream(USER_DIR + userName + USER_EXT);
             ObjectInputStream ois = new ObjectInputStream(inFile);
             user = (UserAccountModel) ois.readObject();
         } catch (ClassNotFoundException e) {
