@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
@@ -70,15 +71,15 @@
                                     <children>
                                         <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUp" text="Sign Up" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
                                         <Label text="Password:" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                                        <TextField GridPane.columnIndex="1" />
-                                        <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <TextField fx:id="newUsernameTextField" GridPane.columnIndex="1" />
+                                        <PasswordField fx:id="newPasswordTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <ChoiceBox fx:id="genderBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <ChoiceBox fx:id="accountTypeBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <Label text="Account type:" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                               <Label text="Username:" GridPane.halignment="CENTER" />
                               <Label text="Birthday:" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                               <Label text="Gender:" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                              <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <DatePicker fx:id="birthdayEntryField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                     </children>
                                 </GridPane>
                             </children>
