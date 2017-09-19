@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -51,10 +52,10 @@ public class LoginController {
 
     @FXML
     public void initialize() {
-        genderBox.setValue("");
         genderBox.setItems(genderList);
-        accountTypeBox.setValue("User");
+        genderBox.getSelectionModel().selectFirst();
         accountTypeBox.setItems(accountTypeList);
+        accountTypeBox.getSelectionModel().selectFirst();
     }
 
     private DummyModel model;
@@ -120,7 +121,7 @@ public class LoginController {
         }
 
 
-        //UserAccountModel newUser = UserAccountModel.createUser(username, password, birthday, gender, accountType);
+        UserAccountModel newUser = new UserAccountModel(gender, accountType, birthday, username, password);
 
         //UserAccountModel.loadUserDetails(username);
 
