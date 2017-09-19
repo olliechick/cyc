@@ -2,10 +2,6 @@ package seng202.team1;
 
 import java.time.LocalDate;
 import java.time.Month;
-import org.joda.time.IllegalFieldValueException;
-import org.joda.time.Years;
-
-import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 
@@ -24,31 +20,29 @@ public class UserAccountModel implements java.io.Serializable{
     private byte[] password; //This needs to change, super naughty
     private byte[] salt;
 
+    /**
+     * Constructor with account type set to "User".
+     */
     public UserAccountModel(char gender, LocalDate birthday, String userName, String password) {
         this.gender = gender;
         this.birthday = birthday;
         LocalDate currentDate = LocalDate.now();
         int age = Period.between(birthday,currentDate).getYears();
-        if( age < 13){
-            this.under13 = true;
-        } else {
-            this.under13 = false;
-        }
+        this.under13 = age < 13;
         this.accountType = "User";
         this.userName = userName;
         this.salt = PasswordManager.getNextSalt();
         this.password = PasswordManager.hash(password, salt);
     }
 
+    /**
+     * Constructor with account type set to "User" and gender set to unknown.
+     */
     public UserAccountModel(LocalDate birthday, String userName, String password) {
         this.birthday = birthday;
         LocalDate currentDate = LocalDate.now();
         int age = Period.between(birthday,currentDate).getYears();
-        if( age < 13){
-            this.under13 = true;
-        } else {
-            this.under13 = false;
-        }
+        this.under13 = age < 13;
         this.accountType = "User";
         this.userName = userName;
         this.salt = PasswordManager.getNextSalt();
@@ -56,33 +50,31 @@ public class UserAccountModel implements java.io.Serializable{
         this.gender = 'u';
     }
 
+    /**
+     * Constructor with all parameters set by caller.
+     */
     public UserAccountModel(char gender, String accountType, LocalDate birthday, String userName, String password) {
         this.gender = gender;
         this.accountType = accountType;
         this.birthday = birthday;
         LocalDate currentDate = LocalDate.now();
         int age = Period.between(birthday,currentDate).getYears();
-        if( age < 13){
-            this.under13 = true;
-        } else {
-            this.under13 = false;
-        }
+        this.under13 = age < 13;
 
         this.userName = userName;
         this.salt = PasswordManager.getNextSalt();
         this.password = PasswordManager.hash(password, salt);
     }
 
+    /**
+     * Constructor with gender set to unknown.
+     */
     public UserAccountModel(String accountType, LocalDate birthday, String userName, String password) {
         this.accountType = accountType;
         this.birthday = birthday;
         LocalDate currentDate = LocalDate.now();
         int age = Period.between(birthday,currentDate).getYears();
-        if( age < 13){
-            this.under13 = true;
-        } else {
-            this.under13 = false;
-        }
+        this.under13 = age < 13;
         this.userName = userName;
         this.salt = PasswordManager.getNextSalt();
         this.password = PasswordManager.hash(password, salt);
@@ -94,10 +86,10 @@ public class UserAccountModel implements java.io.Serializable{
     }
 
     public void setGender(char gender) {
-        if (gender != 'u' && gender != 'f' && gender != 'm') {
-            this.gender = 'u';
-        } else {
+        if (gender == 'f' || gender == 'm') {
             this.gender = gender;
+        } else {
+            this.gender = 'u';
         }
     }
 
@@ -109,7 +101,7 @@ public class UserAccountModel implements java.io.Serializable{
         if (accountType.equalsIgnoreCase("user") || accountType.equalsIgnoreCase("analyst") || accountType.equalsIgnoreCase("admin")) {
             this.accountType = accountType;
         } else {
-            this.accountType = "user";
+            this.accountType = "User";
         }
     }
 
