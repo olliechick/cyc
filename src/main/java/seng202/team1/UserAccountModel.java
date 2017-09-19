@@ -2,20 +2,27 @@ package seng202.team1;
 
 import java.time.LocalDate;
 import java.time.Month;
+import org.joda.time.IllegalFieldValueException;
+import org.joda.time.Years;
+
+import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 
 /**
- * Created by jbu71 on 19/09/17.
+ * Model class of a user. Has 4 constructors for various option including account type specification and optional gender
+ * Flags any user who is under 13 for data usage laws. Implements Serializable to allow Users to be persistantly saved.
+ *@author Josh Burt
  */
-public class UserAccountModel {
+public class UserAccountModel implements java.io.Serializable{
 
     private char gender;
     private String accountType;
     private LocalDate birthday;
     private boolean under13;
     private String userName;
-    private String password; //This needs to change, super naughty
+    private byte[] password; //This needs to change, super naughty
+    private byte[] salt;
 
     public UserAccountModel(char gender, LocalDate birthday, String userName, String password) {
         this.gender = gender;
@@ -30,6 +37,8 @@ public class UserAccountModel {
         this.accountType = "User";
         this.userName = userName;
         this.password = password;
+        this.salt = PasswordManager.getNextSalt();
+        this.password = PasswordManager.hash(password, salt);
     }
 
     public UserAccountModel(LocalDate birthday, String userName, String password) {
@@ -43,7 +52,8 @@ public class UserAccountModel {
         }
         this.accountType = "User";
         this.userName = userName;
-        this.password = password;
+        this.salt = PasswordManager.getNextSalt();
+        this.password = PasswordManager.hash(password, salt);
         this.gender = 'u';
     }
 
@@ -60,7 +70,8 @@ public class UserAccountModel {
         }
 
         this.userName = userName;
-        this.password = password;
+        this.salt = PasswordManager.getNextSalt();
+        this.password = PasswordManager.hash(password, salt);
     }
 
     public UserAccountModel(String accountType, LocalDate birthday, String userName, String password) {
@@ -74,7 +85,8 @@ public class UserAccountModel {
             this.under13 = false;
         }
         this.userName = userName;
-        this.password = password;
+        this.salt = PasswordManager.getNextSalt();
+        this.password = PasswordManager.hash(password, salt);
         this.gender = 'u';
     }
 
@@ -126,12 +138,16 @@ public class UserAccountModel {
         this.userName = userName;
     }
 
-    public String getPassword() {
+    public byte[] getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.salt = PasswordManager.getNextSalt();
+        this.password = PasswordManager.hash(password, salt);
+    }
+    byte[] getSalt(){
+        return this.salt;
     }
 
 //from dummy Model
