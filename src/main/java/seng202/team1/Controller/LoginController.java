@@ -64,21 +64,7 @@ public class LoginController {
         this.model = dummyModel;
     }
 
-    /**
-     * At the moment, just grabs the username entered and sets it in the model,
-     * then hands over to the landing GUI.
-     *
-     * If no name is entered, name is set to "No username entered" as error handling isn't needed yet.
-     */
-    public void login() {
-
-        System.out.println("Login button clicked");
-        if (!usernameTextField.getText().isEmpty()) {
-            model.setName(usernameTextField.getText());
-        } else {
-            model.setName("No username entered");
-        }
-
+    public void launchLandingScreen() {
 
         try {
             // Changes to the table choosing GUI
@@ -96,6 +82,48 @@ public class LoginController {
         } catch (IOException e) {
             e.printStackTrace(); //File not found
         }
+    }
+
+    public void launchMap() {
+
+        try {
+            // Changes to the map GUI
+
+            FXMLLoader mapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+            Parent mapView = mapLoader.load();
+            MapController mapController = mapLoader.getController();
+
+            // mapController.initModel(model);
+            //mapController.setName();
+
+            Stage stage = (Stage) signUpButton.getScene().getWindow(); //gets the current stage so that Map can take over
+
+            stage.setScene(new Scene(mapView));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace(); //File not found
+        }
+    }
+
+    /**
+     * At the moment, just grabs the username entered and sets it in the model,
+     * then hands over to the landing GUI.
+     *
+     * If no name is entered, name is set to "No username entered" as error handling isn't needed yet.
+     */
+    public void login() {
+
+        System.out.println("Login button clicked");
+        if (!usernameTextField.getText().isEmpty()) {
+            model.setName(usernameTextField.getText());
+        } else {
+            model.setName("No username entered");
+        }
+
+
+
+        launchLandingScreen();
     }
 
     /**
@@ -120,8 +148,14 @@ public class LoginController {
             gender = 'u';
         }
 
-
         UserAccountModel newUser = new UserAccountModel(gender, accountType, birthday, username, password);
+        model.setName(newUser.getUserName());
+        if (newUser.getAccountType() == "User") {
+            launchMap();
+        } else {
+            //User is admin or analyser
+            launchLandingScreen();
+        }
 
         //UserAccountModel.loadUserDetails(username);
 
