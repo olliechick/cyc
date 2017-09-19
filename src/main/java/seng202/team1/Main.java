@@ -2,12 +2,11 @@ package seng202.team1;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import seng202.team1.Controller.LoginController;
 import seng202.team1.Controller.DummyModel;
+import seng202.team1.Controller.LoginController;
 
 import java.io.IOException;
 
@@ -27,8 +26,9 @@ public class Main extends Application {
      * entry point into the application.
      *
      * @author Josh Bernasconi
+     * @author Cameron Auld
      * @param primaryStage main JavaFX stage, where scenes are displayed.
-     * @throws IOException
+     * @throws IOException TODO when?
      */
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -37,12 +37,14 @@ public class Main extends Application {
         BorderPane root = new BorderPane(); //Any pane would work here, used only as a container
 
         FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-        root.setCenter((Node) loginLoader.load());
+        root.setCenter(loginLoader.load());
         LoginController loginController = loginLoader.getController(); //Needed to be able to call methods below
 
         DummyModel model = new DummyModel(); //Create dummy model to hold login info
         loginController.initModel(model);
-        primaryStage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("/css/loginStyle.css");
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
+    <top>
+
+    </top>
+    <bottom>
+      <TabPane BorderPane.alignment="CENTER">
+         <tabs>
+            <Tab text="Retailers">
+               <content>
+                   <GridPane hgap="5.0" vgap="2.0" BorderPane.alignment="CENTER">
+                       <columnConstraints>
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                       </columnConstraints>
+                       <rowConstraints>
+                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                       </rowConstraints>
+                       <children>
+                           <Label text="Retailer Filters:" />
+                           <Label text="Primary Function:" GridPane.columnIndex="1" />
+                           <Label text="Address:" GridPane.columnIndex="3" />
+                           <Label text="ZIP:" GridPane.columnIndex="2" />
+                           <ComboBox fx:id="filterPrimaryComboBox" onAction="#updateRetailers" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           <ComboBox fx:id="filterZipComboBox" onAction="#updateRetailers"  prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                           <Label fx:id="nameLabel" text="Name placeholder" visible="false" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                           <Label fx:id="loadLabel" text="Loading:" visible="false" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                           <ProgressIndicator fx:id="progressSpinner" progress="0.0" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                           <TextField fx:id="streetSearchField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                       </children>
+                       <padding>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                       </padding>
+                   </GridPane>
+               </content>
+            </Tab>
+            <Tab text="WIFI">
+               <content>
+                   <GridPane hgap="5.0" vgap="2.0" BorderPane.alignment="CENTER">
+                       <columnConstraints>
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                       </columnConstraints>
+                       <rowConstraints>
+                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                       </rowConstraints>
+                       <children>
+                           <Label text="Wifi Filters:" />
+                           <Label text="Borough:" GridPane.columnIndex="1" />
+                           <Label text="Provider:" GridPane.columnIndex="3" />
+                           <Label text="Cost:" GridPane.columnIndex="2" />
+                           <ComboBox fx:id="filterBoroughComboBox" onAction="#updateWIFI" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           <ComboBox fx:id="filterCostComboBox" onAction="#updateWIFI" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                           <ComboBox fx:id="filterProviderComboBox" onAction="#updateWIFI" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                       </children>
+                       <padding>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                       </padding>
+                   </GridPane>
+               </content>
+            </Tab>
+            <Tab text="Routes">
+               <content>
+                  <GridPane hgap="5.0" vgap="2.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                     <children>
+                        <Button fx:id="ZoomInButton11" mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" GridPane.columnIndex="3" />
+                        <Button fx:id="ZoomOutButton11" mnemonicParsing="false" onAction="#zoomOut" text="Zoom Out" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Button fx:id="WIFIButton11" mnemonicParsing="false" onAction="#loadAllWifi" text="WIFI icon test" GridPane.columnIndex="2" />
+                        <Button fx:id="RetailerButton11" mnemonicParsing="false" onAction="#loadAllRetailers" text="retailer icon test" GridPane.columnIndex="1" />
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+
+
+         </tabs>
+      </TabPane>
+    </bottom>
+   <center>
+      <WebView fx:id="webView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </center>
+   <left>
+      <GridPane prefHeight="696.0" prefWidth="189.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+      </GridPane>
+   </left>
+</BorderPane>

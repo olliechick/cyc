@@ -1,88 +1,283 @@
 package seng202.team1;
 
+import java.awt.Point;
+import java.awt.geom.Point2D;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
- * Bike Trip data class. This will likely change during development as we need to do more./
- * So far it just builds a bike trip from CSV files
+ * Bike Trip data class. This will likely change during development as we need to do more.
+ * So far it just builds a bike trip from given data.
+ * If birthYear = -1, this is a flag which means the data is not available.
+ * Gender will be m (male), f (female), or u (unknown).
  * @author Josh Burt
+ * @author Ollie Chick
  */
 public class BikeTrip extends DataPoint {
 
-    private String tripDuration;
-    private String startTime;
-    private String stopTime;
-    private String startLongitude; //I've brought these in as strings but may need to make these Int tuples later
-    private String startLatitude;
-    private String endLongitude;
-    private String endLatitude;
+    private long tripDuration; //in seconds
+    private LocalDateTime startTime; //example usage: LocalDateTime aDateTime = LocalDateTime.of(2015, Month.JULY, 29, 19, 30, 40);
+    private LocalDateTime stopTime;
+    private Point.Float startPoint;
+    private Point.Float endPoint;
+    private int bikeID;
+    private char gender; //u for unknown, m for male, f for female
+    private int birthYear;
+    private Double tripDistance;
+    private String googleData;
+    private boolean isUserDefinedPoint;
 
-
-    public BikeTrip(String tripDuration, String startTime, String stopTime, String startLongitude, String startLatitude, String endLongitude, String endLatitude) {
+    //default constructor
+    public BikeTrip(long tripDuration, LocalDateTime startTime, LocalDateTime stopTime,
+                    Point.Float startPoint, Point.Float endPoint, int bikeID, char gender, int birthYear,
+                    boolean isUserDefinedPoint) {
         this.tripDuration = tripDuration;
         this.startTime = startTime;
         this.stopTime = stopTime;
-        this.startLongitude = startLongitude;
-        this.startLatitude = startLatitude;
-        this.endLongitude = endLongitude;
-        this.endLatitude = endLatitude;
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+        this.bikeID = bikeID;
+        this.gender = gender;
+        this.birthYear = birthYear;
+        this.tripDistance = DataAnaliser.calculateDistance(startPoint.getX(),startPoint.getY(),endPoint.getX(),endPoint.getY());
+        this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
+    //constructor that calculates tripDuration
+    public BikeTrip(LocalDateTime startTime, LocalDateTime stopTime, Point.Float startPoint,
+                    Point.Float endPoint, int bikeID, char gender, int birthYear, boolean isUserDefinedPoint) {
+        this.tripDuration = Duration.between(startTime, stopTime).getSeconds();
+        this.startTime = startTime;
+        this.stopTime = stopTime;
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+        this.bikeID = bikeID;
+        this.gender = gender;
+        this.birthYear = birthYear;
+        this.tripDistance = DataAnaliser.calculateDistance(startPoint.getX(),startPoint.getY(),endPoint.getX(),endPoint.getY());
+        this.isUserDefinedPoint = isUserDefinedPoint;
+    }
 
-    public String getTripDuration() {
+    public long getTripDuration() {
         return tripDuration;
     }
 
-    public void setTripDuration(String tripDuration) {
+    public void setTripDuration(long tripDuration) {
         this.tripDuration = tripDuration;
     }
 
-    public String getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public String getStopTime() {
+    public LocalDateTime getStopTime() {
         return stopTime;
     }
 
-    public void setStopTime(String stopTime) {
+    public void setStopTime(LocalDateTime stopTime) {
         this.stopTime = stopTime;
     }
 
-    public String getStartLongitude() {
-        return startLongitude;
+    // Start point
+
+    public Point.Float getStartPoint() {
+        return startPoint;
     }
 
-    public void setStartLongitude(String startLongitude) {
-        this.startLongitude = startLongitude;
+    public void setStartPoint(Point.Float startPoint) {
+        this.startPoint = startPoint;
     }
 
-    public String getStartLatitude() {
-        return startLatitude;
+    public float getStartLongitude() {
+        return startPoint.x;
     }
 
-    public void setStartLatitude(String startLatitude) {
-        this.startLatitude = startLatitude;
+    public void setStartLongitude(float startLongitude) {
+        this.startPoint.x = startLongitude;
     }
 
-    public String getEndLongitude() {
-        return endLongitude;
+    public float getStartLatitude() {
+        return startPoint.y;
     }
 
-    public void setEndLongitude(String endLongitude) {
-        this.endLongitude = endLongitude;
+    public void setStartLatitude(float startLatitude) {
+        this.startPoint.y = startLatitude;
     }
 
-    public String getEndLatitude() {
-        return endLatitude;
+    // End point
+
+    public Point.Float getEndPoint() {
+        return endPoint;
     }
 
-    public void setEndLatitude(String endLatitude) {
-        this.endLatitude = endLatitude;
+    public void setEndPoint(Point.Float endPoint) {
+        this.endPoint = endPoint;
+    }
+
+    public float getEndLongitude() {
+        return endPoint.x;
+    }
+
+    public void setEndLongitude(float endLongitude) {
+        this.endPoint.x = endLongitude;
+    }
+
+    public float getEndLatitude() {
+        return endPoint.y;
+    }
+
+    public void setEndLatitude(float endLatitude) {
+        this.endPoint.y = endLatitude;
+    }
+
+    //Other
+
+    public int getBikeID() {
+        return bikeID;
+    }
+
+    public void setBikeID(int bikeID) {
+        this.bikeID = bikeID;
+    }
+
+    public char getGender() {
+        return gender;
+    }
+
+    public void setGender(char gender) {
+        this.gender = gender;
+    }
+
+    public int getBirthYear() {
+        return this.birthYear;
+    }
+
+    public void setBirthYear(int birthYear) {
+        this.birthYear = birthYear;
+    }
+
+    public String getGoogleData() {
+        return googleData;
+    }
+
+    public void setGoogleData(String googleData) {
+        this.googleData = googleData;
+    }
+
+    /**
+     * Returns the duration of the trip, contextualised.
+     * Either in seconds, minutes, hours, or days (rounded down).
+     */
+    public String getDuration() {
+        String duration;
+        // first find the unit of time and how many units
+        String unit;
+        long unitCount;
+        if (tripDuration < 60) {
+            unit = "second";
+            unitCount = tripDuration;
+        } else if (tripDuration < 60*60) {
+            unit = "minute";
+            unitCount = tripDuration / 60;
+        } else if (tripDuration < 60*60*24) {
+            unit = "hour";
+            unitCount = tripDuration / (60*60);
+        } else {
+            unit = "day";
+            unitCount = tripDuration / (60 * 60 * 24);
+        }
+
+        duration = unitCount + " " + unit;
+
+        // then check if it's plural
+        if (unitCount != 1) {
+            duration += "s";
+        }
+
+        return duration;
     }
 
 
+    /**
+     * Returns the gender description (male, female, or unknown).
+     */
+    public String getGenderDescription() {
+
+        String genderDescription;
+
+        if (gender == 'm') {
+            genderDescription = "male";
+        } else if (gender == 'f') {
+            genderDescription = "female";
+        } else {
+            genderDescription = "unknown";
+        }
+
+        return genderDescription;
+    }
+
+
+    public String getName() {
+        String start = startTime.format(DateTimeFormatter.ofPattern("h:mm a d MMMM yyyy"))
+                .replace("AM", "am").replace("PM","pm");
+        return String.format("Trip at %s", start);
+    }
+
+
+
+    /**
+     * Returns a description of the bike trip.
+     */
+    public String getDescription() {
+        String start = startTime.format(DateTimeFormatter.ofPattern("h:mm a d MMMM yyyy"))
+                .replace("AM", "am").replace("PM","pm");
+
+        // end: check if including the date (or year) is necessary
+        String end;
+        if (startTime.getYear() != stopTime.getYear()) {
+            // different years
+            end = stopTime.format(DateTimeFormatter.ofPattern("h:mm a d MMMM yyyy"));
+        } else if (startTime.getDayOfYear() != stopTime.getDayOfYear()) {
+            //different days
+            end = stopTime.format(DateTimeFormatter.ofPattern("h:mm a d MMMM"));
+        } else {
+            //same day
+            end = stopTime.format(DateTimeFormatter.ofPattern("h:mm a"));
+        }
+        end = end.replace("AM", "am").replace("PM","pm");
+
+        // Put together description
+
+        return String.format("Started at %s and ended %s later at %s\nBike ID: %d\nCyclist: %s, born in %d",
+                start, getDuration(), end, bikeID, getGenderDescription(), birthYear);
+    }
+
+
+    public Double getTripDistance() {
+        return tripDistance;
+    }
+
+    public void setTripDistance(Double tripDistance) {
+        this.tripDistance = tripDistance;
+    }
+
+    @Override
+    public String toString() {
+        return "BikeTrip{" +
+                "tripDuration=" + tripDuration +
+                ", startTime=" + startTime +
+                ", stopTime=" + stopTime +
+                ", startPoint=" + startPoint +
+                ", endPoint=" + endPoint +
+                ", bikeID=" + bikeID +
+                ", gender=" + gender +
+                ", birthYear=" + birthYear +
+                '}';
+    }
 
 }

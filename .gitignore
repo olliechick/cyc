@@ -1,2 +1,5 @@
 .idea/
 target/
+src/main/java/seng202/team1/Controller/Sandbox.java
+.~lock.*
+*.iml

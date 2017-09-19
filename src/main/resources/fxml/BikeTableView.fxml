@@ -26,17 +26,15 @@
             <items>
                   <Menu mnemonicParsing="false" text="Import CSV">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Retailers" />
-                        <MenuItem mnemonicParsing="false" text="Bike Trips" />
-                        <MenuItem mnemonicParsing="false" text="WiFi" />
+                      <MenuItem mnemonicParsing="false" onAction="#importBike" text="Bike" />
                     </items>
                   </Menu>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem mnemonicParsing="false" onAction="#addBikeTrip" text="Add Bike Trip" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -62,6 +60,7 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -69,16 +68,18 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Filter:" />
-            <Label text="Primary Function:" GridPane.columnIndex="1" />
-            <Label text="Street" GridPane.columnIndex="3" />
-            <Label text="ZIP:" GridPane.columnIndex="2" />
-            <ComboBox fx:id="filterPrimaryComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <ComboBox fx:id="filterZipComboBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label text="Bike Filters:" />
+            <Label text="Start Location:" GridPane.columnIndex="3" />
+            <Label text="Bike ID:" GridPane.columnIndex="1" />
+            <Label text="Gender:" GridPane.columnIndex="2" />
+            <ComboBox fx:id="filterStartComboBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <ComboBox fx:id="filterGenderComboBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <Label fx:id="nameLabel" text="Name placeholder" visible="false" GridPane.columnSpan="2" GridPane.rowIndex="2" />
             <Label fx:id="loadLabel" text="Loading:" visible="false" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
             <ProgressIndicator fx:id="progressSpinner" progress="0.0" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-            <TextField fx:id="streetSearchField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <TextField fx:id="bikeSearchField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="End Location:" GridPane.columnIndex="4" />
+            <ComboBox fx:id="filterEndComboBox" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
