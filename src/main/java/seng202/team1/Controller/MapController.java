@@ -73,10 +73,7 @@ public class MapController {
     }
     @FXML
     private void zoomOut() {
-        for (int i = 0; i < 500; i++) {
-            webView.getEngine().executeScript("document.hideWIFIMarker(" + i + ")");
-        }
-
+        webView.getEngine().executeScript("document.zoomOut()");
 
     }
 
