@@ -8,9 +8,11 @@ import java.time.Period;
 import java.util.ArrayList;
 
 /**
- * Created by jbu71 on 19/09/17.
+ * Model class of a user. Has 4 constructors for various option including account type specification and optional gender
+ * Flags any user who is under 13 for data usage laws. Implements Serializable to allow Users to be persistantly saved.
+ *@author Josh Burt 
  */
-public class UserAcountModel implements java.io.Serializable{
+public class UserAccountModel implements java.io.Serializable{
 
     private char gender;
     private String accountType;
@@ -19,7 +21,7 @@ public class UserAcountModel implements java.io.Serializable{
     private String userName;
     private String password; //This needs to change, super naughty
 
-    public UserAcountModel(char gender, LocalDate birthday, String userName, String password) {
+    public UserAccountModel(char gender, LocalDate birthday, String userName, String password) {
         this.gender = gender;
         this.birthday = birthday;
         LocalDate currentDate = LocalDate.now();
@@ -34,7 +36,7 @@ public class UserAcountModel implements java.io.Serializable{
         this.password = password;
     }
 
-    public UserAcountModel(LocalDate birthday, String userName, String password) {
+    public UserAccountModel(LocalDate birthday, String userName, String password) {
         this.birthday = birthday;
         LocalDate currentDate = LocalDate.now();
         int age = Period.between(birthday,currentDate).getYears();
@@ -49,7 +51,7 @@ public class UserAcountModel implements java.io.Serializable{
         this.gender = 'u';
     }
 
-    public UserAcountModel(char gender, String accountType, LocalDate birthday, String userName, String password) {
+    public UserAccountModel(char gender, String accountType, LocalDate birthday, String userName, String password) {
         this.gender = gender;
         this.accountType = accountType;
         this.birthday = birthday;
@@ -65,7 +67,7 @@ public class UserAcountModel implements java.io.Serializable{
         this.password = password;
     }
 
-    public UserAcountModel(String accountType, LocalDate birthday, String userName, String password) {
+    public UserAccountModel(String accountType, LocalDate birthday, String userName, String password) {
         this.accountType = accountType;
         this.birthday = birthday;
         LocalDate currentDate = LocalDate.now();

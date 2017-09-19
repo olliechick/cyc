@@ -5,13 +5,18 @@ import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import java.io.*;
 
 /**
- *Static class to serialize the users.
+ *Static class to serialize  and deserialize the users.
  *
  * @author Josh Burt
  */
 public final class SerializerImplementation {
 
-
+    /**
+     * Takes a UserAccountModel object and saves them in a .ser file in the resources/tmp folder.
+     * File path is /src/main/resources/tmp/{username}.ser
+     * @param user UserAcccountModel user to be serialized.
+     * @throws IOException
+     */
     public static void serializeUser(UserAccountModel user) throws IOException{
         try {
             FileOutputStream fileOut = new FileOutputStream("src/main/resources/tmp/"+user.getUserName()+".ser");
@@ -25,6 +30,14 @@ public final class SerializerImplementation {
         }
     }
 
+    /**
+     * Takes a userName as a string and returns the already serialized object. .ser file must be in resources/tmp and named
+     * as userName.ser. Throws and IOException if the .ser file cannot be found.
+     * @param userName String userName to be deserialized
+     * @return UserAccountModel
+     * @throws IOException When .ser doesnot exist or is in wrong dir
+     * @throws ClassNotFoundException When anyother object other than UserAccountModel is deserialized with this method.
+     */
     public static UserAccountModel deserializeUser(String userName) throws IOException{
         UserAccountModel user = null;
         try {
