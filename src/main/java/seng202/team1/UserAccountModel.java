@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Created by jbu71 on 19/09/17.
  */
-public class UserAcountModel {
+public class UserAcountModel implements java.io.Serializable{
 
     private char gender;
     private String accountType;
