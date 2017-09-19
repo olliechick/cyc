@@ -25,7 +25,7 @@ public class SerializerImplementationTest {
     public void TestDeserialzeUser() throws Exception {
         UserAccountModel user = SerializerImplementation.deserializeUser("Josh");
         assertEquals("Josh", user.getUserName());
-        assertEquals("Password",user.getPassword());
+        assertEquals(true,PasswordManager.isExpectedPassword("Password",user.getSalt(), user.getPassword()));
         assertEquals('m', user.getGender());
     }
 }
