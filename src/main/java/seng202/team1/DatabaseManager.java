@@ -1,8 +1,10 @@
 package seng202.team1;
 
 
+import java.awt.*;
 import java.io.File;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -43,15 +45,60 @@ public class DatabaseManager {
 
     private static void createDatabaseTables() {
         // TODO: Create required tables for database
-        String createTripsTable = "CREATE TABLE trip ( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                "duration TEXT, startTime TEXT, endTime TEXT, startLongitude TEXT NOT NULL, " +
-                "startLatitude TEXT NOT NULL, endLongitude TEXT NOT NULL, endLatitude TEXT NOT NULL)";
+        String createTripsTable = "CREATE TABLE trip\n" +
+                "(\n" +
+                "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
+                "    duration BIGINT,\n" +
+                "    startTime TEXT,\n" +
+                "    stopTime TEXT,\n" +
+                "    startx FLOAT,\n" +
+                "    starty FLOAT,\n" +
+                "    endx FLOAT,\n" +
+                "    endy FLOAT,\n" +
+                "    bikeID INTEGER,\n" +
+                "    gender VARCHAR(1),\n" +
+                "    birthYear INTEGER,\n" +
+                "    tripDistance DOUBLE,\n" +
+                "    googleData BLOB,\n" +
+                "    isUserDefined BOOLEAN\n" +
+                ");";
 
-        String createRetailerTable =  "CREATE TABLE retailer (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                "name TEXT NOT NULL, address TEXT NOT NULL, latitude TEXT, longitude TEXT)";
+        String createRetailerTable =  "CREATE TABLE retailer\n" +
+                "(\n" +
+                "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
+                "    name TEXT NOT NULL,\n" +
+                "    addressLine1 TEXT NOT NULL,\n" +
+                "    addressLine2 TEXT,\n" +
+                "    city TEXT,\n" +
+                "    state TEXT,\n" +
+                "    zipcode VARCHAR(5),\n" +
+                "    blockLot TEXT,\n" +
+                "    primaryFunction TEXT,\n" +
+                "    secondaryFunction TEXT,\n" +
+                "    latitude FLOAT,\n" +
+                "    longitude FLOAT\n" +
+                ");";
 
-        String createWifiTable = "CREATE TABLE wifi (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                "latitude TEXT, longitude TEXT, the_geom TEXT, cost TEXT, location TEXT)";
+        String createWifiTable = "CREATE TABLE wifi\n" +
+                "(\n" +
+                "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
+                "    objectID INTEGER,\n" +
+                "    locationx FLOAT,\n" +
+                "    locationy FLOAT,\n" +
+                "    placeName TEXT,\n" +
+                "    location TEXT,\n" +
+                "    locationType TEXT,\n" +
+                "    hood TEXT,\n" +
+                "    borough TEXT,\n" +
+                "    city TEXT,\n" +
+                "    zipcode VARCHAR(5),\n" +
+                "    cost TEXT,\n" +
+                "    provider TEXT,\n" +
+                "    remarks TEXT,\n" +
+                "    SSID TEXT,\n" +
+                "    sourceId TEXT,\n" +
+                "    datetimeactivated TEXT\n" +
+                ");";
 
         try {
             // Check if tables already exist
@@ -142,30 +189,58 @@ public class DatabaseManager {
         String statement;
 
         if (point instanceof RetailerLocation) {
-            statement = "INSERT INTO retailer (name, address) VALUES (?, ?)"; // TODO: Fix when lat/long implemented
+            statement = "INSERT INTO retailer (name, addressLine1, addressLine2, city, state, zipcode, blockLot, " +
+                    "primaryFunction, secondaryFunction, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             RetailerLocation retailer = (RetailerLocation) point;
 
             preparedStatement = getConnection().prepareStatement(statement);
 
             preparedStatement.setString(1, retailer.getName());
-            preparedStatement.setString(2, retailer.getAddress());
+            preparedStatement.setString(2, retailer.getAddressLine1());
+            preparedStatement.setString(3, retailer.getAddressLine2());
+            preparedStatement.setString(4, retailer.getCity());
+            preparedStatement.setString(5, retailer.getState());
+
+            preparedStatement.setString(6, Integer.toString(retailer.getZipcode()));
+            preparedStatement.setString(7, retailer.getBlockLot());
+            preparedStatement.setString(8, retailer.getPrimaryFunction());
+            preparedStatement.setString(9, retailer.getSecondaryFunction());
+            preparedStatement.setFloat(10, retailer.getLatitude());
+            preparedStatement.setFloat(11, retailer.getLongitude());
 
             preparedStatement.execute();
 
 
         } else if (point instanceof WifiPoint) {
-            statement = "INSERT INTO wifi (the_geom, latitude, longitude, cost, location) VALUES (?, ?, ?, ?, ?)";
+            statement = "INSERT INTO wifi (objectID, locationx, locationy, placeName, location, locationType, " +
+                    "hood, borough, city, zipcode, cost, provider, remarks, SSID, sourceId, datetimeactivated) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             WifiPoint wifiPoint = (WifiPoint) point;
 
             preparedStatement = getConnection().prepareStatement(statement);
 
-            preparedStatement.setString(1, wifiPoint.getThe_geom());
-            preparedStatement.setString(2, wifiPoint.getLatitude());
-            preparedStatement.setString(3, wifiPoint.getLongitude());
-            preparedStatement.setString(4, wifiPoint.getCost());
+            preparedStatement.setInt(1, wifiPoint.getObjectId());
+            preparedStatement.setFloat(2, wifiPoint.getLatitude());
+            preparedStatement.setFloat(3, wifiPoint.getLongitude());
+            preparedStatement.setString(4, wifiPoint.getPlaceName());
             preparedStatement.setString(5, wifiPoint.getLocation());
 
-            preparedStatement.execute();
+            preparedStatement.setString(6, wifiPoint.getLocationType());
+            preparedStatement.setString(7, wifiPoint.getHood());
+            preparedStatement.setString(8, wifiPoint.getBorough());
+            preparedStatement.setString(9, wifiPoint.getCity());
+            preparedStatement.setString(10, Integer.toString(wifiPoint.getZipcode()));
+
+            preparedStatement.setString(11, wifiPoint.getCost());
+            preparedStatement.setString(12, wifiPoint.getProvider());
+            preparedStatement.setString(13, wifiPoint.getRemarks());
+            preparedStatement.setString(14, wifiPoint.getSsid());
+            preparedStatement.setString(15, wifiPoint.getSourceId());
+            preparedStatement.setString(16, wifiPoint.getDatetimeActivated().toString());
+
+            preparedStatement.addBatch();
+
+            preparedStatement.executeBatch();
 
         } else {
             System.out.println("Unexpected type.");
@@ -180,18 +255,24 @@ public class DatabaseManager {
      */
     public static void addBikeTrip(BikeTrip trip) throws SQLException {
         // TODO: Don't assume values can be null
-        String insert = "INSERT INTO trip (duration, startTime, endTime, startLongitude, startLatitude, " +
-                "endLongitude, endLatitude) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String insert = "INSERT INTO trip (duration, startTime, stopTime, startx, starty, endx, endy, bikeID, gender, " +
+                "birthYear, tripDistance, googleData) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement statement = getConnection().prepareStatement(insert);
 
-        statement.setString(1, trip.getTripDuration());
-        statement.setString(2, trip.getStartTime());
-        statement.setString(3, trip.getStopTime());
-        statement.setString(4, trip.getStartLatitude());
-        statement.setString(5, trip.getStartLongitude());
-        statement.setString(6, trip.getEndLatitude());
-        statement.setString(7, trip.getEndLongitude());
+        statement.setLong(1, trip.getTripDuration());
+        statement.setString(2, trip.getStartTime().toString());
+        statement.setString(3, trip.getStopTime().toString());
+        statement.setFloat(4, trip.getStartLatitude());
+        statement.setFloat(5, trip.getStartLongitude());
+        statement.setFloat(6, trip.getEndLatitude());
+        statement.setFloat(7, trip.getEndLongitude());
+        statement.setInt(8, trip.getBikeID());
+        statement.setInt(9, trip.getGender());
+        statement.setInt(10, trip.getBirthYear());
+        statement.setDouble(11, trip.getTripDistance());
+        statement.setString(12, trip.getGoogleData());
+        // statement.setBoolean(13, trip.isUserDefined());
         statement.executeUpdate();
 
         getConnection().commit();
@@ -236,15 +317,28 @@ public class DatabaseManager {
             ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
-                String startTime = rs.getString("startTime");
-                String endTime = rs.getString("endTime");
-                String duration = rs.getString("duration");
-                String startLatitude = rs.getString("startLatitude");
-                String startLongitude = rs.getString("startLongitude");
-                String endLatitude = rs.getString("endLatitude");
-                String endLongitude = rs.getString("endLongitude");
+                String startTimeString = rs.getString("startTime");
+                String stopTimeString = rs.getString("stopTime");
+                Long duration = rs.getLong("duration");
+                Float startx = rs.getFloat("startx");
+                Float starty = rs.getFloat("starty");
+                Float endx = rs.getFloat("endx");
+                Float endy = rs.getFloat("endy");
+                int bikeID = rs.getInt("bikeID");
+                char gender = rs.getString("gender").toCharArray()[0];
+                int birthYear = rs.getInt("birthYear");
+                // double tripDistance = rs.getDouble("tripDistance");          // Currently not required in constructor
+                // String googleData = rs.getBlob("googleData").toString();     // Also not used
+                boolean isUserDefined = rs.getBoolean("isUserDefined");
+                
+                LocalDateTime startTime = LocalDateTime.parse(startTimeString);
+                LocalDateTime stopTime = LocalDateTime.parse(stopTimeString);
 
-                BikeTrip trip = new BikeTrip(duration, startTime, endTime, startLongitude, startLatitude, endLongitude, endLatitude);
+                Point.Float startPoint = new Point.Float(startx, starty);
+                Point.Float stopPoint = new Point.Float(endx, endy);
+                
+
+                BikeTrip trip = new BikeTrip(duration, startTime, stopTime, startPoint, stopPoint, bikeID, gender, birthYear, isUserDefined);
 
                 result.add(trip);
             }
@@ -254,7 +348,7 @@ public class DatabaseManager {
         return result;
     }
 
-    public static ArrayList<BikeTrip> getTrips() {
+    public static ArrayList<BikeTrip> getAllTrips() {
         return getTrips(0, getNumberOfBikeTrips());
     }
 
