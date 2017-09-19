@@ -29,12 +29,12 @@
                       <MenuItem mnemonicParsing="false" onAction="#importBike" text="Bike" />
                     </items>
                   </Menu>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem mnemonicParsing="false" onAction="#addBikeTrip" text="Add Bike Trip" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

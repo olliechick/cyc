@@ -29,7 +29,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#importWifi" text="WiFi" />
                     </items>
                   </Menu>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
