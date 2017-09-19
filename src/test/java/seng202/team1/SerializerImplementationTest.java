@@ -1,31 +1,47 @@
 package seng202.team1;
 
-import org.junit.Test;
+import junit.framework.TestCase;
 
 import java.io.File;
 import java.time.LocalDate;
 import java.time.Month;
 
-import static org.junit.Assert.*;
-
 /**
- * Created by jbu71 on 19/09/17.
+ * @author Josh Burt
+ * @author Ollie Chick
  */
-public class SerializerImplementationTest {
-    @Test
-    public void TestSerializeUser() throws Exception {
-        LocalDate birthday = LocalDate.of(1993, Month.JANUARY,1);
-        UserAccountModel u = new UserAccountModel('m', birthday,"Josh", "Password");
-        SerializerImplementation.serializeUser(u);
-        File f = new File("src/main/resources/tmp/Josh.ser");
+public class SerializerImplementationTest extends TestCase {
+
+    LocalDate birthday;
+    UserAccountModel user;
+    String expectedFilePath;
+    String username;
+    String password;
+    char gender;
+    File f;
+
+    public void setUp() throws Exception {
+        super.setUp();
+        birthday = LocalDate.of(1993, Month.JANUARY,1);
+        username = "testUser";
+        password = "password";
+        user = new UserAccountModel(gender, birthday, username, password);
+        expectedFilePath = "src/main/resources/users/testUser.user";
+        f = new File(expectedFilePath);
+    }
+
+    public void testSerializeUser() throws Exception {
+        SerializerImplementation.serializeUser(user);
         assertEquals(true, f.exists());
     }
 
-    @Test
-    public void TestDeserialzeUser() throws Exception {
-        UserAccountModel user = SerializerImplementation.deserializeUser("Josh");
-        assertEquals("Josh", user.getUserName());
-        assertEquals(true,PasswordManager.isExpectedPassword("Password",user.getSalt(), user.getPassword()));
-        assertEquals('m', user.getGender());
+    public void testDeserializeUser() throws Exception {
+        UserAccountModel user = SerializerImplementation.deserializeUser(username);
+        assertEquals(username, user.getUserName());
+        assertEquals(true, PasswordManager.isExpectedPassword(password, user.getSalt(), user
+                .getPassword()));
+        assertEquals(gender, user.getGender());
+        assertEquals(true, f.delete());
     }
+
 }
