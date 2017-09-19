@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import seng202.team1.Alert;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
@@ -115,11 +116,17 @@ public class LoginController {
     public void login() {
 
         System.out.println("Login button clicked");
-        if (!usernameTextField.getText().isEmpty()) {
-            model.setName(usernameTextField.getText());
-        } else {
-            model.setName("No username entered");
+
+        String username = usernameTextField.getText();
+        if (username.isEmpty()) {
+            Alert.createAlert("Error", "Please enter a username.");
+            return;
         }
+
+        model.setName(username);
+
+        UserAccountModel user = UserAccountModel.getUser(username);
+
 
 
 

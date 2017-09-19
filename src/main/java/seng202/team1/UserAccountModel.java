@@ -1,6 +1,7 @@
 package seng202.team1;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.Period;
 import java.util.ArrayList;
 
@@ -161,6 +162,10 @@ public class UserAccountModel {
 
     public void addCustomWifiLocation(WifiPoint wifiPoint) {
         customWifiPoints.add(wifiPoint);
+    }
+
+    public static UserAccountModel getUser(String username) {
+        return new UserAccountModel(LocalDate.of(2017, Month.APRIL, 1), username, "pw");
     }
 }
 
