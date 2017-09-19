@@ -60,7 +60,6 @@
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label fx:id="hoodLabel" text="Neighborhood:">
@@ -73,14 +72,8 @@
                   <Insets right="10.0" top="5.0" />
                </padding>
             </Label>
-            <Label fx:id="cityLabel" text="City:" GridPane.rowIndex="2">
-               <padding>
-                  <Insets right="10.0" top="5.0" />
-               </padding>
-            </Label>
             <TextField fx:id="hoodField" GridPane.columnIndex="1" />
-            <TextField fx:id="boroField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="cityField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ComboBox fx:id="boroComboBox" prefHeight="25.0" prefWidth="214.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
       <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />

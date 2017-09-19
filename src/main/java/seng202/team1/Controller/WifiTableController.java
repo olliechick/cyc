@@ -196,6 +196,19 @@ public class WifiTableController extends TableController{
         setFilters();
     }
 
+    public void addWifi() {
+        try {
+            FXMLLoader addWifiLoader = new FXMLLoader(getClass().getResource("/fxml/AddWifiDialog.fxml"));
+            Parent root = addWifiLoader.load();
+            AddWifiDialogController addWifiDialog = addWifiLoader.getController();
+            Stage stage1 = new Stage();
+
+            addWifiDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     protected void initModel(DummyModel dummyModel) {
         /**
