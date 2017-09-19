@@ -19,8 +19,9 @@ public class DatabaseManager {
      * Creates local database file, and required tables.
      *
      * @author Ridge Nairn
+     * @throws SQLException when database cannot be connected to / instantiated.
      */
-    public static void connect() {
+    public static void connect() throws SQLException {
         String filename = "sqlite.db";
         localDatabaseFile = new File(filename);
         String url = "jdbc:sqlite:" + filename;
@@ -51,10 +52,10 @@ public class DatabaseManager {
                 "    duration BIGINT,\n" +
                 "    startTime TEXT,\n" +
                 "    stopTime TEXT,\n" +
-                "    startx FLOAT,\n" +
-                "    starty FLOAT,\n" +
-                "    endx FLOAT,\n" +
-                "    endy FLOAT,\n" +
+                "    startLatitude FLOAT,\n" +
+                "    startLongitude FLOAT,\n" +
+                "    endLatitude FLOAT,\n" +
+                "    endLongitude FLOAT,\n" +
                 "    bikeID INTEGER,\n" +
                 "    gender VARCHAR(1),\n" +
                 "    birthYear INTEGER,\n" +
@@ -63,41 +64,43 @@ public class DatabaseManager {
                 "    isUserDefined BOOLEAN\n" +
                 ");";
 
-        String createRetailerTable =  "CREATE TABLE retailer\n" +
+        String createRetailerTable = "CREATE TABLE retailer\n" +
                 "(\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
                 "    name TEXT NOT NULL,\n" +
-                "    addressLine1 TEXT NOT NULL,\n" +
+                "    addressLine1 TEXT,\n" +
                 "    addressLine2 TEXT,\n" +
                 "    city TEXT,\n" +
                 "    state TEXT,\n" +
-                "    zipcode VARCHAR(5),\n" +
+                "    zipcode INTEGER,\n" +
                 "    blockLot TEXT,\n" +
                 "    primaryFunction TEXT,\n" +
                 "    secondaryFunction TEXT,\n" +
                 "    latitude FLOAT,\n" +
-                "    longitude FLOAT\n" +
+                "    longitude FLOAT,\n" +
+                "    isUserDefined BOOLEAN\n" +
                 ");";
 
         String createWifiTable = "CREATE TABLE wifi\n" +
                 "(\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
                 "    objectID INTEGER,\n" +
-                "    locationx FLOAT,\n" +
-                "    locationy FLOAT,\n" +
+                "    latitude FLOAT,\n" +
+                "    longitude FLOAT,\n" +
                 "    placeName TEXT,\n" +
                 "    location TEXT,\n" +
                 "    locationType TEXT,\n" +
                 "    hood TEXT,\n" +
                 "    borough TEXT,\n" +
                 "    city TEXT,\n" +
-                "    zipcode VARCHAR(5),\n" +
+                "    zipcode INTEGER,\n" +
                 "    cost TEXT,\n" +
                 "    provider TEXT,\n" +
                 "    remarks TEXT,\n" +
                 "    SSID TEXT,\n" +
                 "    sourceId TEXT,\n" +
-                "    datetimeactivated TEXT\n" +
+                "    dateTimeActivated TEXT,\n" +
+                "    isUserDefined BOOLEAN\n" +
                 ");";
 
         try {
@@ -182,6 +185,7 @@ public class DatabaseManager {
      *
      * @author Ridge Nairn
      * @param point A point to be added to the database.
+     * @throws SQLException when record cannot be added.
      */
     public static void addRecord(DataPoint point) throws SQLException {
         // TODO: Implement Record Adding to correct table, based on subclass
@@ -212,7 +216,7 @@ public class DatabaseManager {
 
 
         } else if (point instanceof WifiPoint) {
-            statement = "INSERT INTO wifi (objectID, locationx, locationy, placeName, location, locationType, " +
+            statement = "INSERT INTO wifi (objectID, latitude, longitude, placeName, location, locationType, " +
                     "hood, borough, city, zipcode, cost, provider, remarks, SSID, sourceId, datetimeactivated) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             WifiPoint wifiPoint = (WifiPoint) point;
@@ -252,10 +256,11 @@ public class DatabaseManager {
      *
      * @author Ridge Nairn
      * @param trip An instance of BikeTrip to be added to the trip database table.
+     * @throws SQLException when the row could not be inserted
      */
     public static void addBikeTrip(BikeTrip trip) throws SQLException {
         // TODO: Don't assume values can be null
-        String insert = "INSERT INTO trip (duration, startTime, stopTime, startx, starty, endx, endy, bikeID, gender, " +
+        String insert = "INSERT INTO trip (duration, startTime, stopTime, startLatitude, startLongitude, endLatitude, endLongitude, bikeID, gender, " +
                 "birthYear, tripDistance, googleData) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement statement = getConnection().prepareStatement(insert);
@@ -268,7 +273,7 @@ public class DatabaseManager {
         statement.setFloat(6, trip.getEndLatitude());
         statement.setFloat(7, trip.getEndLongitude());
         statement.setInt(8, trip.getBikeID());
-        statement.setInt(9, trip.getGender());
+        statement.setString(9, Character.toString(trip.getGender()));
         statement.setInt(10, trip.getBirthYear());
         statement.setDouble(11, trip.getTripDistance());
         statement.setString(12, trip.getGoogleData());
@@ -320,10 +325,10 @@ public class DatabaseManager {
                 String startTimeString = rs.getString("startTime");
                 String stopTimeString = rs.getString("stopTime");
                 Long duration = rs.getLong("duration");
-                Float startx = rs.getFloat("startx");
-                Float starty = rs.getFloat("starty");
-                Float endx = rs.getFloat("endx");
-                Float endy = rs.getFloat("endy");
+                Float startLatitude = rs.getFloat("startLatitude");
+                Float startLongitude = rs.getFloat("startLongitude");
+                Float endLatitude = rs.getFloat("endLatitude");
+                Float endLongitude = rs.getFloat("endLongitude");
                 int bikeID = rs.getInt("bikeID");
                 char gender = rs.getString("gender").toCharArray()[0];
                 int birthYear = rs.getInt("birthYear");
@@ -334,8 +339,8 @@ public class DatabaseManager {
                 LocalDateTime startTime = LocalDateTime.parse(startTimeString);
                 LocalDateTime stopTime = LocalDateTime.parse(stopTimeString);
 
-                Point.Float startPoint = new Point.Float(startx, starty);
-                Point.Float stopPoint = new Point.Float(endx, endy);
+                Point.Float startPoint = new Point.Float(startLongitude, startLatitude);
+                Point.Float stopPoint = new Point.Float(endLongitude, endLatitude);
                 
 
                 BikeTrip trip = new BikeTrip(duration, startTime, stopTime, startPoint, stopPoint, bikeID, gender, birthYear, isUserDefined);
@@ -351,6 +356,85 @@ public class DatabaseManager {
     public static ArrayList<BikeTrip> getAllTrips() {
         return getTrips(0, getNumberOfBikeTrips());
     }
+
+    public static ArrayList<RetailerLocation> getRetailers() {
+        String statement = "SELECT * FROM retailer";
+        PreparedStatement preparedStatement;
+        ArrayList<RetailerLocation> result = new ArrayList<>();
+        try {
+            preparedStatement = getConnection().prepareStatement(statement);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String addressLine1 = rs.getString("addressLine1");
+                String addressLine2 = rs.getString("addressLine2");
+                String city = rs.getString("city");
+                String state = rs.getString("state");
+                int zipcode = rs.getInt("zipcode");
+                String blocklot = rs.getString("blocklot");
+                String primaryFunction = rs.getString("primaryFunction");
+                String secondaryFunction = rs.getString("secondaryFunction");
+                Float latitude = rs.getFloat("latitude");
+                Float longitude = rs.getFloat("longitude");
+                Boolean isUserDefined = rs.getBoolean("isUserDefined");
+
+                Point.Float location = new Point.Float(longitude, latitude);
+
+                RetailerLocation retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city, state, zipcode, blocklot, primaryFunction, secondaryFunction, location, isUserDefined);
+
+                result.add(retailerLocation);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    public static ArrayList<WifiPoint> getWifiPoints() {
+        String statement = "SELECT * FROM wifi";
+        PreparedStatement preparedStatement;
+        ArrayList<WifiPoint> result = new ArrayList<>();
+        try {
+            preparedStatement = getConnection().prepareStatement(statement);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                int objectID = rs.getInt("objectID");
+                Float latitude = rs.getFloat("latitude");
+                Float longitude = rs.getFloat("longitude");
+                String placeName = rs.getString("placeName");
+                String location = rs.getString("location");
+                String locationType = rs.getString("locationType");
+                String hood = rs.getString("hood");
+                String borough = rs.getString("borough");
+                String city = rs.getString("city");
+                int zipcode = rs.getInt("zipcode");
+                String cost = rs.getString("cost");
+                String provider = rs.getString("provider");
+                String remarks = rs.getString("remarks");
+                String ssid = rs.getString("SSID");
+                String sourceID = rs.getString("sourceId");
+                String dateTimeActivated = rs.getString("dateTimeActivated");
+                Boolean isUserDefined = rs.getBoolean("isUserDefined");
+
+                Point.Float coords = new Point.Float(longitude, latitude);
+                LocalDateTime dateTime = LocalDateTime.parse(dateTimeActivated);
+
+                WifiPoint wifiPoint = new WifiPoint(objectID, coords, placeName, location, locationType, hood,
+                        borough, city, zipcode, cost, provider, remarks, ssid, sourceID, dateTime, isUserDefined);
+
+                result.add(wifiPoint);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 
     /**
      * Returns the number of BikeTrip records stored in the database.
