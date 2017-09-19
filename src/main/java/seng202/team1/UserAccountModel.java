@@ -36,7 +36,6 @@ public class UserAccountModel implements java.io.Serializable{
         }
         this.accountType = "User";
         this.userName = userName;
-        this.password = password;
         this.salt = PasswordManager.getNextSalt();
         this.password = PasswordManager.hash(password, salt);
     }
