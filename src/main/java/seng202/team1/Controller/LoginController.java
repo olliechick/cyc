@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import seng202.team1.Alert;
+import seng202.team1.PasswordManager;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
@@ -158,7 +159,7 @@ public class LoginController {
         UserAccountModel user;
         try {
             user = UserAccountModel.getUser(username);
-        } catch (IllegalArgumentException e) {
+        } catch (IOException e) {
             usernameLabel.setTextFill(Color.RED);
             passwordLabel.setTextFill(Color.RED);
             Alert.createAlert("Error", "User does not exist. Please sign up or check your username.");
@@ -166,7 +167,7 @@ public class LoginController {
         }
 
         String password = passwordField.getText();
-        if (user.getPassword().equals(password)) {
+        if (PasswordManager.isExpectedPassword(password, user.getSalt(), user.getPassword())) {
             // They got the password right
             if (user.getAccountType().equals("User")) {
                 launchMap();
@@ -185,8 +186,9 @@ public class LoginController {
     /**
      * Processes a user signup.
      * Does not allow empty usernames, but does allow empty passwords.
+     * @throws IOException If it can't create the user file.
      */
-    public void signUp() {
+    public void signUp() throws IOException{
 
         System.out.println("Sign up button clicked");
         String username = newUsernameTextField.getText();
@@ -223,7 +225,7 @@ public class LoginController {
             launchLandingScreen();
         }
 
-        // TODO UserAccountModel.createUser(newUser) which calls Serializer.SerializeUser(newUser);
+        UserAccountModel.createUser(newUser);
 
     }
 }

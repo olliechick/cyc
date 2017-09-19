@@ -1,8 +1,5 @@
 package seng202.team1;
 
-import sun.security.util.Password;
-
-import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
@@ -41,7 +38,7 @@ public final class PasswordManager {
      * @param salt byte[] salt to be used should be created by getNextSalt()
      * @return the hashed and salted password
      */
-    public static byte[] hash(String password, byte[] salt){
+    public static byte[] hash(String password, byte[] salt) {
         char[] passwordChar = password.toCharArray();
         PBEKeySpec spec = new PBEKeySpec(passwordChar,salt,ITERATIONS,KEY_LENGTH);
         Arrays.fill(passwordChar, Character.MIN_VALUE);
@@ -63,13 +60,12 @@ public final class PasswordManager {
      * @param expectedHash expected value for the hash
      * @return true if matches false otherwise
      */
-    public static boolean isExpectedPassword(String password, byte[] salt, byte[] expectedHash){
+    public static boolean isExpectedPassword(String password, byte[] salt, byte[] expectedHash) {
         byte[] passwordHash = hash(password,salt);
-        password = "\0"; // wipe the password once done with it
         if (passwordHash.length != expectedHash.length){
             return false;
         }
-        for(int i =0; i < passwordHash.length; i++){
+        for (int i = 0; i < passwordHash.length; i++){
             if (passwordHash[i] != expectedHash[i]){
                 return false;
             }

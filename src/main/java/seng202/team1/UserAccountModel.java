@@ -1,7 +1,7 @@
 package seng202.team1;
 
+import java.io.IOException;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.Period;
 import java.util.ArrayList;
 
@@ -137,7 +137,8 @@ public class UserAccountModel implements java.io.Serializable{
         this.salt = PasswordManager.getNextSalt();
         this.password = PasswordManager.hash(password, salt);
     }
-    byte[] getSalt(){
+
+    public byte[] getSalt(){
         return this.salt;
     }
 
@@ -171,8 +172,12 @@ public class UserAccountModel implements java.io.Serializable{
         customWifiPoints.add(wifiPoint);
     }
 
-    public static UserAccountModel getUser(String username) {
-        return new UserAccountModel(LocalDate.of(2017, Month.APRIL, 1), username, "pw");
+    public static void createUser(UserAccountModel user)  {
+        SerializerImplementation.serializeUser(user);
+    }
+
+    public static UserAccountModel getUser(String username) throws IOException{
+        return SerializerImplementation.deserializeUser(username);
     }
 }
 
