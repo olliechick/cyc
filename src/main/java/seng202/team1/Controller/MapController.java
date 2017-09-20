@@ -94,7 +94,7 @@ public class MapController {
     }
 
     private void addWifi(float lat, float lng, String title) {
-        String scriptStr = "document.addWIFIMarker({lat: " + lat + ", lng:  " + lng + "}, 'WIFI.png', " + "'" + title + "')";
+        String scriptStr = "document.addWIFIMarker({lat: " + lat + ", lng:  " + lng + "}, 'WIFI2.png', " + "'" + title + "')";
         webView.getEngine().executeScript(scriptStr);
 
     }
@@ -129,6 +129,11 @@ public class MapController {
         webView.getEngine().executeScript("document.retailerCluster()");
     }
 
+    private void redrawWIFICluster() {
+        String scriptStr = "document.updatewifiMarkerCluster()";
+        webView.getEngine().executeScript(scriptStr);
+    }
+
     @FXML
     private void updateRetailers() {
         for (int i = 0; i < retailerPoints.size(); i++ ) {
@@ -143,6 +148,7 @@ public class MapController {
                 }
             }
         }
+
     }
 
     @FXML
@@ -157,6 +163,7 @@ public class MapController {
                 }
             }
         }
+        redrawWIFICluster();
     }
 
 

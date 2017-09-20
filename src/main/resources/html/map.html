@@ -30,7 +30,7 @@
           center: myLatLng,
           disableDefaultUI: true
         });
-
+        var wifiMarkerCluster;
         directionsDisplay = new google.maps.DirectionsRenderer();
         var bikeLayer = new google.maps.BicyclingLayer();
         bikeLayer.setMap(map);
@@ -52,7 +52,7 @@
         var iconBase = '';
         var icons = {
           wifi: {
-            icon: iconBase + 'WIFI.png'
+            icon: iconBase + 'wifi-2.png'
           },
           retailer: {
             icon: iconBase + 'departmentstore.png'
@@ -121,8 +121,10 @@
 
         document.wifiCluster = function wifiCluster()
         {
-        var wifiMarkerCluster = new MarkerClusterer(map, wifiMarkerArray,
-        {imagePath: 'wifiCluster/m'});
+        wifiMarkerCluster = new MarkerClusterer(map, wifiMarkerArray,
+        {imagePath: 'wifiCluster/green',
+         ignoreHiddenMarkers: true,
+         maxZoom: 14});
         }
 
         document.retailerCluster = function retailerCluster()
@@ -162,16 +164,32 @@
         retailerMarkerArray.push(marker);
     }
 
+    document.updatewifiMarkerCluster = function updatewifiMarkerCluster()
+    {
+
+        var newCluster = [];
+
+        for (index = 0; index < wifiMarkerArray.length; ++index) {
+            if(wifiMarkerArray[index].getVisible()) {
+                newCluster.push(wifiMarkerArray[index]);
+            }
+        }
+        wifiMarkerCluster.clearMarkers();
+        wifiMarkerCluster.addMarkers(newCluster, false);
+        wifiMarkerCluster.redraw();
+    }
+
 
     document.hideWIFIMarker = function hideWIFIMarker(index)
     {
         wifiMarkerArray[index].setVisible(false);
-
+        //wifiMarkerCluster.removeMarker(wifiMarkerArray[index])
     }
 
     document.showWIFIMarker = function showWIFIMarker(index)
     {
         wifiMarkerArray[index].setVisible(true);
+        //wifiMarkerCluster.addMarker(wifiMarkerArray[index], false)
     }
 
 
