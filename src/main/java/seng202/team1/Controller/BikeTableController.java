@@ -11,13 +11,13 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.BikeTrip;
+import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
 
 import java.awt.*;
@@ -132,7 +132,7 @@ public class BikeTableController extends TableController{
         filterGenderComboBox.getSelectionModel().selectFirst();
 
         filterStartComboBox.getItems().addAll("Not yet implemented");
-        filterStartComboBox.getSelectionModel().selectFirst();;
+        filterStartComboBox.getSelectionModel().selectFirst();
 
         filterEndComboBox.getItems().addAll("Not yet implemented");
         filterEndComboBox.getSelectionModel().selectFirst();
@@ -153,7 +153,12 @@ public class BikeTableController extends TableController{
              */
             //@Override
             protected ArrayList<BikeTrip> call() {
-                return populateBikeTrips(filename);
+                try {
+                    return populateBikeTrips(filename);
+                } catch (CsvParserException e) {
+                    //TODO deal with the exception
+                    return null;
+                }
             }
         };
 

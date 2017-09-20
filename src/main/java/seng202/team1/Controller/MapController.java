@@ -4,9 +4,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import seng202.team1.CsvParserException;
 import seng202.team1.GenerateFields;
 import seng202.team1.RetailerLocation;
 import seng202.team1.WifiPoint;
+import seng202.team1.Alert;
 
 import java.util.ArrayList;
 
@@ -19,6 +21,7 @@ import static seng202.team1.GenerateFields.generateWifiProviders;
  * Logic for the map GUI
  *
  * @author Cameron Auld
+ * @author Ollie Chick
  * Created by cga51 on 06/09/17.
  */
 public class MapController {
@@ -123,8 +126,12 @@ public class MapController {
     }
     @FXML
     private void loadAllWifi() {
-        wifiPoints =  populateWifiHotspots("src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv");
-        WifiPoint point = null;
+        try {
+            wifiPoints = populateWifiHotspots("src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv");
+        } catch (CsvParserException e) {
+            Alert.createAlert("Error", "Cannot load WiFi points.");
+        }
+        WifiPoint point;
         for (int i = 0; i < wifiPoints.size(); i++) {
             point = wifiPoints.get(i);
             point.setId(i);
@@ -136,8 +143,12 @@ public class MapController {
     }
     @FXML
     private void loadAllRetailers() {
+        try {
         retailerPoints =  populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
-        RetailerLocation point = null;
+        } catch (CsvParserException e) {
+            Alert.createAlert("Error", "Cannot load retailers.");
+        }
+        RetailerLocation point;
         for (int i = 0; i < retailerPoints.size(); i++) {
             point = retailerPoints.get(i);
             point.setId(i);
@@ -268,6 +279,7 @@ public class MapController {
         }
     }
 
+
     private boolean checkZip(RetailerLocation retailerLocation) {
         if (filterZipComboBox.getValue().equals("All")) {
             return true;
@@ -285,6 +297,7 @@ public class MapController {
         }
     }
 
+
     private boolean checkBorough(WifiPoint wifiPoint) {
         if (filterBoroughComboBox.getValue().equals("All")) {
             return true;
@@ -300,6 +313,7 @@ public class MapController {
             return wifiPoint.getProvider().equalsIgnoreCase((String) filterProviderComboBox.getValue());
         }
     }
+
 
     private void initializeFilters() {
         /**
@@ -326,8 +340,9 @@ public class MapController {
 
         filterProviderComboBox.getItems().addAll("All");
         filterProviderComboBox.getSelectionModel().selectFirst();
-
     }
+
+
     private void setFilters() {
         /**
          * Sets the filter options
@@ -336,12 +351,15 @@ public class MapController {
 
         // RETAILERS
 
+        ArrayList<String> uniquePrimaryFunctions;
         uniquePrimaryFunctions = GenerateFields.generatePrimaryFunctionsList(retailerPoints);
         filterPrimaryComboBox.getItems().addAll( uniquePrimaryFunctions);
         filterPrimaryComboBox.getSelectionModel().selectFirst();
 
 
         uniqueSecondaryFunctions = generateSecondaryFunctionsList(retailerPoints);
+        ArrayList<String> uniqueSecondaryFunctions;
+        uniqueSecondaryFunctions = GenerateFields.generateSecondaryFunctionsList(retailerPoints);
         filterSecondaryComboBox.getItems().addAll( uniqueSecondaryFunctions);
         filterSecondaryComboBox.getSelectionModel().selectFirst();
 

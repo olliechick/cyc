@@ -9,16 +9,13 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
 import seng202.team1.RetailerLocation;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static seng202.team1.CSVLoader.populateRetailers;
@@ -168,8 +165,12 @@ public class RetailerTableController extends TableController{
              */
             @Override
             protected ArrayList<RetailerLocation> call() {
-
-                return populateRetailers(filename);
+                try {
+                    return populateRetailers(filename);
+                } catch (CsvParserException e) {
+                    //TODO deal with the exception
+                    return null;
+                }
             }
         };
 

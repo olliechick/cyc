@@ -1,21 +1,16 @@
 package seng202.team1;
 
 
-;
-import com.sun.org.apache.bcel.internal.generic.BIPUSH;
 import org.junit.Test;
-import org.junit.runner.notification.RunListener;
 
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.geom.Arc2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
+;
 
 /**
  * Unit test for simple App.
@@ -24,7 +19,7 @@ public class DataAnaliserTest{
 
 
     @Test
-    public void TestDistanceBikeTripsDifferant(){
+    public void TestDistanceBikeTripsDifferent() throws Exception {
         ArrayList<BikeTrip> testData = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         BikeTrip trip1 = testData.get(1);
         BikeTrip trip2 = testData.get(2);
@@ -34,7 +29,7 @@ public class DataAnaliserTest{
     }
 
     @Test
-    public void TestDistanceBikeTripsSame(){
+    public void TestDistanceBikeTripsSame() throws Exception {
         ArrayList<BikeTrip> testData = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         BikeTrip trip1 = testData.get(1);
         BikeTrip trip2 = testData.get(1);
@@ -44,27 +39,27 @@ public class DataAnaliserTest{
     }
 
     @Test
-    public void TestSearchBikeTripsMatching(){ //Needs better data to be checked with #TODO
+    public void TestSearchBikeTripsMatching() throws Exception { //Needs better data to be checked with #TODO
         ArrayList<BikeTrip> trips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<BikeTrip> results = DataAnaliser.searchBikeTrips(40.732,-73.9925,600, trips); // should be in the middle of the test data
         assertEquals(2, results.size());
     }
 
     @Test
-    public void TestSearchWifiPoints(){ //Needs better data to be checked with #TODO
+    public void TestSearchWifiPoints() throws Exception { //Needs better data to be checked with #TODO
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         ArrayList<WifiPoint> results = DataAnaliser.searchWifiPoints(40.755, -73.985,600,hotspots);
         assertEquals(3, results.size());
     }
 
     @Test
-    public void TestCalculateDistance(){
+    public void TestCalculateDistance() throws Exception {
         double distance = DataAnaliser.calculateDistance(40.767, -73.933,40.77,-73.94);
         assertEquals(680, distance, 3);
     }
 
     @Test
-    public void TestSortTripsByDistance() {
+    public void TestSortTripsByDistance() throws Exception {
         ArrayList<BikeTrip> testData = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<BikeTrip> oldData = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         Collections.shuffle(testData, new Random(2132154541));
@@ -77,7 +72,7 @@ public class DataAnaliserTest{
     }
 
     @Test
-    public void TestFindClosestWifiPointToStartPointExists(){
+    public void TestFindClosestWifiPointToStartPointExists() throws Exception {
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         BikeTrip testTrip = bikeTrips.get(3);
@@ -85,7 +80,7 @@ public class DataAnaliserTest{
         assertEquals(hotspots.get(1), testPoint); // can't test just yet as need the point class the Ollie is working on
     }
     @Test
-    public void TestFindClosestWifiPointToStartPointDoesNotExists(){
+    public void TestFindClosestWifiPointToStartPointDoesNotExists() throws Exception {
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         BikeTrip testTrip = bikeTrips.get(0);
@@ -94,7 +89,7 @@ public class DataAnaliserTest{
     }
 
     @Test
-    public void TestFIndClosestWifiPointToEndExists(){
+    public void TestFIndClosestWifiPointToEndExists() throws Exception {
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         BikeTrip testTrip = bikeTrips.get(3);
@@ -103,7 +98,7 @@ public class DataAnaliserTest{
     }
 
     @Test
-    public void TestFindClosestWifiPointToEndDoesNotExist(){
+    public void TestFindClosestWifiPointToEndDoesNotExist() throws Exception {
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         BikeTrip testTrip = bikeTrips.get(0);
@@ -112,7 +107,7 @@ public class DataAnaliserTest{
     }
 
     @Test
-    public void TestFindClosestPointToTripExists() {
+    public void TestFindClosestPointToTripExists() throws Exception {
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         BikeTrip testTrip = bikeTrips.get(3);
@@ -121,7 +116,7 @@ public class DataAnaliserTest{
     }
 
     @Test
-    public void TestFindClosestPointToTripDoesNotExists() {
+    public void TestFindClosestPointToTripDoesNotExists() throws Exception {
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         BikeTrip testTrip = bikeTrips.get(1);
@@ -130,7 +125,7 @@ public class DataAnaliserTest{
     }
 
     @Test
-    public void TestFindClosestWifiPointToRoute(){
+    public void TestFindClosestWifiPointToRoute() throws Exception {
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         ArrayList<Point2D.Float> waypoints = new ArrayList<Point2D.Float>();

@@ -3,21 +3,19 @@ package seng202.team1;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.maps.DirectionsApi;
-import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.GeocodingResult;
-import com.google.maps.model.TravelMode;
 import com.google.maps.model.LatLng;
+import com.google.maps.model.TravelMode;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import static seng202.team1.CSVLoader.populateRetailers;
-import static seng202.team1.CSVLoader.populateWifiHotspots;
 
 public class GoogleAPIClient {
 
@@ -36,8 +34,14 @@ public class GoogleAPIClient {
     }
 
     public static void getRetailerGeocode() {
-        ArrayList<RetailerLocation> retailerPoints =  populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
-        RetailerLocation point = null;
+        ArrayList<RetailerLocation> retailerPoints;
+        try {
+            retailerPoints = populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
+        } catch (CsvParserException e) {
+            //TODO deal with the exception
+            return;
+        }
+        RetailerLocation point;
         String address;
         for (int i = 665; i < retailerPoints.size(); i++) {
 
@@ -45,13 +49,9 @@ public class GoogleAPIClient {
             address = point.getAddressLine1() + point.getAddressLine2() + ", " + point.getCity() + ", " + point.getZipcode();
             //System.out.println(address);
             try {
-                Point.Double  latlng  = googleGeocode(address);
+                Point.Double latlng = googleGeocode(address);
                 System.out.println(latlng.getX() + ", " + latlng.getY());
-            } catch (InterruptedException e) {
-                //e.printStackTrace();
-            } catch (ApiException e) {
-                //e.printStackTrace();
-            } catch (IOException e) {
+            } catch (InterruptedException|ApiException|IOException e) {
                 //e.printStackTrace();
             }
 
