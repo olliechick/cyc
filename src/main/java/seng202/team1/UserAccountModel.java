@@ -141,7 +141,7 @@ public class UserAccountModel implements java.io.Serializable{
         this.password = PasswordManager.hash(password, salt);
     }
 
-    public byte[] getSalt(){
+    public byte[] getSalt() {
         return this.salt;
     }
 

@@ -38,6 +38,11 @@ public class BikeTripTest extends TestCase {
     }
 
 
+    public void testGetDuration() {
+        String expectedString = "3 days";
+        assertEquals(expectedString, bikeTrip.getDuration());
+    }
+
     public void testDurationlessConstructor() {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint, bikeID,
                 gender, birthYear, isUserDefinedPoint);

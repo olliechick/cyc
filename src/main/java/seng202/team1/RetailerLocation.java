@@ -25,12 +25,12 @@ public class RetailerLocation extends DataPoint {
                             String secondaryFunction, Point.Float coords, boolean isUserDefinedPoint) {
         this.name = name;
 
-        if (primaryFunction.equalsIgnoreCase("")){
+        if (primaryFunction.equalsIgnoreCase("")) {
             this.primaryFunction = "Other";
         } else{
             this.primaryFunction = primaryFunction;
         }
-        if (secondaryFunction.equalsIgnoreCase("")){
+        if (secondaryFunction.equalsIgnoreCase("")) {
             this.secondaryFunction = "Other";
         } else {
             this.secondaryFunction = secondaryFunction;

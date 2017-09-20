@@ -272,7 +272,7 @@ public class DatabaseManager {
         statement.setFloat(5, trip.getStartLongitude());
         statement.setFloat(6, trip.getEndLatitude());
         statement.setFloat(7, trip.getEndLongitude());
-        statement.setInt(8, trip.getBikeID());
+        statement.setInt(8, trip.getBikeId());
         statement.setString(9, Character.toString(trip.getGender()));
         statement.setInt(10, trip.getBirthYear());
         statement.setDouble(11, trip.getTripDistance());

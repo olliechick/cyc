@@ -144,7 +144,7 @@ public class MapController {
     @FXML
     private void loadAllRetailers() {
         try {
-        retailerPoints =  populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
+        retailerPoints = populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
         } catch (CsvParserException e) {
             Alert.createAlert("Error", "Cannot load retailers.");
         }

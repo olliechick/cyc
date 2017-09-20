@@ -99,7 +99,7 @@ public class BikeTableController extends TableController{
         if (bikeSearchField.getText().isEmpty()) {
             return true;
         } else {
-            String bikeId = Integer.toString(bikeTrip.getBikeID());
+            String bikeId = Integer.toString(bikeTrip.getBikeId());
             return bikeId.contains(bikeSearchField.getText());
         }
     }

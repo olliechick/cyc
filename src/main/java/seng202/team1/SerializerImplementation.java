@@ -19,7 +19,7 @@ public final class SerializerImplementation {
      * File path is /src/main/resources/tmp/{username}.ser
      * @param user UserAcccountModel user to be serialized.
      */
-    public static void serializeUser(UserAccountModel user){
+    public static void serializeUser(UserAccountModel user) {
         try {
             FileOutputStream fileOut = new FileOutputStream(USER_DIR + user.getUserName() +
                     USER_EXT);
@@ -28,8 +28,7 @@ public final class SerializerImplementation {
             out.close();
             fileOut.close();
             System.out.println("User successfully serialized and stored.");
-        } catch (IOException e){
-
+        } catch (IOException e) {
             System.out.println("IO exception occurred while serializing User " + user.getUserName());
         }
     }
