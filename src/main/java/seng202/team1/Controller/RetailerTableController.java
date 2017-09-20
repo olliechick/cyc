@@ -89,7 +89,7 @@ public class RetailerTableController extends TableController{
     private void setPredicate() {
 
         filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
-                        retailerLocation -> checkStreet(retailerLocation)
+                        (RetailerLocation retailerLocation) -> checkStreet(retailerLocation)
                                 && checkPrimary(retailerLocation)
                                 && checkZip(retailerLocation),
 
@@ -259,7 +259,7 @@ public class RetailerTableController extends TableController{
         setFilters();
     }
 
-    public void addPoint() {
+    public void addRetailer() {
 
     }
 

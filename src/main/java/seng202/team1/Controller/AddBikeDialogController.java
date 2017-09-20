@@ -160,7 +160,7 @@ public class AddBikeDialogController {
 
     /**
      * Check the fields are filled with semi-valid data, turn all invalid fields red.
-     * TODO complete checks
+     *
      * @return true only if all fields are valid
      */
     private boolean checkFields() {
@@ -253,6 +253,6 @@ public class AddBikeDialogController {
     }
 
     public void cancel() {
-        System.out.println("Cancel");
+        stage.close();
     }
 }
