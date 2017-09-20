@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -14,7 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.web.WebView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
     <top>
 
     </top>
@@ -36,7 +41,7 @@
                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                        </rowConstraints>
                        <children>
-                           <Label text="Retailer Filters:" />
+                           <Label text="Retailer filters:" />
                            <Label text="Primary Function:" GridPane.columnIndex="1" />
                            <Label text="Address:" GridPane.columnIndex="3" />
                            <Label text="ZIP:" GridPane.columnIndex="2" />
@@ -53,7 +58,7 @@
                    </GridPane>
                </content>
             </Tab>
-            <Tab text="WIFI">
+            <Tab text="WiFi">
                <content>
                    <GridPane hgap="5.0" vgap="2.0" BorderPane.alignment="CENTER">
                        <columnConstraints>
@@ -68,7 +73,7 @@
                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                        </rowConstraints>
                        <children>
-                           <Label text="Wifi Filters:" />
+                           <Label text="WiFi filters:" />
                            <Label text="Borough:" GridPane.columnIndex="1" />
                            <Label text="Provider:" GridPane.columnIndex="3" />
                            <Label text="Cost:" GridPane.columnIndex="2" />
@@ -124,8 +129,8 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="WIFIButton11" mnemonicParsing="false" onAction="#loadAllWifi" text="WIFI icon test" GridPane.columnIndex="1" />
-            <Button fx:id="RetailerButton11" mnemonicParsing="false" onAction="#loadAllRetailers" text="retailer icon test" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button fx:id="WIFIButton11" mnemonicParsing="false" onAction="#loadAllWifi" text="WiFi icon test" GridPane.columnIndex="1" />
+            <Button fx:id="RetailerButton11" mnemonicParsing="false" onAction="#loadAllRetailers" text="Retailer icon test" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
