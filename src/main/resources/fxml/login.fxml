@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -17,7 +23,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.LoginController">
+<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.LoginController">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="186.0" minWidth="10.0" prefWidth="130.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="430.0" minWidth="10.0" prefWidth="291.0" />
@@ -50,11 +56,11 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" text="Log in" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                                        <PasswordField fx:id="passwordField" onAction="#login" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                         <TextField fx:id="usernameTextField" GridPane.columnIndex="1" />
+                                        <PasswordField fx:id="passwordField" onAction="#login" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                         <Label fx:id="passwordLabel" text="Password:" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                                         <Label fx:id="usernameLabel" nodeOrientation="LEFT_TO_RIGHT" text="Username:" GridPane.halignment="CENTER" />
+                                        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" text="Log in" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                                     </children>
                                 </GridPane>
                             </children>
@@ -79,17 +85,17 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUp" text="Sign Up" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
                                         <Label fx:id="newPasswordLabel" text="Password:" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                                         <TextField fx:id="newUsernameTextField" GridPane.columnIndex="1" />
                                         <PasswordField fx:id="newPasswordTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <DatePicker fx:id="birthdayEntryField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <ChoiceBox fx:id="genderBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <ChoiceBox fx:id="accountTypeBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <Label fx:id="accountTypeLabel" text="Account type:" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                               <Label fx:id="newUsernameLabel" text="Username:" GridPane.halignment="CENTER" />
                               <Label fx:id="birthdayLabel" text="Birthday:" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                               <Label fx:id="genderLabel" text="Gender:" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                              <DatePicker fx:id="birthdayEntryField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                        <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUp" text="Sign Up" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
                                     </children>
                                 </GridPane>
                             </children>

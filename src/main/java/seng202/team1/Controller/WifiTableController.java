@@ -9,6 +9,8 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -51,6 +53,7 @@ public class WifiTableController extends TableController{
     private DummyModel model;
     private Stage stage;
 
+    private ObservableList<WifiPoint> dataPoints;
     private FilteredList<WifiPoint> filteredData;
 
     final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/wifipoint.csv";
@@ -86,7 +89,7 @@ public class WifiTableController extends TableController{
     private void setPredicate() {
 
         filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
-                        wifiPoint -> checkCost(wifiPoint),
+                        (WifiPoint wifiPoint) -> checkCost(wifiPoint),
 
                 filterBoroughComboBox.valueProperty(),
                 filterCostComboBox.valueProperty(),
@@ -146,6 +149,7 @@ public class WifiTableController extends TableController{
                 setTableViewWifi(loadWifiCsv.getValue());
                 stopLoadingAni();
                 setPredicate();
+                populateCustomWifiPoints();
             }
         });
 
@@ -170,7 +174,7 @@ public class WifiTableController extends TableController{
      */
     private void setTableViewWifi(ArrayList<WifiPoint> data) {
 
-        ObservableList<WifiPoint> dataPoints = FXCollections.observableArrayList(data);
+        dataPoints = FXCollections.observableArrayList(data);
 
         TableColumn locationCol = new TableColumn("Location");
         TableColumn boroughCol = new TableColumn("Borough");
@@ -200,6 +204,35 @@ public class WifiTableController extends TableController{
         setFilters();
     }
 
+    public void addWifi() {
+        try {
+            FXMLLoader addWifiLoader = new FXMLLoader(getClass().getResource("/fxml/AddWifiDialog.fxml"));
+            Parent root = addWifiLoader.load();
+            AddWifiDialogController addWifiDialog = addWifiLoader.getController();
+            Stage stage1 = new Stage();
+
+            addWifiDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+
+            WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
+            if (newWifiPoint != null) {
+                dataPoints.add(newWifiPoint);
+                model.addCustomWifiLocation(newWifiPoint);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void populateCustomWifiPoints() {
+        ArrayList<WifiPoint> customWifi = model.getCustomWifiPoints();
+
+        if (customWifi != null) {
+            for (WifiPoint wifi : customWifi) {
+                dataPoints.add(wifi);
+            }
+        }
+    }
 
     protected void initModel(DummyModel dummyModel) {
         /**
