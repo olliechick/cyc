@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.web.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -19,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.web.WebView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
     <top>
 
     </top>
@@ -34,6 +29,7 @@
                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                        </columnConstraints>
                        <rowConstraints>
                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -51,6 +47,7 @@
                            <Label fx:id="loadLabel" text="Loading:" visible="false" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                            <ProgressIndicator fx:id="progressSpinner" progress="0.0" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                            <TextField fx:id="streetSearchField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Button mnemonicParsing="false" text="Search" onAction="#updateRetailers" GridPane.halignment="CENTER"  GridPane.columnIndex="4" GridPane.rowIndex="1" />
                        </children>
                        <padding>
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
