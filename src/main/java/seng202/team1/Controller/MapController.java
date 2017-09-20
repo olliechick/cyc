@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import seng202.team1.GenerateFields;
 import seng202.team1.RetailerLocation;
 import seng202.team1.WifiPoint;
 
@@ -28,6 +29,9 @@ public class MapController {
 
     @FXML
     private ComboBox filterPrimaryComboBox;
+
+    @FXML
+    private ComboBox filterSecondaryComboBox;
 
     @FXML
     private TextField streetSearchField;
@@ -64,8 +68,16 @@ public class MapController {
         webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
         webEngine.load(getClass().getResource("/html/map.html").toString());
+        initializeFilters();
+    }
+
+    @FXML
+    private void loadData() {
+        loadAllWifi();
+        loadAllRetailers();
         setFilters();
     }
+
     @FXML
     private void zoomIn() {
         webView.getEngine().executeScript("document.zoomIn()");
@@ -127,6 +139,7 @@ public class MapController {
             addRetailer(point.getLatitude(), point.getLongitude(), point.toInfoString());
         }
         webView.getEngine().executeScript("document.retailerCluster()");
+
     }
 
     private void redrawWIFICluster() {
@@ -145,6 +158,7 @@ public class MapController {
             RetailerLocation retailerLocation = retailerPoints.get(i);
             if(retailerLocation.isUpdated((checkStreet(retailerLocation)
                     && checkPrimary(retailerLocation)
+                    && checkSecondary(retailerLocation)
                     && checkZip(retailerLocation)))) {
                 if(retailerLocation.isVisible()) {
                     showRetailer(i);
@@ -185,6 +199,18 @@ public class MapController {
         }
     }
 
+    private boolean checkSecondary(RetailerLocation retailerLocation) {
+        /**
+         * checks the given retailerLocation against the filter in the primary function ComboBox.
+         *
+         */
+        if ("All".equals(filterSecondaryComboBox.getValue())) {
+            return true;
+        } else {
+            return retailerLocation.getSecondaryFunction().equals(filterSecondaryComboBox.getValue());
+        }
+    }
+
     private boolean checkStreet(RetailerLocation retailerLocation) {
         /**
          * Checks the address line 1 of the given retailerLocation against the text in the street
@@ -214,17 +240,23 @@ public class MapController {
         }
     }
 
-    private void setFilters() {
+    private void initializeFilters() {
         /**
          * Sets the filter options
          * TODO don't hard code
          */
-        filterPrimaryComboBox.getItems().addAll("All", "Shopping", "Personal and Professional Services");
+        // RETAILERS
+        filterPrimaryComboBox.getItems().addAll("All");
         filterPrimaryComboBox.getSelectionModel().selectFirst();
+
+        filterSecondaryComboBox.getItems().addAll("All");
+        filterSecondaryComboBox.getSelectionModel().selectFirst();
 
         filterZipComboBox.getItems().addAll("All", 10004, 10005, 10038, 10007);
         filterZipComboBox.getSelectionModel().selectFirst();
 
+
+        // WIFI
         filterBoroughComboBox.getItems().addAll("All");
         filterBoroughComboBox.getSelectionModel().selectFirst();
 
@@ -233,6 +265,28 @@ public class MapController {
 
         filterProviderComboBox.getItems().addAll("All");
         filterProviderComboBox.getSelectionModel().selectFirst();
+
+    }
+    private void setFilters() {
+        /**
+         * Sets the filter options
+         * TODO don't hard code
+         */
+        ArrayList<String> uniquePrimaryFunctions = null;
+        uniquePrimaryFunctions = GenerateFields.generatePrimaryFunctionsList(retailerPoints);
+        filterPrimaryComboBox.getItems().addAll( uniquePrimaryFunctions);
+        filterPrimaryComboBox.getSelectionModel().selectFirst();
+
+        ArrayList<String> uniqueSecondaryFunctions = null;
+        uniqueSecondaryFunctions = GenerateFields.generateSecondaryFunctionsList(retailerPoints);
+        filterSecondaryComboBox.getItems().addAll( uniqueSecondaryFunctions);
+        filterSecondaryComboBox.getSelectionModel().selectFirst();
+
+        //filterBoroughComboBox.getItems().addAll("All");
+        //filterBoroughComboBox.getSelectionModel().selectFirst();
+
+        //filterProviderComboBox.getItems().addAll("All");
+        //filterProviderComboBox.getSelectionModel().selectFirst();
 
     }
 

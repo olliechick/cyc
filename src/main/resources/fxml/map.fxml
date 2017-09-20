@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -27,6 +28,7 @@
                        <columnConstraints>
                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -39,15 +41,18 @@
                        <children>
                            <Label text="Retailer filters:" />
                            <Label text="Primary Function:" GridPane.columnIndex="1" />
-                           <Label text="Address:" GridPane.columnIndex="3" />
-                           <Label text="ZIP:" GridPane.columnIndex="2" />
+                           <Label text="Secondary Function:" GridPane.columnIndex="2" />
+                           <Label text="Address:" GridPane.columnIndex="4" />
+                           <Label text="ZIP:" GridPane.columnIndex="3" />
                            <ComboBox fx:id="filterPrimaryComboBox" onAction="#updateRetailers" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                           <ComboBox fx:id="filterZipComboBox" onAction="#updateRetailers" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                           <ComboBox fx:id="filterSecondaryComboBox" onAction="#updateRetailers" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                           <ComboBox fx:id="filterZipComboBox" onAction="#updateRetailers" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                            <Label fx:id="nameLabel" text="Name placeholder" visible="false" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                           <Label fx:id="loadLabel" text="Loading:" visible="false" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                           <ProgressIndicator fx:id="progressSpinner" progress="0.0" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                           <TextField fx:id="streetSearchField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <Button mnemonicParsing="false" text="Search" onAction="#updateRetailers" GridPane.halignment="CENTER"  GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                           <Label fx:id="loadLabel" text="Loading:" visible="false" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                           <ProgressIndicator fx:id="progressSpinner" progress="0.0" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                           <TextField fx:id="streetSearchField" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <Button mnemonicParsing="false" onAction="#updateRetailers" text="Search" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <ImageView fitHeight="17.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
                        </children>
                        <padding>
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -126,7 +131,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="WIFIButton11" mnemonicParsing="false" onAction="#loadAllWifi" text="WiFi icon test" GridPane.columnIndex="1" />
+            <Button fx:id="LoadDataButton" mnemonicParsing="false" onAction="#loadData" text="Load data" GridPane.columnIndex="1" />
             <Button fx:id="RetailerButton11" mnemonicParsing="false" onAction="#loadAllRetailers" text="Retailer icon test" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">
               <columnConstraints>
