@@ -113,7 +113,7 @@ public class CSVLoader {
      * If the file does not exist, then the error message is printed.
      * @return ArrayList<BikeTrip>
      */
-    public static ArrayList<BikeTrip> populateBikeTrips() {
+    public static ArrayList<BikeTrip> populateBikeTrips() throws CsvParserException {
         return populateBikeTrips(DEFAULT_BIKE_TRIPS_FILENAME);
     }
 
@@ -123,9 +123,10 @@ public class CSVLoader {
      * @param filename name of the file the data is to be loaded from.
      * @return ArrayList<BikeTrip>
      */
-    public static ArrayList<BikeTrip> populateBikeTrips(String filename){ //
+    public static ArrayList<BikeTrip> populateBikeTrips(String filename) throws CsvParserException {
         ArrayList<BikeTrip> trips = new ArrayList<BikeTrip>();
         HashSet<Character> genders = new HashSet<Character>();
+        boolean isValidCsv = false; // assume false unless proven otherwise
         try {
             ArrayList<CSVRecord> tripData = loadCSV(filename);
             for (CSVRecord record : tripData){
@@ -139,6 +140,7 @@ public class CSVLoader {
                     isHeaderRow = true;
                 }
                 if (!isHeaderRow) {
+                    isValidCsv = true;
                     long tripDuration = new Long(record.get(0).trim());
 
                     // Set start time
@@ -147,7 +149,7 @@ public class CSVLoader {
                         startTime = LocalDateTime.parse(record.get
                                 (1), DateTimeFormatter.ofPattern
                                 ("M/d/yyyy HH:mm:ss"));
-                    } catch (Exception e) {
+                    } catch (DateTimeParseException e) {
                         startTime = LocalDateTime.parse(record.get(1),
                                 DateTimeFormatter.ofPattern
                                         ("yyyy-MM-dd HH:mm:ss"));
@@ -159,7 +161,7 @@ public class CSVLoader {
                         stopTime = LocalDateTime.parse(record.get
                                 (2), DateTimeFormatter.ofPattern
                                 ("M/d/yyyy HH:mm:ss"));
-                    } catch (Exception e) {
+                    } catch (DateTimeParseException e) {
                         stopTime = LocalDateTime.parse(record.get(2),
                                 DateTimeFormatter.ofPattern
                                 ("yyyy-MM-dd HH:mm:ss"));
@@ -196,6 +198,9 @@ public class CSVLoader {
             System.out.println(e.getMessage());
         }
         //TODO do something with genders
+        if (!isValidCsv) {
+            throw new CsvParserException(filename);
+        }
         return trips;
     }
 
@@ -206,7 +211,7 @@ public class CSVLoader {
      * If the filename does not exist, then the error message is printed.
      * @return ArrayList<WifiPoint>
      */
-    public static ArrayList<WifiPoint> populateWifiHotspots() {
+    public static ArrayList<WifiPoint> populateWifiHotspots() throws CsvParserException {
         return populateWifiHotspots(DEFAULT_WIFI_HOTSPOTS_FILENAME);
     }
 
@@ -216,8 +221,10 @@ public class CSVLoader {
      * @param filename name of the file the data is to be loaded from.
      * @return ArrayList<WifiPoint>
      */
-    public static ArrayList<WifiPoint> populateWifiHotspots(String filename){
+    public static ArrayList<WifiPoint> populateWifiHotspots(String filename) throws
+            CsvParserException {
         ArrayList<WifiPoint> wifiSpots = new ArrayList<WifiPoint>();
+        boolean isValidCsv = false; // assume false unless proven otherwise
         try {
             ArrayList<CSVRecord> wifiData = loadCSV(filename);
             for(CSVRecord record : wifiData){
@@ -231,6 +238,7 @@ public class CSVLoader {
                     isHeaderRow = true;
                 }
                 if (!isHeaderRow) {
+                    isValidCsv = true;
                     int objectId = Integer.parseInt(record.get(0));
                     Point.Float coords = new Point.Float(Float.parseFloat(record.get(8)), Float.parseFloat(record.get(7)));
                     String name = record.get(5);
@@ -256,6 +264,9 @@ public class CSVLoader {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        if (!isValidCsv) {
+            throw new CsvParserException(filename);
+        }
         return wifiSpots;
     }
 
@@ -265,7 +276,7 @@ public class CSVLoader {
      * RetailerLocation objects from the default filename.
      * @return ArrayList<RetailerLocation>
      */
-    public static ArrayList<RetailerLocation> populateRetailers() {
+    public static ArrayList<RetailerLocation> populateRetailers() throws CsvParserException {
         return populateRetailers(DEFAULT_RETAILER_LOCATIONS_FILENAME);
     }
 
@@ -277,8 +288,10 @@ public class CSVLoader {
      * @param filename name of the file the data is to be loaded from.
      * @return ArrayList<RetailerLocation>
      */
-    public static ArrayList<RetailerLocation> populateRetailers(String filename){
+    public static ArrayList<RetailerLocation> populateRetailers(String filename) throws
+            CsvParserException {
         ArrayList<RetailerLocation> retailers = new ArrayList<RetailerLocation>(); //array list of retailers
+        boolean isValidCsv = false; // assume false unless proven otherwise
         try {
             ArrayList<CSVRecord> retailerData = loadCSV(filename);
             for(CSVRecord record : retailerData){
@@ -292,6 +305,7 @@ public class CSVLoader {
                     isHeaderRow = true;
                 }
                 if (!isHeaderRow) {
+                    isValidCsv = true;
                     String name = record.get(0);
                     String addressLine1 = record.get(1);
                     String addressLine2 = record.get(2);
@@ -319,6 +333,9 @@ public class CSVLoader {
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        }
+        if (!isValidCsv) {
+            throw new CsvParserException(filename);
         }
         return retailers;
     }
