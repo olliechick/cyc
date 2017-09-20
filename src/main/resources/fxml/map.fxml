@@ -44,7 +44,7 @@
                            <Label text="Secondary Function:" GridPane.columnIndex="2" />
                            <Label text="Address:" GridPane.columnIndex="4" />
                            <Label text="ZIP:" GridPane.columnIndex="3" />
-                           <ComboBox fx:id="filterPrimaryComboBox" onAction="#updateRetailers" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           <ComboBox fx:id="filterPrimaryComboBox" onAction="#updateRetailersPrimary" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                            <ComboBox fx:id="filterSecondaryComboBox" onAction="#updateRetailers" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                            <ComboBox fx:id="filterZipComboBox" onAction="#updateRetailers" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                            <Label fx:id="nameLabel" text="Name placeholder" visible="false" GridPane.columnSpan="2" GridPane.rowIndex="2" />

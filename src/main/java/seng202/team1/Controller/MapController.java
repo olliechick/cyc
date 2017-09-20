@@ -12,6 +12,8 @@ import java.util.ArrayList;
 
 import static seng202.team1.CSVLoader.populateRetailers;
 import static seng202.team1.CSVLoader.populateWifiHotspots;
+import static seng202.team1.GenerateFields.generateSecondaryFunctionsList;
+import static seng202.team1.GenerateFields.generateWifiProviders;
 
 /**
  * Logic for the map GUI
@@ -23,6 +25,10 @@ public class MapController {
 
     ArrayList<RetailerLocation> retailerPoints = null;
     ArrayList<WifiPoint> wifiPoints = null;
+
+    ArrayList<String> uniqueSecondaryFunctions = null;
+    ArrayList<String> uniquePrimaryFunctions = null;
+    ArrayList<String> uniqueProviders = null;
 
     @FXML
     private WebView webView;
@@ -153,6 +159,42 @@ public class MapController {
     }
 
     @FXML
+    private void updateRetailersPrimary() {
+        ArrayList<RetailerLocation> retailers = new ArrayList<RetailerLocation>();
+        for (int i = 0; i < retailerPoints.size(); i++ ) {
+
+            RetailerLocation retailerLocation = retailerPoints.get(i);
+            if(retailerLocation.isUpdated((checkStreet(retailerLocation)
+                    && checkPrimary(retailerLocation)
+                    && checkSecondary(retailerLocation)
+                    && checkZip(retailerLocation)))) {
+                if(retailerLocation.isVisible()) {
+                    showRetailer(i);
+                } else {
+                    hideRetailer(i);
+                }
+
+            }
+            if(checkPrimary(retailerLocation)) {
+                retailers.add(retailerLocation);
+            }
+        }
+        redrawRetailerCluster();
+        updateSecondaryFunctions(retailers);
+
+
+    }
+
+    private void updateSecondaryFunctions(ArrayList<RetailerLocation> retailers) {
+        ArrayList<String> newSecondaryFunctions = generateSecondaryFunctionsList(retailers);
+        filterSecondaryComboBox.getItems().clear();
+        filterSecondaryComboBox.getItems().addAll( "All");
+        filterSecondaryComboBox.getItems().addAll( newSecondaryFunctions);
+        filterSecondaryComboBox.getSelectionModel().selectFirst();
+    }
+
+
+    @FXML
     private void updateRetailers() {
         for (int i = 0; i < retailerPoints.size(); i++ ) {
             RetailerLocation retailerLocation = retailerPoints.get(i);
@@ -175,7 +217,9 @@ public class MapController {
     private void updateWIFI() {
         for (int i = 0; i < wifiPoints.size(); i++) {
             WifiPoint wifiPoint = wifiPoints.get(i);
-            if (wifiPoint.isUpdated((checkCost(wifiPoint)))) {
+            if (wifiPoint.isUpdated((checkCost(wifiPoint)
+            && checkBorough(wifiPoint)
+            && checkProvider(wifiPoint)))) {
                 if (wifiPoint.isVisible()) {
                     showWIFI(i);
                 } else {
@@ -232,11 +276,28 @@ public class MapController {
         }
     }
 
+
     private boolean checkCost(WifiPoint wifiPoint) {
         if (filterCostComboBox.getValue().equals("All")) {
             return true;
         } else {
             return wifiPoint.getCost().equals(filterCostComboBox.getValue());
+        }
+    }
+
+    private boolean checkBorough(WifiPoint wifiPoint) {
+        if (filterBoroughComboBox.getValue().equals("All")) {
+            return true;
+        } else {
+            return wifiPoint.getBorough().equalsIgnoreCase((String) filterBoroughComboBox.getValue());
+        }
+    }
+
+    private boolean checkProvider(WifiPoint wifiPoint) {
+        if (filterProviderComboBox.getValue().equals("All")) {
+            return true;
+        } else {
+            return wifiPoint.getProvider().equalsIgnoreCase((String) filterProviderComboBox.getValue());
         }
     }
 
@@ -252,7 +313,7 @@ public class MapController {
         filterSecondaryComboBox.getItems().addAll("All");
         filterSecondaryComboBox.getSelectionModel().selectFirst();
 
-        filterZipComboBox.getItems().addAll("All", 10004, 10005, 10038, 10007);
+        filterZipComboBox.getItems().addAll("All");
         filterZipComboBox.getSelectionModel().selectFirst();
 
 
@@ -260,7 +321,7 @@ public class MapController {
         filterBoroughComboBox.getItems().addAll("All");
         filterBoroughComboBox.getSelectionModel().selectFirst();
 
-        filterCostComboBox.getItems().addAll("All", "Free", "Limited Free", "Partner Site");
+        filterCostComboBox.getItems().addAll("All");
         filterCostComboBox.getSelectionModel().selectFirst();
 
         filterProviderComboBox.getItems().addAll("All");
@@ -272,21 +333,32 @@ public class MapController {
          * Sets the filter options
          * TODO don't hard code
          */
-        ArrayList<String> uniquePrimaryFunctions = null;
+
+        // RETAILERS
+
         uniquePrimaryFunctions = GenerateFields.generatePrimaryFunctionsList(retailerPoints);
         filterPrimaryComboBox.getItems().addAll( uniquePrimaryFunctions);
         filterPrimaryComboBox.getSelectionModel().selectFirst();
 
-        ArrayList<String> uniqueSecondaryFunctions = null;
-        uniqueSecondaryFunctions = GenerateFields.generateSecondaryFunctionsList(retailerPoints);
+
+        uniqueSecondaryFunctions = generateSecondaryFunctionsList(retailerPoints);
         filterSecondaryComboBox.getItems().addAll( uniqueSecondaryFunctions);
         filterSecondaryComboBox.getSelectionModel().selectFirst();
 
-        //filterBoroughComboBox.getItems().addAll("All");
-        //filterBoroughComboBox.getSelectionModel().selectFirst();
+        filterZipComboBox.getItems().addAll(10004, 10005, 10038, 10007);
+        filterZipComboBox.getSelectionModel().selectFirst();
 
-        //filterProviderComboBox.getItems().addAll("All");
-        //filterProviderComboBox.getSelectionModel().selectFirst();
+        // WIFI
+
+        filterBoroughComboBox.getItems().addAll("Manhattan", "Brooklyn", "Queens", "The Bronx", "Staten Island");
+        filterBoroughComboBox.getSelectionModel().selectFirst();
+
+        filterCostComboBox.getItems().addAll( "Free", "Limited Free", "Partner Site");
+        filterCostComboBox.getSelectionModel().selectFirst();
+
+        uniqueProviders = generateWifiProviders(wifiPoints);
+        filterProviderComboBox.getItems().addAll(uniqueProviders);
+        filterProviderComboBox.getSelectionModel().selectFirst();
 
     }
 
