@@ -257,11 +257,12 @@ public class BikeTableController extends TableController{
         setFilters();
     }
 
+    /**
+     * initialises the model for use in the rest of the View
+     * Will allow for accessing user data once implemented
+     */
     protected void initModel(DummyModel dummyModel) {
-        /**
-         * initialises the model for use in the rest of the View
-         * Will allow for accessing user data once implemented
-         */
+
         this.model = dummyModel;
         importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME);
     }
