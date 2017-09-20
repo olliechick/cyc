@@ -39,7 +39,7 @@ public class GoogleAPIClient {
             retailerPoints = populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
         } catch (CsvParserException|IOException e) {
             //TODO deal with the exception
-            Alert.createAlert("Error", "Error generating retailers");
+            AlertGenerator.createAlert("Error", "Error generating retailers");
             return;
         }
         RetailerLocation point;

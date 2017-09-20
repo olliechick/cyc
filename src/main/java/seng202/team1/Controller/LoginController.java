@@ -10,7 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import seng202.team1.Alert;
+import seng202.team1.AlertGenerator;
 import seng202.team1.PasswordManager;
 import seng202.team1.UserAccountModel;
 
@@ -152,7 +152,7 @@ public class LoginController {
         if (username.isEmpty()) {
             usernameLabel.setTextFill(Color.RED);
             passwordLabel.setTextFill(Color.RED);
-            Alert.createAlert("Error", "Please enter a username.");
+            AlertGenerator.createAlert("Error", "Please enter a username.");
             return;
         }
         model.setName(username);
@@ -162,7 +162,7 @@ public class LoginController {
         } catch (IOException e) {
             usernameLabel.setTextFill(Color.RED);
             passwordLabel.setTextFill(Color.RED);
-            Alert.createAlert("Error", "User does not exist. Please sign up or check your username.");
+            AlertGenerator.createAlert("Error", "User does not exist. Please sign up or check your username.");
             return;
         }
 
@@ -179,7 +179,7 @@ public class LoginController {
             // Wrong password
             usernameLabel.setTextFill(Color.BLACK);
             passwordLabel.setTextFill(Color.RED);
-            Alert.createAlert("Error", "Incorrect password. Please try again or check your username.");
+            AlertGenerator.createAlert("Error", "Incorrect password. Please try again or check your username.");
         }
     }
 
@@ -210,7 +210,7 @@ public class LoginController {
 
         if (username.isEmpty()) {
             newUsernameLabel.setTextFill(Color.RED);
-            Alert.createAlert("Error", "Please enter a username.");
+            AlertGenerator.createAlert("Error", "Please enter a username.");
             return;
         } else {
             newUsernameLabel.setTextFill(Color.BLACK);

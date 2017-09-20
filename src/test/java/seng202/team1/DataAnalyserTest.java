@@ -10,12 +10,10 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
-;
-
 /**
  * Unit test for simple App.
  */
-public class DataAnaliserTest{
+public class DataAnalyserTest {
 
 
     @Test
@@ -23,7 +21,7 @@ public class DataAnaliserTest{
         ArrayList<BikeTrip> testData = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         BikeTrip trip1 = testData.get(1);
         BikeTrip trip2 = testData.get(2);
-        double distance = DataAnaliser.calculateDistOfBikeTrips(trip1,trip2);
+        double distance = DataAnalyser.calculateDistBetweenBikeTrips(trip1,trip2);
         assertEquals(1190, distance , 10.0);
 
     }
@@ -33,7 +31,7 @@ public class DataAnaliserTest{
         ArrayList<BikeTrip> testData = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         BikeTrip trip1 = testData.get(1);
         BikeTrip trip2 = testData.get(1);
-        double distance = DataAnaliser.calculateDistOfBikeTrips(trip1,trip2);
+        double distance = DataAnalyser.calculateDistBetweenBikeTrips(trip1,trip2);
         assertEquals(922, distance , 10.0);
 
     }
@@ -41,20 +39,20 @@ public class DataAnaliserTest{
     @Test
     public void TestSearchBikeTripsMatching() throws Exception { //Needs better data to be checked with #TODO
         ArrayList<BikeTrip> trips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
-        ArrayList<BikeTrip> results = DataAnaliser.searchBikeTrips(40.732,-73.9925,600, trips); // should be in the middle of the test data
+        ArrayList<BikeTrip> results = DataAnalyser.searchBikeTrips(40.732,-73.9925,600, trips); // should be in the middle of the test data
         assertEquals(2, results.size());
     }
 
     @Test
     public void TestSearchWifiPoints() throws Exception { //Needs better data to be checked with #TODO
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
-        ArrayList<WifiPoint> results = DataAnaliser.searchWifiPoints(40.755, -73.985,600,hotspots);
+        ArrayList<WifiPoint> results = DataAnalyser.searchWifiPoints(40.755, -73.985,600,hotspots);
         assertEquals(3, results.size());
     }
 
     @Test
     public void TestCalculateDistance() throws Exception {
-        double distance = DataAnaliser.calculateDistance(40.767, -73.933,40.77,-73.94);
+        double distance = DataAnalyser.calculateDistance(40.767, -73.933,40.77,-73.94);
         assertEquals(680, distance, 3);
     }
 
@@ -64,7 +62,7 @@ public class DataAnaliserTest{
         ArrayList<BikeTrip> oldData = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         Collections.shuffle(testData, new Random(2132154541));
         Collections.shuffle(oldData, new Random(2132154541));
-        DataAnaliser.sortTripsByDistance(testData);// sorts in place
+        DataAnalyser.sortTripsByDistance(testData);// sorts in place
         assertEquals(testData.get(0), oldData.get(0));
         assertEquals(testData.get(1), oldData.get(3));
         assertEquals(testData.get(2), oldData.get(2));
@@ -76,7 +74,7 @@ public class DataAnaliserTest{
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         BikeTrip testTrip = bikeTrips.get(3);
-        WifiPoint testPoint = DataAnaliser.findClosestWifiToBikeRouteStart(testTrip, hotspots);
+        WifiPoint testPoint = DataAnalyser.findClosestWifiToBikeRouteStart(testTrip, hotspots);
         assertEquals(hotspots.get(1), testPoint); // can't test just yet as need the point class the Ollie is working on
     }
     @Test
@@ -84,7 +82,7 @@ public class DataAnaliserTest{
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         BikeTrip testTrip = bikeTrips.get(0);
-        WifiPoint testPoint = DataAnaliser.findClosestWifiToBikeRouteStart(testTrip, hotspots);
+        WifiPoint testPoint = DataAnalyser.findClosestWifiToBikeRouteStart(testTrip, hotspots);
         assertEquals(null, testPoint); // can't test just yet as need the point class the Ollie is working on
     }
 
@@ -93,7 +91,7 @@ public class DataAnaliserTest{
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         BikeTrip testTrip = bikeTrips.get(3);
-        WifiPoint testPoint = DataAnaliser.findClosestWifiToBikeRouteEnd(testTrip, hotspots);
+        WifiPoint testPoint = DataAnalyser.findClosestWifiToBikeRouteEnd(testTrip, hotspots);
         assertEquals(hotspots.get(2),testPoint);
     }
 
@@ -102,7 +100,7 @@ public class DataAnaliserTest{
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         BikeTrip testTrip = bikeTrips.get(0);
-        WifiPoint testPoint = DataAnaliser.findClosestWifiToBikeRouteEnd(testTrip, hotspots);
+        WifiPoint testPoint = DataAnalyser.findClosestWifiToBikeRouteEnd(testTrip, hotspots);
         assertEquals(null,testPoint);
     }
 
@@ -111,7 +109,7 @@ public class DataAnaliserTest{
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         BikeTrip testTrip = bikeTrips.get(3);
-        WifiPoint testPoint = DataAnaliser.findClosestWifiPointToTrip(testTrip,hotspots);
+        WifiPoint testPoint = DataAnalyser.findClosestWifiPointToTrip(testTrip,hotspots);
         assertEquals(hotspots.get(2), testPoint);
     }
 
@@ -120,7 +118,7 @@ public class DataAnaliserTest{
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("wifiTester.csv");
         BikeTrip testTrip = bikeTrips.get(1);
-        WifiPoint testPoint = DataAnaliser.findClosestWifiPointToTrip(testTrip,hotspots);
+        WifiPoint testPoint = DataAnalyser.findClosestWifiPointToTrip(testTrip,hotspots);
         assertEquals(null, testPoint);
     }
 
@@ -133,7 +131,7 @@ public class DataAnaliserTest{
             Point2D.Float point = trip.getStartPoint();
              waypoints.add(point);
         }
-        WifiPoint closestPoint = DataAnaliser.findClosestWifiToRoute(waypoints,hotspots);
+        WifiPoint closestPoint = DataAnalyser.findClosestWifiToRoute(waypoints,hotspots);
         assertEquals(hotspots.get(1),closestPoint);
     }
 

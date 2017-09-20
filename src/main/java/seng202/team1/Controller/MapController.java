@@ -8,7 +8,7 @@ import seng202.team1.CsvParserException;
 import seng202.team1.GenerateFields;
 import seng202.team1.RetailerLocation;
 import seng202.team1.WifiPoint;
-import seng202.team1.Alert;
+import seng202.team1.AlertGenerator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -130,7 +130,7 @@ public class MapController {
         try {
             wifiPoints = populateWifiHotspots("src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv");
         } catch (CsvParserException|IOException e) {
-            Alert.createAlert("Error", "Cannot load WiFi points.");
+            AlertGenerator.createAlert("Error", "Cannot load WiFi points.");
         }
         WifiPoint point;
         for (int i = 0; i < wifiPoints.size(); i++) {
@@ -147,7 +147,7 @@ public class MapController {
         try {
             retailerPoints = populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
         } catch (CsvParserException|IOException e) {
-            Alert.createAlert("Error", "Cannot load retailers.");
+            AlertGenerator.createAlert("Error", "Cannot load retailers.");
         }
         RetailerLocation point;
         for (int i = 0; i < retailerPoints.size(); i++) {

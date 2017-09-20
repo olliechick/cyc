@@ -12,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import seng202.team1.Alert;
+import seng202.team1.AlertGenerator;
 import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
 import seng202.team1.RetailerLocation;
@@ -171,7 +171,7 @@ public class RetailerTableController extends TableController{
                     return populateRetailers(filename);
                 } catch (CsvParserException|IOException e) {
                     //TODO deal with the exception
-                    Alert.createAlert("Error", "Error loading retailers.");
+                    AlertGenerator.createAlert("Error", "Error loading retailers.");
                     return null;
                 }
             }

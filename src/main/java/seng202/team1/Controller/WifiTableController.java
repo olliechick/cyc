@@ -15,7 +15,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import seng202.team1.Alert;
+import seng202.team1.AlertGenerator;
 import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
 import seng202.team1.WifiPoint;
@@ -128,7 +128,7 @@ public class WifiTableController extends TableController{
                     return populateWifiHotspots(filename);
                 } catch (CsvParserException|IOException e) {
                     //TODO deal with the exception
-                    Alert.createAlert("Error", "Error generating wifis");
+                    AlertGenerator.createAlert("Error", "Error generating wifis");
                     return null;
                 }
             }

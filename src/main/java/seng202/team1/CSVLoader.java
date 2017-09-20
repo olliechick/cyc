@@ -16,9 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
- * Class that will pull in our CSV files and then call the appropriate constructor.
- * Most likely will be static I'm thinking. Should allow us to use it without creating an instance.
- * Last updated 22 August 2017.
+ * Class that can load CSV files and return ArrayLists of different subclasses of DataPoint.
  * @author Josh Burt
  * @author Ollie Chick
  */
@@ -33,8 +31,7 @@ public class CSVLoader {
             "Lower_Manhattan_Retailers.csv";
 
     //Earliest date that a Wifi point can be set up -- any date before this will be replaced with null
-    private final static LocalDateTime EARLIEST_POSSIBLE_DATE = LocalDateTime.of(1900, Month
-            .JANUARY, 1, 0, 0);
+    private final static LocalDateTime EARLIEST_POSSIBLE_DATE = LocalDateTime.of(1900, Month.JANUARY, 1, 0, 0);
 
 
     /**

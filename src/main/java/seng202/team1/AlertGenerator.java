@@ -6,7 +6,7 @@ import javafx.scene.layout.Region;
  * Class to generate alerts.
  * @author Ollie Chick
  */
-public class Alert {
+public class AlertGenerator {
 
     /**
      * Creates an alert that will pop up and alert the user.
@@ -22,5 +22,14 @@ public class Alert {
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         alert.getDialogPane().setMinWidth(Region.USE_COMPUTED_SIZE);
         alert.showAndWait();
+    }
+
+    /**
+     * Creates an alert with the header "Error" that will pop up and alert the user.
+     * Takes one parameters, the contents of the popup.
+     * @param content the contents of the popup
+     */
+    public static void createAlert(String content) {
+        createAlert("Error", content);
     }
 }

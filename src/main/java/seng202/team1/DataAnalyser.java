@@ -1,40 +1,34 @@
 package seng202.team1;
 
-import seng202.team1.BikeTrip;
-import seng202.team1.CSVLoader;
-import javafx.concurrent.WorkerStateEvent;
-import seng202.team1.WifiPoint;
-
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Static class that handles all of the data analysis required
+ * Static class that handles all of the data analysis required.
  *  @author Josh Burt
  */
-public final class DataAnaliser {
+public final class DataAnalyser {
+
     private static final int RADIUS_OF_EARTH = 6371000; //Mean value for the average of earth in m
+
     /**
-     * Calaculates the distance, as the crow flies between two points on a bike trip.
-     * If the same bike trip is passed in twice the length of the bike trip is calculated
+     * Calculates the distance (as the crow flies) between two points on a bike trip.
+     * If the same bike trip is passed in twice, the length of the bike trip is calculated
      * Otherwise the distance between the two starting points is calculated.
      * @param b1 first bike trip
      * @param b2 second bike trip
      * @return Double
      */
-    public static double calculateDistOfBikeTrips(BikeTrip b1, BikeTrip b2){
+    public static double calculateDistBetweenBikeTrips(BikeTrip b1, BikeTrip b2){
         double endingLat;
         double endingLong;
         Point.Float startPoint = b1.getStartPoint();
         Point.Float endPoint;
         double startingLat =  startPoint.getY();
         double startingLong = startPoint.getX();
-
 
         if(b1 == b2){
             endPoint = b2.getEndPoint();
@@ -45,10 +39,11 @@ public final class DataAnaliser {
            endingLong = endPoint.getX();
            endingLat = endPoint.getY();
         }
-        //the below line uses the formula of haversines to find distances using lat and long.
-        double distance = calculateDistance(startingLat,startingLong,endingLat,endingLong);
-        return distance;
+
+        // Use the formula of haversines to find distances using lat and long
+        return calculateDistance(startingLat, startingLong, endingLat, endingLong);
     }
+
 
     /**
      * Takes a latitude, longitude and distance delta and iterates through a list of bike trips
@@ -109,7 +104,7 @@ public final class DataAnaliser {
         double tripLong = trip.getStartPoint().getX();
         double searchDistance = 100;
         ArrayList<WifiPoint> closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance, hotspots);
-        ;
+
         while (closeHotspots.size() == 0 && searchDistance <= 1000) {
             searchDistance += 100; //add 100m to the search distance until at least one point is found or search extends further than 1000m
             closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance, hotspots); //finds all WifiPoints within given distance of given coords
@@ -140,7 +135,7 @@ public final class DataAnaliser {
         double tripLong = trip.getEndPoint().getX();
         double searchDistance = 100;
         ArrayList<WifiPoint> closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance, hotspots);
-        ;
+
         while (closeHotspots.size() == 0 && searchDistance <= 1000) {
             searchDistance += 100; //add 100m to the search distance until at least one point is found or search extends further than 1000m
             closeHotspots = searchWifiPoints(tripLat, tripLong, searchDistance, hotspots); //finds all WifiPoints within given distance of given coords

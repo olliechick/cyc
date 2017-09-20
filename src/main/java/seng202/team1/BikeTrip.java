@@ -55,7 +55,7 @@ public class BikeTrip extends DataPoint {
         this.bikeId = bikeId;
         this.gender = gender;
         this.birthYear = birthYear;
-        this.tripDistance = DataAnaliser.calculateDistance(startPoint.getX(),startPoint.getY(),endPoint.getX(),endPoint.getY());
+        this.tripDistance = DataAnalyser.calculateDistance(startPoint.getX(),startPoint.getY(),endPoint.getX(),endPoint.getY());
         this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
@@ -82,7 +82,7 @@ public class BikeTrip extends DataPoint {
         this.bikeId = bikeId;
         this.gender = gender;
         this.birthYear = birthYear;
-        this.tripDistance = DataAnaliser.calculateDistance(startPoint.getX(),startPoint.getY(),endPoint.getX(),endPoint.getY());
+        this.tripDistance = DataAnalyser.calculateDistance(startPoint.getX(),startPoint.getY(),endPoint.getX(),endPoint.getY());
         this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
