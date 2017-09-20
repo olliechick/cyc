@@ -81,7 +81,7 @@ public class BikeTableController extends TableController{
     private void setPredicate() {
 
         filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
-                        bikeTrip -> searchBikeId(bikeTrip) &&
+                        (BikeTrip bikeTrip) -> searchBikeId(bikeTrip) &&
                                     checkGender(bikeTrip),
 
                 bikeSearchField.textProperty(),
