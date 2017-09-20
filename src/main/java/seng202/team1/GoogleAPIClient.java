@@ -71,6 +71,7 @@ public class GoogleAPIClient {
                         .destination(destination)
                         .avoid(DirectionsApi.RouteRestriction.HIGHWAYS)
                         .mode(TravelMode.BICYCLING)
+                        .alternatives(true)
                         .await();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -80,7 +81,7 @@ public class GoogleAPIClient {
 
 
     public static void main(String [ ] args) throws InterruptedException, ApiException, IOException {
-        //googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
+        googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
         //example
         //System.out.println(googleGeocode("1600 Amphitheatre Parkway Mountain View, CA 94043"));
        // getRetailerGeocode();

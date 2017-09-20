@@ -13,7 +13,6 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 /**
  * Class that can load CSV files and return ArrayLists of different subclasses of DataPoint.
@@ -131,7 +130,6 @@ public class CSVLoader {
     public static ArrayList<BikeTrip> populateBikeTrips(String filename) throws
             IOException, CsvParserException {
         ArrayList<BikeTrip> trips = new ArrayList<BikeTrip>();
-        HashSet<Character> genders = new HashSet<Character>();
         boolean isValidCsv = false; // assume false unless proven otherwise
         ArrayList<CSVRecord> tripData = loadCSV(filename);
 
@@ -179,30 +177,30 @@ public class CSVLoader {
                 Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(6)), Float.parseFloat(record.get(5)));
                 Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(10)), Float.parseFloat(record.get(9)));
                 char gender;
+
                 if (record.get(14).equals("1")) {
                     gender = 'm';
-                    genders.add('m');
                 } else if (record.get(14).equals("2")) {
                     gender = 'f';
-                    genders.add('f');
                 } else {
                     gender = 'u';
-                    genders.add('u');
                 }
+
                 String birthYearString = record.get(13);
                 int birthYear;
+
                 if (birthYearString.isEmpty()) {
                     //unknown birth year flag
                     birthYear = -1;
                 } else {
                     birthYear = Integer.parseInt(birthYearString);
                 }
+
                 trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,
                         endPoint, bikeId, gender, birthYear, false));
             }
 
         }
-        //TODO do something with genders - populate the dropdown menu?
         if (!isValidCsv) {
             throw new CsvParserException(filename);
         }

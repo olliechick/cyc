@@ -70,6 +70,9 @@ public class MapController {
     @FXML
     private WebEngine webEngine;
 
+    @FXML
+    private Button LoadDataButton;
+
     private DummyModel model;
 
     @FXML
@@ -83,6 +86,7 @@ public class MapController {
 
     @FXML
     private void loadData() {
+        LoadDataButton.setDisable(true);
         loadAllWifi();
         loadAllRetailers();
         setFilters();
