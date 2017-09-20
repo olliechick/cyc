@@ -134,6 +134,11 @@ public class MapController {
         webView.getEngine().executeScript(scriptStr);
     }
 
+    private void redrawRetailerCluster() {
+        String scriptStr = "document.updateRetailerMarkerCluster()";
+        webView.getEngine().executeScript(scriptStr);
+    }
+
     @FXML
     private void updateRetailers() {
         for (int i = 0; i < retailerPoints.size(); i++ ) {
@@ -148,6 +153,7 @@ public class MapController {
                 }
             }
         }
+        redrawRetailerCluster();
 
     }
 

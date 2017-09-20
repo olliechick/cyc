@@ -31,6 +31,7 @@
           disableDefaultUI: true
         });
         var wifiMarkerCluster;
+        var retailerMarkerCluster;
         directionsDisplay = new google.maps.DirectionsRenderer();
         var bikeLayer = new google.maps.BicyclingLayer();
         bikeLayer.setMap(map);
@@ -129,8 +130,10 @@
 
         document.retailerCluster = function retailerCluster()
         {
-        var retailerMarkerCluster = new MarkerClusterer(map, retailerMarkerArray,
-        {imagePath: 'retailerCluster/m'});
+        retailerMarkerCluster = new MarkerClusterer(map, retailerMarkerArray,
+        {imagePath: 'retailerCluster/pink',
+        ignoreHiddenMarkers: true,
+         maxZoom: 16});
         }
 
 
@@ -177,6 +180,21 @@
         wifiMarkerCluster.clearMarkers();
         wifiMarkerCluster.addMarkers(newCluster, false);
         wifiMarkerCluster.redraw();
+    }
+
+        document.updateRetailerMarkerCluster = function updateRetailerMarkerCluster()
+    {
+
+        var newClusterRetailer = [];
+
+        for (index = 0; index < retailerMarkerArray.length; ++index) {
+            if(retailerMarkerArray[index].getVisible()) {
+                newClusterRetailer.push(retailerMarkerArray[index]);
+            }
+        }
+        retailerMarkerCluster.clearMarkers();
+        retailerMarkerCluster.addMarkers(newClusterRetailer, false);
+        retailerMarkerCluster.redraw();
     }
 
 
