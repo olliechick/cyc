@@ -255,7 +255,7 @@ public class RetailerTableController extends TableController{
         setFilters();
     }
 
-    public void addPoint() {
+    public void addRetailer() {
 
     }
 

@@ -121,7 +121,7 @@ public class AddWifiDialogController {
         stage = stage1;
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
-        stage.setTitle("Add Bike Trip");
+        stage.setTitle("Add Wifi Point");
         stage.setScene(new Scene(root));
 
         boroComboBox.setItems(boroughs);
