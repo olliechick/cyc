@@ -12,10 +12,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import seng202.team1.Alert;
 import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
 import seng202.team1.RetailerLocation;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static seng202.team1.CSVLoader.populateRetailers;
@@ -167,8 +169,9 @@ public class RetailerTableController extends TableController{
             protected ArrayList<RetailerLocation> call() {
                 try {
                     return populateRetailers(filename);
-                } catch (CsvParserException e) {
+                } catch (CsvParserException|IOException e) {
                     //TODO deal with the exception
+                    Alert.createAlert("Error", "Error loading retailers.");
                     return null;
                 }
             }

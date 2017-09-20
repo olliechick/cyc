@@ -10,6 +10,7 @@ import seng202.team1.RetailerLocation;
 import seng202.team1.WifiPoint;
 import seng202.team1.Alert;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static seng202.team1.CSVLoader.populateRetailers;
@@ -128,7 +129,7 @@ public class MapController {
     private void loadAllWifi() {
         try {
             wifiPoints = populateWifiHotspots("src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv");
-        } catch (CsvParserException e) {
+        } catch (CsvParserException|IOException e) {
             Alert.createAlert("Error", "Cannot load WiFi points.");
         }
         WifiPoint point;
@@ -144,8 +145,8 @@ public class MapController {
     @FXML
     private void loadAllRetailers() {
         try {
-        retailerPoints = populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
-        } catch (CsvParserException e) {
+            retailerPoints = populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
+        } catch (CsvParserException|IOException e) {
             Alert.createAlert("Error", "Cannot load retailers.");
         }
         RetailerLocation point;

@@ -15,10 +15,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import seng202.team1.Alert;
 import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
 import seng202.team1.WifiPoint;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static seng202.team1.CSVLoader.populateWifiHotspots;
@@ -124,8 +126,9 @@ public class WifiTableController extends TableController{
             protected ArrayList<WifiPoint> call() {
                 try {
                     return populateWifiHotspots(filename);
-                } catch (CsvParserException e) {
+                } catch (CsvParserException|IOException e) {
                     //TODO deal with the exception
+                    Alert.createAlert("Error", "Error generating wifis");
                     return null;
                 }
             }

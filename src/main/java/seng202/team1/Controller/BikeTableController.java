@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import seng202.team1.Alert;
 import seng202.team1.BikeTrip;
 import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
@@ -155,8 +156,9 @@ public class BikeTableController extends TableController{
             protected ArrayList<BikeTrip> call() {
                 try {
                     return populateBikeTrips(filename);
-                } catch (CsvParserException e) {
+                } catch (CsvParserException|IOException e) {
                     //TODO deal with the exception
+                    Alert.createAlert("Error", "Error loading bike trips.");
                     return null;
                 }
             }
