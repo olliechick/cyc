@@ -39,7 +39,7 @@ public class BikeTripTest extends TestCase {
 
 
     public void testGetDuration() {
-        String expectedString = "3 days";
+        String expectedString = "10 seconds";
         assertEquals(expectedString, bikeTrip.getDuration());
     }
 
