@@ -71,11 +71,10 @@ public class MapController {
     @FXML
     private WebEngine webEngine;
 
-    private UserAccountModel model;
     @FXML
     private Button LoadDataButton;
 
-    private DummyModel model;
+    private UserAccountModel model;
 
     @FXML
     private void initialize()
