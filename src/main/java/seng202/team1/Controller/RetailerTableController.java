@@ -60,7 +60,7 @@ public class RetailerTableController extends TableController{
     private ObservableList<RetailerLocation> dataPoints;
     private FilteredList<RetailerLocation> filteredData;
 
-    final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "src/main/resources/csv/retailerlocation.csv";
+    final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "src/main/resources/csv/Lower_Manhattan_Retailers.csv";
 
     /**
      * Run automatically when the fxml is loaded by an FXMLLoader
