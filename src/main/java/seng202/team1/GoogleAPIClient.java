@@ -17,7 +17,10 @@ import java.util.ArrayList;
 
 import static seng202.team1.CSVLoader.populateRetailers;
 
+
+
 public class GoogleAPIClient {
+
 
     // non-verified google api key created by cameron. please dont waste.
     private static String KEY = "AIzaSyBrALsvaGRKhQxRw6X5VvydPqA5wMfwDN8";
@@ -81,10 +84,12 @@ public class GoogleAPIClient {
 
 
     public static void main(String [ ] args) throws InterruptedException, ApiException, IOException {
-        googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
+        //googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
         //example
         //System.out.println(googleGeocode("1600 Amphitheatre Parkway Mountain View, CA 94043"));
-       // getRetailerGeocode();
-
+        // getRetailerGeocode();
+        //String encoded =   "}huwFfsrcM{@uK[{DOoBIkAW_DASMiBQwB[{Dc@gGWmDc@aGKuAMyA_@sESoCGs@G{@e@_Gs@aJ";
+        //ArrayList<Point.Double> points =  decodePoly(encoded);
+        //System.out.println(points);
     }
 }
