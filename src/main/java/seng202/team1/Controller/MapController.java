@@ -7,6 +7,7 @@ import javafx.scene.web.WebView;
 import seng202.team1.CsvParserException;
 import seng202.team1.GenerateFields;
 import seng202.team1.RetailerLocation;
+import seng202.team1.UserAccountModel;
 import seng202.team1.WifiPoint;
 import seng202.team1.AlertGenerator;
 
@@ -70,7 +71,7 @@ public class MapController {
     @FXML
     private WebEngine webEngine;
 
-    private DummyModel model;
+    private UserAccountModel model;
 
     @FXML
     private void initialize()
@@ -383,7 +384,7 @@ public class MapController {
 
 
 
-    protected void initModel(DummyModel dummyModel) {
-        this.model = dummyModel;
+    protected void initModel(UserAccountModel userAccountModel) {
+        this.model = userAccountModel;
     }
 }

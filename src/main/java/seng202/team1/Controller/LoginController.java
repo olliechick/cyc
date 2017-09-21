@@ -90,11 +90,8 @@ public class LoginController {
         birthdayEntryField.setValue(LocalDate.of(1990, 1, 1));
     }
 
-    private DummyModel model;
+    private UserAccountModel model;
 
-    public void initModel(DummyModel dummyModel) {
-        this.model = dummyModel;
-    }
 
     public void launchLandingScreen() {
 
@@ -155,10 +152,10 @@ public class LoginController {
             AlertGenerator.createAlert("Error", "Please enter a username.");
             return;
         }
-        model.setName(username);
-        UserAccountModel user;
+        //model.setUserName(username);
+        seng202.team1.UserAccountModel user;
         try {
-            user = UserAccountModel.getUser(username);
+            user = seng202.team1.UserAccountModel.getUser(username);
         } catch (IOException e) {
             usernameLabel.setTextFill(Color.RED);
             passwordLabel.setTextFill(Color.RED);
@@ -173,6 +170,7 @@ public class LoginController {
                 launchMap();
             } else {
                 // User is admin or analyser
+                model = user;
                 launchLandingScreen();
             }
         } else {
@@ -216,8 +214,8 @@ public class LoginController {
             newUsernameLabel.setTextFill(Color.BLACK);
         }
 
-        UserAccountModel newUser = new UserAccountModel(gender, accountType, birthday, username, password);
-        model.setName(newUser.getUserName());
+        seng202.team1.UserAccountModel newUser = new seng202.team1.UserAccountModel(gender, accountType, birthday, username, password);
+        model.setUserName(newUser.getUserName());
         if (newUser.getAccountType().equals("User")) {
             launchMap();
         } else {
@@ -225,7 +223,7 @@ public class LoginController {
             launchLandingScreen();
         }
 
-        UserAccountModel.createUser(newUser);
+        seng202.team1.UserAccountModel.createUser(newUser);
 
     }
 }

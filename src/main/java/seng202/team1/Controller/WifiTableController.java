@@ -20,6 +20,8 @@ import javafx.stage.Stage;
 import seng202.team1.AlertGenerator;
 import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
+import seng202.team1.SerializerImplementation;
+import seng202.team1.UserAccountModel;
 import seng202.team1.WifiPoint;
 
 import java.io.IOException;
@@ -50,7 +52,7 @@ public class WifiTableController extends TableController{
     @FXML
     private Label nameLabel;
 
-    private DummyModel model;
+    private UserAccountModel model;
     private Stage stage;
 
     private ObservableList<WifiPoint> dataPoints;
@@ -63,7 +65,7 @@ public class WifiTableController extends TableController{
     }
 
     protected void setName() {
-        nameLabel.setText("Logged in as: " + model.getName());
+        nameLabel.setText("Logged in as: " + model.getUserName());
         nameLabel.setVisible(true);
     }
 
@@ -218,6 +220,7 @@ public class WifiTableController extends TableController{
             if (newWifiPoint != null) {
                 dataPoints.add(newWifiPoint);
                 model.addCustomWifiLocation(newWifiPoint);
+                SerializerImplementation.serializeUser(model);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -234,12 +237,12 @@ public class WifiTableController extends TableController{
         }
     }
 
-    protected void initModel(DummyModel dummyModel) {
+    protected void initModel(UserAccountModel userAccountModel) {
         /**
          * initialises the model for use in the rest of the View
          * Will allow for accessing user data once implemented
          */
-        this.model = dummyModel;
+        this.model = userAccountModel;
         importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME);
     }
 

@@ -2,16 +2,14 @@ package seng202.team1.Controller;
 
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng202.team1.DataPoint;
+import seng202.team1.UserAccountModel;
+
 import java.io.File;
-import java.io.IOException;
 
 
 /**
@@ -32,7 +30,7 @@ public class TableController {
     @FXML
     private TableView<DataPoint> table;
 
-    private DummyModel model;
+    private UserAccountModel model;
     private Stage stage;
 
     /**
@@ -121,8 +119,8 @@ public class TableController {
      * initialises the model for use in the rest of the View
      * Will allow for accessing user data once implemented
      */
-    protected void initModel(DummyModel dummyModel) {
-        this.model = dummyModel;
+    protected void initModel(UserAccountModel userAccountModel) {
+        this.model = userAccountModel;
         stage = (Stage) table.getScene().getWindow();
     }
 
