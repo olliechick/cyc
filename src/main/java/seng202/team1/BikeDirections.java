@@ -22,6 +22,12 @@ public class BikeDirections {
      * Constructor that parses a gson and gets the polylines and the date retrieved (today's date).
      */
     public BikeDirections(String jsonFile) {
+        //JsonReader jsonReader = Json.createReader();
+        //JsonObject object = jsonReader.readObject();
+        //jsonReader.close();
+
+
+
 //deal with multiple routes?
     }
 
