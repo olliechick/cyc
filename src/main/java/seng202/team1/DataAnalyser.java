@@ -320,6 +320,43 @@ public final class DataAnalyser {
         return index;
     }
 
+    /**
+     * Takes a list of wifiPoints and a point and sorts the list in place based on the distance from the given point
+     * Also appends a field distanceFrom onto WifiPoint.
+     * @param toSort List to be sorted
+     * @param testPoint point to get Distance from
+     */
+    public static void sortWifiByDistanceFromPoint(ArrayList<WifiPoint> toSort, Point.Float testPoint){
+        for(WifiPoint hotspot : toSort){
+            hotspot.setDistanceFrom(calculateDistance(testPoint.getY(),testPoint.getX(),hotspot.getLatitude(),hotspot.getLongitude()));
+        }
+        Collections.sort(toSort, new Comparator<WifiPoint>() {
+            @Override
+            public int compare(WifiPoint o1, WifiPoint o2) {
+                return o1.getDistanceFrom().compareTo(o2.getDistanceFrom());
+            }
+        });
+
+    }
+
+    /**
+     * Takes a list of RetailerLocations and sorts them in place based on the distance from the
+     * test point
+     * @param toSort List of Retailers to be sorted
+     * @param testPoint Point to find distance from
+     */
+    public static void sortRetailerByDistanceFromPoint(ArrayList<RetailerLocation> toSort, Point.Float testPoint){
+        for(RetailerLocation shop : toSort){
+            shop.setDistanceFrom(calculateDistance(testPoint.getY(),testPoint.getX(),shop.getLatitude(),shop.getLongitude()));
+        }
+        Collections.sort(toSort, new Comparator<RetailerLocation>() {
+            @Override
+            public int compare(RetailerLocation o1, RetailerLocation o2) {
+                return o1.getDistanceFrom().compareTo(o2.getDistanceFrom());
+            }
+        });
+
+    }
 
 
     /**

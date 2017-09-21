@@ -21,6 +21,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable{
     private String primaryFunction;
     private String secondaryFunction;
     private Point.Float coords;
+    private Double distanceFrom; // stores the distance from point
 
     public RetailerLocation(String name, String addressLine1, String addressLine2,
                             String city, String state,  int zipcode, String blockLot, String primaryFunction,
@@ -153,6 +154,14 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable{
 
     public void setCoords(Point.Float coords) {
         this.coords = coords;
+    }
+
+    public Double getDistanceFrom() {
+        return distanceFrom;
+    }
+
+    public void setDistanceFrom(Double distanceFrom) {
+        this.distanceFrom = distanceFrom;
     }
 
     /**

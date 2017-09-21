@@ -168,4 +168,35 @@ public class DataAnalyserTest {
         assertEquals(2,result);
     }
 
+    @Test
+    public void TestSortWifiByDistanceFromPoint() throws Exception{
+        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("src/test/resources/testWifi.csv");
+        ArrayList<WifiPoint> originalArray = CSVLoader.populateWifiHotspots("src/test/resources/testWifi.csv");
+        Point.Float testPoint = new Point2D.Float((float)-73.96753849952732,(float)40.76045675959568);
+        DataAnalyser.sortWifiByDistanceFromPoint(hotspots,testPoint);
+        assertEquals(hotspots.get(0), originalArray.get(4));
+        assertEquals(hotspots.get(1), originalArray.get(3));
+        assertEquals(hotspots.get(2), originalArray.get(2));
+        assertEquals(hotspots.get(3), originalArray.get(5));
+        assertEquals(hotspots.get(4), originalArray.get(1));
+        assertEquals(hotspots.get(5), originalArray.get(0));
+    }
+
+    @Test
+    public void TestSortRetailerByDistanceFromPoint() throws Exception {
+        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("src/test/resources/Lower_Manhattan_Retailers.csv");
+        ArrayList<RetailerLocation> orignalList = CSVLoader.populateRetailers("src/test/resources/Lower_Manhattan_Retailers.csv");
+        for(int i = retailers.size() -1; i > 4; i--){ // cut the list to a more managable size backwards for efficancy
+            retailers.remove(i);
+            orignalList.remove(i);
+        }
+        Point.Float testPoint = new Point2D.Float((float)-73.96753849952732,(float)40.76045675959568);
+        DataAnalyser.sortRetailerByDistanceFromPoint(retailers,testPoint);
+        assertEquals(retailers.get(0), orignalList.get(4));
+        assertEquals(retailers.get(1), orignalList.get(2));
+        assertEquals(retailers.get(2), orignalList.get(3));
+        assertEquals(retailers.get(3), orignalList.get(1));
+        assertEquals(retailers.get(4), orignalList.get(0));
+
+    }
 }

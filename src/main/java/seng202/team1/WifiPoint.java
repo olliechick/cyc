@@ -30,6 +30,7 @@ public class WifiPoint extends DataPoint implements java.io.Serializable{
     private String ssid;
     private String sourceId;
     private LocalDateTime datetimeActivated;
+    private Double distanceFrom; // variable used for sorting the distance from a point
 
     public WifiPoint(int objectId, Point.Float coords, String placeName, String location, String locationType, String hood,
                      String borough, String city, int zipcode, String cost, String provider, String remarks, String ssid,
@@ -190,7 +191,13 @@ public class WifiPoint extends DataPoint implements java.io.Serializable{
         this.datetimeActivated = datetimeActivated;
     }
 
+    public Double getDistanceFrom() {
+        return distanceFrom;
+    }
 
+    public void setDistanceFrom(Double distanceFrom) {
+        this.distanceFrom = distanceFrom;
+    }
 
     /**
      * Returns the name of the WiFi point (SSID chosen as this is what will appear on the user's device
