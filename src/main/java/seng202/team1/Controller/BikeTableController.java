@@ -20,6 +20,8 @@ import seng202.team1.AlertGenerator;
 import seng202.team1.BikeTrip;
 import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
+import seng202.team1.SerializerImplementation;
+import seng202.team1.UserAccountModel;
 
 import java.awt.*;
 import java.io.IOException;
@@ -55,7 +57,7 @@ public class BikeTableController extends TableController{
     @FXML
     private Label nameLabel;
 
-    private DummyModel model;
+    private UserAccountModel model;
     private Stage stage;
 
     private ObservableList<BikeTrip> dataPoints;
@@ -119,7 +121,7 @@ public class BikeTableController extends TableController{
     }
 
     protected void setName() {
-        nameLabel.setText("Logged in as: " + model.getName());
+        nameLabel.setText("Logged in as: " + model.getUserName());
         nameLabel.setVisible(true);
     }
 
@@ -215,7 +217,7 @@ public class BikeTableController extends TableController{
                 dataPoints.add(addBikeDialog.getBikeTrip());
                 model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
             }
-            System.out.println(test);
+            SerializerImplementation.serializeUser(model);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -268,9 +270,9 @@ public class BikeTableController extends TableController{
      * initialises the model for use in the rest of the View
      * Will allow for accessing user data once implemented
      */
-    protected void initModel(DummyModel dummyModel) {
+    protected void initModel(UserAccountModel userAccountModel) {
 
-        this.model = dummyModel;
+        this.model = userAccountModel;
         importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME);
     }
 

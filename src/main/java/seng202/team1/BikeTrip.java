@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
  * @author Josh Burt
  * @author Ollie Chick
  */
-public class BikeTrip extends DataPoint {
+public class BikeTrip extends DataPoint implements java.io.Serializable{
 
     private final static String DT_FORMAT = "h:mm a d MMMM yyyy";
     private final static String DAY_OF_MONTH_FORMAT = "h:mm a d MMMM";

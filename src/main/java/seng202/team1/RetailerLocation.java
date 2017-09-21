@@ -7,7 +7,7 @@ import java.awt.*;
  * All methods are getters and setters.
  * @author Josh Burt
  */
-public class RetailerLocation extends DataPoint {
+public class RetailerLocation extends DataPoint implements java.io.Serializable{
 
     private String name;
     private String addressLine1;

@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import seng202.team1.Controller.DummyModel;
 import seng202.team1.Controller.LoginController;
 
 import java.io.IOException;
@@ -38,10 +37,7 @@ public class Main extends Application {
 
         FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
         root.setCenter(loginLoader.load());
-        LoginController loginController = loginLoader.getController(); //Needed to be able to call methods below
 
-        DummyModel model = new DummyModel(); //Create dummy model to hold login info
-        loginController.initModel(model);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/css/loginStyle.css");
         primaryStage.setScene(scene);

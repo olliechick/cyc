@@ -16,6 +16,7 @@ import seng202.team1.AlertGenerator;
 import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
 import seng202.team1.RetailerLocation;
+import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class RetailerTableController extends TableController{
     @FXML
     private TableView table;
 
-    private DummyModel model;
+    private UserAccountModel model;
     private Stage stage;
 
     private ObservableList<RetailerLocation> dataPoints;
@@ -68,7 +69,7 @@ public class RetailerTableController extends TableController{
     }
 
     protected void setName() {
-        nameLabel.setText("Logged in as: " + model.getName());
+        nameLabel.setText("Logged in as: " + model.getUserName());
         nameLabel.setVisible(true);
     }
 
@@ -264,8 +265,8 @@ public class RetailerTableController extends TableController{
     }
 
     @Override
-    protected void initModel(DummyModel dummyModel) {
-        this.model = dummyModel;
+    protected void initModel(UserAccountModel userAccountModel) {
+        this.model = userAccountModel;
         importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME);
     }
 }
