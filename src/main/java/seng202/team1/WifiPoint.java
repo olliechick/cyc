@@ -1,5 +1,7 @@
 package seng202.team1;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.awt.Point;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -208,6 +210,30 @@ public class WifiPoint extends DataPoint implements java.io.Serializable{
                 city, zipcode, getLatitude(), getLongitude(), cost, provider, ssid, sourceId,
                 datetimeActivated.format(DateTimeFormatter.ofPattern("h:mm:ss a d/M/yyyy")),
                 objectId);
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if (obj == null){
+            return false;
+        }
+        if (this == obj){
+            return true;
+        }
+        WifiPoint that = (WifiPoint) obj;
+        if (this.coords.equals(that.coords) && this.ssid.equalsIgnoreCase(that.ssid)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17,31).
+                append(coords).
+                append(ssid).
+                toHashCode();
+
     }
 
 

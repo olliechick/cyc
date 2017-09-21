@@ -35,6 +35,7 @@ public class DataPoint {
 
         return visible;
     }
+    /* Do we need this each sub class has it own implementation, if so hashCode() needs to be overwritten as well
     @Override
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
@@ -44,7 +45,7 @@ public class DataPoint {
             //check if string repr is the same
             return this.toString().equals(otherObject.toString());
         }
-    }
+    }*/
 
 
     /**

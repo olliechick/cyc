@@ -4,6 +4,7 @@ import java.awt.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Bike Trip data class.
@@ -302,6 +303,29 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
     }
 
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null){
+            return false;
+        }
+        if (this == obj){ // same obj is passed
+            return true;
+        }
+        BikeTrip that = (BikeTrip) obj;
+        if (this.getStartPoint() == that.getStartPoint() && this.getEndPoint() == that.getEndPoint()){
+            return true;
+        }
+        return false; // if we can't prove they are the same we will assume they are differant.
+    }
+
+    @Override
+    public int hashCode() { // must overide hashcode when overiding equality
+        return new HashCodeBuilder(17,31).
+                append(startPoint).
+                append(endPoint).
+                toHashCode();
+
+    }
     @Override
     public String toString() {
         return "BikeTrip{" +

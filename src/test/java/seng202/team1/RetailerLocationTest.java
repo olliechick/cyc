@@ -1,8 +1,13 @@
 package seng202.team1;
 
+import com.sun.org.apache.regexp.internal.RE;
 import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.awt.Point;
+
+import static org.junit.Assert.assertNotEquals;
 
 public class RetailerLocationTest extends TestCase {
 
@@ -20,6 +25,7 @@ public class RetailerLocationTest extends TestCase {
 
     RetailerLocation retailerLocation;
 
+    @Before
     public void setUp() throws Exception {
         super.setUp();
         name = "Pearl Bodywork";
@@ -36,11 +42,13 @@ public class RetailerLocationTest extends TestCase {
                 zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
     }
 
+    @Test
     public void testGetAddress() {
         String expectedAddress = "Floor 2, 60 Pearl Street, New York, NY 10004";
         assertEquals(expectedAddress, retailerLocation.getAddress());
     }
 
+    @Test
     public void testGetAddressNoAddressLine2() {
         addressLine2 = "";
         RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2,
@@ -49,15 +57,142 @@ public class RetailerLocationTest extends TestCase {
         assertEquals(expectedAddress, retailerLocation1.getAddress());
     }
 
+    @Test
     public void testCoordlessConstructor() {
         RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2,
                 city, state, zipcode, blockLot, primaryFunction, secondaryFunction, isUserDefinedPoint);
         assertEquals(null, retailerLocation1.getCoords());
     }
 
+    @Test
     public void testGetDescription() {
         String expectedString = "Address: Floor 2, 60 Pearl Street, New York, NY 10004\nFunction: Personal and " +
                 "Professional Services (Spa)";
         assertEquals(expectedString, retailerLocation.getDescription());
     }
+
+    @Test
+    public void testEqualsSame(){
+        name = "Pearl Bodywork";
+        addressLine1 = "60 Pearl Street";
+        addressLine2 = "Floor 2";
+        city = "New York";
+        state = "NY";
+        zipcode = 10004;
+        blockLot = "7-38";
+        primaryFunction = "Personal and Professional Services";
+        secondaryFunction = "Spa";
+        coords = new Point.Float((float) -74.011071, (float) 40.703417);
+        RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2, city, state,
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+        boolean isSame = retailerLocation.equals(retailerLocation1);
+        assertEquals(true, isSame);
+    }
+
+    @Test
+    public void testEqualsSameButDiffernant(){
+        name = "Pearl Bodywork";
+        addressLine1 = "60 Pearl Street";
+        addressLine2 = "Floor 3";
+        city = "New York";
+        state = "NY";
+        zipcode = 10004;
+        blockLot = "7-38";
+        primaryFunction = "Personal and Professional Services";
+        secondaryFunction = "Spa";
+        coords = new Point.Float((float) -74.011071, (float) 40.703417);
+        RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2, city, state,
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+        boolean isSame = retailerLocation.equals(retailerLocation1);
+        assertEquals(true, isSame);
+    }
+
+    @Test
+    public void testEqualsDifferant(){
+        name = "Pearl Bodywork";
+        addressLine1 = "60 Pearl Street";
+        addressLine2 = "Floor 2";
+        city = "New York";
+        state = "NY";
+        zipcode = 10004;
+        blockLot = "7-38";
+        primaryFunction = "Personal and Professional Services";
+        secondaryFunction = "Spa";
+        coords = new Point.Float((float) -74.011171, (float) 40.703417);
+        RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2, city, state,
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+        boolean isSame = retailerLocation.equals(retailerLocation1);
+        assertEquals(false, isSame);
+    }
+
+    @Test
+    public void testEqualsNull(){
+        assertEquals(false, retailerLocation.equals(null));
+    }
+
+    @Test
+    public void testEqualsSameObj(){
+        assertEquals(true, retailerLocation.equals(retailerLocation));
+    }
+
+    @Test
+    public void testHashCodeSame(){
+        name = "Pearl Bodywork";
+        addressLine1 = "60 Pearl Street";
+        addressLine2 = "Floor 2";
+        city = "New York";
+        state = "NY";
+        zipcode = 10004;
+        blockLot = "7-38";
+        primaryFunction = "Personal and Professional Services";
+        secondaryFunction = "Spa";
+        coords = new Point.Float((float) -74.011071, (float) 40.703417);
+        RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2, city, state,
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+        int hash1 = retailerLocation.hashCode();
+        int hash2 = retailerLocation1.hashCode();
+        assertEquals(hash1,hash2);
+    }
+
+    @Test
+    public void testHashCodeSameButDifferant(){
+        name = "Pearl Bodywork";
+        addressLine1 = "60 Pearl Street";
+        addressLine2 = "Floor 3";
+        city = "New York";
+        state = "NY";
+        zipcode = 10004;
+        blockLot = "7-38";
+        primaryFunction = "Personal and Professional Services";
+        secondaryFunction = "Spa";
+        coords = new Point.Float((float) -74.011071, (float) 40.703417);
+        RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2, city, state,
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+        int hash1 = retailerLocation.hashCode();
+        int hash2 = retailerLocation1.hashCode();
+        assertEquals(hash1,hash2);
+    }
+
+    @Test
+    public void testHashCodeDifferant(){
+        name = "Pearl Bodywork";
+        addressLine1 = "60 Pearl Street";
+        addressLine2 = "Floor 2";
+        city = "New York";
+        state = "NY";
+        zipcode = 10004;
+        blockLot = "7-38";
+        primaryFunction = "Personal and Professional Services";
+        secondaryFunction = "Spa";
+        coords = new Point.Float((float) -74.011071, (float) 40.723417);
+        RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2, city, state,
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+        int hash1 = retailerLocation.hashCode();
+        int hash2 = retailerLocation1.hashCode();
+        assertNotEquals(hash1,hash2);
+    }
+
+
+
+
 }

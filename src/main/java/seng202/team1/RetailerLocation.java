@@ -1,5 +1,7 @@
 package seng202.team1;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.awt.*;
 
 /**
@@ -196,6 +198,29 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable{
         this.coords.y = latitude;
     }
 
+    @Override
+    public boolean equals(Object obj){
+        if (obj == null){
+            return false;
+        }
+        if (this == obj){
+            return true;
+        }
+        RetailerLocation that = (RetailerLocation) obj;
+        if (this.name.equalsIgnoreCase(that.name) && this.primaryFunction.equalsIgnoreCase(that.primaryFunction) && this.coords.equals(that.coords)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode(){
+        return new HashCodeBuilder(17,31).
+                append(name).
+                append(primaryFunction).
+                append(coords).
+                toHashCode();
+    }
     @Override
     public String toString() {
         return "RetailerLocation{" +
