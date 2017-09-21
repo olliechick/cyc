@@ -5,8 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
 
@@ -22,14 +22,14 @@ public class LandingController {
     @FXML
     private Button openRetailerButton;
 
-    private DummyModel model;
+    private UserAccountModel model;
     private Stage stage;
 
     /**
      * Enables this controller to use the model.
      * @param model the model object
      */
-    protected void initModel(DummyModel model) {
+    protected void initModel(UserAccountModel model) {
         this.model = model;
     }
 

@@ -29,6 +29,7 @@ public final class SerializerImplementation {
             fileOut.close();
             System.out.println("User successfully serialized and stored.");
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("IO exception occurred while serializing User " + user.getUserName());
         }
     }

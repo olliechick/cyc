@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
  * @author Josh Burt
  * @author Ollie Chick
  */
-public class WifiPoint extends DataPoint {
+public class WifiPoint extends DataPoint implements java.io.Serializable{
 
     private int objectId;
     private Point.Float coords;
