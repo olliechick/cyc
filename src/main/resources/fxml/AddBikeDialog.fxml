@@ -32,56 +32,7 @@
             <TextField fx:id="idField" />
          </children>
       </HBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="4">
-         <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label fx:id="startLatLabel" prefHeight="20.0" prefWidth="83.0" text="Start Lat:">
-                     <padding>
-                        <Insets right="10.0" top="5.0" />
-                     </padding>
-                  </Label>
-                  <TextField fx:id="startLatField" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label fx:id="startLongLabel" text="Start Long:">
-                     <padding>
-                        <Insets right="10.0" top="5.0" />
-                     </padding>
-                  </Label>
-                  <TextField fx:id="startLongField" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
-         <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label fx:id="endLatLabel" prefHeight="20.0" prefWidth="76.0" text="End Lat:">
-                     <padding>
-                        <Insets right="10.0" top="5.0" />
-                     </padding>
-                  </Label>
-                  <TextField fx:id="endLatField" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label fx:id="endLongLabel" text="End Long:">
-                     <padding>
-                        <Insets right="10.0" top="5.0" />
-                     </padding>
-                  </Label>
-                  <TextField fx:id="endLongField" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <Button fx:id="addButton" mnemonicParsing="false" onAction="#addBike" text="Add" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
-      <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Cancel" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+      <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
@@ -108,6 +59,7 @@
             </HBox>
          </children>
       </VBox>
+      <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
@@ -135,10 +87,58 @@
          </children>
       </VBox>
       <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
-      <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
-      <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
-      <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="4">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="startLatLabel" prefHeight="20.0" prefWidth="83.0" text="Start Lat:">
+                     <padding>
+                        <Insets right="10.0" top="5.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="startLatField" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="startLongLabel" text="Start Long:">
+                     <padding>
+                        <Insets right="10.0" top="5.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="startLongField" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
       <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="endLatLabel" prefHeight="20.0" prefWidth="76.0" text="End Lat:">
+                     <padding>
+                        <Insets right="10.0" top="5.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="endLatField" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="endLongLabel" text="End Long:">
+                     <padding>
+                        <Insets right="10.0" top="5.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="endLongField" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
+      <Button fx:id="addButton" mnemonicParsing="false" onAction="#addBike" text="Add" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+      <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Cancel" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
    </children>
    <padding>
       <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />

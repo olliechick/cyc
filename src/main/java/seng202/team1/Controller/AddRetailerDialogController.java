@@ -77,6 +77,17 @@ public class AddRetailerDialogController {
         stage.setScene(new Scene(root));
     }
 
+    /**
+     * TODO implement
+     * @return
+     */
+    private boolean checkFields() {
+        boolean valid = true;
+
+
+        return valid;
+    }
+
 
 
 }
