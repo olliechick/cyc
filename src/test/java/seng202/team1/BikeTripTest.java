@@ -23,7 +23,7 @@ public class BikeTripTest extends TestCase {
     int birthYear;
     boolean isUserDefinedPoint;
 
-    BikeTrip bikeTrip;
+        BikeTrip bikeTrip;
 
     @Before
     public void setUp() throws Exception {

@@ -312,7 +312,7 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
             return true;
         }
         BikeTrip that = (BikeTrip) obj;
-        if (this.getStartPoint() == that.getStartPoint() && this.getEndPoint() == that.getEndPoint()){
+        if (this.getStartPoint().equals(that.getStartPoint()) && this.getEndPoint().equals(that.getEndPoint())){
             return true;
         }
         return false; // if we can't prove they are the same we will assume they are differant.
