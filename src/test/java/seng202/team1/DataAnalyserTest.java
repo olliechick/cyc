@@ -3,6 +3,7 @@ package seng202.team1;
 
 import org.junit.Test;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -135,5 +136,36 @@ public class DataAnalyserTest {
         assertEquals(hotspots.get(1),closestPoint);
     }
 
+    @Test
+    public void TestFindClosestRetailerToBikeTrip() throws Exception{
+        ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
+        ArrayList<Point.Float> waypoints = new ArrayList<>();
+        for(BikeTrip trip : bikeTrips){
+            waypoints.add(trip.getStartPoint());
+            waypoints.add(trip.getEndPoint());
+        }
+        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("src/test/resources/Lower_Manhattan_Retailers.csv");
+        int result = DataAnalyser.findClosestRetailerToBikeTrip(waypoints,retailers);
+        assertEquals(90, result);
+
+    }
+
+    @Test
+    public void TestFindClosesRetailerToWifi() throws Exception{
+        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("src/test/resources/testWifi.csv");
+        WifiPoint hotspot = hotspots.get(0);
+        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("src/test/resources/Lower_Manhattan_Retailers.csv");
+        int result = DataAnalyser.findClosestRetailerToWifiPoint(hotspot,retailers);
+        assertEquals(543, result);
+
+    }
+    @Test
+    public void TestFindClosestWifiToRetailer() throws Exception{
+        ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers("src/test/resources/Lower_Manhattan_Retailers.csv");
+        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots("src/test/resources/testWifi.csv");
+        RetailerLocation retailer = retailers.get(0);
+        int result = DataAnalyser.findClosestWifiPointToRetailer(hotspots,retailer);
+        assertEquals(2,result);
+    }
 
 }

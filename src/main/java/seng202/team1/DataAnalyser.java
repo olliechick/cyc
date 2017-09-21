@@ -254,6 +254,75 @@ public final class DataAnalyser {
     }
 
     /**
+     * Takes a list of waypoints and a list of retailers and returns the index of the closest retailer
+     * @param waypoints List of waypoints to be searched
+     * @param retailers List of retailers to be searched.
+     * @return index of closest retailer.
+     */
+    public static int findClosestRetailerToBikeTrip(ArrayList<Point.Float> waypoints, ArrayList<RetailerLocation> retailers){
+        int index = -1;
+        double  distance = 1000000000;
+        double  testDistance;
+        for(Point.Float waypoint : waypoints){
+            for (int i = 0 ; i < retailers.size(); i++){
+                testDistance = calculateDistance(waypoint.getY(),waypoint.getX(), retailers.get(i).getLatitude(), retailers.get(i).getLongitude());
+                if (testDistance < distance){
+                    distance = testDistance;
+                    index = i;
+                }
+            }
+        }
+        return index;
+    }
+
+    /**
+     * Takes a WifiPoint and a list of retailers and returns the index of the closest Retailer to the wifipoint
+     * @param hotspot a single wifipoint
+     * @param retailers an list of retailers that need the closest hotspot returned
+     * @return index of closest retailer
+     */
+    public static int findClosestRetailerToWifiPoint(WifiPoint hotspot, ArrayList<RetailerLocation> retailers){
+        int index = -1;
+        double  distance = 1000000000;
+        double  testDistance;
+            for (int i = 0 ; i < retailers.size(); i++){
+                testDistance = calculateDistance(hotspot.getLatitude(), hotspot.getLongitude(), retailers.get(i).getLatitude(), retailers.get(i).getLongitude());
+                if (testDistance < distance){
+                    distance = testDistance;
+                    index = i;
+                }
+            }
+
+        return index;
+    }
+
+    /**
+     * Takes a Retailer and a list of WifiPoints and returns the closest wifiPoint to the retaielr.
+     * @param hotspots List of Wifi hotpsots
+     * @param retailer a single retailer
+     * @return returns index of closest wifipoint
+     */
+
+    public static int findClosestWifiPointToRetailer(ArrayList<WifiPoint> hotspots, RetailerLocation retailer){
+        int index = -1;
+        double  distance = 1000000000;
+        double  testDistance;
+        int i  = 0;
+        for (WifiPoint hotspot : hotspots){
+            testDistance = calculateDistance(hotspot.getLatitude(), hotspot.getLongitude(), retailer.getLatitude(), retailer.getLongitude());
+            if (testDistance < distance){
+                distance = testDistance;
+                index = i;
+            }
+            i++;
+        }
+
+        return index;
+    }
+
+
+
+    /**
      * Takes an angle in radian and returns the haversine function of it.
      * Haversine is (1-Cos(theta))/2 or sin^2(theta/2)
      * This is here to clean up the math on distance calulations
