@@ -1,16 +1,19 @@
 package seng202.team1.Controller;
 
+import com.google.maps.errors.ApiException;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import seng202.team1.CsvParserException;
-import seng202.team1.GenerateFields;
-import seng202.team1.RetailerLocation;
-import seng202.team1.UserAccountModel;
-import seng202.team1.WifiPoint;
-import seng202.team1.AlertGenerator;
+import javafx.stage.Stage;
+import seng202.team1.*;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -30,6 +33,7 @@ public class MapController {
 
     ArrayList<RetailerLocation> retailerPoints = null;
     ArrayList<WifiPoint> wifiPoints = null;
+
 
     ArrayList<String> uniqueSecondaryFunctions = null;
     ArrayList<String> uniquePrimaryFunctions = null;
@@ -77,8 +81,7 @@ public class MapController {
     private UserAccountModel model;
 
     @FXML
-    private void initialize()
-    {
+    private void initialize() {
         webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
         webEngine.load(getClass().getResource("/html/map.html").toString());
@@ -98,6 +101,7 @@ public class MapController {
         webView.getEngine().executeScript("document.zoomIn()");
 
     }
+
     @FXML
     private void zoomOut() {
         webView.getEngine().executeScript("document.zoomOut()");
@@ -125,16 +129,72 @@ public class MapController {
         webView.getEngine().executeScript(scriptStr);
 
     }
+
     private void addRetailer(float lat, float lng, String title) {
         String scriptStr = "document.addRetailerMarker({lat: " + lat + ", lng:  " + lng + "}, 'departmentstore.png', " + "'" + title + "')";
         webView.getEngine().executeScript(scriptStr);
-
     }
+
+    private String latLngArray(ArrayList<Point.Double> points) {
+        String latLng = "[";
+        Point.Double point;
+        for (int i = 0; i < (points.size() - 1); i++) {
+            point = points.get(i);
+            latLng += "{lat: " + point.getY() + ", lng: " + point.getX() + "},";
+        }
+        point = points.get((points.size() - 1));
+        latLng += "{lat: " + point.getY() + ", lng: " + point.getX() + "}]";
+        return latLng;
+    }
+
+    private void drawRoute(ArrayList<Point.Double> points) {
+        String scriptStr = "document.drawRoute(" + latLngArray(points) + ")";
+        webView.getEngine().executeScript(scriptStr);
+    }
+
+
+    public void addWifi() {
+        try {
+            FXMLLoader addWifiLoader = new FXMLLoader(getClass().getResource("/fxml/AddWifiDialog.fxml"));
+            Parent root = addWifiLoader.load();
+            AddWifiDialogController addWifiDialog = addWifiLoader.getController();
+            Stage stage1 = new Stage();
+
+            addWifiDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+
+            WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
+            if (newWifiPoint != null) {
+                wifiPoints.add(newWifiPoint);
+                model.addCustomWifiLocation(newWifiPoint);
+                SerializerImplementation.serializeUser(model);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void testDraw() {
+        BikeDirections b = null;
+        try {
+            String directionsTest = GoogleAPIClient.googleGetDirections(40.753517,-73.980948,40.801723,-124.162505);
+            b = new BikeDirections(directionsTest);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ApiException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ArrayList<Point.Double> points = b.getPoints();
+        drawRoute(points);
+    }
+
     @FXML
     private void loadAllWifi() {
         try {
             wifiPoints = populateWifiHotspots("src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv");
-        } catch (CsvParserException|IOException e) {
+        } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load WiFi points.");
         }
         WifiPoint point;
@@ -147,11 +207,12 @@ public class MapController {
         }
         webView.getEngine().executeScript("document.wifiCluster()");
     }
+
     @FXML
     private void loadAllRetailers() {
         try {
             retailerPoints = populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
-        } catch (CsvParserException|IOException e) {
+        } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load retailers.");
         }
         RetailerLocation point;
@@ -178,21 +239,21 @@ public class MapController {
     @FXML
     private void updateRetailersPrimary() {
         ArrayList<RetailerLocation> retailers = new ArrayList<RetailerLocation>();
-        for (int i = 0; i < retailerPoints.size(); i++ ) {
+        for (int i = 0; i < retailerPoints.size(); i++) {
 
             RetailerLocation retailerLocation = retailerPoints.get(i);
-            if(retailerLocation.isUpdated((checkStreet(retailerLocation)
+            if (retailerLocation.isUpdated((checkStreet(retailerLocation)
                     && checkPrimary(retailerLocation)
                     && checkSecondary(retailerLocation)
                     && checkZip(retailerLocation)))) {
-                if(retailerLocation.isVisible()) {
+                if (retailerLocation.isVisible()) {
                     showRetailer(i);
                 } else {
                     hideRetailer(i);
                 }
 
             }
-            if(checkPrimary(retailerLocation)) {
+            if (checkPrimary(retailerLocation)) {
                 retailers.add(retailerLocation);
             }
         }
@@ -205,21 +266,21 @@ public class MapController {
     private void updateSecondaryFunctions(ArrayList<RetailerLocation> retailers) {
         ArrayList<String> newSecondaryFunctions = generateSecondaryFunctionsList(retailers);
         filterSecondaryComboBox.getItems().clear();
-        filterSecondaryComboBox.getItems().addAll( "All");
-        filterSecondaryComboBox.getItems().addAll( newSecondaryFunctions);
+        filterSecondaryComboBox.getItems().addAll("All");
+        filterSecondaryComboBox.getItems().addAll(newSecondaryFunctions);
         filterSecondaryComboBox.getSelectionModel().selectFirst();
     }
 
 
     @FXML
     private void updateRetailers() {
-        for (int i = 0; i < retailerPoints.size(); i++ ) {
+        for (int i = 0; i < retailerPoints.size(); i++) {
             RetailerLocation retailerLocation = retailerPoints.get(i);
-            if(retailerLocation.isUpdated((checkStreet(retailerLocation)
+            if (retailerLocation.isUpdated((checkStreet(retailerLocation)
                     && checkPrimary(retailerLocation)
                     && checkSecondary(retailerLocation)
                     && checkZip(retailerLocation)))) {
-                if(retailerLocation.isVisible()) {
+                if (retailerLocation.isVisible()) {
                     showRetailer(i);
                 } else {
                     hideRetailer(i);
@@ -235,8 +296,8 @@ public class MapController {
         for (int i = 0; i < wifiPoints.size(); i++) {
             WifiPoint wifiPoint = wifiPoints.get(i);
             if (wifiPoint.isUpdated((checkCost(wifiPoint)
-            && checkBorough(wifiPoint)
-            && checkProvider(wifiPoint)))) {
+                    && checkBorough(wifiPoint)
+                    && checkProvider(wifiPoint)))) {
                 if (wifiPoint.isVisible()) {
                     showWIFI(i);
                 } else {
@@ -359,14 +420,14 @@ public class MapController {
 
         ArrayList<String> uniquePrimaryFunctions;
         uniquePrimaryFunctions = GenerateFields.generatePrimaryFunctionsList(retailerPoints);
-        filterPrimaryComboBox.getItems().addAll( uniquePrimaryFunctions);
+        filterPrimaryComboBox.getItems().addAll(uniquePrimaryFunctions);
         filterPrimaryComboBox.getSelectionModel().selectFirst();
 
 
         uniqueSecondaryFunctions = generateSecondaryFunctionsList(retailerPoints);
         ArrayList<String> uniqueSecondaryFunctions;
         uniqueSecondaryFunctions = GenerateFields.generateSecondaryFunctionsList(retailerPoints);
-        filterSecondaryComboBox.getItems().addAll( uniqueSecondaryFunctions);
+        filterSecondaryComboBox.getItems().addAll(uniqueSecondaryFunctions);
         filterSecondaryComboBox.getSelectionModel().selectFirst();
 
         filterZipComboBox.getItems().addAll(10004, 10005, 10038, 10007);
@@ -377,7 +438,7 @@ public class MapController {
         filterBoroughComboBox.getItems().addAll("Manhattan", "Brooklyn", "Queens", "The Bronx", "Staten Island");
         filterBoroughComboBox.getSelectionModel().selectFirst();
 
-        filterCostComboBox.getItems().addAll( "Free", "Limited Free", "Partner Site");
+        filterCostComboBox.getItems().addAll("Free", "Limited Free", "Partner Site");
         filterCostComboBox.getSelectionModel().selectFirst();
 
         uniqueProviders = generateWifiProviders(wifiPoints);
@@ -387,8 +448,11 @@ public class MapController {
     }
 
 
-
     protected void initModel(UserAccountModel userAccountModel) {
+
         this.model = userAccountModel;
+
     }
+
 }
+
