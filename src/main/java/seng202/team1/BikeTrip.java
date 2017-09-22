@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 public class BikeTrip extends DataPoint implements java.io.Serializable{
 
     private final static String TIME_FORMAT = "h:mm a";
-    private final static String DAY_OF_MONTH_FORMAT = TIME_FORMAT + " MMMM";
+    private final static String DAY_OF_MONTH_FORMAT = TIME_FORMAT + "dd MMMM";
     private final static String DT_FORMAT = DAY_OF_MONTH_FORMAT + " yyyy";
 
     private long tripDuration; //in seconds
@@ -75,8 +75,8 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
      * @param stopTime datetime the bike trip ended
      * @param startPoint co-ordinates of the bike trip's origin
      * @param endPoint co-ordinates of the bike trip's terminus
-     * @param startStationId station ID of the start point. Null if didn't start at a station
-     * @param endStationId station ID of the end point. Null if didn't end at a station
+     * @param startStationId station ID of the start point. -1 flag if didn't start at a station
+     * @param endStationId station ID of the end point. -1 flag if didn't end at a station
      * @param bikeId the ID of the bike
      * @param gender the gender of the bike's rider (m, f, or u)
      * @param birthYear the year of birth of the rider
@@ -99,6 +99,69 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
         this.gender = gender;
         this.birthYear = birthYear;
         this.tripDistance = tripDistance;
+        this.isUserDefinedPoint = isUserDefinedPoint;
+    }
+
+
+    /**
+     * Grandfathered-in constructor for a bike trip. Start and end station IDs are set to -1 flag
+     * and trip distance is set to null.
+     * @param tripDuration duration (in seconds) of the bike trip
+     * @param startTime datetime the bike trip started
+     * @param stopTime datetime the bike trip ended
+     * @param startPoint co-ordinates of the bike trip's origin
+     * @param endPoint co-ordinates of the bike trip's terminus
+     * @param bikeId the ID of the bike
+     * @param gender the gender of the bike's rider (m, f, or u)
+     * @param birthYear the year of birth of the rider
+     * @param isUserDefinedPoint whether the point is user-defined or loaded from a CSV file/the
+     *                           database TODO is this right?
+     */
+    public BikeTrip(long tripDuration, LocalDateTime startTime, LocalDateTime stopTime,
+                    Point.Float startPoint, Point.Float endPoint,int bikeId, char gender,
+                    int birthYear, boolean isUserDefinedPoint) {
+        this.tripDuration = tripDuration;
+        this.startTime = startTime;
+        this.stopTime = stopTime;
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+        this.startStationId = -1;
+        this.endStationId = -1;
+        this.bikeId = bikeId;
+        this.gender = gender;
+        this.birthYear = birthYear;
+        this.tripDistance = null;
+        this.isUserDefinedPoint = isUserDefinedPoint;
+    }
+
+
+    /**
+     * Grandfathered-in constructor for a bike trip that calculates trip duration.
+     * Start and end station IDs are set to -1 flag and trip distance is set to null.
+     * @param startTime datetime the bike trip started
+     * @param stopTime datetime the bike trip ended
+     * @param startPoint co-ordinates of the bike trip's origin
+     * @param endPoint co-ordinates of the bike trip's terminus
+     * @param bikeId the ID of the bike
+     * @param gender the gender of the bike's rider (m, f, or u)
+     * @param birthYear the year of birth of the rider
+     * @param isUserDefinedPoint whether the point is user-defined or loaded from a CSV file/the
+     *                           database TODO is this right?
+     */
+    public BikeTrip(LocalDateTime startTime, LocalDateTime stopTime,
+                    Point.Float startPoint, Point.Float endPoint,int bikeId, char gender,
+                    int birthYear, boolean isUserDefinedPoint) {
+        this.tripDuration = Duration.between(startTime, stopTime).getSeconds();
+        this.startTime = startTime;
+        this.stopTime = stopTime;
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+        this.startStationId = -1;
+        this.endStationId = -1;
+        this.bikeId = bikeId;
+        this.gender = gender;
+        this.birthYear = birthYear;
+        this.tripDistance = null;
         this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
