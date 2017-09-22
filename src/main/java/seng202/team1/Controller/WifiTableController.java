@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import seng202.team1.AlertGenerator;
 import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
+import seng202.team1.GenerateFields;
 import seng202.team1.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 import seng202.team1.WifiPoint;
@@ -38,16 +39,16 @@ import static seng202.team1.CSVLoader.populateWifiHotspots;
 public class WifiTableController extends TableController{
 
     @FXML
-    private ComboBox filterBoroughComboBox;
+    private ComboBox<String> filterBoroughComboBox;
 
     @FXML
-    private ComboBox filterCostComboBox;
+    private ComboBox<String> filterCostComboBox;
 
     @FXML
-    private ComboBox filterProviderComboBox;
+    private ComboBox<String> filterProviderComboBox;
 
     @FXML
-    private TableView<DataPoint> table;
+    private TableView<WifiPoint> table;
 
     @FXML
     private Label nameLabel;
@@ -58,7 +59,7 @@ public class WifiTableController extends TableController{
     private ObservableList<WifiPoint> dataPoints;
     private FilteredList<WifiPoint> filteredData;
 
-    final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/wifipoint.csv";
+    private final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv";
 
     public void initialize() {
         super.initialize();
@@ -73,14 +74,20 @@ public class WifiTableController extends TableController{
      * Set the filters in the combo boxes
      * TODO don't hardcode
      */
-    private void setFilters() {
-        filterBoroughComboBox.getItems().addAll("All");
+    private void setFilters(ArrayList<WifiPoint> data) {
+        filterBoroughComboBox.getItems().clear();
+        filterBoroughComboBox.getItems().add("All");
+        filterBoroughComboBox.getItems().addAll(GenerateFields.generateWifiBoroughs(data));
         filterBoroughComboBox.getSelectionModel().selectFirst();
 
-        filterCostComboBox.getItems().addAll("All", "Free", "Limited Free", "Partner Site");
+        filterCostComboBox.getItems().clear();
+        filterCostComboBox.getItems().add("All");
+        filterCostComboBox.getItems().addAll(GenerateFields.generateWifiTypes(data));
         filterCostComboBox.getSelectionModel().selectFirst();
 
-        filterProviderComboBox.getItems().addAll("All");
+        filterProviderComboBox.getItems().clear();
+        filterProviderComboBox.getItems().add("All");
+        filterProviderComboBox.getItems().addAll(GenerateFields.generateWifiProviders(data));
         filterProviderComboBox.getSelectionModel().selectFirst();
     }
 
@@ -91,7 +98,9 @@ public class WifiTableController extends TableController{
     private void setPredicate() {
 
         filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
-                        (WifiPoint wifiPoint) -> checkCost(wifiPoint),
+                        (WifiPoint wifiPoint) -> checkCost(wifiPoint) &&
+                                                checkBorough(wifiPoint) &&
+                                                checkProvider(wifiPoint),
 
                 filterBoroughComboBox.valueProperty(),
                 filterCostComboBox.valueProperty(),
@@ -109,6 +118,22 @@ public class WifiTableController extends TableController{
             return true;
         } else {
             return wifiPoint.getCost().equals(filterCostComboBox.getValue());
+        }
+    }
+
+    private boolean checkBorough(WifiPoint wifiPoint) {
+        if (filterBoroughComboBox.getValue().equals("All")) {
+            return true;
+        } else {
+            return wifiPoint.getBorough().equals(filterBoroughComboBox.getValue());
+        }
+    }
+
+    private boolean checkProvider(WifiPoint wifiPoint) {
+        if (filterProviderComboBox.getValue().equals("All")) {
+            return true;
+        } else {
+            return wifiPoint.getProvider().equals(filterProviderComboBox.getValue());
         }
     }
 
@@ -148,6 +173,8 @@ public class WifiTableController extends TableController{
              */
             public void handle(WorkerStateEvent event) {
 
+                setFilters(loadWifiCsv.getValue());
+
                 setTableViewWifi(loadWifiCsv.getValue());
                 stopLoadingAni();
                 setPredicate();
@@ -166,6 +193,7 @@ public class WifiTableController extends TableController{
 
         String filename = getCsvFilename();
         if (filename != null) {
+            dataPoints.clear();
             importWifiCsv(filename);
         }
     }
@@ -178,32 +206,33 @@ public class WifiTableController extends TableController{
 
         dataPoints = FXCollections.observableArrayList(data);
 
-        TableColumn locationCol = new TableColumn("Location");
-        TableColumn boroughCol = new TableColumn("Borough");
-        TableColumn hoodCol = new TableColumn("Neighbourhood");
-        TableColumn cityCol = new TableColumn("City");
-        TableColumn costCol = new TableColumn("Cost");
-        TableColumn providerCol = new TableColumn("Provider");
+        TableColumn<WifiPoint, String> nameCol = new TableColumn<>("Name");
+        TableColumn<WifiPoint, String> locationCol = new TableColumn("Location");
+        TableColumn<WifiPoint, String> streetCol = new TableColumn<>("Street/Location");
+        TableColumn<WifiPoint, String> boroughCol = new TableColumn("Borough");
+        TableColumn<WifiPoint, String> hoodCol = new TableColumn("Neighbourhood");
+        TableColumn<WifiPoint, String> costCol = new TableColumn("Cost");
+        TableColumn<WifiPoint, String> providerCol = new TableColumn("Provider");
 
-        locationCol.getColumns().addAll(hoodCol, boroughCol, cityCol);
+        locationCol.getColumns().addAll(streetCol, hoodCol, boroughCol);
 
         table.getColumns().clear();
 
-        boroughCol.setCellValueFactory( new PropertyValueFactory<WifiPoint, String>("borough"));
-        hoodCol.setCellValueFactory( new PropertyValueFactory<WifiPoint, String>("hood"));
-        cityCol.setCellValueFactory( new PropertyValueFactory<WifiPoint, String>("city"));
-        costCol.setCellValueFactory( new PropertyValueFactory<WifiPoint, String>("cost"));
-        providerCol.setCellValueFactory( new PropertyValueFactory<WifiPoint, String>("provider"));
+        nameCol.setCellValueFactory( new PropertyValueFactory<>("name"));
+        streetCol.setCellValueFactory( new PropertyValueFactory<>("location"));
+        boroughCol.setCellValueFactory( new PropertyValueFactory<>("borough"));
+        hoodCol.setCellValueFactory( new PropertyValueFactory<>("hood"));
+        costCol.setCellValueFactory( new PropertyValueFactory<>("cost"));
+        providerCol.setCellValueFactory( new PropertyValueFactory<>("provider"));
 
         filteredData = new FilteredList<>(dataPoints, p -> true);
 
-        SortedList<DataPoint> sortedData = new SortedList<>(filteredData);
+        SortedList<WifiPoint> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(table.comparatorProperty());
 
         table.setItems(sortedData);
-        table.getColumns().addAll(locationCol, costCol, providerCol);
+        table.getColumns().addAll(nameCol, locationCol, costCol, providerCol);
 
-        setFilters();
     }
 
     public void addWifi() {
@@ -230,18 +259,14 @@ public class WifiTableController extends TableController{
     private void populateCustomWifiPoints() {
         ArrayList<WifiPoint> customWifi = model.getCustomWifiPoints();
 
-        if (customWifi != null) {
-            for (WifiPoint wifi : customWifi) {
-                dataPoints.add(wifi);
-            }
-        }
+        dataPoints.addAll(customWifi);
     }
 
+    /**
+     * initialises the model for use in the rest of the View
+     * Will allow for accessing user data once implemented
+     */
     protected void initModel(UserAccountModel userAccountModel) {
-        /**
-         * initialises the model for use in the rest of the View
-         * Will allow for accessing user data once implemented
-         */
         this.model = userAccountModel;
         importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME);
     }

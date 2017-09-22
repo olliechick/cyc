@@ -165,12 +165,12 @@ public class LoginController {
 
         String password = passwordField.getText();
         if (PasswordManager.isExpectedPassword(password, user.getSalt(), user.getPassword())) {
+            model = user;
             // They got the password right
             if (user.getAccountType().equals("User")) {
                 launchMap();
             } else {
                 // User is admin or analyser
-                model = user;
                 launchLandingScreen();
             }
         } else {
@@ -215,7 +215,7 @@ public class LoginController {
         }
 
         seng202.team1.UserAccountModel newUser = new seng202.team1.UserAccountModel(gender, accountType, birthday, username, password);
-        model.setUserName(newUser.getUserName());
+        model = newUser;
         if (newUser.getAccountType().equals("User")) {
             launchMap();
         } else {

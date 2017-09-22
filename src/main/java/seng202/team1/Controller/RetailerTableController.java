@@ -9,13 +9,17 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.AlertGenerator;
 import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
+import seng202.team1.GenerateFields;
 import seng202.team1.RetailerLocation;
+import seng202.team1.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
@@ -58,7 +62,7 @@ public class RetailerTableController extends TableController{
     private ObservableList<RetailerLocation> dataPoints;
     private FilteredList<RetailerLocation> filteredData;
 
-    final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "src/main/resources/csv/retailerlocation.csv";
+    final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "src/main/resources/csv/Lower_Manhattan_Retailers.csv";
 
     /**
      * Run automatically when the fxml is loaded by an FXMLLoader
@@ -143,12 +147,16 @@ public class RetailerTableController extends TableController{
      * Sets the filter options
      * TODO don't hard code
      */
-    private void setFilters() {
+    private void setFilters(ArrayList<RetailerLocation> retailerLocations) {
 
-        filterPrimaryComboBox.getItems().addAll("All", "Shopping", "Personal and Professional Services");
+        filterPrimaryComboBox.getItems().clear();
+        filterPrimaryComboBox.getItems().add("All");
+        filterPrimaryComboBox.getItems().addAll(GenerateFields.generatePrimaryFunctionsList(retailerLocations));
         filterPrimaryComboBox.getSelectionModel().selectFirst();
 
-        filterZipComboBox.getItems().addAll("All", 10004, 10005, 10038, 10007);
+        filterZipComboBox.getItems().clear();
+        filterZipComboBox.getItems().add("All");
+        filterZipComboBox.getItems().addAll(GenerateFields.generateRetailerZipcodes(retailerLocations));
         filterZipComboBox.getSelectionModel().selectFirst();
 
     }
@@ -188,9 +196,14 @@ public class RetailerTableController extends TableController{
              */
             public void handle(WorkerStateEvent event) {
 
+                // Initialise the values in the filter combo boxes now that we have data to work with
+                setFilters(loadRetailerCsv.getValue());
+
                 setTableViewRetailer(loadRetailerCsv.getValue());
                 stopLoadingAni();
                 setPredicate();
+                populateCustomRetailerLocations();
+
             }
         });
 
@@ -205,6 +218,7 @@ public class RetailerTableController extends TableController{
 
         String filename = getCsvFilename();
         if (filename != null) {
+            dataPoints.clear();
             importRetailerCsv(filename);
         }
     }
@@ -255,13 +269,33 @@ public class RetailerTableController extends TableController{
         // Add the sorted and filtered data to the table.
         table.setItems(sortedData);
         table.getColumns().addAll(nameCol, addressCol, primaryCol, secondaryCol, zipCol);
-
-        // Initialise the values in the filter combo boxes now that we have data to work with
-        setFilters();
     }
 
     public void addRetailer() {
+        try {
+            FXMLLoader addRetailerLoader = new FXMLLoader(getClass().getResource("/fxml/AddRetailerDialog.fxml"));
+            Parent root = addRetailerLoader.load();
+            AddRetailerDialogController addRetailerDialog = addRetailerLoader.getController();
+            Stage stage1 = new Stage();
 
+            addRetailerDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+
+            RetailerLocation retailerLocation = addRetailerDialog.getRetailerLocation();
+            if (retailerLocation != null) {
+                dataPoints.add(retailerLocation);
+                model.addCustomRetailerLocation(retailerLocation);
+                SerializerImplementation.serializeUser(model);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void populateCustomRetailerLocations() {
+        ArrayList<RetailerLocation> customRetailerLocations = model.getCustomRetailerLocations();
+
+        dataPoints.addAll(customRetailerLocations);
     }
 
     @Override
