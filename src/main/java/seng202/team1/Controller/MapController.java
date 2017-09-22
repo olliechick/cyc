@@ -132,7 +132,7 @@ public class MapController {
     }
 
     private void addWifi(float lat, float lng, String title) {
-        String scriptStr = "document.addWIFIMarker({lat: " + lat + ", lng:  " + lng + "}, 'wifi.png', " + "'" + title + "')";
+        String scriptStr = "document.addWIFIMarker({lat: " + lat + ", lng:  " + lng + "}, 'WIFI2.png', " + "'" + title + "')";
         webView.getEngine().executeScript(scriptStr);
 
     }

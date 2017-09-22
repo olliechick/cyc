@@ -52,7 +52,7 @@ public class BikeTableController extends TableController{
     private ComboBox filterGenderComboBox;
 
     @FXML
-    private TableView<DataPoint> table;
+    private TableView<BikeTrip> table;
 
     @FXML
     private Label nameLabel;
@@ -131,12 +131,15 @@ public class BikeTableController extends TableController{
      */
     private void setFilters() {
 
+        filterGenderComboBox.getItems().clear();
         filterGenderComboBox.getItems().addAll("All", 'm', 'f', 'u');
         filterGenderComboBox.getSelectionModel().selectFirst();
 
+        filterStartComboBox.getItems().clear();
         filterStartComboBox.getItems().addAll("Not yet implemented");
         filterStartComboBox.getSelectionModel().selectFirst();
 
+        filterEndComboBox.getItems().clear();
         filterEndComboBox.getItems().addAll("Not yet implemented");
         filterEndComboBox.getSelectionModel().selectFirst();
 
@@ -193,6 +196,7 @@ public class BikeTableController extends TableController{
 
         String filename = getCsvFilename();
         if (filename != null) {
+            dataPoints.clear();
             importBikeCsv(filename);
         }
     }
@@ -214,10 +218,15 @@ public class BikeTableController extends TableController{
 
             BikeTrip test = addBikeDialog.getBikeTrip();
             if (test != null) {
-                dataPoints.add(addBikeDialog.getBikeTrip());
-                model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
+                if (dataPoints.contains(test)) {
+                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
+                } else {
+                    dataPoints.add(addBikeDialog.getBikeTrip());
+                    model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
+                    SerializerImplementation.serializeUser(model);
+                }
             }
-            SerializerImplementation.serializeUser(model);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -231,25 +240,25 @@ public class BikeTableController extends TableController{
 
         dataPoints = FXCollections.observableArrayList(data);
 
-        TableColumn bikeIdCol = new TableColumn("Bike ID");
-        TableColumn genderCol = new TableColumn("Gender");
-        TableColumn durationCol = new TableColumn("Duration");
-        TableColumn startLocCol = new TableColumn("Start Location");
-        TableColumn startLatitudeCol = new TableColumn("Latitude");
-        TableColumn startLongitudeCol = new TableColumn("Longitude");
-        TableColumn endLocCol = new TableColumn("End Location");
-        TableColumn endLatitudeCol = new TableColumn("Latitude");
-        TableColumn endLongitudeCol = new TableColumn("Longitude");
+        TableColumn<BikeTrip, Integer> bikeIdCol = new TableColumn("Bike ID");
+        TableColumn<BikeTrip, Character> genderCol = new TableColumn("Gender");
+        TableColumn<BikeTrip, String> durationCol = new TableColumn("Duration");
+        TableColumn<BikeTrip, Point.Float> startLocCol = new TableColumn("Start Location");
+        TableColumn<BikeTrip, Point.Float> startLatitudeCol = new TableColumn("Latitude");
+        TableColumn<BikeTrip, Point.Float> startLongitudeCol = new TableColumn("Longitude");
+        TableColumn<BikeTrip, Point.Float> endLocCol = new TableColumn("End Location");
+        TableColumn<BikeTrip, Point.Float> endLatitudeCol = new TableColumn("Latitude");
+        TableColumn<BikeTrip, Point.Float> endLongitudeCol = new TableColumn("Longitude");
         table.getColumns().clear();
 
         // Attempts to access public properties of name "Property", falls back to get<property>() methods if no property available
-        bikeIdCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Integer>("bikeID"));
-        genderCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Character>("gender"));
-        durationCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, String>("Duration"));
-        startLatitudeCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("startLatitude"));
-        startLongitudeCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("startLongitude"));
-        endLatitudeCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("endLatitude"));
-        endLongitudeCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Point.Float>("endLongitude"));
+        bikeIdCol.setCellValueFactory( new PropertyValueFactory<>("bikeId"));
+        genderCol.setCellValueFactory( new PropertyValueFactory<>("gender"));
+        durationCol.setCellValueFactory( new PropertyValueFactory<>("Duration"));
+        startLatitudeCol.setCellValueFactory( new PropertyValueFactory<>("startLatitude"));
+        startLongitudeCol.setCellValueFactory( new PropertyValueFactory<>("startLongitude"));
+        endLatitudeCol.setCellValueFactory( new PropertyValueFactory<>("endLatitude"));
+        endLongitudeCol.setCellValueFactory( new PropertyValueFactory<>("endLongitude"));
 
         startLocCol.getColumns().addAll(startLatitudeCol, startLongitudeCol);
         endLocCol.getColumns().addAll(endLatitudeCol, endLongitudeCol);
@@ -257,7 +266,7 @@ public class BikeTableController extends TableController{
 
         filteredData = new FilteredList<>(dataPoints, p -> true);
 
-        SortedList<DataPoint> sortedData = new SortedList<>(filteredData);
+        SortedList<BikeTrip> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(table.comparatorProperty());
 
         table.setItems(sortedData);
@@ -279,11 +288,6 @@ public class BikeTableController extends TableController{
     private void populateCustomBikeTrips() {
         ArrayList<BikeTrip> customTrips = model.getCustomBikeTrips();
 
-        if (customTrips != null) {
-            for (BikeTrip trip : customTrips) {
-                System.out.println(trip);
-                dataPoints.add(trip);
-            }
-        }
+        dataPoints.addAll(customTrips);
     }
 }

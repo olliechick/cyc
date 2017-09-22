@@ -145,22 +145,12 @@ public class AddWifiDialogController {
             dateTimeActivated = LocalDateTime.now();
 
             wifiPoint = new WifiPoint(objectId, coords, "placeName", street, "locationType", hood, boro, city, zip, cost, provider, remarks, ssid, sourceId, dateTimeActivated, true);
-            System.out.println(wifiPoint);
+            stage.close();
         }
     }
 
     private boolean checkFields() {
         boolean valid = true;
-
-//        try {
-//            startPoint = new Point.Float(Float.parseFloat(startLatField.getText()), Float.parseFloat(startLongField.getText()));
-//            startLatLabel.setTextFill(javafx.scene.paint.Color.BLACK);
-//            startLongLabel.setTextFill(javafx.scene.paint.Color.BLACK);
-//        } catch (NumberFormatException e) {
-//            valid = false;
-//            startLatLabel.setTextFill(javafx.scene.paint.Color.RED);
-//            startLongLabel.setTextFill(javafx.scene.paint.Color.RED);
-//        }
 
         try {
             latitude = Float.parseFloat(latField.getText());
