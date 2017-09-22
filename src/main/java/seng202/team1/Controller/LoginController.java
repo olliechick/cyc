@@ -215,7 +215,7 @@ public class LoginController {
         }
 
         seng202.team1.UserAccountModel newUser = new seng202.team1.UserAccountModel(gender, accountType, birthday, username, password);
-        model.setUserName(newUser.getUserName());
+        model = newUser;
         if (newUser.getAccountType().equals("User")) {
             launchMap();
         } else {
