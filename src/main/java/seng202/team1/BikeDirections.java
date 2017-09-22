@@ -13,13 +13,19 @@ public class BikeDirections {
 
     private ArrayList<String> overviewPolylines;
     private LocalDate dateRetrieved;
+    private Point.Double startPoint;
+    private Point.Double endPoint;
+    private ArrayList<Point.Double> points;
+    private int duration; //minutes?
+    private int distance; //in km
 
 
     /**
      * Default constructor for BikeDirections
      */
-    public BikeDirections(ArrayList<String> overviewPolyline, LocalDate dateRetrieved) {
-        this.overviewPolylines = overviewPolyline;
+    public BikeDirections(ArrayList<String> overviewPolylines, LocalDate dateRetrieved) {
+        this.overviewPolylines = overviewPolylines;
+
         this.dateRetrieved = dateRetrieved;
     }
 
