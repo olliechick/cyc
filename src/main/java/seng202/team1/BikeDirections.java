@@ -16,8 +16,10 @@ public class BikeDirections {
     private Point.Double startPoint;
     private Point.Double endPoint;
     private ArrayList<Point.Double> points;
-    private String duration; // human readable
-    private String distance; // human readable
+    private int distance; // in metres
+    private String distanceDescription; // human readable
+    private int duration; // in seconds
+    private String durationDescription; // human readable
 
 
 
@@ -26,6 +28,8 @@ public class BikeDirections {
      */
     public BikeDirections(String jsonString) throws InterruptedException, ApiException, IOException{
 
+        //jsonString = GoogleAPIClient.googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
+
         JSONArray legs = new JSONObject(jsonString).getJSONArray("routes").getJSONObject(0)
                 .getJSONArray("legs");
         JSONArray steps = legs.getJSONObject(0).getJSONArray("steps");
@@ -33,30 +37,24 @@ public class BikeDirections {
         polylines = new ArrayList<>();
         points = new ArrayList<>();
         for (int i = 0; i < steps.length(); i++) {
-            //JSONObject JSONArray
+
             JSONObject step = steps.getJSONObject(i);
             String polyline = step.getJSONObject("polyline").getString("points");
             ArrayList<Point.Double>thesePoints = decodePoly(polyline);
 
             polylines.add(polyline);
             points.addAll(thesePoints);
-
-            System.out.println(polyline);
-            System.out.println(thesePoints);
         }
 
         dateRetrieved = LocalDate.now();
         startPoint = points.get(0);
         endPoint = points.get(points.size()-1);
-        distance = legs.getJSONObject(0).getJSONObject("distance").getString("humanReadable");
-        duration = legs.getJSONObject(0).getJSONObject("duration").getString("humanReadable");
+        distanceDescription = legs.getJSONObject(0).getJSONObject("distance").getString("humanReadable");
+        durationDescription = legs.getJSONObject(0).getJSONObject("duration").getString("humanReadable");
+        distance = legs.getJSONObject(0).getJSONObject("distance").getInt("inMeters");
+        duration = legs.getJSONObject(0).getJSONObject("duration").getInt("inSeconds");
 
-
-
-
-
-
-//deal with multiple routes?
+        //deal with multiple routes?
     }
 
 
