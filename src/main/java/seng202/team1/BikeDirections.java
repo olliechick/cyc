@@ -42,7 +42,9 @@ public class BikeDirections {
         for (int i=0; i<legs.length(); i++) {
             //JSONObject JSONArray
             JSONObject leg = legs.getJSONObject(i);
-            System.out.println(leg .getJSONObject("polyline").getString("points"));
+            String polyline = leg.getJSONObject("polyline").getString("points");
+            System.out.println(polyline);
+            System.out.println(decodePoly(polyline));
         }
 
 
