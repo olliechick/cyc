@@ -16,8 +16,8 @@ public class BikeDirections {
     private Point.Double startPoint;
     private Point.Double endPoint;
     private ArrayList<Point.Double> points;
-    private int duration; //minutes?
-    private int distance; //in km
+    private String duration; // human readable
+    private String distance; // human readable
 
 
 
@@ -29,14 +29,15 @@ public class BikeDirections {
         jsonString = GoogleAPIClient.googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
 
         JSONArray legs = new JSONObject(jsonString).getJSONArray("routes").getJSONObject(0)
-                .getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
+                .getJSONArray("legs");
+        JSONArray steps = legs.getJSONObject(0).getJSONArray("steps");
 
         polylines = new ArrayList<>();
         points = new ArrayList<>();
-        for (int i = 0; i < legs.length(); i++) {
+        for (int i = 0; i < steps.length(); i++) {
             //JSONObject JSONArray
-            JSONObject leg = legs.getJSONObject(i);
-            String polyline = leg.getJSONObject("polyline").getString("points");
+            JSONObject step = steps.getJSONObject(i);
+            String polyline = step.getJSONObject("polyline").getString("points");
             ArrayList<Point.Double>thesePoints = decodePoly(polyline);
 
             polylines.add(polyline);
@@ -49,6 +50,9 @@ public class BikeDirections {
         dateRetrieved = LocalDate.now();
         startPoint = points.get(0);
         endPoint = points.get(points.size()-1);
+        distance = legs.getJSONObject(0).getJSONObject("distance").getString("humanReadable");
+        duration = legs.getJSONObject(0).getJSONObject("duration").getString("humanReadable");
+
 
 
 
