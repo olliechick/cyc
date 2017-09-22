@@ -212,11 +212,25 @@ public class WifiPoint extends DataPoint implements java.io.Serializable{
      * Returns a description of the WiFi point.
      */
     public String getDescription() {
-        return String.format("Location: %s (%s) - %s, %s, %s, %s %d (%f, %f)\nCost: %s\n" +
-                "Provider: %s\nSSID: %s\nSourceID: %s\nActivated: %s\nID %d", location, locationType, placeName, hood, borough,
-                city, zipcode, getLatitude(), getLongitude(), cost, provider, ssid, sourceId,
-                datetimeActivated.format(DateTimeFormatter.ofPattern("h:mm:ss a d/M/yyyy")),
-                objectId);
+        //TODO make a more robust description that checks if each value is null
+        String description;
+        if (datetimeActivated == null) {
+            description = String.format("Location: %s (%s) - %s, %s, %s, %s %d (%f, %f)\nCost: %s\n" +
+                            "Provider: %s\nSSID: %s\nSourceID: %s\nID: %d",
+                    location, locationType, placeName, hood, borough,
+                    city, zipcode, getLatitude(), getLongitude(), cost, provider, ssid, sourceId,
+                    objectId);
+        } else {
+
+            description = String.format("Location: %s (%s) - %s, %s, %s, %s %d (%f, %f)\nCost: %s\n" +
+                            "Provider: %s\nSSID: %s\nSourceID: %s\nActivated: %s\nID: %d",
+                    location, locationType, placeName, hood, borough,
+                    city, zipcode, getLatitude(), getLongitude(), cost, provider, ssid, sourceId,
+                    datetimeActivated.format(DateTimeFormatter.ofPattern("h:mm:ss a d/M/yyyy")),
+                    objectId);
+
+        }
+        return description;
     }
 
     @Override
