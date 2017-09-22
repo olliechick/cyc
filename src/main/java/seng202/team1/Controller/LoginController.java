@@ -165,12 +165,12 @@ public class LoginController {
 
         String password = passwordField.getText();
         if (PasswordManager.isExpectedPassword(password, user.getSalt(), user.getPassword())) {
+            model = user;
             // They got the password right
             if (user.getAccountType().equals("User")) {
                 launchMap();
             } else {
                 // User is admin or analyser
-                model = user;
                 launchLandingScreen();
             }
         } else {
