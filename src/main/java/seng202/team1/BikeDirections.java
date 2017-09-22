@@ -37,15 +37,23 @@ public class BikeDirections {
             System.out.println(s);
             System.out.println(obj);
             JSONArray subobj = obj.getJSONArray(s);
-            System.out.println(subobj);
-            System.out.println(subobj.length());
+            //System.out.println(subobj);
+            //System.out.println(subobj.length());
             for (int j = 0; j < subobj.length(); j++) {
+                System.out.println(j);
                 System.out.println(subobj.get(j));
+                //System.out.println(subobj.getJSONObject(j));
             }
 
 
             System.out.println("\n");
             i++;
+        }
+
+        for (i=0; i<20; i++) {
+            //JSONObject JSONArray
+            String overviewPolyline = obj.getJSONArray("routes").getJSONObject(0).getJSONObject("overviewPolyline").getString("points");//.getJSONObject(i);
+            System.out.println(overviewPolyline);
         }
 
 
