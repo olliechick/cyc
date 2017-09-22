@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team1.UserAccountModel;
 
@@ -20,7 +22,7 @@ import java.io.IOException;
 public class LandingController {
 
     @FXML
-    private Button openRetailerButton;
+    private Label welcomeLabel;
 
     private UserAccountModel model;
     private Stage stage;
@@ -29,8 +31,10 @@ public class LandingController {
      * Enables this controller to use the model.
      * @param model the model object
      */
-    protected void initModel(UserAccountModel model) {
+    protected void initModel(UserAccountModel model, Stage stage) {
         this.model = model;
+        this.stage = stage;
+        welcomeLabel.setText("Welcome to CYC, " + model.getUserName());
     }
 
     /**
@@ -111,6 +115,36 @@ public class LandingController {
             e.printStackTrace(); //File not found
         }
 
+    }
+
+    public void openMap() {
+        try {
+            FXMLLoader mapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+            Parent mapView = mapLoader.load();
+
+            Stage stage1 = new Stage();
+            stage1.setScene(new Scene(mapView));
+            stage1.initModality(Modality.APPLICATION_MODAL);
+            stage1.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void logout() {
+        System.out.println("Logout");
+        model = null;
+        try {
+            FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+            Parent loginView = loginLoader.load();
+
+            Scene loginScene = new Scene(loginView);
+            loginScene.getStylesheets().add("/css/loginStyle.css");
+            stage.setScene(loginScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
