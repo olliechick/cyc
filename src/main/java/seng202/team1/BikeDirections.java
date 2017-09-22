@@ -1,6 +1,11 @@
 package seng202.team1;
 
+import com.google.maps.errors.ApiException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.awt.*;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -21,10 +26,27 @@ public class BikeDirections {
     /**
      * Constructor that parses a gson and gets the polylines and the date retrieved (today's date).
      */
-    public BikeDirections(String jsonFile) {
-        //JsonReader jsonReader = Json.createReader();
-        //JsonObject object = jsonReader.readObject();
-        //jsonReader.close();
+    public BikeDirections(String jsonFile) throws InterruptedException, ApiException, IOException{
+        String JSONString = GoogleAPIClient.googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
+
+
+        JSONObject obj = new JSONObject(JSONString);
+        String[] names = JSONObject.getNames(obj);
+        int i = 0;
+        for (String s : names) {
+            System.out.println(s);
+            System.out.println(obj);
+            JSONArray subobj = obj.getJSONArray(s);
+            System.out.println(subobj);
+            System.out.println(subobj.length());
+            for (int j = 0; j < subobj.length(); j++) {
+                System.out.println(subobj.get(j));
+            }
+
+
+            System.out.println("\n");
+            i++;
+        }
 
 
 

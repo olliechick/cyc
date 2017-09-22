@@ -63,7 +63,7 @@ public class GoogleAPIClient {
     }
 
     // THIS IS A WORK IN PROGRESS
-    public static void googleGetDirections(double latOrigin, double lngOrigin, double latDest, double lngDest) throws InterruptedException, ApiException, IOException {
+    public static String googleGetDirections(double latOrigin, double lngOrigin, double latDest, double lngDest) throws InterruptedException, ApiException, IOException {
         LatLng origin =  new LatLng(latOrigin, lngOrigin);
         LatLng destination = new LatLng(latDest, lngDest);
         GeoApiContext context = new GeoApiContext.Builder().apiKey(KEY).build();
@@ -78,13 +78,13 @@ public class GoogleAPIClient {
                         .await();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        System.out.println(gson.toJson(result));
+        return gson.toJson(result);
     }
 
 
 
     public static void main(String [ ] args) throws InterruptedException, ApiException, IOException {
-        //googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
+        BikeDirections b = new BikeDirections("");
         //example
         //System.out.println(googleGeocode("1600 Amphitheatre Parkway Mountain View, CA 94043"));
         // getRetailerGeocode();
