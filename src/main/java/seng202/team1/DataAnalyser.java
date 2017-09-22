@@ -244,9 +244,11 @@ public final class DataAnalyser {
      * @param toSort ArrayList of bike trips to be sorted
      */
     public static void sortTripsByDistance(ArrayList<BikeTrip> toSort){
+        System.out.println(toSort.size()+" sort "+ toSort);
         Collections.sort(toSort, new Comparator<BikeTrip>() {
             @Override
             public int compare(BikeTrip o1, BikeTrip o2) {
+                System.out.println("comp "+o1.getTripDistance() + "" + o2.getTripDistance());
                 return o1.getTripDistance().compareTo(o2.getTripDistance());
             }
         });

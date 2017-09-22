@@ -198,6 +198,7 @@ public class CSVLoader {
 
                 trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,
                         endPoint, bikeId, gender, birthYear, false));
+                System.out.println(trips.get(trips.size()-1));
             }
 
         }

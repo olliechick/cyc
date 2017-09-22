@@ -63,6 +63,7 @@ public class DataAnalyserTest {
         ArrayList<BikeTrip> oldData = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
         Collections.shuffle(testData, new Random(2132154541));
         Collections.shuffle(oldData, new Random(2132154541));
+        System.out.println(testData.size()+""+ testData);
         DataAnalyser.sortTripsByDistance(testData);// sorts in place
         assertEquals(testData.get(0), oldData.get(0));
         assertEquals(testData.get(1), oldData.get(3));
