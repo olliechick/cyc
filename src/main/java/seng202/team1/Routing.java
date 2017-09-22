@@ -25,7 +25,9 @@ public final class Routing {
         while(results.size() < 9 && delta < 1001){
             ArrayList<BikeTrip> holder = DataAnalyser.searchBikeTrips(ourPoint.getY(), ourPoint.getX(), delta, triplist);
             for (BikeTrip t : holder){
-                results.add(t);
+                if ( !results.contains(t)) {
+                    results.add(t);
+                }
             }
             delta += 100;
 
@@ -33,7 +35,7 @@ public final class Routing {
         return results;
     }
 
-    /**
+    /*
      * Takes a point a list of biketrips and a requested duration.
      * this then returns either the first 10 bike trips within 10 mins of the duration
      * sorted by duration or all the bike trips within 20 mins of the duration sorted by time.
@@ -41,7 +43,7 @@ public final class Routing {
      * @param tripList biketrips to compare against
      * @param duration specified time durration
      * @return a list of points meting the criteria sorted.
-     */
+
     public static ArrayList<BikeTrip> findSightSeeingRoutes(Point.Float ourPoint, ArrayList<BikeTrip> tripList, long duration) {
         ArrayList<BikeTrip> resultsNonTime = new ArrayList<>();
         ArrayList<BikeTrip> resultsCorrectTime = new ArrayList<>();
@@ -76,5 +78,5 @@ public final class Routing {
             });
             return resultsNonTime;
         }
-    }
+    }*/
 }

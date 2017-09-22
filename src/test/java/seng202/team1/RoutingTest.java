@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 /**
  * Created by jbu71 on 22/09/17.
  */
-public class RoutingTest {/*
+public class RoutingTest {
     ArrayList<BikeTrip> bikeTrips;
     ArrayList<BikeTrip> orignalList;
 
@@ -23,21 +23,12 @@ public class RoutingTest {/*
 
     @Test
     public void findCommonTripsFromPosition() throws Exception {
-        Point.Float testPoint = new Point.Float((float)40.76727216,(float)-73.99392888);
+        Point.Float testPoint = new Point.Float((float)-73.99492888,(float)40.745968);
         ArrayList<BikeTrip> results = Routing.findCommonTripsFromPosition(testPoint, bikeTrips);
-        for(BikeTrip b : bikeTrips){
-            System.out.println(b);
-        }
-        System.out.println("Changing list");
-        for (BikeTrip b : results){
-            System.out.println(b);
-        }
+        assertEquals(results.get(0), bikeTrips.get(3));
 
     }
 
-    @Test
-    public void findSightSeeingRoutes() throws Exception {
 
-    }
-*/
+
 }
