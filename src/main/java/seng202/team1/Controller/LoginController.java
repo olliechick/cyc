@@ -101,10 +101,11 @@ public class LoginController {
             Parent landingView = landingLoader.load();
             LandingController landingController = landingLoader.getController();
 
-            landingController.initModel(model);
+
 
             Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Table can take over
 
+            landingController.initModel(model, stage);
             stage.setScene(new Scene(landingView));
             stage.show();
 
