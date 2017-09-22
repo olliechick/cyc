@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class BikeDirections {
 
-    private ArrayList<String> overviewPolylines;
+    private ArrayList<String> polylines;
     private LocalDate dateRetrieved;
     private Point.Double startPoint;
     private Point.Double endPoint;
@@ -20,14 +20,6 @@ public class BikeDirections {
     private int distance; //in km
 
 
-    /**
-     * Default constructor for BikeDirections
-     */
-    public BikeDirections(ArrayList<String> overviewPolylines, LocalDate dateRetrieved) {
-        this.overviewPolylines = overviewPolylines;
-
-        this.dateRetrieved = dateRetrieved;
-    }
 
     /**
      * Constructor that parses a json and gets the polylines and the date retrieved (today's date).
@@ -39,27 +31,32 @@ public class BikeDirections {
         JSONArray legs = new JSONObject(jsonString).getJSONArray("routes").getJSONObject(0)
                 .getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
 
-        for (int i=0; i<legs.length(); i++) {
+        polylines = new ArrayList<>();
+        points = new ArrayList<>();
+        for (int i = 0; i < legs.length(); i++) {
             //JSONObject JSONArray
             JSONObject leg = legs.getJSONObject(i);
             String polyline = leg.getJSONObject("polyline").getString("points");
+            ArrayList<Point.Double>thesePoints = decodePoly(polyline);
+
+            polylines.add(polyline);
+            points.addAll(thesePoints);
+
             System.out.println(polyline);
-            System.out.println(decodePoly(polyline));
+            System.out.println(thesePoints);
         }
+
+        dateRetrieved = LocalDate.now();
+        startPoint = points.get(0);
+        endPoint = points.get(points.size()-1);
+
+
 
 
 
 //deal with multiple routes?
     }
 
-
-    public ArrayList<String> getOverviewPolyline() {
-        return overviewPolylines;
-    }
-
-    public void setOverviewPolyline(ArrayList<String> overviewPolyline) {
-        this.overviewPolylines = overviewPolyline;
-    }
 
     public LocalDate getDateRetrieved() {
         return dateRetrieved;
@@ -109,7 +106,6 @@ public class BikeDirections {
     @Override
     public String toString() {
         return "BikeDirections{" +
-                "overviewPolylines='" + overviewPolylines + '\'' +
                 ", dateRetrieved=" + dateRetrieved +
                 '}';
     }
