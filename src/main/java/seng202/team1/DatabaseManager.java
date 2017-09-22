@@ -10,6 +10,7 @@ import java.util.ArrayList;
 /**
  * Manages the local and remote databases.
  * @author Ridge Nairn
+ * @author Ollie Chick
  */
 public class DatabaseManager {
     private static Connection connection;
@@ -56,11 +57,12 @@ public class DatabaseManager {
                 "    startLongitude FLOAT,\n" +
                 "    endLatitude FLOAT,\n" +
                 "    endLongitude FLOAT,\n" +
+                "    startStationId INTEGER,\n" +
+                "    endStationId INTEGER,\n" +
                 "    bikeID INTEGER,\n" +
                 "    gender VARCHAR(1),\n" +
                 "    birthYear INTEGER,\n" +
                 "    tripDistance DOUBLE,\n" +
-                "    googleData BLOB,\n" +
                 "    isUserDefined BOOLEAN\n" +
                 ");";
 
@@ -255,13 +257,17 @@ public class DatabaseManager {
      * Adds a single bike trip record to the database.
      *
      * @author Ridge Nairn
+     * @author Ollie Chick
      * @param trip An instance of BikeTrip to be added to the trip database table.
      * @throws SQLException when the row could not be inserted
      */
     public static void addBikeTrip(BikeTrip trip) throws SQLException {
         // TODO: Don't assume values can be null
-        String insert = "INSERT INTO trip (duration, startTime, stopTime, startLatitude, startLongitude, endLatitude, endLongitude, bikeID, gender, " +
-                "birthYear, tripDistance, googleData) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        int numOfQs = 14; //number of question marks to put in the statement
+        String insert = "INSERT INTO trip (duration, startTime, stopTime, startLatitude, " +
+                "startLongitude, endLatitude, endLongitude, startStationId, endStationId, " +
+                "bikeID, gender, birthYear, tripDistance, googleData) VALUES (" +
+                new String(new char[numOfQs-1]).replace("\0", "?, ") + "?)";
 
         PreparedStatement statement = getConnection().prepareStatement(insert);
 
@@ -273,11 +279,12 @@ public class DatabaseManager {
         statement.setFloat(6, trip.getEndLatitude());
         statement.setFloat(7, trip.getEndLongitude());
         statement.setInt(8, trip.getBikeId());
-        statement.setString(9, Character.toString(trip.getGender()));
-        statement.setInt(10, trip.getBirthYear());
-        statement.setDouble(11, trip.getTripDistance());
-        statement.setString(12, trip.getGoogleData());
-        // statement.setBoolean(13, trip.isUserDefined());
+        statement.setInt(9, trip.getStartStationId());
+        statement.setInt(10, trip.getEndStationId());
+        statement.setString(11, Character.toString(trip.getGender()));
+        statement.setInt(12, trip.getBirthYear());
+        statement.setDouble(13, trip.getTripDistance());
+        statement.setBoolean(14, trip.isUserDefinedPoint());
         statement.executeUpdate();
 
         getConnection().commit();
@@ -300,6 +307,7 @@ public class DatabaseManager {
         // TODO: Implement upload all local records to remote database
     }
 
+
     /**
      * Fetches an ArrayList of BikeTrips from the database, of m - n size.
      *
@@ -308,7 +316,6 @@ public class DatabaseManager {
      * @param m upper bound to be fetched, exclusive.
      * @return An ArrayList of BikeTrip objects of size m - n.
      */
-
     public static ArrayList<BikeTrip> getTrips(int n, int m) {
         String statement = "SELECT * FROM trip WHERE id >= ? AND id <= ?";
         PreparedStatement preparedStatement;
@@ -329,11 +336,12 @@ public class DatabaseManager {
                 Float startLongitude = rs.getFloat("startLongitude");
                 Float endLatitude = rs.getFloat("endLatitude");
                 Float endLongitude = rs.getFloat("endLongitude");
+                int startStationId = rs.getInt("startStationId");
+                int endStationId = rs.getInt("endStationId");
                 int bikeID = rs.getInt("bikeID");
                 char gender = rs.getString("gender").toCharArray()[0];
                 int birthYear = rs.getInt("birthYear");
-                // double tripDistance = rs.getDouble("tripDistance");          // Currently not required in constructor
-                // String googleData = rs.getBlob("googleData").toString();     // Also not used
+                double tripDistance = rs.getDouble("tripDistance");
                 boolean isUserDefined = rs.getBoolean("isUserDefined");
                 
                 LocalDateTime startTime = LocalDateTime.parse(startTimeString);
@@ -343,7 +351,9 @@ public class DatabaseManager {
                 Point.Float stopPoint = new Point.Float(endLongitude, endLatitude);
                 
 
-                BikeTrip trip = new BikeTrip(duration, startTime, stopTime, startPoint, stopPoint, bikeID, gender, birthYear, isUserDefined);
+                BikeTrip trip = new BikeTrip(duration, startTime, stopTime, startPoint, stopPoint,
+                                             startStationId, endStationId, bikeID, gender,
+                                             birthYear, tripDistance, isUserDefined);
 
                 result.add(trip);
             }
