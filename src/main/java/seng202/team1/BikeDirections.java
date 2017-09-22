@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,7 +22,13 @@ public class BikeDirections {
     private int duration; // in seconds
     private String durationDescription; // human readable
 
+    public ArrayList<Point.Double> getPoints() {
+        return points;
+    }
 
+    public void setPoints(ArrayList<Point.Double> points) {
+        this.points = points;
+    }
 
     /**
      * Constructor that parses a json and gets the polylines and the date retrieved (today's date).
