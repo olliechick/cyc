@@ -30,7 +30,7 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
     private int bikeId;
     private char gender; //u for unknown, m for male, f for female
     private int birthYear;
-    private Double tripDistance;
+    private Double tripDistance; //TODO units?
     private boolean isUserDefinedPoint;
 
 
@@ -46,7 +46,6 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
      * @param bikeId the ID of the bike
      * @param gender the gender of the bike's rider (m, f, or u)
      * @param birthYear the year of birth of the rider
-     * @param tripDistance distance of the trip (in TODO units)
      * @param isUserDefinedPoint whether the point is user-defined or loaded from a CSV file/the
      *                           database TODO is this right?
      */
@@ -64,7 +63,6 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
         this.bikeId = bikeId;
         this.gender = gender;
         this.birthYear = birthYear;
-        this.tripDistance = tripDistance;
         this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
@@ -80,7 +78,6 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
      * @param bikeId the ID of the bike
      * @param gender the gender of the bike's rider (m, f, or u)
      * @param birthYear the year of birth of the rider
-     * @param tripDistance distance of the trip (in TODO units)
      * @param isUserDefinedPoint whether the point is user-defined or loaded from a CSV file/the
      *                           database TODO is this right?
      */
@@ -98,14 +95,12 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
         this.bikeId = bikeId;
         this.gender = gender;
         this.birthYear = birthYear;
-        this.tripDistance = tripDistance;
         this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
 
     /**
-     * Grandfathered-in constructor for a bike trip. Start and end station IDs are set to -1 flag
-     * and trip distance is set to null.
+     * Grandfathered-in constructor for a bike trip. Start and end station IDs are set to -1 flag.
      * @param tripDuration duration (in seconds) of the bike trip
      * @param startTime datetime the bike trip started
      * @param stopTime datetime the bike trip ended
@@ -130,14 +125,15 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
         this.bikeId = bikeId;
         this.gender = gender;
         this.birthYear = birthYear;
-        this.tripDistance = null;
+        this.tripDistance = DataAnalyser.calculateDistance(startPoint.getX(), startPoint.getY(),
+                                                           endPoint.getX(), endPoint.getY());
         this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
 
     /**
      * Grandfathered-in constructor for a bike trip that calculates trip duration.
-     * Start and end station IDs are set to -1 flag and trip distance is set to null.
+     * Start and end station IDs are set to -1 flag.
      * @param startTime datetime the bike trip started
      * @param stopTime datetime the bike trip ended
      * @param startPoint co-ordinates of the bike trip's origin
@@ -161,7 +157,8 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
         this.bikeId = bikeId;
         this.gender = gender;
         this.birthYear = birthYear;
-        this.tripDistance = null;
+        this.tripDistance = DataAnalyser.calculateDistance(startPoint.getX(), startPoint.getY(),
+                endPoint.getX(), endPoint.getY());
         this.isUserDefinedPoint = isUserDefinedPoint;
     }
 

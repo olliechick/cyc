@@ -266,7 +266,7 @@ public class DatabaseManager {
         int numOfQs = 14; //number of question marks to put in the statement
         String insert = "INSERT INTO trip (duration, startTime, stopTime, startLatitude, " +
                 "startLongitude, endLatitude, endLongitude, startStationId, endStationId, " +
-                "bikeID, gender, birthYear, tripDistance, googleData) VALUES (" +
+                "bikeID, gender, birthYear, tripDistance, isUserDefined) VALUES (" +
                 new String(new char[numOfQs-1]).replace("\0", "?, ") + "?)";
 
         PreparedStatement statement = getConnection().prepareStatement(insert);
