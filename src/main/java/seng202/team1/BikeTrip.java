@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 public class BikeTrip extends DataPoint implements java.io.Serializable{
 
     private final static String TIME_FORMAT = "h:mm a";
-    private final static String DAY_OF_MONTH_FORMAT = TIME_FORMAT + "dd MMMM";
+    private final static String DAY_OF_MONTH_FORMAT = TIME_FORMAT + " d MMMM";
     private final static String DT_FORMAT = DAY_OF_MONTH_FORMAT + " yyyy";
 
     private long tripDuration; //in seconds
