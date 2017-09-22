@@ -1,10 +1,11 @@
 package seng202.team1;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.awt.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Bike Trip data class.
@@ -15,25 +16,91 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class BikeTrip extends DataPoint implements java.io.Serializable{
 
-    private final static String DT_FORMAT = "h:mm a d MMMM yyyy";
-    private final static String DAY_OF_MONTH_FORMAT = "h:mm a d MMMM";
     private final static String TIME_FORMAT = "h:mm a";
+    private final static String DAY_OF_MONTH_FORMAT = TIME_FORMAT + " d MMMM";
+    private final static String DT_FORMAT = DAY_OF_MONTH_FORMAT + " yyyy";
 
     private long tripDuration; //in seconds
     private LocalDateTime startTime; //example usage: LocalDateTime aDateTime = LocalDateTime.of(2015, Month.JULY, 29, 19, 30, 40);
     private LocalDateTime stopTime;
     private Point.Float startPoint;
     private Point.Float endPoint;
+    private int startStationId;
+    private int endStationId;
     private int bikeId;
     private char gender; //u for unknown, m for male, f for female
     private int birthYear;
-    private Double tripDistance;
-    private String googleData;
+    private Double tripDistance; //TODO units?
     private boolean isUserDefinedPoint;
 
 
     /**
      * Constructor for a bike trip.
+     * @param tripDuration duration (in seconds) of the bike trip
+     * @param startTime datetime the bike trip started
+     * @param stopTime datetime the bike trip ended
+     * @param startPoint co-ordinates of the bike trip's origin
+     * @param endPoint co-ordinates of the bike trip's terminus
+     * @param startStationId station ID of the start point. Null if didn't start at a station
+     * @param endStationId station ID of the end point. Null if didn't end at a station
+     * @param bikeId the ID of the bike
+     * @param gender the gender of the bike's rider (m, f, or u)
+     * @param birthYear the year of birth of the rider
+     * @param isUserDefinedPoint whether the point is user-defined or loaded from a CSV file/the
+     *                           database TODO is this right?
+     */
+    public BikeTrip(long tripDuration, LocalDateTime startTime, LocalDateTime stopTime,
+                    Point.Float startPoint, Point.Float endPoint, int startStationId,
+                    int endStationId, int bikeId, char gender, int birthYear, Double tripDistance,
+                    boolean isUserDefinedPoint) {
+        this.tripDuration = tripDuration;
+        this.startTime = startTime;
+        this.stopTime = stopTime;
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+        this.startStationId = startStationId;
+        this.endStationId = endStationId;
+        this.bikeId = bikeId;
+        this.gender = gender;
+        this.birthYear = birthYear;
+        this.isUserDefinedPoint = isUserDefinedPoint;
+    }
+
+
+    /**
+     * Constructor for a bike trip that calculates tripDuration.
+     * @param startTime datetime the bike trip started
+     * @param stopTime datetime the bike trip ended
+     * @param startPoint co-ordinates of the bike trip's origin
+     * @param endPoint co-ordinates of the bike trip's terminus
+     * @param startStationId station ID of the start point. -1 flag if didn't start at a station
+     * @param endStationId station ID of the end point. -1 flag if didn't end at a station
+     * @param bikeId the ID of the bike
+     * @param gender the gender of the bike's rider (m, f, or u)
+     * @param birthYear the year of birth of the rider
+     * @param isUserDefinedPoint whether the point is user-defined or loaded from a CSV file/the
+     *                           database TODO is this right?
+     */
+    public BikeTrip(LocalDateTime startTime, LocalDateTime stopTime,
+                    Point.Float startPoint, Point.Float endPoint, int startStationId,
+                    int endStationId, int bikeId, char gender, int birthYear, Double tripDistance,
+                    boolean isUserDefinedPoint) {
+        this.tripDuration = Duration.between(startTime, stopTime).getSeconds();
+        this.startTime = startTime;
+        this.stopTime = stopTime;
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+        this.startStationId = startStationId;
+        this.endStationId = endStationId;
+        this.bikeId = bikeId;
+        this.gender = gender;
+        this.birthYear = birthYear;
+        this.isUserDefinedPoint = isUserDefinedPoint;
+    }
+
+
+    /**
+     * Grandfathered-in constructor for a bike trip. Start and end station IDs are set to -1 flag.
      * @param tripDuration duration (in seconds) of the bike trip
      * @param startTime datetime the bike trip started
      * @param stopTime datetime the bike trip ended
@@ -46,23 +113,27 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
      *                           database TODO is this right?
      */
     public BikeTrip(long tripDuration, LocalDateTime startTime, LocalDateTime stopTime,
-                    Point.Float startPoint, Point.Float endPoint, int bikeId, char gender, int birthYear,
-                    boolean isUserDefinedPoint) {
+                    Point.Float startPoint, Point.Float endPoint,int bikeId, char gender,
+                    int birthYear, boolean isUserDefinedPoint) {
         this.tripDuration = tripDuration;
         this.startTime = startTime;
         this.stopTime = stopTime;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
+        this.startStationId = -1;
+        this.endStationId = -1;
         this.bikeId = bikeId;
         this.gender = gender;
         this.birthYear = birthYear;
-        this.tripDistance = DataAnalyser.calculateDistance(startPoint.getX(),startPoint.getY(),endPoint.getX(),endPoint.getY());
+        this.tripDistance = DataAnalyser.calculateDistance(startPoint.getX(), startPoint.getY(),
+                                                           endPoint.getX(), endPoint.getY());
         this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
 
     /**
-     * Constructor for bike trip that calculates tripDuration
+     * Grandfathered-in constructor for a bike trip that calculates trip duration.
+     * Start and end station IDs are set to -1 flag.
      * @param startTime datetime the bike trip started
      * @param stopTime datetime the bike trip ended
      * @param startPoint co-ordinates of the bike trip's origin
@@ -73,17 +144,21 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
      * @param isUserDefinedPoint whether the point is user-defined or loaded from a CSV file/the
      *                           database TODO is this right?
      */
-    public BikeTrip(LocalDateTime startTime, LocalDateTime stopTime, Point.Float startPoint,
-                    Point.Float endPoint, int bikeId, char gender, int birthYear, boolean isUserDefinedPoint) {
+    public BikeTrip(LocalDateTime startTime, LocalDateTime stopTime,
+                    Point.Float startPoint, Point.Float endPoint,int bikeId, char gender,
+                    int birthYear, boolean isUserDefinedPoint) {
         this.tripDuration = Duration.between(startTime, stopTime).getSeconds();
         this.startTime = startTime;
         this.stopTime = stopTime;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
+        this.startStationId = -1;
+        this.endStationId = -1;
         this.bikeId = bikeId;
         this.gender = gender;
         this.birthYear = birthYear;
-        this.tripDistance = DataAnalyser.calculateDistance(startPoint.getX(),startPoint.getY(),endPoint.getX(),endPoint.getY());
+        this.tripDistance = DataAnalyser.calculateDistance(startPoint.getX(), startPoint.getY(),
+                endPoint.getX(), endPoint.getY());
         this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
@@ -190,14 +265,6 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
         this.birthYear = birthYear;
     }
 
-    public String getGoogleData() {
-        return googleData;
-    }
-
-    public void setGoogleData(String googleData) {
-        this.googleData = googleData;
-    }
-
     public Double getTripDistance() {
         return tripDistance;
     }
@@ -206,6 +273,21 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
         this.tripDistance = tripDistance;
     }
 
+    public int getStartStationId() {
+        return startStationId;
+    }
+
+    public void setStartStationId(int startStationId) {
+        this.startStationId = startStationId;
+    }
+
+    public int getEndStationId() {
+        return endStationId;
+    }
+
+    public void setEndStationId(int endStationId) {
+        this.endStationId = endStationId;
+    }
 
     /**
      * Returns the duration of the trip, contextualised.
@@ -217,7 +299,7 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
     public String getDuration() {
         String duration;
 
-        // first find the unit of time and how many units
+        // first find the unit of time and how many of those units
         String unit;
         long unitCount;
         if (tripDuration < 60) {
@@ -304,7 +386,8 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
 
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj) { //TODO equals should check the class of its parameter
+
         if (obj == null){
             return false;
         }
@@ -312,20 +395,22 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
             return true;
         }
         BikeTrip that = (BikeTrip) obj;
-        if (this.getStartPoint().equals(that.getStartPoint()) && this.getEndPoint().equals(that.getEndPoint())){
-            return true;
-        }
-        return false; // if we can't prove they are the same we will assume they are different.
+
+        return this.getStartPoint().equals(that.getStartPoint())
+                && this.getEndPoint().equals(that.getEndPoint());
     }
+
 
     @Override
-    public int hashCode() { // must overide hashcode when overiding equality
-        return new HashCodeBuilder(17,31).
-                append(startPoint).
-                append(endPoint).
-                toHashCode();
+    public int hashCode() { // must override hashcode when overriding equality
+        return new HashCodeBuilder(17,31)
+                .append(startPoint)
+                .append(endPoint)
+                .toHashCode();
 
     }
+
+
     @Override
     public String toString() {
         return "BikeTrip{" +
@@ -338,7 +423,6 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
                 ", gender=" + gender +
                 ", birthYear=" + birthYear +
                 ", tripDistance=" + tripDistance +
-                ", googleData='" + googleData + '\'' +
                 ", isUserDefinedPoint=" + isUserDefinedPoint +
                 '}';
     }

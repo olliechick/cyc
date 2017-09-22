@@ -67,7 +67,8 @@ public final class GenerateFields {
      * @param isPrimary Flag for weather to find the primary or secondary function
      * @return ArrayList<RetailerLocation>
      */
-    public static ArrayList<RetailerLocation> generateListOfSameFunction(ArrayList<RetailerLocation> retailers, String function, boolean isPrimary){
+    public static ArrayList<RetailerLocation> generateListOfSameFunction(ArrayList<RetailerLocation> retailers,
+                                                                         String function, boolean isPrimary){
         ArrayList<RetailerLocation> sameFunction = new ArrayList<RetailerLocation>();
         if(isPrimary){
             for (RetailerLocation retailer : retailers){
@@ -152,7 +153,8 @@ public final class GenerateFields {
      * @param hotspots List of hotspots to search through
      * @return ArrayList<WifiPoint>
      */
-    public static  ArrayList<WifiPoint> findWifiOfSameProvider(String  provider, ArrayList<WifiPoint> hotspots){
+    public static ArrayList<WifiPoint> findWifiOfSameProvider(String provider,
+                                                              ArrayList<WifiPoint> hotspots){
         ArrayList<WifiPoint> results = new ArrayList<WifiPoint>();
         for(WifiPoint hotspot : hotspots){
             if (provider.equalsIgnoreCase(hotspot.getProvider())){
