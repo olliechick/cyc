@@ -27,10 +27,10 @@ public final class DataAnalyser {
         double endingLong;
         Point.Float startPoint = b1.getStartPoint();
         Point.Float endPoint;
-        double startingLat =  startPoint.getY();
+        double startingLat = startPoint.getY();
         double startingLong = startPoint.getX();
 
-        if(b1 == b2){
+        if(b1 == b2) {
             endPoint = b2.getEndPoint();
             endingLat = endPoint.getY();
             endingLong = endPoint.getX();
@@ -53,9 +53,10 @@ public final class DataAnalyser {
      * @param delta radius to search in
      * @return ArrayList<BikeTrip>
      */
-    public static ArrayList<BikeTrip> searchBikeTrips(double searchLat, double searchLong, double delta, ArrayList<BikeTrip> trips){
+    public static ArrayList<BikeTrip> searchBikeTrips(double searchLat, double searchLong,
+                                                      double delta, ArrayList<BikeTrip> trips) {
         ArrayList<BikeTrip> results = new ArrayList<BikeTrip>();
-        for (BikeTrip trip : trips) { //unfortunalty an 0(n) with the current data set. Perhaps we need to sort based on Lat and long to decrease time complexity
+        for (BikeTrip trip : trips) { //unfortunately an 0(n) with the current data set. Perhaps we need to sort based on Lat and long to decrease time complexity
             Point.Float tripPoint = trip.getStartPoint();
             double tripLong = tripPoint.getX();
             double tripLat = tripPoint.getY();
@@ -77,12 +78,13 @@ public final class DataAnalyser {
      * @param hotspots ArrayList of wifipoints to search through
      * @return ArrayList<WifiPoint>
      */
-    public static ArrayList<WifiPoint> searchWifiPoints(double searchLat, double searchLong, double delta, ArrayList<WifiPoint> hotspots) {
+    public static ArrayList<WifiPoint> searchWifiPoints(double searchLat, double searchLong,
+                                                        double delta, ArrayList<WifiPoint> hotspots) {
         ArrayList<WifiPoint> results = new ArrayList<WifiPoint>();
         for (WifiPoint hotspot : hotspots) { //unfortunalty an 0(n) with the current data set. Perhaps we need to sort based on Lat and long to decrease time complexity
             double spotLong = hotspot.getLongitude();
             double spotLat = hotspot.getLatitude();
-            if (calculateDistance(searchLat,searchLong,spotLat,spotLong) < delta){
+            if (calculateDistance(searchLat,searchLong,spotLat,spotLong) < delta) {
                     results.add(hotspot);
                 }
             }
@@ -93,7 +95,7 @@ public final class DataAnalyser {
     }
 
     /**
-     * Takes a Biketrip and returns the closest  WifiPoint, within 1000m, to the start of the bike trip.
+     * Takes a Biketrip and returns the closest WifiPoint, within 1000m, to the start of the bike trip.
      * returns null if no wifiPoint is found
      * @param trip Bike trip that needs to have the closest point found
      * @param hotspots ArrayList of wifiPoints to search through
@@ -124,7 +126,7 @@ public final class DataAnalyser {
         return closestPoint;
     }
     /**
-     * Takes a Biketrip and returns the closest  WifiPoint, within 1000m, to the end of the bike trip.
+     * Takes a Biketrip and returns the closest WifiPoint, within 1000m, to the end of the bike trip.
      * returns null if no wifiPoint is found
      * @param trip Bike trip that needs to have the closest point found
      * @param hotspots ArrayList of wifiPoints to search through
@@ -200,7 +202,7 @@ public final class DataAnalyser {
             double pointLong = waypoint.getX();
             for (WifiPoint hotspot : hotspots){
                 double hotspotLat = hotspot.getLatitude();
-                double hotspotLong  = hotspot.getLongitude();
+                double hotspotLong = hotspot.getLongitude();
                 double distance = calculateDistance(pointLat,pointLong,hotspotLat,hotspotLong);
                 if (closestPoint == null){
                     closestPoint = hotspot;
@@ -224,7 +226,7 @@ public final class DataAnalyser {
      * @param startLat Double Latitude to start the search at
      * @param startLong Double Longitude to start the search at
      * @param endLat Double Latitude to end the search at
-     * @param endLong  Double Longitude to end the search at
+     * @param endLong Double Longitude to end the search at
      * @return Double
      */
     public static double calculateDistance(double startLat, double startLong, double endLat, double endLong){
