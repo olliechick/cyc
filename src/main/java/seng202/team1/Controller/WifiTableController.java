@@ -247,9 +247,13 @@ public class WifiTableController extends TableController{
 
             WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
             if (newWifiPoint != null) {
-                dataPoints.add(newWifiPoint);
-                model.addCustomWifiLocation(newWifiPoint);
-                SerializerImplementation.serializeUser(model);
+                if (dataPoints.contains(newWifiPoint)) {
+                    AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
+                } else {
+                    dataPoints.add(newWifiPoint);
+                    model.addCustomWifiLocation(newWifiPoint);
+                    SerializerImplementation.serializeUser(model);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

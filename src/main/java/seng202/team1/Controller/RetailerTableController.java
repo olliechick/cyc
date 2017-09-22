@@ -283,9 +283,13 @@ public class RetailerTableController extends TableController{
 
             RetailerLocation retailerLocation = addRetailerDialog.getRetailerLocation();
             if (retailerLocation != null) {
-                dataPoints.add(retailerLocation);
-                model.addCustomRetailerLocation(retailerLocation);
-                SerializerImplementation.serializeUser(model);
+                if (dataPoints.contains(retailerLocation)) {
+                    AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
+                } else {
+                    dataPoints.add(retailerLocation);
+                    model.addCustomRetailerLocation(retailerLocation);
+                    SerializerImplementation.serializeUser(model);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

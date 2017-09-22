@@ -218,10 +218,15 @@ public class BikeTableController extends TableController{
 
             BikeTrip test = addBikeDialog.getBikeTrip();
             if (test != null) {
-                dataPoints.add(addBikeDialog.getBikeTrip());
-                model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
+                if (dataPoints.contains(test)) {
+                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
+                } else {
+                    dataPoints.add(addBikeDialog.getBikeTrip());
+                    model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
+                    SerializerImplementation.serializeUser(model);
+                }
             }
-            SerializerImplementation.serializeUser(model);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
