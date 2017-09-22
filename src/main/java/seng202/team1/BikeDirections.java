@@ -40,26 +40,34 @@ public class BikeDirections {
         String[] names = JSONObject.getNames(obj);
         int i = 0;
         for (String s : names) {
-            System.out.println(s);
-            System.out.println(obj);
+            //System.out.println(s);
+            //System.out.println(obj);
             JSONArray subobj = obj.getJSONArray(s);
             //System.out.println(subobj);
             //System.out.println(subobj.length());
             for (int j = 0; j < subobj.length(); j++) {
-                System.out.println(j);
-                System.out.println(subobj.get(j));
+                //System.out.println(j);
+                //System.out.println(subobj.get(j));
                 //System.out.println(subobj.getJSONObject(j));
             }
 
 
-            System.out.println("\n");
+            //System.out.println("\n");
             i++;
         }
 
-        for (i=0; i<20; i++) {
-            //JSONObject JSONArray
-            String overviewPolyline = obj.getJSONArray("routes").getJSONObject(0).getJSONObject("overviewPolyline").getString("points");//.getJSONObject(i);
-            System.out.println(overviewPolyline);
+        JSONArray legs = obj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
+        //System.out.println(legs.length());
+        //System.out.println(legs);
+        for (i=0; i<legs.length(); i++) {
+            // JSONArray JSONObject String
+            Object leg = legs.get(i);//.getString("points");//.getJSONObject(i);
+
+            //String[] names2 = JSONObject.getNames(overviewPolyline);
+            //System.out.println(names2[i]);
+
+            System.out.println(leg);
+            //System.out.println(overviewPolyline).get(i));
         }
 
 
