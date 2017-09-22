@@ -26,8 +26,6 @@ public class BikeDirections {
      */
     public BikeDirections(String jsonString) throws InterruptedException, ApiException, IOException{
 
-        jsonString = GoogleAPIClient.googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
-
         JSONArray legs = new JSONObject(jsonString).getJSONArray("routes").getJSONObject(0)
                 .getJSONArray("legs");
         JSONArray steps = legs.getJSONObject(0).getJSONArray("steps");
