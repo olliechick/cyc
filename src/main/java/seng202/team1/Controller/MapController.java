@@ -1,15 +1,26 @@
 package seng202.team1.Controller;
 
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import seng202.team1.CsvParserException;
 import seng202.team1.GenerateFields;
 import seng202.team1.RetailerLocation;
-import seng202.team1.UserAccountModel;
 import seng202.team1.WifiPoint;
-import seng202.team1.AlertGenerator;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.maps.DirectionsApi;
+import com.google.maps.DirectionsApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.errors.ApiException;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,12 +29,12 @@ import static seng202.team1.CSVLoader.populateRetailers;
 import static seng202.team1.CSVLoader.populateWifiHotspots;
 import static seng202.team1.GenerateFields.generateSecondaryFunctionsList;
 import static seng202.team1.GenerateFields.generateWifiProviders;
+import static seng202.team1.GoogleAPIClient.googleGetDirections;
 
 /**
  * Logic for the map GUI
  *
  * @author Cameron Auld
- * @author Ollie Chick
  * Created by cga51 on 06/09/17.
  */
 public class MapController {
@@ -165,6 +176,14 @@ public class MapController {
 
     }
 
+    @FXML
+    private void loadTestRoute() throws InterruptedException, ApiException, IOException {
+        //DirectionsRoute[] result = googleGetDirections(40.759071, -73.902467, 40.745968480330795,-74.13915300041297);
+       // Gson gson = new GsonBuilder().create();
+        //webView.getEngine().executeScript("document.renderDirections({lat: " + "40.759071" + ", lng:  " + "-73.902467" + "}, {lat: " + "40.745968480330795" + ", lng:  " + "-74.13915300041297" + "}," + gson.toJson(result) + ")");
+    }
+
+
     private void redrawWIFICluster() {
         String scriptStr = "document.updatewifiMarkerCluster()";
         webView.getEngine().executeScript(scriptStr);
@@ -285,7 +304,6 @@ public class MapController {
         }
     }
 
-
     private boolean checkZip(RetailerLocation retailerLocation) {
         if (filterZipComboBox.getValue().equals("All")) {
             return true;
@@ -303,7 +321,6 @@ public class MapController {
         }
     }
 
-
     private boolean checkBorough(WifiPoint wifiPoint) {
         if (filterBoroughComboBox.getValue().equals("All")) {
             return true;
@@ -319,7 +336,6 @@ public class MapController {
             return wifiPoint.getProvider().equalsIgnoreCase((String) filterProviderComboBox.getValue());
         }
     }
-
 
     private void initializeFilters() {
         /**
@@ -346,9 +362,8 @@ public class MapController {
 
         filterProviderComboBox.getItems().addAll("All");
         filterProviderComboBox.getSelectionModel().selectFirst();
+
     }
-
-
     private void setFilters() {
         /**
          * Sets the filter options
@@ -357,15 +372,12 @@ public class MapController {
 
         // RETAILERS
 
-        ArrayList<String> uniquePrimaryFunctions;
         uniquePrimaryFunctions = GenerateFields.generatePrimaryFunctionsList(retailerPoints);
         filterPrimaryComboBox.getItems().addAll( uniquePrimaryFunctions);
         filterPrimaryComboBox.getSelectionModel().selectFirst();
 
 
         uniqueSecondaryFunctions = generateSecondaryFunctionsList(retailerPoints);
-        ArrayList<String> uniqueSecondaryFunctions;
-        uniqueSecondaryFunctions = GenerateFields.generateSecondaryFunctionsList(retailerPoints);
         filterSecondaryComboBox.getItems().addAll( uniqueSecondaryFunctions);
         filterSecondaryComboBox.getSelectionModel().selectFirst();
 
