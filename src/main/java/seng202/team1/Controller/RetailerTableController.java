@@ -18,6 +18,7 @@ import seng202.team1.AlertGenerator;
 import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
 import seng202.team1.RetailerLocation;
+import seng202.team1.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
@@ -193,6 +194,7 @@ public class RetailerTableController extends TableController{
                 setTableViewRetailer(loadRetailerCsv.getValue());
                 stopLoadingAni();
                 setPredicate();
+                populateCustomRetailerLocations();
             }
         });
 
@@ -271,9 +273,22 @@ public class RetailerTableController extends TableController{
 
             addRetailerDialog.setDialog(stage1, root);
             stage1.showAndWait();
+
+            RetailerLocation retailerLocation = addRetailerDialog.getRetailerLocation();
+            if (retailerLocation != null) {
+                dataPoints.add(retailerLocation);
+                model.addCustomRetailerLocation(retailerLocation);
+                SerializerImplementation.serializeUser(model);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void populateCustomRetailerLocations() {
+        ArrayList<RetailerLocation> customRetailerLocations = model.getCustomRetailerLocations();
+
+        dataPoints.addAll(customRetailerLocations);
     }
 
     @Override

@@ -38,16 +38,16 @@ import static seng202.team1.CSVLoader.populateWifiHotspots;
 public class WifiTableController extends TableController{
 
     @FXML
-    private ComboBox filterBoroughComboBox;
+    private ComboBox<String> filterBoroughComboBox;
 
     @FXML
-    private ComboBox filterCostComboBox;
+    private ComboBox<String> filterCostComboBox;
 
     @FXML
-    private ComboBox filterProviderComboBox;
+    private ComboBox<String> filterProviderComboBox;
 
     @FXML
-    private TableView<DataPoint> table;
+    private TableView<WifiPoint> table;
 
     @FXML
     private Label nameLabel;
@@ -58,7 +58,7 @@ public class WifiTableController extends TableController{
     private ObservableList<WifiPoint> dataPoints;
     private FilteredList<WifiPoint> filteredData;
 
-    final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/wifipoint.csv";
+    private final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/wifipoint.csv";
 
     public void initialize() {
         super.initialize();
@@ -74,12 +74,15 @@ public class WifiTableController extends TableController{
      * TODO don't hardcode
      */
     private void setFilters() {
+        filterBoroughComboBox.getItems().clear();
         filterBoroughComboBox.getItems().addAll("All");
         filterBoroughComboBox.getSelectionModel().selectFirst();
 
+        filterCostComboBox.getItems().clear();
         filterCostComboBox.getItems().addAll("All", "Free", "Limited Free", "Partner Site");
         filterCostComboBox.getSelectionModel().selectFirst();
 
+        filterProviderComboBox.getItems().clear();
         filterProviderComboBox.getItems().addAll("All");
         filterProviderComboBox.getSelectionModel().selectFirst();
     }
@@ -178,26 +181,26 @@ public class WifiTableController extends TableController{
 
         dataPoints = FXCollections.observableArrayList(data);
 
-        TableColumn locationCol = new TableColumn("Location");
-        TableColumn boroughCol = new TableColumn("Borough");
-        TableColumn hoodCol = new TableColumn("Neighbourhood");
-        TableColumn cityCol = new TableColumn("City");
-        TableColumn costCol = new TableColumn("Cost");
-        TableColumn providerCol = new TableColumn("Provider");
+        TableColumn<WifiPoint, String> locationCol = new TableColumn("Location");
+        TableColumn<WifiPoint, String> boroughCol = new TableColumn("Borough");
+        TableColumn<WifiPoint, String> hoodCol = new TableColumn("Neighbourhood");
+        TableColumn<WifiPoint, String> cityCol = new TableColumn("City");
+        TableColumn<WifiPoint, String> costCol = new TableColumn("Cost");
+        TableColumn<WifiPoint, String> providerCol = new TableColumn("Provider");
 
         locationCol.getColumns().addAll(hoodCol, boroughCol, cityCol);
 
         table.getColumns().clear();
 
-        boroughCol.setCellValueFactory( new PropertyValueFactory<WifiPoint, String>("borough"));
-        hoodCol.setCellValueFactory( new PropertyValueFactory<WifiPoint, String>("hood"));
-        cityCol.setCellValueFactory( new PropertyValueFactory<WifiPoint, String>("city"));
-        costCol.setCellValueFactory( new PropertyValueFactory<WifiPoint, String>("cost"));
-        providerCol.setCellValueFactory( new PropertyValueFactory<WifiPoint, String>("provider"));
+        boroughCol.setCellValueFactory( new PropertyValueFactory<>("borough"));
+        hoodCol.setCellValueFactory( new PropertyValueFactory<>("hood"));
+        cityCol.setCellValueFactory( new PropertyValueFactory<>("city"));
+        costCol.setCellValueFactory( new PropertyValueFactory<>("cost"));
+        providerCol.setCellValueFactory( new PropertyValueFactory<>("provider"));
 
         filteredData = new FilteredList<>(dataPoints, p -> true);
 
-        SortedList<DataPoint> sortedData = new SortedList<>(filteredData);
+        SortedList<WifiPoint> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(table.comparatorProperty());
 
         table.setItems(sortedData);
@@ -230,18 +233,14 @@ public class WifiTableController extends TableController{
     private void populateCustomWifiPoints() {
         ArrayList<WifiPoint> customWifi = model.getCustomWifiPoints();
 
-        if (customWifi != null) {
-            for (WifiPoint wifi : customWifi) {
-                dataPoints.add(wifi);
-            }
-        }
+        dataPoints.addAll(customWifi);
     }
 
+    /**
+     * initialises the model for use in the rest of the View
+     * Will allow for accessing user data once implemented
+     */
     protected void initModel(UserAccountModel userAccountModel) {
-        /**
-         * initialises the model for use in the rest of the View
-         * Will allow for accessing user data once implemented
-         */
         this.model = userAccountModel;
         importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME);
     }

@@ -68,9 +68,9 @@ public class AddRetailerDialogController {
     private String addressLine1;
     private String addressLine2 = "";
     private String city = "New York";
-    private String state = "New York";
+    private String state = "NY";
     private int zipcode;
-    private String blockLot = "blockLot";
+    private String blockLot = "Unknown";
     private String primaryFunction;
     private String secondaryFunction = "Unknown";
     private boolean isUserDefined = true;
@@ -81,6 +81,7 @@ public class AddRetailerDialogController {
             retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city,
                                                     state, zipcode, blockLot, primaryFunction,
                                                     secondaryFunction, isUserDefined);
+            stage.close();
         }
     }
 
