@@ -131,12 +131,15 @@ public class BikeTableController extends TableController{
      */
     private void setFilters() {
 
+        filterGenderComboBox.getItems().clear();
         filterGenderComboBox.getItems().addAll("All", 'm', 'f', 'u');
         filterGenderComboBox.getSelectionModel().selectFirst();
 
+        filterStartComboBox.getItems().clear();
         filterStartComboBox.getItems().addAll("Not yet implemented");
         filterStartComboBox.getSelectionModel().selectFirst();
 
+        filterEndComboBox.getItems().clear();
         filterEndComboBox.getItems().addAll("Not yet implemented");
         filterEndComboBox.getSelectionModel().selectFirst();
 
@@ -193,6 +196,7 @@ public class BikeTableController extends TableController{
 
         String filename = getCsvFilename();
         if (filename != null) {
+            dataPoints.clear();
             importBikeCsv(filename);
         }
     }

@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import seng202.team1.AlertGenerator;
 import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
+import seng202.team1.GenerateFields;
 import seng202.team1.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 import seng202.team1.WifiPoint;
@@ -58,7 +59,7 @@ public class WifiTableController extends TableController{
     private ObservableList<WifiPoint> dataPoints;
     private FilteredList<WifiPoint> filteredData;
 
-    private final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/wifipoint.csv";
+    private final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv";
 
     public void initialize() {
         super.initialize();
@@ -73,17 +74,20 @@ public class WifiTableController extends TableController{
      * Set the filters in the combo boxes
      * TODO don't hardcode
      */
-    private void setFilters() {
+    private void setFilters(ArrayList<WifiPoint> data) {
         filterBoroughComboBox.getItems().clear();
-        filterBoroughComboBox.getItems().addAll("All");
+        filterBoroughComboBox.getItems().add("All");
+        filterBoroughComboBox.getItems().addAll(GenerateFields.generateWifiBoroughs(data));
         filterBoroughComboBox.getSelectionModel().selectFirst();
 
         filterCostComboBox.getItems().clear();
-        filterCostComboBox.getItems().addAll("All", "Free", "Limited Free", "Partner Site");
+        filterCostComboBox.getItems().add("All");
+        filterCostComboBox.getItems().addAll(GenerateFields.generateWifiTypes(data));
         filterCostComboBox.getSelectionModel().selectFirst();
 
         filterProviderComboBox.getItems().clear();
-        filterProviderComboBox.getItems().addAll("All");
+        filterProviderComboBox.getItems().add("All");
+        filterProviderComboBox.getItems().addAll(GenerateFields.generateWifiProviders(data));
         filterProviderComboBox.getSelectionModel().selectFirst();
     }
 
@@ -94,7 +98,9 @@ public class WifiTableController extends TableController{
     private void setPredicate() {
 
         filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
-                        (WifiPoint wifiPoint) -> checkCost(wifiPoint),
+                        (WifiPoint wifiPoint) -> checkCost(wifiPoint) &&
+                                                checkBorough(wifiPoint) &&
+                                                checkProvider(wifiPoint),
 
                 filterBoroughComboBox.valueProperty(),
                 filterCostComboBox.valueProperty(),
@@ -112,6 +118,22 @@ public class WifiTableController extends TableController{
             return true;
         } else {
             return wifiPoint.getCost().equals(filterCostComboBox.getValue());
+        }
+    }
+
+    private boolean checkBorough(WifiPoint wifiPoint) {
+        if (filterBoroughComboBox.getValue().equals("All")) {
+            return true;
+        } else {
+            return wifiPoint.getBorough().equals(filterBoroughComboBox.getValue());
+        }
+    }
+
+    private boolean checkProvider(WifiPoint wifiPoint) {
+        if (filterProviderComboBox.getValue().equals("All")) {
+            return true;
+        } else {
+            return wifiPoint.getProvider().equals(filterProviderComboBox.getValue());
         }
     }
 
@@ -151,6 +173,8 @@ public class WifiTableController extends TableController{
              */
             public void handle(WorkerStateEvent event) {
 
+                setFilters(loadWifiCsv.getValue());
+
                 setTableViewWifi(loadWifiCsv.getValue());
                 stopLoadingAni();
                 setPredicate();
@@ -169,6 +193,7 @@ public class WifiTableController extends TableController{
 
         String filename = getCsvFilename();
         if (filename != null) {
+            dataPoints.clear();
             importWifiCsv(filename);
         }
     }
@@ -181,20 +206,22 @@ public class WifiTableController extends TableController{
 
         dataPoints = FXCollections.observableArrayList(data);
 
+        TableColumn<WifiPoint, String> nameCol = new TableColumn<>("Name");
         TableColumn<WifiPoint, String> locationCol = new TableColumn("Location");
+        TableColumn<WifiPoint, String> streetCol = new TableColumn<>("Street/Location");
         TableColumn<WifiPoint, String> boroughCol = new TableColumn("Borough");
         TableColumn<WifiPoint, String> hoodCol = new TableColumn("Neighbourhood");
-        TableColumn<WifiPoint, String> cityCol = new TableColumn("City");
         TableColumn<WifiPoint, String> costCol = new TableColumn("Cost");
         TableColumn<WifiPoint, String> providerCol = new TableColumn("Provider");
 
-        locationCol.getColumns().addAll(hoodCol, boroughCol, cityCol);
+        locationCol.getColumns().addAll(streetCol, hoodCol, boroughCol);
 
         table.getColumns().clear();
 
+        nameCol.setCellValueFactory( new PropertyValueFactory<>("name"));
+        streetCol.setCellValueFactory( new PropertyValueFactory<>("location"));
         boroughCol.setCellValueFactory( new PropertyValueFactory<>("borough"));
         hoodCol.setCellValueFactory( new PropertyValueFactory<>("hood"));
-        cityCol.setCellValueFactory( new PropertyValueFactory<>("city"));
         costCol.setCellValueFactory( new PropertyValueFactory<>("cost"));
         providerCol.setCellValueFactory( new PropertyValueFactory<>("provider"));
 
@@ -204,9 +231,8 @@ public class WifiTableController extends TableController{
         sortedData.comparatorProperty().bind(table.comparatorProperty());
 
         table.setItems(sortedData);
-        table.getColumns().addAll(locationCol, costCol, providerCol);
+        table.getColumns().addAll(nameCol, locationCol, costCol, providerCol);
 
-        setFilters();
     }
 
     public void addWifi() {

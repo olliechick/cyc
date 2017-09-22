@@ -1,6 +1,7 @@
 package seng202.team1;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Generates data fields and other related tasks for the GUI.
@@ -58,13 +59,24 @@ public final class GenerateFields {
         return secondaryFunctions;
     }
 
+    public static ArrayList<Integer> generateRetailerZipcodes(ArrayList<RetailerLocation> retailers) {
+        ArrayList<Integer> zipcodes = new ArrayList<>();
+        for (RetailerLocation retailer : retailers) {
+            if (!(zipcodes.contains(retailer.getZipcode()))) {
+                zipcodes.add(retailer.getZipcode());
+            }
+        }
+        Collections.sort(zipcodes);
+        return zipcodes;
+    }
+
     /**
      * Takes a list of retailers and the function name to sort them by and returns list that contains only retailers of the same function
      * the isPrimary flag allows the function to be used either for the primary or secondary function to be selected
      * with true meaning primary and false being secondary.
-     * @param retailers List of reatailer that need the functions checked against
+     * @param retailers List of retailer that need the functions checked against
      * @param function Type of retailer that needs to be found
-     * @param isPrimary Flag for weather to find the primary or secondary function
+     * @param isPrimary Flag for whether to find the primary or secondary function
      * @return ArrayList<RetailerLocation>
      */
     public static ArrayList<RetailerLocation> generateListOfSameFunction(ArrayList<RetailerLocation> retailers, String function, boolean isPrimary){
@@ -105,6 +117,24 @@ public final class GenerateFields {
             }
         }
         return wifiTypes;
+    }
+
+    public static ArrayList<String> generateWifiBoroughs(ArrayList<WifiPoint> hotspots) {
+        ArrayList<String> boroughs = new ArrayList<>();
+        for(WifiPoint hotspot : hotspots){
+            boolean found = false;
+            for(String borough : boroughs) {
+                if (borough.equalsIgnoreCase(hotspot.getBorough())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                boroughs.add(hotspot.getBorough());
+            }
+        }
+
+        return boroughs;
     }
 
     /**

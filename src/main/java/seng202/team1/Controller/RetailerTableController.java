@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import seng202.team1.AlertGenerator;
 import seng202.team1.CsvParserException;
 import seng202.team1.DataPoint;
+import seng202.team1.GenerateFields;
 import seng202.team1.RetailerLocation;
 import seng202.team1.SerializerImplementation;
 import seng202.team1.UserAccountModel;
@@ -146,12 +147,16 @@ public class RetailerTableController extends TableController{
      * Sets the filter options
      * TODO don't hard code
      */
-    private void setFilters() {
+    private void setFilters(ArrayList<RetailerLocation> retailerLocations) {
 
-        filterPrimaryComboBox.getItems().addAll("All", "Shopping", "Personal and Professional Services");
+        filterPrimaryComboBox.getItems().clear();
+        filterPrimaryComboBox.getItems().add("All");
+        filterPrimaryComboBox.getItems().addAll(GenerateFields.generatePrimaryFunctionsList(retailerLocations));
         filterPrimaryComboBox.getSelectionModel().selectFirst();
 
-        filterZipComboBox.getItems().addAll("All", 10004, 10005, 10038, 10007);
+        filterZipComboBox.getItems().clear();
+        filterZipComboBox.getItems().add("All");
+        filterZipComboBox.getItems().addAll(GenerateFields.generateRetailerZipcodes(retailerLocations));
         filterZipComboBox.getSelectionModel().selectFirst();
 
     }
@@ -191,10 +196,14 @@ public class RetailerTableController extends TableController{
              */
             public void handle(WorkerStateEvent event) {
 
+                // Initialise the values in the filter combo boxes now that we have data to work with
+                setFilters(loadRetailerCsv.getValue());
+
                 setTableViewRetailer(loadRetailerCsv.getValue());
                 stopLoadingAni();
                 setPredicate();
                 populateCustomRetailerLocations();
+
             }
         });
 
@@ -209,6 +218,7 @@ public class RetailerTableController extends TableController{
 
         String filename = getCsvFilename();
         if (filename != null) {
+            dataPoints.clear();
             importRetailerCsv(filename);
         }
     }
@@ -259,9 +269,6 @@ public class RetailerTableController extends TableController{
         // Add the sorted and filtered data to the table.
         table.setItems(sortedData);
         table.getColumns().addAll(nameCol, addressCol, primaryCol, secondaryCol, zipCol);
-
-        // Initialise the values in the filter combo boxes now that we have data to work with
-        setFilters();
     }
 
     public void addRetailer() {
