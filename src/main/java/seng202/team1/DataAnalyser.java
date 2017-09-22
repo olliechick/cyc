@@ -248,7 +248,8 @@ public final class DataAnalyser {
         Collections.sort(toSort, new Comparator<BikeTrip>() {
             @Override
             public int compare(BikeTrip o1, BikeTrip o2) {
-                System.out.println("comp "+o1.getTripDistance() + "" + o2.getTripDistance());
+                System.out.println("comp "+o1 + "" + o2);
+                //TODO debug print stnt
                 return o1.getTripDistance().compareTo(o2.getTripDistance());
             }
         });

@@ -97,7 +97,6 @@ public class BikeTripTest extends TestCase {
                 birthYear, tripDistance, isUserDefinedPoint);
         String expectedString = "Started at 11:50 pm 30 December 2015 and ended 1 day later at " +
                 "12:10 am 1 January 2016\nBike ID: 1\nCyclist: female, born in 2000";
-        System.out.println(bikeTrip1.getStopTime());
         assertEquals(expectedString, bikeTrip1.getDescription());
     }
 
