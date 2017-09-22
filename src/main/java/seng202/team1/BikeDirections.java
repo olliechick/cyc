@@ -30,44 +30,19 @@ public class BikeDirections {
     }
 
     /**
-     * Constructor that parses a gson and gets the polylines and the date retrieved (today's date).
+     * Constructor that parses a json and gets the polylines and the date retrieved (today's date).
      */
-    public BikeDirections(String jsonFile) throws InterruptedException, ApiException, IOException{
-        String JSONString = GoogleAPIClient.googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
+    public BikeDirections(String jsonString) throws InterruptedException, ApiException, IOException{
 
+        jsonString = GoogleAPIClient.googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
 
-        JSONObject obj = new JSONObject(JSONString);
-        String[] names = JSONObject.getNames(obj);
-        int i = 0;
-        for (String s : names) {
-            //System.out.println(s);
-            //System.out.println(obj);
-            JSONArray subobj = obj.getJSONArray(s);
-            //System.out.println(subobj);
-            //System.out.println(subobj.length());
-            for (int j = 0; j < subobj.length(); j++) {
-                //System.out.println(j);
-                //System.out.println(subobj.get(j));
-                //System.out.println(subobj.getJSONObject(j));
-            }
+        JSONArray legs = new JSONObject(jsonString).getJSONArray("routes").getJSONObject(0)
+                .getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
 
-
-            //System.out.println("\n");
-            i++;
-        }
-
-        JSONArray legs = obj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
-        //System.out.println(legs.length());
-        //System.out.println(legs);
-        for (i=0; i<legs.length(); i++) {
-            // JSONArray JSONObject String
-            Object leg = legs.get(i);//.getString("points");//.getJSONObject(i);
-
-            //String[] names2 = JSONObject.getNames(overviewPolyline);
-            //System.out.println(names2[i]);
-
-            System.out.println(leg);
-            //System.out.println(overviewPolyline).get(i));
+        for (int i=0; i<legs.length(); i++) {
+            //JSONObject JSONArray
+            JSONObject leg = legs.getJSONObject(i);
+            System.out.println(leg .getJSONObject("polyline").getString("points"));
         }
 
 
