@@ -157,8 +157,7 @@ public class WifiTableController extends TableController{
                 try {
                     return populateWifiHotspots(filename);
                 } catch (CsvParserException|IOException e) {
-                    //TODO deal with the exception
-                    AlertGenerator.createAlert("Error", "Error generating wifis");
+                    super.failed();
                     return null;
                 }
             }
@@ -179,6 +178,14 @@ public class WifiTableController extends TableController{
                 stopLoadingAni();
                 setPredicate();
                 populateCustomWifiPoints();
+            }
+        });
+
+        loadWifiCsv.setOnFailed(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                AlertGenerator.createAlert("Error", "Error generating wifis");
+                stopLoadingAni();
             }
         });
 

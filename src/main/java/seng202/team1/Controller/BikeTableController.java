@@ -40,10 +40,10 @@ import static seng202.team1.CSVLoader.populateBikeTrips;
 public class BikeTableController extends TableController{
 
     @FXML
-    private ComboBox filterStartComboBox;
+    private ComboBox<String> filterStartComboBox;
 
     @FXML
-    private ComboBox filterEndComboBox;
+    private ComboBox<String> filterEndComboBox;
 
     @FXML
     private TextField bikeSearchField;
@@ -63,7 +63,7 @@ public class BikeTableController extends TableController{
     private ObservableList<BikeTrip> dataPoints;
     private FilteredList<BikeTrip> filteredData;
 
-    final static String DEFAULT_BIKE_TRIPS_FILENAME = "src/main/resources/csv/biketrip.csv";
+    private final static String DEFAULT_BIKE_TRIPS_FILENAME = "src/main/resources/csv/biketrip.csv";
 
     public void initialize() {
         super.initialize();
@@ -93,10 +93,10 @@ public class BikeTableController extends TableController{
     }
 
     /**
-     * Checks if the Bike ID of the given bike trip contains the entered bike ID anywhere in it's ID.
+     * Checks if the Bike ID of the given bike trip contains the entered bike ID.
      *
      * @param bikeTrip Bike trip to check against
-     * @return boolean true if bike ID matches, or the text field is empty. False otherwise
+     * @return true if bike ID matches, or the text field is empty. False otherwise
      */
     private boolean searchBikeId(BikeTrip bikeTrip) {
         if (bikeSearchField.getText().isEmpty()) {
@@ -110,7 +110,7 @@ public class BikeTableController extends TableController{
     /**
      * Checks if the selected gender matches the gender of the given bike trip.
      * @param bikeTrip Bike trip to check against
-     * @return boolean True if matches or "All" is selected. False otherwise.
+     * @return True if matches or "All" is selected. False otherwise.
      */
     private boolean checkGender(BikeTrip bikeTrip) {
         if (filterGenderComboBox.getValue().equals("All")) {
@@ -126,8 +126,8 @@ public class BikeTableController extends TableController{
     }
 
     /**
-     * Sets the filter options.
-     * TODO don't hard code
+     * Sets the filter ComboBox options.
+     *
      */
     private void setFilters() {
 
@@ -162,8 +162,7 @@ public class BikeTableController extends TableController{
                 try {
                     return populateBikeTrips(filename);
                 } catch (CsvParserException|IOException e) {
-                    //TODO deal with the exception
-                    AlertGenerator.createAlert("Error", "Error loading bike trips.");
+                    super.failed();
                     return null;
                 }
             }
@@ -182,6 +181,15 @@ public class BikeTableController extends TableController{
                 stopLoadingAni();
                 setPredicate();
                 populateCustomBikeTrips();
+            }
+        });
+
+        loadBikeCsv.setOnFailed(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+
+                AlertGenerator.createAlert("Error", "Error loading bike trips.");
+                stopLoadingAni();
             }
         });
 

@@ -180,7 +180,7 @@ public class RetailerTableController extends TableController{
                     return populateRetailers(filename);
                 } catch (CsvParserException|IOException e) {
                     //TODO deal with the exception
-                    AlertGenerator.createAlert("Error", "Error loading retailers.");
+                    super.failed();
                     return null;
                 }
             }
@@ -204,6 +204,14 @@ public class RetailerTableController extends TableController{
                 setPredicate();
                 populateCustomRetailerLocations();
 
+            }
+        });
+
+        loadRetailerCsv.setOnFailed(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                AlertGenerator.createAlert("Error", "Error loading retailers.");
+                stopLoadingAni();
             }
         });
 
