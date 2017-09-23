@@ -154,23 +154,28 @@ public class DatabaseManager {
         }
     }
 
+
     /**
-     * Checks to see if database is currently connected.
+     * Checks to see if thedatabase is currently connected.
      *
      * @author Ridge Nairn
-     * @return true if database is connected, else false.
+     * @return true if the database is connected.
      */
     public static boolean isDatabaseConnected() {
         return getConnection() != null;
     }
 
+
+    /**
+     * @return the connection to the database
+     */
     public static Connection getConnection() {
         return connection;
     }
 
+
     /**
      * Deletes database, and all records. Primarily used for cleaning up after test cases.
-     *
      * @author Ridge Nairn
      */
     public static void deleteDatabase() {
@@ -180,6 +185,7 @@ public class DatabaseManager {
             System.out.println("Database Deleted.");
         }
     }
+
 
     /**
      * Adds a single record to the database.
@@ -215,7 +221,6 @@ public class DatabaseManager {
             preparedStatement.setFloat(11, retailer.getLongitude());
 
             preparedStatement.execute();
-
 
         } else if (point instanceof WifiPoint) {
             statement = "INSERT INTO wifi (objectID, latitude, longitude, placeName, location, locationType, " +
@@ -253,6 +258,7 @@ public class DatabaseManager {
         }
     }
 
+
     /**
      * Adds a single bike trip record to the database.
      *
@@ -288,13 +294,12 @@ public class DatabaseManager {
         statement.executeUpdate();
 
         getConnection().commit();
-
-
     }
 
 
     /**
      * Checks to see if a record point is currently stored in the database.
+     * NOT YET IMPLEMENTED.
      * @author Ridge Nairn
      * @param point A point to be checked if it exists in the database.
      */
@@ -454,11 +459,13 @@ public class DatabaseManager {
         return getNumberOfRowsFromType(BikeTrip.class);
     }
 
+
     /**
      * Returns the number of records of a certain type stored in the database.
      *
      * @author Ridge Nairn
      * @param c Class of which the count is to be queried.
+     * @return number of records to type c in database
      */
     public static int getNumberOfRowsFromType(Class c) {
         String statement = "";
@@ -483,6 +490,4 @@ public class DatabaseManager {
         }
         return n;
     }
-
-
 }

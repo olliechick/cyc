@@ -32,20 +32,8 @@ public class DataPoint {
     }
 
     public boolean isVisible() {
-
         return visible;
     }
-    /* Do we need this each sub class has it own implementation, if so hashCode() needs to be overwritten as well
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            //two objects are the same (i.e. pointers to the same thing)
-            return true;
-        } else {
-            //check if string repr is the same
-            return this.toString().equals(otherObject.toString());
-        }
-    }*/
 
 
     /**
@@ -64,9 +52,11 @@ public class DataPoint {
     public String getDescription() {
         return "A datapoint.";
     }
+
+
     /**
-     * Returns true if a dataPoints visible bool has changed
-     *
+     * @param update TODO what is this???
+     * @return true if a DataPoint's visible bool has changed
      */
     public boolean isUpdated(boolean update) {
         if (visible != update) {
@@ -75,6 +65,5 @@ public class DataPoint {
         } else {
             return false;
         }
-
     }
 }
