@@ -46,7 +46,6 @@ public class CSVLoader {
         File csvData = new File(filename);
         CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
         return (ArrayList<CSVRecord>) parser.getRecords();
-
     }
 
 
@@ -221,6 +220,7 @@ public class CSVLoader {
         return populateWifiHotspots(DEFAULT_WIFI_HOTSPOTS_FILENAME);
     }
 
+
     /**
      * Calls the load CSV method and populates an ArrayList with a set of WifiPoint objects from
      * a given filename.
@@ -292,6 +292,7 @@ public class CSVLoader {
             CsvParserException {
         return populateRetailers(DEFAULT_RETAILER_LOCATIONS_FILENAME);
     }
+
 
     /**
      * Calls the load CSV method and populates an ArrayList with a set of

@@ -9,12 +9,13 @@ public class CsvParserException extends Exception {
     private String filename;
 
     /**
-     * Constructor
+     * Constructor for CsvParserException
      * @param filename The name of the file that couldn't be parsed.
      */
     public CsvParserException(String filename) {
         this.filename = filename;
     }
+
 
     public String getFilename() {
         return filename;
