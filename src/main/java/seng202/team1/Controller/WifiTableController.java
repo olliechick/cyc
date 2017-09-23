@@ -61,18 +61,24 @@ public class WifiTableController extends TableController{
 
     private final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv";
 
+    /**
+     * Run automatically on load of the FXML.
+     */
     public void initialize() {
         super.initialize();
     }
 
+    /**
+     * Displays the currently logged in user's name at the bottom of the table.
+     */
     protected void setName() {
         nameLabel.setText("Logged in as: " + model.getUserName());
         nameLabel.setVisible(true);
     }
 
     /**
-     * Set the filters in the combo boxes
-     * TODO don't hardcode
+     * Genereates and sets the filter options for wifis
+     * @param data An ArrayList of the WifiPoints to generate filters for
      */
     private void setFilters(ArrayList<WifiPoint> data) {
         filterBoroughComboBox.getItems().clear();
@@ -109,9 +115,8 @@ public class WifiTableController extends TableController{
 
     /**
      * Check the cost of the given wifi point matches the cost selected in the filter box.
-     *
      * @param wifiPoint The wifi point to check against
-     * @return boolean True if matches or "All", False otherwise
+     * @return True if matches or "All", False otherwise
      */
     private boolean checkCost(WifiPoint wifiPoint) {
         if (filterCostComboBox.getValue().equals("All")) {
@@ -121,6 +126,11 @@ public class WifiTableController extends TableController{
         }
     }
 
+    /**
+     * Check the borough of the given WifiPoint matches the borough selected in the ComboBox
+     * @param wifiPoint The WifiPoint to check against
+     * @return True if matches or "All", False otherwise
+     */
     private boolean checkBorough(WifiPoint wifiPoint) {
         if (filterBoroughComboBox.getValue().equals("All")) {
             return true;
@@ -129,6 +139,11 @@ public class WifiTableController extends TableController{
         }
     }
 
+    /**
+     * Check the provider of the given WifiPoint against the provider selected in the ComboBox
+     * @param wifiPoint The WifiPoint to check against
+     * @return True if matches or "All", False otherwise
+     */
     private boolean checkProvider(WifiPoint wifiPoint) {
         if (filterProviderComboBox.getValue().equals("All")) {
             return true;
@@ -141,7 +156,6 @@ public class WifiTableController extends TableController{
      * Creates a task to run on another thread to open the file,
      * to stop GUI hangs.
      * Also sets the loading animation going and stops when finished.
-     *
      * @param filename the absolute path to the csv file.
      */
     private void importWifiCsv(final String filename) {
@@ -194,7 +208,6 @@ public class WifiTableController extends TableController{
 
     /**
      * Gets an absolute filepath to a chosen csv.
-     * TODO add file validity checking.
      */
     public void importWifi() {
 
@@ -206,8 +219,10 @@ public class WifiTableController extends TableController{
     }
 
     /**
-     * Fairly similar to Retailer setup, but for a bike trip
-     * TODO add relevant columns
+     * Creates the columns of the table.
+     * Sets their value factories so that the data is displayed correctly.
+     * Sets up the lists of data for filtering TODO move out
+     * Displays the columns
      */
     private void setTableViewWifi(ArrayList<WifiPoint> data) {
 
@@ -242,6 +257,11 @@ public class WifiTableController extends TableController{
 
     }
 
+    /**
+     * Opens a dialog for the user to enter data for a new Wifi Point.
+     * If valid, checks it doesn't match any existing points and adds it to the table,
+     * as well as the user's list of custom points.
+     */
     public void addWifi() {
         try {
             FXMLLoader addWifiLoader = new FXMLLoader(getClass().getResource("/fxml/AddWifiDialog.fxml"));
@@ -267,6 +287,9 @@ public class WifiTableController extends TableController{
         }
     }
 
+    /**
+     * Add the user's custom Wifi points to the current data
+     */
     private void populateCustomWifiPoints() {
         ArrayList<WifiPoint> customWifi = model.getCustomWifiPoints();
 

@@ -27,6 +27,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 /**
+ * Logic for the dialog for adding bike trips
  * Created on 17/09/17.
  *
  * @author Josh Bernasconi
