@@ -29,9 +29,9 @@ import static seng202.team1.CSVLoader.populateRetailers;
 
 /**
  * Logic for the retailer table GUI
- *
- *
- * Created by jbe113 on 7/09/17.
+
+ * Created on 7/09/17.
+ * @author Josh Bernasconi
  */
 public class RetailerTableController extends TableController{
 
@@ -54,10 +54,9 @@ public class RetailerTableController extends TableController{
     private Label loadLabel;
 
     @FXML
-    private TableView table;
+    private TableView<RetailerLocation> table;
 
     private UserAccountModel model;
-    private Stage stage;
 
     private ObservableList<RetailerLocation> dataPoints;
     private FilteredList<RetailerLocation> filteredData;
@@ -72,6 +71,9 @@ public class RetailerTableController extends TableController{
         super.initialize();
     }
 
+    /**
+     * Display the user name at the bottom of the table
+     */
     protected void setName() {
         nameLabel.setText("Logged in as: " + model.getUserName());
         nameLabel.setVisible(true);
@@ -105,7 +107,9 @@ public class RetailerTableController extends TableController{
     }
 
     /**
-     * checks the given retailerLocation against the filter in the primary function ComboBox.
+     * Checks the given retailerLocation against the filter in the primary function ComboBox.
+     * @param retailerLocation The retailer Location to check against the filter
+     * @return True if "All" is selected, or the primary function of the retailer matches the current filter. False otherwise.
      */
     private boolean checkPrimary(RetailerLocation retailerLocation) {
 
@@ -119,6 +123,8 @@ public class RetailerTableController extends TableController{
     /**
      * Checks the address line 1 of the given retailerLocation against the text in the street
      * search field.
+     * @param retailerLocation The retailer Location to check against the filter
+     * @return True is the search box is empty or the retailer address contains the text in the field. False otherwise.
      */
     private boolean checkStreet(RetailerLocation retailerLocation) {
 
@@ -131,9 +137,9 @@ public class RetailerTableController extends TableController{
     }
 
     /**
-     * Check the zip code of the given RetailerLocation against the selected zip code
-     *
-     * @return boolean true if zip matches or "All" is selected, false otherwise.
+     * Check the zip code of the given RetailerLocation against the selected zip code.
+     * @param retailerLocation The retailer Location to check against the filter
+     * @return True if zip matches or "All" is selected, false otherwise.
      */
     private boolean checkZip(RetailerLocation retailerLocation) {
         if (filterZipComboBox.getValue().equals("All")) {
@@ -144,8 +150,8 @@ public class RetailerTableController extends TableController{
     }
 
     /**
-     * Sets the filter options
-     * TODO don't hard code
+     * Generate and set the filter options for the given retailer set.
+     * @param retailerLocations the ArrayList of retailers to generate filters from.
      */
     private void setFilters(ArrayList<RetailerLocation> retailerLocations) {
 
@@ -164,6 +170,7 @@ public class RetailerTableController extends TableController{
     /**
      * Creates a task to load the csv data, runs it on another thread.
      * The loading animations are shown until load completes, then the UI is updated.
+     * @param filename The filename of the CSV to load.
      */
     private void importRetailerCsv(final String filename) {
 
@@ -188,12 +195,9 @@ public class RetailerTableController extends TableController{
 
         startLoadingAni();
 
+        // Code to run after the load has completed, updates GUI.
         loadRetailerCsv.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            /**
-             * Fairly certain this won't get called until the runLater in the task completes.
-             * So should be safe spot to stop the loading animations.
-             *
-             */
+
             public void handle(WorkerStateEvent event) {
 
                 // Initialise the values in the filter combo boxes now that we have data to work with
@@ -207,6 +211,7 @@ public class RetailerTableController extends TableController{
             }
         });
 
+        // Code to run if the load fails due to an invalid CSV or an IOException.
         loadRetailerCsv.setOnFailed(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
@@ -220,7 +225,6 @@ public class RetailerTableController extends TableController{
 
     /**
      * Get the path for a csv to load, open one if given
-     * TODO add file checking
      */
     public void importRetailer() {
 
@@ -232,24 +236,21 @@ public class RetailerTableController extends TableController{
     }
 
     /**
-     * Pretty much straight from http://docs.oracle.com/javafx/2/ui_controls/table-view.htm
-     *
      * Creates the columns of the table.
      * Sets their value factories so that the data is displayed correctly.
      * Sets up the lists of data for filtering TODO move out
      * Displays the columns
-     * Sets the filters based on the data
      */
     private void setTableViewRetailer(ArrayList<RetailerLocation> data) {
 
         dataPoints = FXCollections.observableArrayList(data);
 
         // Create the columns
-        TableColumn nameCol = new TableColumn("Name");
-        TableColumn addressCol = new TableColumn("Address");
-        TableColumn primaryCol = new TableColumn("Primary Function");
-        TableColumn secondaryCol = new TableColumn("Secondary Function");
-        TableColumn zipCol = new TableColumn("ZIP");
+        TableColumn<RetailerLocation, String> nameCol = new TableColumn("Name");
+        TableColumn<RetailerLocation, String> addressCol = new TableColumn("Address");
+        TableColumn<RetailerLocation, String> primaryCol = new TableColumn("Primary Function");
+        TableColumn<RetailerLocation, String> secondaryCol = new TableColumn("Secondary Function");
+        TableColumn<RetailerLocation, String> zipCol = new TableColumn("ZIP");
 
         //Set the IDs of the columns, not used yet TODO remove if never use
         nameCol.setId("name");
@@ -262,16 +263,16 @@ public class RetailerTableController extends TableController{
         table.getColumns().clear();
 
         //Sets up each column to get the correct entry in each dataPoint
-        nameCol.setCellValueFactory( new PropertyValueFactory<RetailerLocation, String>("name"));
-        addressCol.setCellValueFactory( new PropertyValueFactory<RetailerLocation, String>("addressLine1"));
-        primaryCol.setCellValueFactory( new PropertyValueFactory<RetailerLocation, String>("primaryFunction"));
-        secondaryCol.setCellValueFactory( new PropertyValueFactory<RetailerLocation, String>("secondaryFunction"));
-        zipCol.setCellValueFactory( new PropertyValueFactory<RetailerLocation, String>("zipcode"));
+        nameCol.setCellValueFactory( new PropertyValueFactory<>("name"));
+        addressCol.setCellValueFactory( new PropertyValueFactory<>("addressLine1"));
+        primaryCol.setCellValueFactory( new PropertyValueFactory<>("primaryFunction"));
+        secondaryCol.setCellValueFactory( new PropertyValueFactory<>("secondaryFunction"));
+        zipCol.setCellValueFactory( new PropertyValueFactory<>("zipcode"));
 
         // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
         filteredData = new FilteredList<>(dataPoints, p -> true);
 
-        SortedList<DataPoint> sortedData = new SortedList<>(filteredData);
+        SortedList<RetailerLocation> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(table.comparatorProperty());
 
         // Add the sorted and filtered data to the table.
@@ -279,6 +280,10 @@ public class RetailerTableController extends TableController{
         table.getColumns().addAll(nameCol, addressCol, primaryCol, secondaryCol, zipCol);
     }
 
+    /**
+     * Creates a pop up to get the data for a new Retailer Location.
+     * If valid data is entered the Retailer is added, if it is not a duplicate.
+     */
     public void addRetailer() {
         try {
             FXMLLoader addRetailerLoader = new FXMLLoader(getClass().getResource("/fxml/AddRetailerDialog.fxml"));
@@ -304,6 +309,9 @@ public class RetailerTableController extends TableController{
         }
     }
 
+    /**
+     * Add the user's custom Retailer Points to the table.
+     */
     private void populateCustomRetailerLocations() {
         ArrayList<RetailerLocation> customRetailerLocations = model.getCustomRetailerLocations();
 

@@ -32,8 +32,6 @@ import static seng202.team1.CSVLoader.populateBikeTrips;
 
 /**
  * Logic for the bike table GUI
- *
- *
  * Created on 7/09/17.
  * @author Josh Bernasconi
  */
@@ -94,7 +92,6 @@ public class BikeTableController extends TableController{
 
     /**
      * Checks if the Bike ID of the given bike trip contains the entered bike ID.
-     *
      * @param bikeTrip Bike trip to check against
      * @return true if bike ID matches, or the text field is empty. False otherwise
      */
@@ -127,7 +124,6 @@ public class BikeTableController extends TableController{
 
     /**
      * Sets the filter ComboBox options.
-     *
      */
     private void setFilters() {
 
@@ -170,11 +166,12 @@ public class BikeTableController extends TableController{
 
         startLoadingAni();
 
+        /*
+         * Runs only once the task has finished successfully, gives the gui the loaded
+         * data and updates it.
+         */
         loadBikeCsv.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            /**
-             * Runs only once the task has finished, gives the gui the loaded
-             * data and updates it.
-             */
+
             public void handle(WorkerStateEvent event) {
 
                 setTableViewBike(loadBikeCsv.getValue());
@@ -184,6 +181,9 @@ public class BikeTableController extends TableController{
             }
         });
 
+        /*
+         * Runs only if the task fails, alerts the user.
+         */
         loadBikeCsv.setOnFailed(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
@@ -197,8 +197,7 @@ public class BikeTableController extends TableController{
     }
 
     /**
-     * Get the path for a csv to load, open one if given
-     * TODO add file checking
+     * Get the path for a csv to load, open one if given.
      */
     public void importBike() {
 
@@ -211,7 +210,6 @@ public class BikeTableController extends TableController{
 
     /**
      * Opens a dialog to add a bike trip, adds the trip if valid, otherwise does nothing.
-     * TODO handle null trips
      */
     public void addBikeTrip() {
 
@@ -241,7 +239,7 @@ public class BikeTableController extends TableController{
     }
 
     /**
-     * Fairly similar to Retailer setup, but for a bike trip
+     * Creates and links the table columns to their data.
      * TODO add more relevant columns
      */
     private void setTableViewBike(ArrayList<BikeTrip> data) {
@@ -284,8 +282,9 @@ public class BikeTableController extends TableController{
     }
 
     /**
-     * initialises the model for use in the rest of the View
-     * Will allow for accessing user data once implemented
+     * initialises the model for use in the rest of the View.
+     * Allows reading and writing to user data.
+     * @param userAccountModel The current user's account.
      */
     protected void initModel(UserAccountModel userAccountModel) {
 
@@ -293,9 +292,11 @@ public class BikeTableController extends TableController{
         importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME);
     }
 
+    /**
+     * Adds the users custom bike trips to the table.
+     */
     private void populateCustomBikeTrips() {
         ArrayList<BikeTrip> customTrips = model.getCustomBikeTrips();
-
         dataPoints.addAll(customTrips);
     }
 }
