@@ -1,16 +1,24 @@
 package seng202.team1.Controller;
 
 
+import com.google.maps.errors.ApiException;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import netscape.javascript.JSObject;
 import seng202.team1.*;
 
 import seng202.team1.AlertGenerator;
@@ -41,8 +49,11 @@ import static seng202.team1.GenerateFields.generateWifiProviders;
  */
 public class MapController {
 
-    public ArrayList<RetailerLocation> retailerPoints = null;
+    ArrayList<RetailerLocation> retailerPoints = null;
     ArrayList<WifiPoint> wifiPoints = null;
+    ArrayList<BikeTrip> bikeTrips = null;
+    ObservableList<DataPoint> dataPoints = null;
+    ArrayList<Point.Double> userClicks = new ArrayList<>();
 
 
     public ArrayList<String> uniqueSecondaryFunctions = null;
@@ -75,6 +86,12 @@ public class MapController {
 
     @FXML
     private ComboBox filterProviderComboBox;
+    @FXML
+    private Button switchViewButton;
+    @FXML
+    private Button AddCustomWIFIButton;
+    @FXML
+    private Button AddCustomRetailerButton;
 
 
 
@@ -116,7 +133,38 @@ public class MapController {
         loadAllWifi();
         loadAllRetailers();
         setFilters();
+        JSObject win = (JSObject) webEngine.executeScript("window");
+        win.setMember("app", new JavaApp());
+        // Add a Java callback object to a WebEngine document once it has loaded.
+        /**webEngine.getLoadWorker().stateProperty().addListener(
+                new ChangeListener<Worker.State>() {
+                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
+                        if (newState == Worker.State.SUCCEEDED) {
+                            JSObject win = (JSObject) webEngine.executeScript("window");
+                            win.setMember("app", new JavaApp());
+                        }
+                    }
+                }); **/
     }
+
+    // JavaScript interface object
+    public class JavaApp {
+        int position = 0;
+        public void alert(Double lat, Double lng) {
+            System.out.println(lat + "," + lng);
+            Point.Double clickPoint = new Point.Double();
+            clickPoint.setLocation(lat, lng);
+            userClicks.add(clickPoint);
+            System.out.print(userClicks);
+        }
+        public void setMarkerArray(int newPosition ) {
+            position = newPosition;
+        }
+        public int getMarkerArray() {
+            return position;
+        }
+    }
+
 
     @FXML
     private void zoomIn() {
@@ -127,6 +175,28 @@ public class MapController {
     @FXML
     private void zoomOut() {
         webView.getEngine().executeScript("document.zoomOut()");
+
+    }
+
+    @FXML
+    private void switchView() {
+        try {
+            // Changes to the table choosing GUI
+            FXMLLoader landingLoader = new FXMLLoader(getClass().getResource("/fxml/landingView.fxml"));
+            Parent landingView = landingLoader.load();
+            LandingController landingController = landingLoader.getController();
+
+
+
+            Stage stage = (Stage) switchViewButton.getScene().getWindow(); //gets the current stage so that Table can take over
+
+            landingController.initModel(model, stage);
+            stage.setScene(new Scene(landingView));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace(); //File not found
+        }
 
     }
 
@@ -178,7 +248,7 @@ public class MapController {
 
 
 
-
+    @FXML
     private void loadAllWifi() {
         try {
             wifiPoints = populateWifiHotspots("src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv");
@@ -397,6 +467,119 @@ public class MapController {
         filterProviderComboBox.getSelectionModel().selectFirst();
     }
 
+    /**
+     * Opens a dialog for the user to enter data for a new Wifi Point.
+     * If valid, checks it doesn't match any existing points and adds it to the table,
+     * as well as the user's list of custom points.
+     */
+    @FXML
+    private void addCustomWIFI() {
+        try {
+            FXMLLoader addWifiLoader = new FXMLLoader(getClass().getResource("/fxml/AddWifiDialog.fxml"));
+            Parent root = addWifiLoader.load();
+            AddWifiDialogController addWifiDialog = addWifiLoader.getController();
+            Stage stage1 = new Stage();
+
+            addWifiDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+
+            WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
+            if (newWifiPoint != null) {
+                if (wifiPoints.contains(newWifiPoint)) {
+                    AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
+                } else {
+                    wifiPoints.add(newWifiPoint);
+                    // TODO
+                    addWifi(newWifiPoint.getLatitude(), newWifiPoint.getLongitude(), newWifiPoint.toInfoString());
+
+                    model.addCustomWifiLocation(newWifiPoint);
+                    SerializerImplementation.serializeUser(model);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Creates a pop up to get the data for a new Retailer Location.
+     * If valid data is entered the Retailer is added, if it is not a duplicate.
+     */
+    @FXML
+    public void addCustomRetailer() {
+        try {
+            FXMLLoader addRetailerLoader = new FXMLLoader(getClass().getResource("/fxml/AddRetailerDialog.fxml"));
+            Parent root = addRetailerLoader.load();
+            AddRetailerDialogController addRetailerDialog = addRetailerLoader.getController();
+            Stage stage1 = new Stage();
+
+            addRetailerDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+
+            RetailerLocation retailerLocation = addRetailerDialog.getRetailerLocation();
+            if (retailerLocation != null) {
+                if (retailerPoints.contains(retailerLocation)) {
+                    AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
+                } else {
+
+                        Point.Double coordinates = userClicks.get(userClicks.size()-1);
+                        System.out.print(coordinates);
+                        retailerLocation.setLatitude((float) coordinates.getX());
+                        retailerLocation.setLongitude((float) coordinates.getY());
+                        // TODO
+                        addRetailer(retailerLocation.getLatitude(), retailerLocation.getLongitude(), retailerLocation.toInfoString());
+                        updateRetailers();
+                        model.addCustomRetailerLocation(retailerLocation);
+                        SerializerImplementation.serializeUser(model);
+
+
+
+
+
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Opens a dialog to add a bike trip, adds the trip if valid, otherwise does nothing.
+     */
+    public void addCustomBikeTrip() {
+
+        try {
+            FXMLLoader addBikeLoader = new FXMLLoader(getClass().getResource("/fxml/AddBikeDialog.fxml"));
+            Parent root = addBikeLoader.load();
+            AddBikeDialogController addBikeDialog = addBikeLoader.getController();
+            Stage stage1 = new Stage();
+
+            addBikeDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+
+            BikeTrip test = addBikeDialog.getBikeTrip();
+            if (test != null) {
+                if (bikeTrips.contains(test)) {
+                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
+                } else {
+                    bikeTrips.add(addBikeDialog.getBikeTrip());
+                    model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
+                    SerializerImplementation.serializeUser(model);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Add the user's custom Wifi points to the current data
+     */
+    private void populateCustomWifiPoints() {
+        ArrayList<WifiPoint> customWifi = model.getCustomWifiPoints();
+
+        dataPoints.addAll(customWifi);
+    }
 
     private void setFilters() {
         /**
@@ -434,7 +617,10 @@ public class MapController {
         filterProviderComboBox.getSelectionModel().selectFirst();
 
     }
-
+    @FXML
+    public void close() {
+        stage.close();
+    }
 
      void initModel(UserAccountModel userAccountModel) {
 

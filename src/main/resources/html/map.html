@@ -19,9 +19,11 @@
     </style>
 </head>
 <body>
-<div id="map"></div>
+<div id="map">
+
 
 <script>
+
 
        var mapStyle = [
   {
@@ -163,6 +165,7 @@ function asPath(encodedPolyObject){
         });
 
         markerArray[markerArray.length] = marker;;
+        app.alert(marker.position.lat(), marker.position.lng());
         if (markerArray.length > 1)
         {
             var marker1 = markerArray[0].position;
@@ -202,7 +205,7 @@ function asPath(encodedPolyObject){
       directionsDisplay.setDirections(response);
     }
   });
-        }
+       }
 
 
 
@@ -224,9 +227,14 @@ function asPath(encodedPolyObject){
         }
 
 
-    // This event listener calls addMarker() when the map is clicked.
+
+
+
+
+
     google.maps.event.addListener(map, 'click', function(event) {
           addMarkerUser(event.latLng, map);
+
         });  
 
 
