@@ -56,7 +56,11 @@ public class Main extends Application {
 
         for (Filename filename : directories) {
             String directory = filename.filename();
-            new File(directory).mkdirs(); //make the directory (if it doesn't exist)
+            if (directory.charAt(directory.length()-1) == '/') {
+                //is a directory
+                System.out.println("Creating " + directory);
+                new File(directory).mkdirs(); //make the directory (if it doesn't exist)
+            }
         }
     }
 
