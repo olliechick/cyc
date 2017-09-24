@@ -1,5 +1,9 @@
 package seng202.team1.Controller;
 
+import com.google.maps.errors.ApiException;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -37,7 +41,8 @@ public class MapController {
     ArrayList<String> uniqueSecondaryFunctions = null;
     ArrayList<String> uniquePrimaryFunctions = null;
     ArrayList<String> uniqueProviders = null;
-
+    private UserAccountModel model;
+    private Stage stage;
     @FXML
     private WebView webView;
 
@@ -77,7 +82,13 @@ public class MapController {
     @FXML
     private Button LoadDataButton;
 
-    private UserAccountModel model;
+
+
+    void initModel(UserAccountModel model, Stage stage) {
+        this.model = model;
+        this.stage = stage;
+
+    }
 
     @FXML
     private void initialize() {
@@ -85,11 +96,25 @@ public class MapController {
         webEngine.setJavaScriptEnabled(true);
         webEngine.load(getClass().getResource("/html/map.html").toString());
         initializeFilters();
+
+        webEngine.getLoadWorker().stateProperty().addListener(
+                new ChangeListener<Worker.State>() {
+                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
+                        if (newState == Worker.State.SUCCEEDED) {
+                            loadData();
+                        }
+                    }
+                });
+
+
+
+
+
     }
 
     @FXML
     private void loadData() {
-        LoadDataButton.setDisable(true);
+
         loadAllWifi();
         loadAllRetailers();
         setFilters();
@@ -432,7 +457,7 @@ public class MapController {
     }
 
 
-    protected void initModel(UserAccountModel userAccountModel) {
+     void initModel(UserAccountModel userAccountModel) {
 
         this.model = userAccountModel;
 
