@@ -1,11 +1,10 @@
 package seng202.team1.Controller;
 
-import com.google.maps.errors.ApiException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
@@ -173,22 +172,7 @@ public class MapController {
             e.printStackTrace();
         }
     }
-    @FXML
-    private void testDraw() {
-        BikeDirections b = null;
-        try {
-            String directionsTest = GoogleAPIClient.googleGetDirections(40.753517,-73.980948,40.801723,-124.162505);
-            b = new BikeDirections(directionsTest);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ApiException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ArrayList<Point.Double> points = b.getPoints();
-        drawRoute(points);
-    }
+
 
     @FXML
     private void loadAllWifi() {
