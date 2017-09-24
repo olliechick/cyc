@@ -2,13 +2,14 @@ package seng202.team1;
 
 import org.junit.*;
 
-import javax.xml.crypto.Data;
 import java.awt.*;
+import java.io.File;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.Month;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Unit tests for DatabaseManager class.
@@ -79,6 +80,8 @@ public class DatabaseManagerTest {
     @After
     public void TearDown() {
         DatabaseManager.deleteDatabase();
+        File f = new File("sqlite.db-journal");
+        f.delete();
     }
 
     @Test
