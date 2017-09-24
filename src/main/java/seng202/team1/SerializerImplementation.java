@@ -15,9 +15,8 @@ public final class SerializerImplementation {
     private final static String USER_EXT = ".user";
 
     /**
-     * Takes a UserAccountModel object and saves them in a .ser file in the resources/tmp folder.
-     * File path is /src/main/resources/tmp/{username}.ser
-     * @param user UserAcccountModel user to be serialized.
+     * Takes a UserAccountModel object and saves them in a .user file.
+     * @param user UserAccountModel user to be serialized.
      */
     public static void serializeUser(UserAccountModel user) {
         try {
@@ -40,7 +39,7 @@ public final class SerializerImplementation {
      * Throws an IOException if the .ser file cannot be found.
      * @param userName String userName to be deserialized
      * @return UserAccountModel
-     * @throws IOException When .ser does not exist in USER_DIR
+     * @throws IOException When .user does not exist in USER_DIR
      * deserialized with this method.
      */
     public static UserAccountModel deserializeUser(String userName) throws IOException {

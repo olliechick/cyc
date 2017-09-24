@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -29,6 +30,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        createDirectories();
+
         try {
             FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             Parent root = loginLoader.load();
@@ -40,6 +43,20 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
             AlertGenerator.createAlert("Error loading Application");
+        }
+    }
+
+
+    /**
+     * Creates all the directories that the program will need.
+     */
+    public static void createDirectories() {
+
+        Filename[] directories = Filename.class.getEnumConstants();
+
+        for (Filename filename : directories) {
+            String directory = filename.filename();
+            new File(directory).mkdirs(); //make the directory (if it doesn't exist)
         }
     }
 
