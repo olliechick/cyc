@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -14,7 +13,6 @@ import java.io.IOException;
 
 /**
  * Gives the data analysis enabled users options on which table to open.
- *
  * Created on 7/09/17.
  *
  * @author Josh Bernasconi
@@ -31,15 +29,14 @@ public class LandingController {
      * Enables this controller to use the model.
      * @param model the model object
      */
-    protected void initModel(UserAccountModel model, Stage stage) {
+    void initModel(UserAccountModel model, Stage stage) {
         this.model = model;
         this.stage = stage;
         welcomeLabel.setText("Welcome to CYC, " + model.getUserName());
     }
 
     /**
-     * Changes the scene to a table view of retailer data
-     * TODO add default data
+     * Opens a table of retailers in a new window.
      */
     public void openRetailerTable() {
 
@@ -64,8 +61,7 @@ public class LandingController {
     }
 
     /**
-     * Changes the scene to a table view of bike trips
-     * TODO add default data
+     * Opens a table of bike trips in a new window.
      */
     public void openBikeTable() {
 
@@ -91,8 +87,7 @@ public class LandingController {
     }
 
     /**
-     * Changes the scene to a table view of wifi points
-     * TODO add default data
+     * Opens a table of wifi points in a new window.
      */
     public void openWifiTable() {
         System.out.println("Wifi table clicked");
@@ -117,6 +112,9 @@ public class LandingController {
 
     }
 
+    /**
+     * Opens a Map view in a new window.
+     */
     public void openMap() {
         try {
             FXMLLoader mapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
@@ -131,6 +129,9 @@ public class LandingController {
         }
     }
 
+    /**
+     * Logout the current user and switch back to the login screen.
+     */
     public void logout() {
         System.out.println("Logout");
         model = null;

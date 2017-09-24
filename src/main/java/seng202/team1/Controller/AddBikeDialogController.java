@@ -21,10 +21,8 @@ import java.awt.Point;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 
 /**
  * Logic for the dialog for adding bike trips
@@ -118,8 +116,6 @@ public class AddBikeDialogController {
     private LocalDateTime stopDateTime;
     private Point.Float startPoint;
     private Point.Float endPoint;
-    private char gender = 'u';
-    private int birthYear = 1997;
 
     /**
      * Set up the window as a dialog.
@@ -127,7 +123,7 @@ public class AddBikeDialogController {
      * @param stage1 the new stage to use to display
      * @param root root fxml node
      */
-    protected void setDialog(Stage stage1, Parent root) {
+    void setDialog(Stage stage1, Parent root) {
         stage = stage1;
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
@@ -150,10 +146,9 @@ public class AddBikeDialogController {
      */
     public void addBike() {
         if (checkFields()) {
-//            bikeTrip = new BikeTrip(new Long(600), LocalDateTime.of(2015, Month.JULY, 29, 19, 30, 40), LocalDateTime.of(2015, Month.JULY, 29, 19, 30, 40),
-//                    new Point.Float(1, 1), new Point.Float(2, 2), 123, 'm', 1997);
-//            //System.out.println(bikeTrip);
-//            stage.close();
+            char gender = 'u';
+            int birthYear = 1997;
+
             bikeTrip = new BikeTrip(startDateTime, stopDateTime, startPoint, endPoint, bikeID, gender, birthYear, false);
             stage.close();
         }
@@ -249,7 +244,7 @@ public class AddBikeDialogController {
         return valid;
     }
 
-    protected BikeTrip getBikeTrip() {
+    BikeTrip getBikeTrip() {
         return bikeTrip;
     }
 

@@ -2,20 +2,18 @@ package seng202.team1;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import seng202.team1.Controller.LoginController;
 
 import java.io.IOException;
 
 /**
  * Main class for launching the application
- * Will need to be relocated to the main package before merge into master
+ * Loads the login view and initialises it
  *
- * Loads the login view and initialises it with access to a dummy model class.
- *
- * Created by jbe113 on 22/08/17.
+ * Created on 22/08/17.
+ * @author Josh Bernasconi
  */
 
 public class Main extends Application {
@@ -27,21 +25,22 @@ public class Main extends Application {
      * @author Josh Bernasconi
      * @author Cameron Auld
      * @param primaryStage main JavaFX stage, where scenes are displayed.
-     * @throws IOException TODO when?
      */
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) {
 
+        try {
+            FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+            Parent root = loginLoader.load();
 
-        BorderPane root = new BorderPane(); //Any pane would work here, used only as a container
-
-        FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-        root.setCenter(loginLoader.load());
-
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add("/css/loginStyle.css");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add("/css/loginStyle.css");
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            AlertGenerator.createAlert("Error loading Application");
+        }
     }
 
 

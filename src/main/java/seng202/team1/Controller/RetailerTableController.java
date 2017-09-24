@@ -16,7 +16,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.AlertGenerator;
 import seng202.team1.CsvParserException;
-import seng202.team1.DataPoint;
 import seng202.team1.GenerateFields;
 import seng202.team1.RetailerLocation;
 import seng202.team1.SerializerImplementation;
@@ -36,7 +35,7 @@ import static seng202.team1.CSVLoader.populateRetailers;
 public class RetailerTableController extends TableController{
 
     @FXML
-    private ComboBox filterPrimaryComboBox;
+    private ComboBox<String> filterPrimaryComboBox;
 
     @FXML
     private TextField streetSearchField;
@@ -48,12 +47,6 @@ public class RetailerTableController extends TableController{
     private Label nameLabel;
 
     @FXML
-    private ProgressIndicator progressSpinner;
-
-    @FXML
-    private Label loadLabel;
-
-    @FXML
     private TableView<RetailerLocation> table;
 
     private UserAccountModel model;
@@ -61,20 +54,12 @@ public class RetailerTableController extends TableController{
     private ObservableList<RetailerLocation> dataPoints;
     private FilteredList<RetailerLocation> filteredData;
 
-    final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "src/main/resources/csv/Lower_Manhattan_Retailers.csv";
-
-    /**
-     * Run automatically when the fxml is loaded by an FXMLLoader
-     */
-    public void initialize() {
-
-        super.initialize();
-    }
+    private final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "src/main/resources/csv/Lower_Manhattan_Retailers.csv";
 
     /**
      * Display the user name at the bottom of the table
      */
-    protected void setName() {
+    void setName() {
         nameLabel.setText("Logged in as: " + model.getUserName());
         nameLabel.setVisible(true);
     }
@@ -246,11 +231,11 @@ public class RetailerTableController extends TableController{
         dataPoints = FXCollections.observableArrayList(data);
 
         // Create the columns
-        TableColumn<RetailerLocation, String> nameCol = new TableColumn("Name");
-        TableColumn<RetailerLocation, String> addressCol = new TableColumn("Address");
-        TableColumn<RetailerLocation, String> primaryCol = new TableColumn("Primary Function");
-        TableColumn<RetailerLocation, String> secondaryCol = new TableColumn("Secondary Function");
-        TableColumn<RetailerLocation, String> zipCol = new TableColumn("ZIP");
+        TableColumn<RetailerLocation, String> nameCol = new TableColumn<>("Name");
+        TableColumn<RetailerLocation, String> addressCol = new TableColumn<>("Address");
+        TableColumn<RetailerLocation, String> primaryCol = new TableColumn<>("Primary Function");
+        TableColumn<RetailerLocation, String> secondaryCol = new TableColumn<>("Secondary Function");
+        TableColumn<RetailerLocation, String> zipCol = new TableColumn<>("ZIP");
 
         //Set the IDs of the columns, not used yet TODO remove if never use
         nameCol.setId("name");
@@ -318,8 +303,7 @@ public class RetailerTableController extends TableController{
         dataPoints.addAll(customRetailerLocations);
     }
 
-    @Override
-    protected void initModel(UserAccountModel userAccountModel) {
+    void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
         importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME);
     }

@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 import seng202.team1.AlertGenerator;
 import seng202.team1.BikeTrip;
 import seng202.team1.CsvParserException;
-import seng202.team1.DataPoint;
 import seng202.team1.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
@@ -62,11 +61,6 @@ public class BikeTableController extends TableController{
     private FilteredList<BikeTrip> filteredData;
 
     private final static String DEFAULT_BIKE_TRIPS_FILENAME = "src/main/resources/csv/biketrip.csv";
-
-    public void initialize() {
-        super.initialize();
-
-    }
 
     /**
      * Checks the combo boxes and bike ID field for data and filters the displayed
@@ -117,7 +111,7 @@ public class BikeTableController extends TableController{
         }
     }
 
-    protected void setName() {
+    void setName() {
         nameLabel.setText("Logged in as: " + model.getUserName());
         nameLabel.setVisible(true);
     }
@@ -246,15 +240,15 @@ public class BikeTableController extends TableController{
 
         dataPoints = FXCollections.observableArrayList(data);
 
-        TableColumn<BikeTrip, Integer> bikeIdCol = new TableColumn("Bike ID");
-        TableColumn<BikeTrip, Character> genderCol = new TableColumn("Gender");
-        TableColumn<BikeTrip, String> durationCol = new TableColumn("Duration");
-        TableColumn<BikeTrip, Point.Float> startLocCol = new TableColumn("Start Location");
-        TableColumn<BikeTrip, Point.Float> startLatitudeCol = new TableColumn("Latitude");
-        TableColumn<BikeTrip, Point.Float> startLongitudeCol = new TableColumn("Longitude");
-        TableColumn<BikeTrip, Point.Float> endLocCol = new TableColumn("End Location");
-        TableColumn<BikeTrip, Point.Float> endLatitudeCol = new TableColumn("Latitude");
-        TableColumn<BikeTrip, Point.Float> endLongitudeCol = new TableColumn("Longitude");
+        TableColumn<BikeTrip, Integer> bikeIdCol = new TableColumn<>("Bike ID");
+        TableColumn<BikeTrip, Character> genderCol = new TableColumn<>("Gender");
+        TableColumn<BikeTrip, String> durationCol = new TableColumn<>("Duration");
+        TableColumn<BikeTrip, Point.Float> startLocCol = new TableColumn<>("Start Location");
+        TableColumn<BikeTrip, Point.Float> startLatitudeCol = new TableColumn<>("Latitude");
+        TableColumn<BikeTrip, Point.Float> startLongitudeCol = new TableColumn<>("Longitude");
+        TableColumn<BikeTrip, Point.Float> endLocCol = new TableColumn<>("End Location");
+        TableColumn<BikeTrip, Point.Float> endLatitudeCol = new TableColumn<>("Latitude");
+        TableColumn<BikeTrip, Point.Float> endLongitudeCol = new TableColumn<>("Longitude");
         table.getColumns().clear();
 
         // Attempts to access public properties of name "Property", falls back to get<property>() methods if no property available
@@ -286,7 +280,7 @@ public class BikeTableController extends TableController{
      * Allows reading and writing to user data.
      * @param userAccountModel The current user's account.
      */
-    protected void initModel(UserAccountModel userAccountModel) {
+    void initModel(UserAccountModel userAccountModel) {
 
         this.model = userAccountModel;
         importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME);

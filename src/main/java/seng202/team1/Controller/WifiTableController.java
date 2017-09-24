@@ -19,7 +19,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.AlertGenerator;
 import seng202.team1.CsvParserException;
-import seng202.team1.DataPoint;
 import seng202.team1.GenerateFields;
 import seng202.team1.SerializerImplementation;
 import seng202.team1.UserAccountModel;
@@ -62,22 +61,15 @@ public class WifiTableController extends TableController{
     private final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv";
 
     /**
-     * Run automatically on load of the FXML.
-     */
-    public void initialize() {
-        super.initialize();
-    }
-
-    /**
      * Displays the currently logged in user's name at the bottom of the table.
      */
-    protected void setName() {
+    void setName() {
         nameLabel.setText("Logged in as: " + model.getUserName());
         nameLabel.setVisible(true);
     }
 
     /**
-     * Genereates and sets the filter options for wifis
+     * Generates and sets the filter options for Wifi.
      * @param data An ArrayList of the WifiPoints to generate filters for
      */
     private void setFilters(ArrayList<WifiPoint> data) {
@@ -229,12 +221,12 @@ public class WifiTableController extends TableController{
         dataPoints = FXCollections.observableArrayList(data);
 
         TableColumn<WifiPoint, String> nameCol = new TableColumn<>("Name");
-        TableColumn<WifiPoint, String> locationCol = new TableColumn("Location");
+        TableColumn<WifiPoint, String> locationCol = new TableColumn<>("Location");
         TableColumn<WifiPoint, String> streetCol = new TableColumn<>("Street/Location");
-        TableColumn<WifiPoint, String> boroughCol = new TableColumn("Borough");
-        TableColumn<WifiPoint, String> hoodCol = new TableColumn("Neighbourhood");
-        TableColumn<WifiPoint, String> costCol = new TableColumn("Cost");
-        TableColumn<WifiPoint, String> providerCol = new TableColumn("Provider");
+        TableColumn<WifiPoint, String> boroughCol = new TableColumn<>("Borough");
+        TableColumn<WifiPoint, String> hoodCol = new TableColumn<>("Neighbourhood");
+        TableColumn<WifiPoint, String> costCol = new TableColumn<>("Cost");
+        TableColumn<WifiPoint, String> providerCol = new TableColumn<>("Provider");
 
         locationCol.getColumns().addAll(streetCol, hoodCol, boroughCol);
 
@@ -300,7 +292,7 @@ public class WifiTableController extends TableController{
      * initialises the model for use in the rest of the View
      * Will allow for accessing user data once implemented
      */
-    protected void initModel(UserAccountModel userAccountModel) {
+    void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
         importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME);
     }

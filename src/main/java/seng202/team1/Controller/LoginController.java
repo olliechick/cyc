@@ -77,8 +77,10 @@ public class LoginController {
     @FXML
     private ChoiceBox<String> genderBox;
 
-    ObservableList<String> genderList = FXCollections.observableArrayList("", "Male", "Female");
-    ObservableList<String> accountTypeList = FXCollections.observableArrayList("User", "Admin", "Analyst");
+    private UserAccountModel model;
+
+    private final ObservableList<String> genderList = FXCollections.observableArrayList("", "Male", "Female");
+    private final ObservableList<String> accountTypeList = FXCollections.observableArrayList("User", "Admin", "Analyst");
 
 
     @FXML
@@ -90,10 +92,10 @@ public class LoginController {
         birthdayEntryField.setValue(LocalDate.of(1990, 1, 1));
     }
 
-    private UserAccountModel model;
-
-
-    public void launchLandingScreen() {
+    /**
+     * Changes the scene to display the landing screen for analyst/admin users.
+     */
+    private void launchLandingScreen() {
 
         try {
             // Changes to the table choosing GUI
@@ -114,7 +116,10 @@ public class LoginController {
         }
     }
 
-    public void launchMap() {
+    /**
+     * Changes the scene to display the map to user accounts.
+     */
+    private void launchMap() {
 
         try {
             // Changes to the map GUI
@@ -183,8 +188,8 @@ public class LoginController {
     }
 
     /**
-     * Processes a user signup.
-     * Does not allow empty usernames, but does allow empty passwords.
+     * Processes a user sign up.
+     * Does not allow empty user names, but does allow empty passwords.
      * @throws IOException If it can't create the user file.
      */
     public void signUp() throws IOException{

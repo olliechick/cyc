@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 
 
 /**
+ * Logic for the add Wifi dialog.
  * Created on 19/09/17.
  *
  * @author Josh Bernasconi
@@ -90,24 +91,16 @@ public class AddWifiDialogController {
     private Label latLabel;
 
     private Stage stage;
-    private ObservableList<String> boroughs = FXCollections.observableArrayList("Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island");
-    private ObservableList<String> costs = FXCollections.observableArrayList("Free", "Limited Free", "Partner Site");
+    private final ObservableList<String> boroughs = FXCollections.observableArrayList("Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island");
+    private final ObservableList<String> costs = FXCollections.observableArrayList("Free", "Limited Free", "Partner Site");
 
-    private int objectId = -1;
-    private Point.Float coords;
     private String ssid;
     private Float latitude;
     private Float longitude;
     private String street;
     private int zip;
     private String hood;
-    private String boro;
-    private String city = "New York";
     private String provider;
-    private String cost;
-    private String remarks;
-    private String sourceId = "IDK"; //TODO better default value.
-    private LocalDateTime dateTimeActivated;
 
     private WifiPoint wifiPoint;
 
@@ -117,7 +110,7 @@ public class AddWifiDialogController {
      * @param stage1 the new stage to use to display
      * @param root root fxml node
      */
-    protected void setDialog(Stage stage1, Parent root) {
+    void setDialog(Stage stage1, Parent root) {
         stage = stage1;
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
@@ -131,24 +124,41 @@ public class AddWifiDialogController {
         costComboBox.getSelectionModel().selectFirst();
     }
 
+    /**
+     * If all fields are valid, creates a new WifiPoint and makes it available through
+     * the getter.
+     */
     @FXML
     void addWifi() {
         if (checkFields()) {
-            coords = new Point.Float(latitude, longitude);
-            cost = costComboBox.getValue();
-            boro = boroComboBox.getValue();
+            int objectId = -1;
+            Point.Float coords = new Point.Float(latitude, longitude);
+            String placeName = "Unknown";
+            String locationType = "Unknown";
+            String boro = boroComboBox.getValue();
+            String city = "New York";
+            String cost = costComboBox.getValue();
+            String remarks;
+
             if (remarksField.getText().isEmpty()) {
                 remarks = "";
             } else {
                 remarks = remarksField.getText();
             }
-            dateTimeActivated = LocalDateTime.now();
 
-            wifiPoint = new WifiPoint(objectId, coords, "placeName", street, "locationType", hood, boro, city, zip, cost, provider, remarks, ssid, sourceId, dateTimeActivated, true);
+            String sourceId = "Unknown";
+            LocalDateTime dateTimeActivated = LocalDateTime.now();
+
+
+            wifiPoint = new WifiPoint(objectId, coords, placeName, street, locationType, hood, boro, city, zip, cost, provider, remarks, ssid, sourceId, dateTimeActivated, true);
             stage.close();
         }
     }
 
+    /**
+     * Check all the required fields have been filled with data in the correct format.
+     * @return True if data is valid, false otherwise.
+     */
     private boolean checkFields() {
         boolean valid = true;
 

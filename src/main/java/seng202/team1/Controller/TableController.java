@@ -3,20 +3,18 @@ package seng202.team1.Controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import seng202.team1.AlertGenerator;
 import seng202.team1.DataPoint;
-import seng202.team1.UserAccountModel;
 
 import java.io.File;
 
 
 /**
  * Logic for the table GUI
- *
- *
- * Created by jbe113 on 22/08/17.
+ * Created on 22/08/17.
+ * @author Josh Bernasconi
  */
 public class TableController {
 
@@ -30,7 +28,6 @@ public class TableController {
     @FXML
     private TableView<DataPoint> table;
 
-    private UserAccountModel model;
     private Stage stage;
 
     /**
@@ -60,7 +57,7 @@ public class TableController {
      *
      * @return String the absolute path to the designated csv file, null if cancelled.
      */
-    protected String getCsvFilename() {
+    String getCsvFilename() {
 
         String filename = null;
 
@@ -81,7 +78,7 @@ public class TableController {
     /**
      * set the loading animation to visible and start it spinning indefinitely.
      */
-    protected void startLoadingAni() {
+    void startLoadingAni() {
 
         progressSpinner.setVisible(true);
         loadLabel.setVisible(true);
@@ -91,40 +88,22 @@ public class TableController {
     /**
      * Stop and hide the loading animation.
      */
-    protected void stopLoadingAni() {
+    void stopLoadingAni() {
 
         progressSpinner.setVisible(false);
         progressSpinner.setProgress(0);
         loadLabel.setVisible(false);
     }
+
     /**
      * Opens a modal popup with the toString of the object
      * as the text.
-     * If we change the toString of the different data points
-     * this will print nice.
      */
     private void showDataPopup(DataPoint data) {
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(data.getName());
-        alert.setHeaderText(null);
-        alert.setContentText(data.getDescription());
-        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        alert.getDialogPane().setMinWidth(Region.USE_COMPUTED_SIZE);
-
-        alert.showAndWait();
+        AlertGenerator.createAlert(data.getName(), data.getDescription());
     }
 
-    /**
-     * initialises the model for use in the rest of the View
-     * Will allow for accessing user data once implemented
-     */
-    protected void initModel(UserAccountModel userAccountModel) {
-        this.model = userAccountModel;
-        stage = (Stage) table.getScene().getWindow();
-    }
-
-    protected void setStage(Stage curStage) {
+    void setStage(Stage curStage) {
         stage = curStage;
     }
 

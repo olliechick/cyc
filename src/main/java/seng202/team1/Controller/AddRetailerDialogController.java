@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
@@ -14,7 +13,9 @@ import javafx.stage.StageStyle;
 import seng202.team1.RetailerLocation;
 
 /**
+ * Logic for the add Retailer dialog.
  * Created by jbe113 on 20/09/17.
+ * @author Josh Bernasconi
  */
 public class AddRetailerDialogController {
 
@@ -67,20 +68,20 @@ public class AddRetailerDialogController {
     private String name;
     private String addressLine1;
     private String addressLine2 = "";
-    private String city = "New York";
-    private String state = "NY";
     private int zipcode;
-    private String blockLot = "Unknown";
     private String primaryFunction;
     private String secondaryFunction = "Unknown";
-    private boolean isUserDefined = true;
 
     @FXML
     void addRetailer() {
         if (checkFields()) {
+            String city = "New York";
+            String state = "NY";
+            String blockLot = "Unknown";
+
             retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city,
                                                     state, zipcode, blockLot, primaryFunction,
-                                                    secondaryFunction, isUserDefined);
+                                                    secondaryFunction, true);
             stage.close();
         }
     }
@@ -90,6 +91,11 @@ public class AddRetailerDialogController {
         stage.close();
     }
 
+    /**
+     * Set up the dialog.
+     * @param stage1 The stage the dialog is displayed in.
+     * @param root The root node of the scene.
+     */
     public void setDialog(Stage stage1, Parent root) {
         stage = stage1;
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -100,8 +106,8 @@ public class AddRetailerDialogController {
     }
 
     /**
-     * TODO implement
-     * @return
+     * Checks the data entered for validity.
+     * @return True if all the required fields are filled with valid data
      */
     private boolean checkFields() {
         boolean valid = true;
@@ -122,7 +128,7 @@ public class AddRetailerDialogController {
             addressLabel.setTextFill(Color.BLACK);
         }
 
-        if (address2Field.getText().isEmpty() == false) {
+        if (!address2Field.getText().isEmpty()) {
             addressLine2 = address2Field.getText();
         }
 
@@ -142,7 +148,7 @@ public class AddRetailerDialogController {
             primaryLabel.setTextFill(Color.BLACK);
         }
 
-        if (secondaryField.getText().isEmpty() == false) {
+        if (!secondaryField.getText().isEmpty()) {
             secondaryFunction = secondaryField.getText();
         }
 
