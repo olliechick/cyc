@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.awt.*;
 
 
+import static seng202.team1.CSVLoader.populateBikeTrips;
 import static seng202.team1.CSVLoader.populateRetailers;
 
 import static seng202.team1.CSVLoader.populateWifiHotspots;
@@ -133,6 +134,7 @@ public class MapController {
         loadAllWifi();
         loadAllRetailers();
         setFilters();
+        loadAllBikeTrips();
         JSObject win = (JSObject) webEngine.executeScript("window");
         win.setMember("app", new JavaApp());
         // Add a Java callback object to a WebEngine document once it has loaded.
@@ -175,6 +177,17 @@ public class MapController {
     @FXML
     private void zoomOut() {
         webView.getEngine().executeScript("document.zoomOut()");
+
+    }
+    @FXML
+    private void suggestRouteFromPoint() {
+        Point.Double coordinates = userClicks.get(userClicks.size()-1);
+        System.out.print(coordinates);
+        ArrayList<BikeTrip> suggested = DataAnalyser.searchBikeTrips(coordinates.getX(), coordinates.getY(),
+        20000,  bikeTrips);
+        BikeTrip first = suggested.get(0);
+        webView.getEngine().executeScript("document.calcRoute({lat: " + first.getStartLatitude() + ", lng:  " +
+                first.getStartLongitude() + "}, {lat: " + first.getEndLatitude() + ", lng:  " + first.getEndLongitude() +"})");
 
     }
 
@@ -247,7 +260,14 @@ public class MapController {
 
 
 
-
+    @FXML
+    private void loadAllBikeTrips() {
+        try {
+            bikeTrips = populateBikeTrips("src/main/resources/csv/biketrip.csv");
+        } catch (CsvParserException | IOException e) {
+            AlertGenerator.createAlert("Error", "Cannot load bike trips.");
+        }
+    }
     @FXML
     private void loadAllWifi() {
         try {

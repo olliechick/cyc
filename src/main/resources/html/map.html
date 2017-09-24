@@ -135,23 +135,6 @@ function asPath(encodedPolyObject){
 
 
 
-    document.renderDirections = function renderDirections(start, end, response1){
-    var response = response1;
-    var request = {
-             origin: start,
-             destination: end,
-             travelMode: 'BICYCLING'
-              };
-    directionsDisplay.setOptions({
-        directions : {
-            routes : typecastRoutes(response.routes),
-            // "ub" is important and not returned by web service it's an
-            // object containing "origin", "destination" and "travelMode"
-            request : request
-        },
-        draggable : false,
-        map : map});
-        }
 
 
       // Adds a marker to the map.
