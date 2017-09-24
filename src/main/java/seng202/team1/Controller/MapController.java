@@ -1,26 +1,33 @@
 package seng202.team1.Controller;
 
-import com.google.maps.errors.ApiException;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import seng202.team1.*;
 
-import java.awt.*;
+import seng202.team1.AlertGenerator;
+import seng202.team1.CsvParserException;
+import seng202.team1.GenerateFields;
+
+import seng202.team1.UserAccountModel;
+import seng202.team1.WifiPoint;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
+import java.awt.*;
+
+
 import static seng202.team1.CSVLoader.populateRetailers;
+
 import static seng202.team1.CSVLoader.populateWifiHotspots;
 import static seng202.team1.GenerateFields.generateSecondaryFunctionsList;
 import static seng202.team1.GenerateFields.generateWifiProviders;
@@ -34,14 +41,16 @@ import static seng202.team1.GenerateFields.generateWifiProviders;
  */
 public class MapController {
 
-    ArrayList<RetailerLocation> retailerPoints = null;
+    public ArrayList<RetailerLocation> retailerPoints = null;
     ArrayList<WifiPoint> wifiPoints = null;
 
 
-    ArrayList<String> uniqueSecondaryFunctions = null;
-    ArrayList<String> uniquePrimaryFunctions = null;
-    ArrayList<String> uniqueProviders = null;
+    public ArrayList<String> uniqueSecondaryFunctions = null;
+    public ArrayList<String> uniquePrimaryFunctions = null;
+    public ArrayList<String> uniqueProviders = null;
+    @FXML
     private UserAccountModel model;
+    @FXML
     private Stage stage;
     @FXML
     private WebView webView;
@@ -59,12 +68,6 @@ public class MapController {
     private ComboBox filterZipComboBox;
 
     @FXML
-    private Label nameLabel;
-
-    @FXML
-    private ProgressIndicator progressSpinner;
-
-    @FXML
     private ComboBox filterBoroughComboBox;
 
     @FXML
@@ -73,15 +76,10 @@ public class MapController {
     @FXML
     private ComboBox filterProviderComboBox;
 
-    @FXML
-    private Label loadLabel;
+
 
     @FXML
     private WebEngine webEngine;
-
-    @FXML
-    private Button LoadDataButton;
-
 
 
     void initModel(UserAccountModel model, Stage stage) {
@@ -112,7 +110,7 @@ public class MapController {
 
     }
 
-    @FXML
+
     private void loadData() {
 
         loadAllWifi();
@@ -177,29 +175,10 @@ public class MapController {
     }
 
 
-    public void addWifi() {
-        try {
-            FXMLLoader addWifiLoader = new FXMLLoader(getClass().getResource("/fxml/AddWifiDialog.fxml"));
-            Parent root = addWifiLoader.load();
-            AddWifiDialogController addWifiDialog = addWifiLoader.getController();
-            Stage stage1 = new Stage();
-
-            addWifiDialog.setDialog(stage1, root);
-            stage1.showAndWait();
-
-            WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
-            if (newWifiPoint != null) {
-                wifiPoints.add(newWifiPoint);
-                model.addCustomWifiLocation(newWifiPoint);
-                SerializerImplementation.serializeUser(model);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
-    @FXML
+
+
     private void loadAllWifi() {
         try {
             wifiPoints = populateWifiHotspots("src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv");
@@ -217,7 +196,7 @@ public class MapController {
         webView.getEngine().executeScript("document.wifiCluster()");
     }
 
-    @FXML
+
     private void loadAllRetailers() {
         try {
             retailerPoints = populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
@@ -247,7 +226,7 @@ public class MapController {
 
     @FXML
     private void updateRetailersPrimary() {
-        ArrayList<RetailerLocation> retailers = new ArrayList<RetailerLocation>();
+        ArrayList<RetailerLocation> retailers = new ArrayList<>();
         for (int i = 0; i < retailerPoints.size(); i++) {
 
             RetailerLocation retailerLocation = retailerPoints.get(i);
@@ -427,14 +406,14 @@ public class MapController {
 
         // RETAILERS
 
-        ArrayList<String> uniquePrimaryFunctions;
+
         uniquePrimaryFunctions = GenerateFields.generatePrimaryFunctionsList(retailerPoints);
         filterPrimaryComboBox.getItems().addAll(uniquePrimaryFunctions);
         filterPrimaryComboBox.getSelectionModel().selectFirst();
 
 
-        uniqueSecondaryFunctions = generateSecondaryFunctionsList(retailerPoints);
-        ArrayList<String> uniqueSecondaryFunctions;
+
+
         uniqueSecondaryFunctions = GenerateFields.generateSecondaryFunctionsList(retailerPoints);
         filterSecondaryComboBox.getItems().addAll(uniqueSecondaryFunctions);
         filterSecondaryComboBox.getSelectionModel().selectFirst();

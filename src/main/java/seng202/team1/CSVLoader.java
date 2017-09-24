@@ -1,6 +1,6 @@
 package seng202.team1;
 
-import org.apache.commons.csv.CSVFormat;
+
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
@@ -13,6 +13,8 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+
+import static org.apache.commons.csv.CSVFormat.RFC4180;
 
 /**
  * Class that can load CSV files and return ArrayLists of different subclasses of DataPoint.
@@ -44,7 +46,7 @@ public class CSVLoader {
      */
     public static ArrayList<CSVRecord> loadCSV(String filename) throws IOException {
         File csvData = new File(filename);
-        CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
+        CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), RFC4180);
         return (ArrayList<CSVRecord>) parser.getRecords();
     }
 
@@ -83,7 +85,7 @@ public class CSVLoader {
     public static ArrayList<CSVRecord> loadCSV(String filename, int numberOfEntries, int blockNumber) throws
             IOException, IllegalArgumentException {
         File csvData = new File(filename);
-        CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
+        CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), RFC4180);
         ArrayList<CSVRecord> records = (ArrayList<CSVRecord>) parser.getRecords();
 
         // Try to remove the entries before the block selected.
