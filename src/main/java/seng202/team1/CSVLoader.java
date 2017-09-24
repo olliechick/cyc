@@ -312,24 +312,14 @@ public class CSVLoader {
         ArrayList<CSVRecord> retailerData = loadCSV(filename);
 
         for (CSVRecord record : retailerData) {
-            //First check it is a header row
-            boolean isHeaderRow = false;
-            int zipcode = 0;
+            // Process all the attributes
             try {
-                zipcode = Integer.parseInt(record.get(5));
-            } catch (NumberFormatException e) {
-                //Header row - zipcode is not an int
-                isHeaderRow = true;
-            }
-
-            // Now process all the attributes
-            if (!isHeaderRow) {
-                isValidCsv = true;
                 String name = record.get(0);
                 String addressLine1 = record.get(1);
                 String addressLine2 = record.get(2);
                 String city = record.get(3);
                 String state = record.get(4);
+                int zipcode = Integer.parseInt(record.get(5));
                 String blockLot = record.get(6);
                 String primaryFunction = record.get(7);
                 String secondaryFunction = record.get(8);
@@ -350,9 +340,17 @@ public class CSVLoader {
                 retailers.add(new RetailerLocation(name, addressLine1, addressLine2, city,
                         state, zipcode, blockLot, primaryFunction,
                         secondaryFunction, coords, false));
+
+                //Successfully parsed all the fields
+                System.out.println("Successful row load for " + filename);
+                isValidCsv = true;
+            } catch (Exception e) {
+                // Some error processing the line - probably a header field
+                // Note that if this occurs for all lines in the CSV, a CsvParserException is thrown.
             }
         }
         if (!isValidCsv) {
+            System.out.println("no valid rows; CsvParserException thrown");
             throw new CsvParserException(filename);
         }
         return retailers;
