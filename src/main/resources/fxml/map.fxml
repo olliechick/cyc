@@ -132,10 +132,6 @@
 
         </rowConstraints>
          <children>
-             <Button fx:id="LoadDataButton" mnemonicParsing="false" onAction="#loadData" text="Load data" GridPane.rowIndex="0" GridPane.halignment="CENTER" />
-            <Button fx:id="AddRetailerButton" mnemonicParsing="false" text="Add Retailer"  GridPane.rowIndex="1" GridPane.halignment="CENTER" />
-             <Button fx:id="AddWIFIButton" mnemonicParsing="false" text="Add WIFI Hotspot" onAction="#addWifi" GridPane.rowIndex="2" GridPane.halignment="CENTER" />
-             <Button fx:id="AddBikeTripButton" mnemonicParsing="false" onAction="#testDraw" text="Add Bike Route" GridPane.rowIndex="3" GridPane.halignment="CENTER" />
              <Button fx:id="ZoomInButton11" mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" GridPane.rowIndex="4" GridPane.halignment="CENTER" />
              <Button fx:id="ZoomOutButton11" mnemonicParsing="false" onAction="#zoomOut" text="Zoom Out" GridPane.rowIndex="5" GridPane.halignment="CENTER" />
          </children>
