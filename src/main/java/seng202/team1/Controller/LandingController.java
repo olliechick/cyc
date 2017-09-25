@@ -50,6 +50,8 @@ public class LandingController {
             retailerTableController.setName();
 
             Stage stage1 = new Stage();
+            stage1.setMinWidth(1000);
+            stage1.setMinHeight(800);
             retailerTableController.setStage(stage1);
             stage1.setScene( new Scene(retailerTableView));
             stage1.setTitle("Retailers");
@@ -75,6 +77,8 @@ public class LandingController {
             bikeTableController.setName();
 
             Stage stage1 = new Stage();
+            stage1.setMinWidth(1000);
+            stage1.setMinHeight(800);
             bikeTableController.setStage(stage1);
             stage1.setScene( new Scene(bikeTableView));
             stage1.setTitle("Bike Trips");
@@ -101,6 +105,8 @@ public class LandingController {
             wifiTableController.setName();
 
             Stage stage1 = new Stage();
+            stage1.setMinWidth(1000);
+            stage1.setMinHeight(800);
             wifiTableController.setStage(stage1);
             stage1.setScene( new Scene(wifiTableView));
             stage1.setTitle("Wifi");
