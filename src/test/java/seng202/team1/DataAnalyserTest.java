@@ -2,6 +2,11 @@ package seng202.team1;
 
 
 import org.junit.Test;
+import seng202.team1.Model.CsvHandling.CSVLoader;
+import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.DataAnalyser;
+import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.WifiPoint;
 
 import java.awt.*;
 import java.awt.geom.Point2D;

@@ -16,17 +16,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import seng202.team1.AlertGenerator;
-import seng202.team1.BikeTrip;
-import seng202.team1.CsvParserException;
-import seng202.team1.SerializerImplementation;
+import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static seng202.team1.CSVLoader.populateBikeTrips;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 
 
 /**
@@ -260,16 +259,18 @@ public class BikeTableController extends TableController {
         TableColumn<BikeTrip, Point.Float> endLocCol = new TableColumn<>("End Location");
         TableColumn<BikeTrip, Point.Float> endLatitudeCol = new TableColumn<>("Latitude");
         TableColumn<BikeTrip, Point.Float> endLongitudeCol = new TableColumn<>("Longitude");
+        TableColumn<BikeTrip, Double> distCol= new TableColumn<>("Distance (m)");
         table.getColumns().clear();
 
         // Attempts to access public properties of name "Property", falls back to get<property>() methods if no property available
-        bikeIdCol.setCellValueFactory(new PropertyValueFactory<>("bikeId"));
-        genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
-        durationCol.setCellValueFactory(new PropertyValueFactory<>("Duration"));
-        startLatitudeCol.setCellValueFactory(new PropertyValueFactory<>("startLatitude"));
-        startLongitudeCol.setCellValueFactory(new PropertyValueFactory<>("startLongitude"));
-        endLatitudeCol.setCellValueFactory(new PropertyValueFactory<>("endLatitude"));
-        endLongitudeCol.setCellValueFactory(new PropertyValueFactory<>("endLongitude"));
+        bikeIdCol.setCellValueFactory( new PropertyValueFactory<>("bikeId"));
+        genderCol.setCellValueFactory( new PropertyValueFactory<>("gender"));
+        durationCol.setCellValueFactory( new PropertyValueFactory<>("Duration"));
+        startLatitudeCol.setCellValueFactory( new PropertyValueFactory<>("startLatitude"));
+        startLongitudeCol.setCellValueFactory( new PropertyValueFactory<>("startLongitude"));
+        endLatitudeCol.setCellValueFactory( new PropertyValueFactory<>("endLatitude"));
+        endLongitudeCol.setCellValueFactory( new PropertyValueFactory<>("endLongitude"));
+        distCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Double>("tripDistanceTwoD"));
 
         startLocCol.getColumns().addAll(startLatitudeCol, startLongitudeCol);
         endLocCol.getColumns().addAll(endLatitudeCol, endLongitudeCol);
@@ -281,7 +282,7 @@ public class BikeTableController extends TableController {
         sortedData.comparatorProperty().bind(table.comparatorProperty());
 
         table.setItems(sortedData);
-        table.getColumns().addAll(bikeIdCol, genderCol, durationCol, startLocCol, endLocCol);
+        table.getColumns().addAll(bikeIdCol, genderCol, durationCol, distCol, startLocCol, endLocCol);
 
         setFilters();
     }

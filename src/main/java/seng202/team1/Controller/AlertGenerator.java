@@ -1,4 +1,4 @@
-package seng202.team1;
+package seng202.team1.Controller;
 
 import javafx.scene.layout.Region;
 
