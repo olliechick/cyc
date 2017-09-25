@@ -11,7 +11,6 @@ import java.io.*;
  */
 public final class SerializerImplementation {
 
-    private final static String USER_DIR = "src/main/resources/users/";
     private final static String USER_EXT = ".user";
 
     /**
@@ -20,8 +19,9 @@ public final class SerializerImplementation {
      */
     public static void serializeUser(UserAccountModel user) {
         try {
-            FileOutputStream fileOut = new FileOutputStream(USER_DIR + user.getUserName() +
-                    USER_EXT);
+            String userPath = Filename.USERS.filename() + user.getUserName() + USER_EXT;
+            System.out.println("fileOut: "+userPath);
+            FileOutputStream fileOut = new FileOutputStream(userPath);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(user);
             out.close();
@@ -45,7 +45,8 @@ public final class SerializerImplementation {
     public static UserAccountModel deserializeUser(String userName) throws IOException {
         UserAccountModel user = null;
         try {
-            FileInputStream inFile = new FileInputStream(USER_DIR + userName + USER_EXT);
+            String userPath = Filename.USERS.filename() + userName + USER_EXT;
+            FileInputStream inFile = new FileInputStream(userPath);
             ObjectInputStream ois = new ObjectInputStream(inFile);
             user = (UserAccountModel) ois.readObject();
         } catch (ClassNotFoundException e) {

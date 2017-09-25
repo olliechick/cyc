@@ -1,7 +1,9 @@
 package seng202.team1;
 
 public enum Filename {
-    RESOURCES("src/main/resources/"),
+    SOURCE("src/"),
+    MAIN(SOURCE.filename() + "main/"),
+    RESOURCES(MAIN.filename() + "resources/"),
     CSV_RESOURCES(RESOURCES.filename() + "csv/"),
         WIFI(CSV_RESOURCES.filename() + "NYC_Free_Public_WiFi_03292017.csv"),
         RETAILERS(CSV_RESOURCES.filename() + "Lower_Manhattan_Retailers.csv"),
@@ -15,7 +17,7 @@ public enum Filename {
         RETAILER_CLUSTERS(HTML_RESOURCES.filename() + "retailerCluster/"),
         WIFI_CLUSTERS(HTML_RESOURCES.filename() + "wifiCluster/"),
     //TODO individual images?
-    USERS(RESOURCES + "users/");
+    USERS(RESOURCES.filename() + "users/");
 
     private String filename;
 

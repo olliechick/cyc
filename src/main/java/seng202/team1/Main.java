@@ -50,7 +50,7 @@ public class Main extends Application {
     /**
      * Creates all the directories that the program will need.
      */
-    private static void createDirectories() {
+    public static void createDirectories() {
 
         Filename[] directories = Filename.class.getEnumConstants();
 
