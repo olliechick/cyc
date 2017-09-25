@@ -1,9 +1,9 @@
 package seng202.team1;
 
-import com.sun.org.apache.regexp.internal.RE;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
+import seng202.team1.Model.RetailerLocation;
 
 import java.awt.Point;
 

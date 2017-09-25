@@ -1,4 +1,4 @@
-package seng202.team1;
+package seng202.team1.Model;
 
 /**
  * Holding class for generic arraylist types later. closer to an interface. Probably needs a better name

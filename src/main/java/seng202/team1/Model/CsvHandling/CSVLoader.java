@@ -1,15 +1,17 @@
-package seng202.team1;
+package seng202.team1.Model.CsvHandling;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.WifiPoint;
 
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.Month;

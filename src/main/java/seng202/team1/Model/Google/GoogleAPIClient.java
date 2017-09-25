@@ -1,4 +1,4 @@
-package seng202.team1;
+package seng202.team1.Model.Google;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -11,12 +11,15 @@ import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.TravelMode;
+import seng202.team1.Controller.AlertGenerator;
+import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.RetailerLocation;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static seng202.team1.CSVLoader.populateRetailers;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 
 
 
@@ -38,10 +41,10 @@ public class GoogleAPIClient {
     }
 
     public static void getRetailerGeocode() {
-        ArrayList<seng202.team1.RetailerLocation> retailerPoints;
+        ArrayList<RetailerLocation> retailerPoints;
         try {
             retailerPoints = populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
-        } catch (CsvParserException|IOException e) {
+        } catch (CsvParserException |IOException e) {
             //TODO deal with the exception
             AlertGenerator.createAlert("Error", "Error generating retailers");
             return;

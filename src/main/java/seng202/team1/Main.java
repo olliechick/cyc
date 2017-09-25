@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import seng202.team1.Controller.AlertGenerator;
+import seng202.team1.Model.Filename;
 
 import java.io.File;
 import java.io.IOException;

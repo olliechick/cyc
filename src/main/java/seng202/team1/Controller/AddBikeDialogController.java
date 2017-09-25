@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import seng202.team1.BikeTrip;
+import seng202.team1.Model.BikeTrip;
 
 import java.awt.Point;
 import java.time.LocalDate;

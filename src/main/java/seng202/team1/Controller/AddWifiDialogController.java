@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import seng202.team1.WifiPoint;
+import seng202.team1.Model.WifiPoint;
 
 import java.awt.Point;
 import java.time.LocalDateTime;

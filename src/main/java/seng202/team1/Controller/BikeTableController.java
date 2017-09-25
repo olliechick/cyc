@@ -16,9 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import seng202.team1.AlertGenerator;
-import seng202.team1.BikeTrip;
-import seng202.team1.CsvParserException;
+import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
@@ -26,7 +25,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static seng202.team1.CSVLoader.populateBikeTrips;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 
 
 /**

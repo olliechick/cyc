@@ -1,5 +1,8 @@
 package seng202.team1;
 
+import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.WifiPoint;
+
 import java.util.ArrayList;
 import java.util.Collections;
 

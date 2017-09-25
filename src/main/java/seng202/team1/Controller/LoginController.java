@@ -10,7 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import seng202.team1.AlertGenerator;
 import seng202.team1.PasswordManager;
 import seng202.team1.UserAccountModel;
 

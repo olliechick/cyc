@@ -1,9 +1,10 @@
-package seng202.team1;
+package seng202.team1.Model.Google;
+
+import seng202.team1.DataAnalyser;
+import seng202.team1.Model.BikeTrip;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Class to implement routing methods

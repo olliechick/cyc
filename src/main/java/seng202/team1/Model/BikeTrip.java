@@ -1,6 +1,7 @@
-package seng202.team1;
+package seng202.team1.Model;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import seng202.team1.DataAnalyser;
 
 import java.awt.*;
 import java.time.Duration;

@@ -3,6 +3,7 @@ package seng202.team1;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
+import seng202.team1.Model.BikeTrip;
 
 import java.awt.*;
 import java.time.LocalDateTime;

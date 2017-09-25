@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import seng202.team1.RetailerLocation;
+import seng202.team1.Model.RetailerLocation;
 
 /**
  * Logic for the add Retailer dialog.

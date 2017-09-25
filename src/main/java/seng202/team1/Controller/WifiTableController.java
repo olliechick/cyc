@@ -17,17 +17,16 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import seng202.team1.AlertGenerator;
-import seng202.team1.CsvParserException;
+import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.GenerateFields;
 import seng202.team1.SerializerImplementation;
 import seng202.team1.UserAccountModel;
-import seng202.team1.WifiPoint;
+import seng202.team1.Model.WifiPoint;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static seng202.team1.CSVLoader.populateWifiHotspots;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
 
 /**
  * Logic for the wifi table GUI

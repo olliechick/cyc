@@ -1,4 +1,4 @@
-package seng202.team1;
+package seng202.team1.Model.CsvHandling;
 
 /**
  * Exception class to handle when a CSV can't be parsed (e.g. as bike trips).
