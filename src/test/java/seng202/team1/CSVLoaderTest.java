@@ -2,14 +2,18 @@ package seng202.team1;
 
 import junit.framework.TestCase;
 import org.apache.commons.csv.CSVRecord;
+import seng202.team1.Model.CsvHandling.CSVLoader;
+import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.WifiPoint;
 
 import java.awt.Point;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
-import static seng202.team1.CSVLoader.populateBikeTrips;
-import static seng202.team1.CSVLoader.populateRetailers;
-import static seng202.team1.CSVLoader.populateWifiHotspots;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
 
 
 public class CSVLoaderTest extends TestCase {

@@ -1,4 +1,4 @@
-package seng202.team1;
+package seng202.team1.Model;
 
 public enum Filename {
     SOURCE("src/"),

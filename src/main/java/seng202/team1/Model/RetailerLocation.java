@@ -1,4 +1,4 @@
-package seng202.team1;
+package seng202.team1.Model;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -219,7 +219,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
             return true;
         }
         RetailerLocation that = (RetailerLocation) obj;
-        return this.name.equalsIgnoreCase(that.name) && this.primaryFunction.equalsIgnoreCase(that.primaryFunction) && this.coords.equals(that.coords);
+        return this.name.equalsIgnoreCase(that.name) && this.primaryFunction.equalsIgnoreCase(that.primaryFunction);
     }
 
     @Override
@@ -227,7 +227,6 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
         return new HashCodeBuilder(17, 31).
                 append(name).
                 append(primaryFunction).
-                append(coords).
                 toHashCode();
     }
 

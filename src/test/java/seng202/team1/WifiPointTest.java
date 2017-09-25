@@ -2,6 +2,7 @@ package seng202.team1;
 
 import org.junit.Before;
 import org.junit.Test;
+import seng202.team1.Model.WifiPoint;
 
 import java.awt.Point;
 import java.time.LocalDateTime;

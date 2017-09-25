@@ -1,6 +1,8 @@
 package seng202.team1;
 
 import junit.framework.TestCase;
+import seng202.team1.Model.PasswordManager;
+import seng202.team1.Model.SerializerImplementation;
 
 import java.io.File;
 import java.time.LocalDate;

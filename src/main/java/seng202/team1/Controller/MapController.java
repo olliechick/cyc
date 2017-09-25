@@ -14,15 +14,20 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import seng202.team1.*;
+import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.GenerateFields;
+import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.SerializerImplementation;
+import seng202.team1.Model.WifiPoint;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static seng202.team1.CSVLoader.populateRetailers;
-import static seng202.team1.CSVLoader.populateWifiHotspots;
-import static seng202.team1.GenerateFields.generateSecondaryFunctionsList;
-import static seng202.team1.GenerateFields.generateWifiProviders;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
+import static seng202.team1.Model.GenerateFields.generateSecondaryFunctionsList;
+import static seng202.team1.Model.GenerateFields.generateWifiProviders;
 
 /**
  * Logic for the map GUI

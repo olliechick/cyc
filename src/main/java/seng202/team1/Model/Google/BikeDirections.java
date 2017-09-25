@@ -1,9 +1,10 @@
-package seng202.team1;
+package seng202.team1.Model.Google;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.*;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
