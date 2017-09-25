@@ -60,7 +60,7 @@ public class BikeTableController extends TableController{
     private ObservableList<BikeTrip> dataPoints;
     private FilteredList<BikeTrip> filteredData;
 
-    private final static String DEFAULT_BIKE_TRIPS_FILENAME = "src/main/resources/csv/biketrip.csv";
+    private final static String DEFAULT_BIKE_TRIPS_FILENAME = "/csv/biketrip.csv";
 
     /**
      * Checks the combo boxes and bike ID field for data and filters the displayed
@@ -139,7 +139,7 @@ public class BikeTableController extends TableController{
      * Creates a task to run on another thread to open the file, to stop GUI hangs.
      * Also sets the loading animation going and stops when finished.
      */
-    private void importBikeCsv(final String filename) {
+    private void importBikeCsv(final String filename, final boolean isCustomCsv) {
 
         final Task<ArrayList<BikeTrip>>loadBikeCsv = new Task<ArrayList<BikeTrip>>() {
             /**
@@ -150,7 +150,11 @@ public class BikeTableController extends TableController{
             //@Override
             protected ArrayList<BikeTrip> call() {
                 try {
-                    return populateBikeTrips(filename);
+                    if (isCustomCsv) {
+                        return populateBikeTrips(filename);
+                    } else {
+                        return populateBikeTrips();
+                    }
                 } catch (CsvParserException|IOException e) {
                     super.failed();
                     return null;
@@ -198,7 +202,7 @@ public class BikeTableController extends TableController{
         String filename = getCsvFilename();
         if (filename != null) {
             dataPoints.clear();
-            importBikeCsv(filename);
+            importBikeCsv(filename, true);
         }
     }
 
@@ -283,7 +287,7 @@ public class BikeTableController extends TableController{
     void initModel(UserAccountModel userAccountModel) {
 
         this.model = userAccountModel;
-        importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME);
+        importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME, false);
     }
 
     /**

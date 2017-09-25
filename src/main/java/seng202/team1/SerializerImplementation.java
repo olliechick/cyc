@@ -52,8 +52,6 @@ public final class SerializerImplementation {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-
         return user;
     }
 }

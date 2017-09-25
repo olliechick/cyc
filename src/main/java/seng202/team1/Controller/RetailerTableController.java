@@ -157,7 +157,7 @@ public class RetailerTableController extends TableController{
      * The loading animations are shown until load completes, then the UI is updated.
      * @param filename The filename of the CSV to load.
      */
-    private void importRetailerCsv(final String filename) {
+    private void importRetailerCsv(final String filename, final boolean isCustomCsv) {
 
 
         final Task<ArrayList<RetailerLocation>> loadRetailerCsv = new Task<ArrayList<RetailerLocation>>() {
@@ -169,7 +169,11 @@ public class RetailerTableController extends TableController{
             @Override
             protected ArrayList<RetailerLocation> call() {
                 try {
-                    return populateRetailers(filename);
+                    if (isCustomCsv) {
+                        return populateRetailers(filename);
+                    } else {
+                        return populateRetailers();
+                    }
                 } catch (CsvParserException|IOException e) {
                     //TODO deal with the exception
                     super.failed();
@@ -216,7 +220,7 @@ public class RetailerTableController extends TableController{
         String filename = getCsvFilename();
         if (filename != null) {
             dataPoints.clear();
-            importRetailerCsv(filename);
+            importRetailerCsv(filename, true);
         }
     }
 
@@ -305,6 +309,6 @@ public class RetailerTableController extends TableController{
 
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
-        importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME);
+        importRetailerCsv("/csv/Lower_Manhattan_Retailers.csv", false);
     }
 }
