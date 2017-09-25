@@ -10,10 +10,11 @@ import java.util.ArrayList;
  * Has 4 constructors for various options, including account type specification and optional gender.
  * Flags any user who is under 13 (for data usage laws).
  * Implements Serializable to allow Users to be persistently saved.
+ *
  * @author Josh Burt
  * @author Ollie Chick
  */
-public class UserAccountModel implements java.io.Serializable{
+public class UserAccountModel implements java.io.Serializable {
 
     private char gender;
     private String accountType;
@@ -30,7 +31,7 @@ public class UserAccountModel implements java.io.Serializable{
         this.gender = gender;
         this.birthday = birthday;
         LocalDate currentDate = LocalDate.now();
-        int age = Period.between(birthday,currentDate).getYears();
+        int age = Period.between(birthday, currentDate).getYears();
         this.under13 = age < 13;
         this.accountType = "User";
         this.userName = userName;
@@ -44,7 +45,7 @@ public class UserAccountModel implements java.io.Serializable{
     public UserAccountModel(LocalDate birthday, String userName, String password) {
         this.birthday = birthday;
         LocalDate currentDate = LocalDate.now();
-        int age = Period.between(birthday,currentDate).getYears();
+        int age = Period.between(birthday, currentDate).getYears();
         this.under13 = age < 13;
         this.accountType = "User";
         this.userName = userName;
@@ -61,7 +62,7 @@ public class UserAccountModel implements java.io.Serializable{
         this.accountType = accountType;
         this.birthday = birthday;
         LocalDate currentDate = LocalDate.now();
-        int age = Period.between(birthday,currentDate).getYears();
+        int age = Period.between(birthday, currentDate).getYears();
         this.under13 = age < 13;
 
         this.userName = userName;
@@ -76,7 +77,7 @@ public class UserAccountModel implements java.io.Serializable{
         this.accountType = accountType;
         this.birthday = birthday;
         LocalDate currentDate = LocalDate.now();
-        int age = Period.between(birthday,currentDate).getYears();
+        int age = Period.between(birthday, currentDate).getYears();
         this.under13 = age < 13;
         this.userName = userName;
         this.salt = PasswordManager.getNextSalt();
@@ -175,11 +176,11 @@ public class UserAccountModel implements java.io.Serializable{
         customWifiPoints.add(wifiPoint);
     }
 
-    public static void createUser(UserAccountModel user)  {
+    public static void createUser(UserAccountModel user) {
         SerializerImplementation.serializeUser(user);
     }
 
-    public static UserAccountModel getUser(String username) throws IOException{
+    public static UserAccountModel getUser(String username) throws IOException {
         return SerializerImplementation.deserializeUser(username);
     }
 }

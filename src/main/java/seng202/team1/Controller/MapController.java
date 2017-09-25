@@ -1,6 +1,5 @@
 package seng202.team1.Controller;
 
-import com.google.maps.errors.ApiException;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -83,7 +82,6 @@ public class MapController {
     private Button LoadDataButton;
 
 
-
     void initModel(UserAccountModel model, Stage stage) {
         this.model = model;
         this.stage = stage;
@@ -105,9 +103,6 @@ public class MapController {
                         }
                     }
                 });
-
-
-
 
 
     }
@@ -318,11 +313,10 @@ public class MapController {
     }
 
 
+    /**
+     * checks the given retailerLocation against the filter in the primary function ComboBox.
+     */
     private boolean checkPrimary(RetailerLocation retailerLocation) {
-        /**
-         * checks the given retailerLocation against the filter in the primary function ComboBox.
-         *
-         */
         if ("All".equals(filterPrimaryComboBox.getValue())) {
             return true;
         } else {
@@ -330,11 +324,10 @@ public class MapController {
         }
     }
 
+    /**
+     * checks the given retailerLocation against the filter in the primary function ComboBox.
+     */
     private boolean checkSecondary(RetailerLocation retailerLocation) {
-        /**
-         * checks the given retailerLocation against the filter in the primary function ComboBox.
-         *
-         */
         if ("All".equals(filterSecondaryComboBox.getValue())) {
             return true;
         } else {
@@ -342,11 +335,11 @@ public class MapController {
         }
     }
 
+    /**
+     * Checks the address line 1 of the given retailerLocation against the text in the street
+     * search field.
+     */
     private boolean checkStreet(RetailerLocation retailerLocation) {
-        /**
-         * Checks the address line 1 of the given retailerLocation against the text in the street
-         * search field.
-         */
         if (streetSearchField.getText().isEmpty()) {
             return true;
         } else {
@@ -391,11 +384,11 @@ public class MapController {
     }
 
 
+    /**
+     * Sets the filter options
+     * TODO don't hard code
+     */
     private void initializeFilters() {
-        /**
-         * Sets the filter options
-         * TODO don't hard code
-         */
         // RETAILERS
         filterPrimaryComboBox.getItems().addAll("All");
         filterPrimaryComboBox.getSelectionModel().selectFirst();
@@ -419,13 +412,13 @@ public class MapController {
     }
 
 
+    /**
+     * Sets the filter options
+     * TODO don't hard code
+     */
     private void setFilters() {
-        /**
-         * Sets the filter options
-         * TODO don't hard code
-         */
 
-        // RETAILERS
+        // Retailers
 
         ArrayList<String> uniquePrimaryFunctions;
         uniquePrimaryFunctions = GenerateFields.generatePrimaryFunctionsList(retailerPoints);
@@ -442,7 +435,7 @@ public class MapController {
         filterZipComboBox.getItems().addAll(10004, 10005, 10038, 10007);
         filterZipComboBox.getSelectionModel().selectFirst();
 
-        // WIFI
+        // WiFi
 
         filterBoroughComboBox.getItems().addAll("Manhattan", "Brooklyn", "Queens", "The Bronx", "Staten Island");
         filterBoroughComboBox.getSelectionModel().selectFirst();
@@ -457,7 +450,7 @@ public class MapController {
     }
 
 
-     void initModel(UserAccountModel userAccountModel) {
+    void initModel(UserAccountModel userAccountModel) {
 
         this.model = userAccountModel;
 

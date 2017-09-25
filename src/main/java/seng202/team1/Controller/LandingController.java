@@ -27,6 +27,7 @@ public class LandingController {
 
     /**
      * Enables this controller to use the model.
+     *
      * @param model the model object
      */
     void initModel(UserAccountModel model, Stage stage) {
@@ -53,7 +54,7 @@ public class LandingController {
             stage1.setMinWidth(1000);
             stage1.setMinHeight(800);
             retailerTableController.setStage(stage1);
-            stage1.setScene( new Scene(retailerTableView));
+            stage1.setScene(new Scene(retailerTableView));
             stage1.setTitle("Retailers");
             stage1.show();
 
@@ -80,7 +81,7 @@ public class LandingController {
             stage1.setMinWidth(1000);
             stage1.setMinHeight(800);
             bikeTableController.setStage(stage1);
-            stage1.setScene( new Scene(bikeTableView));
+            stage1.setScene(new Scene(bikeTableView));
             stage1.setTitle("Bike Trips");
             stage1.show();
 
@@ -108,7 +109,7 @@ public class LandingController {
             stage1.setMinWidth(1000);
             stage1.setMinHeight(800);
             wifiTableController.setStage(stage1);
-            stage1.setScene( new Scene(wifiTableView));
+            stage1.setScene(new Scene(wifiTableView));
             stage1.setTitle("Wifi");
             stage1.show();
 

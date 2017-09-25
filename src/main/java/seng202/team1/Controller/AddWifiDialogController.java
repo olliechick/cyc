@@ -108,7 +108,7 @@ public class AddWifiDialogController {
      * Set up the window as a dialog.
      *
      * @param stage1 the new stage to use to display
-     * @param root root fxml node
+     * @param root   root fxml node
      */
     void setDialog(Stage stage1, Parent root) {
         stage = stage1;
@@ -157,6 +157,7 @@ public class AddWifiDialogController {
 
     /**
      * Check all the required fields have been filled with data in the correct format.
+     *
      * @return True if data is valid, false otherwise.
      */
     private boolean checkFields() {

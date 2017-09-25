@@ -2,6 +2,7 @@ package seng202.team1;
 
 /**
  * Exception class to handle when a CSV can't be parsed (e.g. as bike trips).
+ *
  * @author Ollie Chick
  */
 public class CsvParserException extends Exception {
@@ -10,6 +11,7 @@ public class CsvParserException extends Exception {
 
     /**
      * Constructor for CsvParserException
+     *
      * @param filename The name of the file that couldn't be parsed.
      */
     public CsvParserException(String filename) {

@@ -7,9 +7,10 @@ import java.awt.*;
 /**
  * Class for the retailer locations. Has a single constructor that sets the values for the points.
  * All methods are getters and setters.
+ *
  * @author Josh Burt
  */
-public class RetailerLocation extends DataPoint implements java.io.Serializable{
+public class RetailerLocation extends DataPoint implements java.io.Serializable {
 
     private String name;
     private String addressLine1;
@@ -24,13 +25,13 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable{
     private Double distanceFrom; // stores the distance from point
 
     public RetailerLocation(String name, String addressLine1, String addressLine2,
-                            String city, String state,  int zipcode, String blockLot, String primaryFunction,
+                            String city, String state, int zipcode, String blockLot, String primaryFunction,
                             String secondaryFunction, Point.Float coords, boolean isUserDefinedPoint) {
         this.name = name;
 
         if (primaryFunction.equalsIgnoreCase("")) {
             this.primaryFunction = "Other";
-        } else{
+        } else {
             this.primaryFunction = primaryFunction;
         }
         if (secondaryFunction.equalsIgnoreCase("")) {
@@ -51,7 +52,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable{
     }
 
     /**
-    * Overloaded constructor without coords.
+     * Overloaded constructor without coords.
      */
     public RetailerLocation(String name, String addressLine1, String addressLine2, String city, String state,
                             int zipcode, String blockLot, String primaryFunction, String secondaryFunction,
@@ -129,9 +130,9 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable{
     }
 
     public void setPrimaryFunction(String primaryFunction) {
-        if (primaryFunction.equalsIgnoreCase("")){
+        if (primaryFunction.equalsIgnoreCase("")) {
             this.primaryFunction = "Other";
-        } else{
+        } else {
             this.primaryFunction = primaryFunction;
         }
     }
@@ -141,7 +142,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable{
     }
 
     public void setSecondaryFunction(String secondaryFunction) {
-        if (secondaryFunction.equalsIgnoreCase("")){
+        if (secondaryFunction.equalsIgnoreCase("")) {
             this.secondaryFunction = "Other";
         } else {
             this.secondaryFunction = secondaryFunction;
@@ -165,7 +166,8 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable{
     }
 
     /**
-    * Returns the full address of the retailer.
+     * Returns the full address of the retailer.
+     *
      * @return retailer's address
      */
     public String getAddress() {
@@ -184,6 +186,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable{
 
     /**
      * Returns a description of the retailer.
+     *
      * @return description of retailer
      */
     public String getDescription() {
@@ -208,28 +211,26 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable{
     }
 
     @Override
-    public boolean equals(Object obj){
-        if (obj == null){
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
         }
-        if (this == obj){
+        if (this == obj) {
             return true;
         }
         RetailerLocation that = (RetailerLocation) obj;
-        if (this.name.equalsIgnoreCase(that.name) && this.primaryFunction.equalsIgnoreCase(that.primaryFunction) && this.coords.equals(that.coords)){
-            return true;
-        }
-        return false;
+        return this.name.equalsIgnoreCase(that.name) && this.primaryFunction.equalsIgnoreCase(that.primaryFunction) && this.coords.equals(that.coords);
     }
 
     @Override
-    public int hashCode(){
-        return new HashCodeBuilder(17,31).
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31).
                 append(name).
                 append(primaryFunction).
                 append(coords).
                 toHashCode();
     }
+
     @Override
     public String toString() {
         return "RetailerLocation{" +

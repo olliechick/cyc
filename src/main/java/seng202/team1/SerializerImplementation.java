@@ -1,7 +1,6 @@
 package seng202.team1;
 
 
-
 import java.io.*;
 
 /**
@@ -15,12 +14,13 @@ public final class SerializerImplementation {
 
     /**
      * Takes a UserAccountModel object and saves them in a .user file.
+     *
      * @param user UserAccountModel user to be serialized.
      */
     public static void serializeUser(UserAccountModel user) {
         try {
             String userPath = Filename.USERS.filename() + user.getUserName() + USER_EXT;
-            System.out.println("fileOut: "+userPath);
+            System.out.println("fileOut: " + userPath);
             FileOutputStream fileOut = new FileOutputStream(userPath);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(user);
@@ -37,10 +37,11 @@ public final class SerializerImplementation {
      * Takes a userName as a string and returns the already serialized object. .ser file must be
      * in resources/tmp and named as userName.ser.
      * Throws an IOException if the .ser file cannot be found.
+     *
      * @param userName String userName to be deserialized
      * @return UserAccountModel
      * @throws IOException When .user does not exist in USER_DIR
-     * deserialized with this method.
+     *                     deserialized with this method.
      */
     public static UserAccountModel deserializeUser(String userName) throws IOException {
         UserAccountModel user = null;

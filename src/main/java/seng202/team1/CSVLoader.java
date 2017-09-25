@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 /**
  * Class that can load CSV files and return ArrayLists of different subclasses of DataPoint.
+ *
  * @author Josh Burt
  * @author Ollie Chick
  */
@@ -35,24 +36,42 @@ public class CSVLoader {
     private final static LocalDateTime EARLIEST_POSSIBLE_DATE = LocalDateTime.of(1900, Month.JANUARY, 1, 0, 0);
 
 
-    public static ArrayList<CSVRecord> loadCSV(String filename) throws IOException {
-        return loadCSV(filename, true);
-    }
     /**
      * Takes a file named filename, which should be a csv, and returns an ArrayList of type
      * CSVRecord.
      * This can be queried using the get(index) method.
+     * This file should not be provided by the app (i.e. it should be provided
+     * by the user at runtime).
      *
      * @param filename The filename of the file to get data from.
      * @return an ArrayList of CSVRecords of the each row of the csv
      * @throws IOException If an IO error occurs.
      */
+    public static ArrayList<CSVRecord> loadCSV(String filename) throws IOException {
+        return loadCSV(filename, true);
+    }
+
+
+    /**
+     * Takes a file named filename, which should be a csv, and returns an ArrayList of type
+     * CSVRecord.
+     * This can be queried using the get(index) method.
+     *
+     * @param filename    The filename of the file to get data from.
+     * @param isCustomCsv true if the file is a custom csv (i.e. not provided in the app)
+     * @return an ArrayList of CSVRecords of the each row of the csv
+     * @throws IOException If an IO error occurs.
+     */
     public static ArrayList<CSVRecord> loadCSV(String filename, boolean isCustomCsv) throws IOException {
+        // Opens the file in a different way depending on if the file is provided with the app
+        // or by the user on runtime.
         if (isCustomCsv) {
+            // Provided by user at runtime
             File csvData = new File(filename);
             CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
             return (ArrayList<CSVRecord>) parser.getRecords();
         } else {
+            // Provided by application
             InputStream csvData = FileInputStream.class.getResourceAsStream(filename);
             CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
             return (ArrayList<CSVRecord>) parser.getRecords();
@@ -117,7 +136,8 @@ public class CSVLoader {
 
     /**
      * Calls the load CSV method and populates an ArrayList with a set of
-     * BikeTrip objects from the default filename.
+     * BikeTrip objects from the default csv.
+     * This csv will be provided with the app.
      *
      * @return an ArrayList of BikeTrips generated from the csv
      * @throws IOException        If an IO error occurs.
@@ -128,7 +148,16 @@ public class CSVLoader {
     }
 
 
-
+    /**
+     * Calls the load CSV method and populates an ArrayList with a set of BikeTrip objects from a
+     * given filename. This file should not be provided by the app (i.e. it should be provided
+     * by the user at runtime).
+     *
+     * @param filename name of the file the data is to be loaded from.
+     * @return an ArrayList of BikeTrips generated from the csv
+     * @throws IOException        If an IO error occurs.
+     * @throws CsvParserException if it can't find a single valid bike trip
+     */
     public static ArrayList<BikeTrip> populateBikeTrips(String filename) throws
             IOException, CsvParserException {
         return populateBikeTrips(filename, true);
@@ -137,9 +166,11 @@ public class CSVLoader {
 
     /**
      * Calls the load CSV method and populates an ArrayList with a set of BikeTrip objects from a
-     * given filename.
+     * given filename. If the isCustomCsv flag is set, it will act as if the csv is in the app's
+     * files.
      *
-     * @param filename name of the file the data is to be loaded from.
+     * @param filename    name of the file the data is to be loaded from.
+     * @param isCustomCsv true if the file is a custom csv (i.e. not provided in the app)
      * @return an ArrayList of BikeTrips generated from the csv
      * @throws IOException        If an IO error occurs.
      * @throws CsvParserException if it can't find a single valid bike trip
@@ -207,20 +238,21 @@ public class CSVLoader {
 
                 isValidCsv = true;
             } catch (Exception e) {
-            // Some error processing the line - it's either a header field or the csv is invalid.
-            // If this occurs for all lines in the CSV, a CsvParserException is thrown.
+                // Some error processing the line - it's either a header field or the csv is invalid.
+                // If this occurs for all lines in the CSV, a CsvParserException is thrown.
+            }
         }
-    }
         if (!isValidCsv) {
-        throw new CsvParserException(filename);
-    }
+            throw new CsvParserException(filename);
+        }
         return trips;
     }
 
 
     /**
      * Calls the load CSV method and populates an ArrayList with a set of
-     * WifiPoint objects from the default filename.
+     * WifiPoint objects from the default csv.
+     * This csv will be provided with the app.
      *
      * @return an ArrayList of WifiPoints generated from the csv
      * @throws IOException        If an IO error occurs.
@@ -232,16 +264,29 @@ public class CSVLoader {
     }
 
 
+    /**
+     * Calls the load CSV method and populates an ArrayList with a set of WifiPoint objects from a
+     * given filename. This file should not be provided by the app (i.e. it should be provided
+     * by the user at runtime).
+     *
+     * @param filename name of the file the data is to be loaded from.
+     * @return an ArrayList of WifiPoints generated from the csv
+     * @throws IOException        If an IO error occurs.
+     * @throws CsvParserException if it can't find a single valid bike trip
+     */
     public static ArrayList<WifiPoint> populateWifiHotspots(String filename) throws
             IOException, CsvParserException {
         return populateWifiHotspots(filename, true);
     }
 
+
     /**
      * Calls the load CSV method and populates an ArrayList with a set of WifiPoint objects from
-     * a given filename.
-     * If the file does not exist, then the error message is printed.
+     * a given filename. If the isCustomCsv flag is set, it will act as if the csv is in the app's
+     * files.
      *
+     * @param filename    name of the file the data is to be loaded from.
+     * @param isCustomCsv true if the file is a custom csv (i.e. not provided in the app)
      * @return an ArrayList of WifiPoints generated from the csv
      * @throws IOException        If an IO error occurs.
      * @throws CsvParserException if it can't find a single valid wifi point
@@ -282,20 +327,21 @@ public class CSVLoader {
 
                 isValidCsv = true;
             } catch (Exception e) {
-            // Some error processing the line - it's either a header field or the csv is invalid.
-            // If this occurs for all lines in the CSV, a CsvParserException is thrown.
+                // Some error processing the line - it's either a header field or the csv is invalid.
+                // If this occurs for all lines in the CSV, a CsvParserException is thrown.
+            }
         }
-    }
         if (!isValidCsv) {
-        throw new CsvParserException(filename);
-    }
+            throw new CsvParserException(filename);
+        }
         return wifiSpots;
     }
 
 
     /**
      * Calls the load CSV method and populates an array list with a set of
-     * RetailerLocation objects from the default filename.
+     * RetailerLocation objects from the default csv.
+     * This csv will be provided with the app.
      *
      * @return an ArrayList of RetailerLocations generated from the csv
      * @throws IOException        If an IO error occurs.
@@ -306,6 +352,17 @@ public class CSVLoader {
         return populateRetailers(DEFAULT_RETAILER_LOCATIONS_FILENAME, false);
     }
 
+
+    /**
+     * Calls the load CSV method and populates an ArrayList with a set of RetailerLocation objects from a
+     * given filename. This file should not be provided by the app (i.e. it should be provided
+     * by the user at runtime).
+     *
+     * @param filename name of the file the data is to be loaded from.
+     * @return an ArrayList of RetailerLocation generated from the csv
+     * @throws IOException        If an IO error occurs.
+     * @throws CsvParserException if it can't find a single valid bike trip
+     */
     public static ArrayList<RetailerLocation> populateRetailers(String filename) throws
             IOException, CsvParserException {
         return populateRetailers(filename, true);
@@ -317,8 +374,10 @@ public class CSVLoader {
      * RetailerLocation objects.
      * If there are columns (9 and 10) for co-ordinates, these are loaded;
      * otherwise, they are set to null.
+     * If the isCustomCsv flag is set, it will act as if the csv is in the app's files.
      *
-     * @param filename name of the file the data is to be loaded from.
+     * @param filename    name of the file the data is to be loaded from.
+     * @param isCustomCsv true if the file is a custom csv (i.e. not provided in the app)
      * @return an ArrayList of RetailerLocations generated from the csv
      * @throws IOException        If an IO error occurs.
      * @throws CsvParserException if it can't find a single valid retailer

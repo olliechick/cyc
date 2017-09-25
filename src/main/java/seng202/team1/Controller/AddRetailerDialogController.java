@@ -15,6 +15,7 @@ import seng202.team1.RetailerLocation;
 /**
  * Logic for the add Retailer dialog.
  * Created by jbe113 on 20/09/17.
+ *
  * @author Josh Bernasconi
  */
 public class AddRetailerDialogController {
@@ -80,8 +81,8 @@ public class AddRetailerDialogController {
             String blockLot = "Unknown";
 
             retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city,
-                                                    state, zipcode, blockLot, primaryFunction,
-                                                    secondaryFunction, true);
+                    state, zipcode, blockLot, primaryFunction,
+                    secondaryFunction, true);
             stage.close();
         }
     }
@@ -93,8 +94,9 @@ public class AddRetailerDialogController {
 
     /**
      * Set up the dialog.
+     *
      * @param stage1 The stage the dialog is displayed in.
-     * @param root The root node of the scene.
+     * @param root   The root node of the scene.
      */
     public void setDialog(Stage stage1, Parent root) {
         stage = stage1;
@@ -107,6 +109,7 @@ public class AddRetailerDialogController {
 
     /**
      * Checks the data entered for validity.
+     *
      * @return True if all the required fields are filled with valid data
      */
     private boolean checkFields() {

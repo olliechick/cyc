@@ -31,11 +31,11 @@ import static seng202.team1.CSVLoader.populateWifiHotspots;
 
 /**
  * Logic for the wifi table GUI
- *
  * Created on 10/09/17.
+ *
  * @author Josh Bernasconi
  */
-public class WifiTableController extends TableController{
+public class WifiTableController extends TableController {
 
     @FXML
     private ComboBox<String> filterBoroughComboBox;
@@ -70,6 +70,7 @@ public class WifiTableController extends TableController{
 
     /**
      * Generates and sets the filter options for Wifi.
+     *
      * @param data An ArrayList of the WifiPoints to generate filters for
      */
     private void setFilters(ArrayList<WifiPoint> data) {
@@ -97,8 +98,8 @@ public class WifiTableController extends TableController{
 
         filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
                         (WifiPoint wifiPoint) -> checkCost(wifiPoint) &&
-                                                checkBorough(wifiPoint) &&
-                                                checkProvider(wifiPoint),
+                                checkBorough(wifiPoint) &&
+                                checkProvider(wifiPoint),
 
                 filterBoroughComboBox.valueProperty(),
                 filterCostComboBox.valueProperty(),
@@ -107,6 +108,7 @@ public class WifiTableController extends TableController{
 
     /**
      * Check the cost of the given wifi point matches the cost selected in the filter box.
+     *
      * @param wifiPoint The wifi point to check against
      * @return True if matches or "All", False otherwise
      */
@@ -120,6 +122,7 @@ public class WifiTableController extends TableController{
 
     /**
      * Check the borough of the given WifiPoint matches the borough selected in the ComboBox
+     *
      * @param wifiPoint The WifiPoint to check against
      * @return True if matches or "All", False otherwise
      */
@@ -133,6 +136,7 @@ public class WifiTableController extends TableController{
 
     /**
      * Check the provider of the given WifiPoint against the provider selected in the ComboBox
+     *
      * @param wifiPoint The WifiPoint to check against
      * @return True if matches or "All", False otherwise
      */
@@ -148,6 +152,7 @@ public class WifiTableController extends TableController{
      * Creates a task to run on another thread to open the file,
      * to stop GUI hangs.
      * Also sets the loading animation going and stops when finished.
+     *
      * @param filename the absolute path to the csv file.
      */
     private void importWifiCsv(final String filename, final boolean isCustomCsv) {
@@ -166,7 +171,7 @@ public class WifiTableController extends TableController{
                     } else {
                         return populateWifiHotspots();
                     }
-                } catch (CsvParserException|IOException e) {
+                } catch (CsvParserException | IOException e) {
                     super.failed();
                     return null;
                 }
@@ -241,12 +246,12 @@ public class WifiTableController extends TableController{
 
         table.getColumns().clear();
 
-        nameCol.setCellValueFactory( new PropertyValueFactory<>("name"));
-        streetCol.setCellValueFactory( new PropertyValueFactory<>("location"));
-        boroughCol.setCellValueFactory( new PropertyValueFactory<>("borough"));
-        hoodCol.setCellValueFactory( new PropertyValueFactory<>("hood"));
-        costCol.setCellValueFactory( new PropertyValueFactory<>("cost"));
-        providerCol.setCellValueFactory( new PropertyValueFactory<>("provider"));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        streetCol.setCellValueFactory(new PropertyValueFactory<>("location"));
+        boroughCol.setCellValueFactory(new PropertyValueFactory<>("borough"));
+        hoodCol.setCellValueFactory(new PropertyValueFactory<>("hood"));
+        costCol.setCellValueFactory(new PropertyValueFactory<>("cost"));
+        providerCol.setCellValueFactory(new PropertyValueFactory<>("provider"));
 
         filteredData = new FilteredList<>(dataPoints, p -> true);
 

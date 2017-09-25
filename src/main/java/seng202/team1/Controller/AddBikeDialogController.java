@@ -121,7 +121,7 @@ public class AddBikeDialogController {
      * Set up the window as a dialog.
      *
      * @param stage1 the new stage to use to display
-     * @param root root fxml node
+     * @param root   root fxml node
      */
     void setDialog(Stage stage1, Parent root) {
         stage = stage1;
@@ -141,7 +141,6 @@ public class AddBikeDialogController {
     /**
      * Check the fields for validity and if so, add the bike trip.
      * Else warn of errors.
-     *
      * TODO add checking and text field actual use
      */
     public void addBike() {
@@ -194,7 +193,7 @@ public class AddBikeDialogController {
         try {
             startTime = LocalTime.parse(startTimeField.getText(), DateTimeFormatter.ofPattern("HH:mm:ss"));
             if (startPM.isSelected()) {
-                if (startTime.getHour() < 12 ) {
+                if (startTime.getHour() < 12) {
                     startTime = startTime.plusHours(12);
                 }
             }

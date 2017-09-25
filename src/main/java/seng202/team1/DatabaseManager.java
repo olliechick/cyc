@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 /**
  * Manages the local and remote databases.
+ *
  * @author Ridge Nairn
  * @author Ollie Chick
  */
@@ -19,8 +20,8 @@ public class DatabaseManager {
     /**
      * Creates local database file, and required tables.
      *
-     * @author Ridge Nairn
      * @throws SQLException when database cannot be connected to / instantiated.
+     * @author Ridge Nairn
      */
     public static void connect() throws SQLException {
         String filename = "sqlite.db";
@@ -158,8 +159,8 @@ public class DatabaseManager {
     /**
      * Checks to see if thedatabase is currently connected.
      *
-     * @author Ridge Nairn
      * @return true if the database is connected.
+     * @author Ridge Nairn
      */
     public static boolean isDatabaseConnected() {
         return getConnection() != null;
@@ -176,6 +177,7 @@ public class DatabaseManager {
 
     /**
      * Deletes database, and all records. Primarily used for cleaning up after test cases.
+     *
      * @author Ridge Nairn
      */
     public static void deleteDatabase() {
@@ -191,9 +193,9 @@ public class DatabaseManager {
      * Adds a single record to the database.
      * The type of the record is identified and is stored in its respective table.
      *
-     * @author Ridge Nairn
      * @param point A point to be added to the database.
      * @throws SQLException when record cannot be added.
+     * @author Ridge Nairn
      */
     public static void addRecord(DataPoint point) throws SQLException {
         // TODO: Implement Record Adding to correct table, based on subclass
@@ -262,10 +264,10 @@ public class DatabaseManager {
     /**
      * Adds a single bike trip record to the database.
      *
-     * @author Ridge Nairn
-     * @author Ollie Chick
      * @param trip An instance of BikeTrip to be added to the trip database table.
      * @throws SQLException when the row could not be inserted
+     * @author Ridge Nairn
+     * @author Ollie Chick
      */
     public static void addBikeTrip(BikeTrip trip) throws SQLException {
         // TODO: Don't assume values can be null
@@ -273,7 +275,7 @@ public class DatabaseManager {
         String insert = "INSERT INTO trip (duration, startTime, stopTime, startLatitude, " +
                 "startLongitude, endLatitude, endLongitude, startStationId, endStationId, " +
                 "bikeID, gender, birthYear, tripDistance, isUserDefined) VALUES (" +
-                new String(new char[numOfQs-1]).replace("\0", "?, ") + "?)";
+                new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
 
         PreparedStatement statement = getConnection().prepareStatement(insert);
 
@@ -300,8 +302,9 @@ public class DatabaseManager {
     /**
      * Checks to see if a record point is currently stored in the database.
      * NOT YET IMPLEMENTED.
-     * @author Ridge Nairn
+     *
      * @param point A point to be checked if it exists in the database.
+     * @author Ridge Nairn
      */
     public static boolean recordExists(DataPoint point) {
         return false; // TODO: Implement
@@ -316,10 +319,10 @@ public class DatabaseManager {
     /**
      * Fetches an ArrayList of BikeTrips from the database, of m - n size.
      *
-     * @author Ridge Nairn
      * @param n lower bound to be fetched, inclusive.
      * @param m upper bound to be fetched, exclusive.
      * @return An ArrayList of BikeTrip objects of size m - n.
+     * @author Ridge Nairn
      */
     public static ArrayList<BikeTrip> getTrips(int n, int m) {
         String statement = "SELECT * FROM trip WHERE id >= ? AND id <= ?";
@@ -348,17 +351,17 @@ public class DatabaseManager {
                 int birthYear = rs.getInt("birthYear");
                 double tripDistance = rs.getDouble("tripDistance");
                 boolean isUserDefined = rs.getBoolean("isUserDefined");
-                
+
                 LocalDateTime startTime = LocalDateTime.parse(startTimeString);
                 LocalDateTime stopTime = LocalDateTime.parse(stopTimeString);
 
                 Point.Float startPoint = new Point.Float(startLongitude, startLatitude);
                 Point.Float stopPoint = new Point.Float(endLongitude, endLatitude);
-                
+
 
                 BikeTrip trip = new BikeTrip(duration, startTime, stopTime, startPoint, stopPoint,
-                                             startStationId, endStationId, bikeID, gender,
-                                             birthYear, tripDistance, isUserDefined);
+                        startStationId, endStationId, bikeID, gender,
+                        birthYear, tripDistance, isUserDefined);
 
                 result.add(trip);
             }
@@ -453,6 +456,7 @@ public class DatabaseManager {
 
     /**
      * Returns the number of BikeTrip records stored in the database.
+     *
      * @author Ridge Nairn
      */
     public static int getNumberOfBikeTrips() {
@@ -463,9 +467,9 @@ public class DatabaseManager {
     /**
      * Returns the number of records of a certain type stored in the database.
      *
-     * @author Ridge Nairn
      * @param c Class of which the count is to be queried.
      * @return number of records to type c in database
+     * @author Ridge Nairn
      */
     public static int getNumberOfRowsFromType(Class c) {
         String statement = "";

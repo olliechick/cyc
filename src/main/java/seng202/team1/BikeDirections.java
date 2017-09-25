@@ -1,12 +1,9 @@
 package seng202.team1;
 
-import com.google.maps.errors.ApiException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -30,12 +27,16 @@ public class BikeDirections {
         this.points = points;
     }
 
+
     /**
      * Constructor that parses a json and gets the polylines and the date retrieved (today's date).
+     *
+     * @param jsonString The JSON file provided by the Google Maps API
      */
-    public BikeDirections(String jsonString) throws InterruptedException, ApiException, IOException{
+    public BikeDirections(String jsonString) {
 
-        //jsonString = GoogleAPIClient.googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
+        // A sample JSON String pulled from the Google API:
+        // jsonString = GoogleAPIClient.googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
 
         JSONArray legs = new JSONObject(jsonString).getJSONArray("routes").getJSONObject(0)
                 .getJSONArray("legs");
@@ -47,7 +48,7 @@ public class BikeDirections {
 
             JSONObject step = steps.getJSONObject(i);
             String polyline = step.getJSONObject("polyline").getString("points");
-            ArrayList<Point.Double>thesePoints = decodePoly(polyline);
+            ArrayList<Point.Double> thesePoints = decodePoly(polyline);
 
             polylines.add(polyline);
             points.addAll(thesePoints);
@@ -55,13 +56,13 @@ public class BikeDirections {
 
         dateRetrieved = LocalDate.now();
         startPoint = points.get(0);
-        endPoint = points.get(points.size()-1);
+        endPoint = points.get(points.size() - 1);
         distanceDescription = legs.getJSONObject(0).getJSONObject("distance").getString("humanReadable");
         durationDescription = legs.getJSONObject(0).getJSONObject("duration").getString("humanReadable");
         distance = legs.getJSONObject(0).getJSONObject("distance").getInt("inMeters");
         duration = legs.getJSONObject(0).getJSONObject("duration").getInt("inSeconds");
 
-        //deal with multiple routes?
+        //Note that this function can only deal with one route.
     }
 
 
@@ -74,8 +75,13 @@ public class BikeDirections {
     }
 
 
-
-    // from http://jeffreysambells.com/2010/05/27/decoding-polylines-from-google-maps-direction-api-with-java
+    /**
+     * Decodes a polyline (provided by Google) into a set of points.
+     * Adapted from http://jeffreysambells.com/2010/05/27/decoding-polylines-from-google-maps-direction-api-with-java
+     *
+     * @param encoded The encoded polyline
+     * @return the set of points
+     */
     private static ArrayList<Point.Double> decodePoly(String encoded) {
 
         ArrayList<Point.Double> poly = new ArrayList<Point.Double>();
@@ -109,11 +115,18 @@ public class BikeDirections {
         return poly;
     }
 
-
     @Override
     public String toString() {
         return "BikeDirections{" +
+                "polylines=" + polylines +
                 ", dateRetrieved=" + dateRetrieved +
+                ", startPoint=" + startPoint +
+                ", endPoint=" + endPoint +
+                ", points=" + points +
+                ", distance=" + distance +
+                ", distanceDescription='" + distanceDescription + '\'' +
+                ", duration=" + duration +
+                ", durationDescription='" + durationDescription + '\'' +
                 '}';
     }
 }

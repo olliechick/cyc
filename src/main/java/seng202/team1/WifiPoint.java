@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
  * @author Josh Burt
  * @author Ollie Chick
  */
-public class WifiPoint extends DataPoint implements java.io.Serializable{
+public class WifiPoint extends DataPoint implements java.io.Serializable {
 
     private int objectId;
     private Point.Float coords;
@@ -234,23 +234,20 @@ public class WifiPoint extends DataPoint implements java.io.Serializable{
     }
 
     @Override
-    public boolean equals(Object obj){
-        if (obj == null){
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
         }
-        if (this == obj){
+        if (this == obj) {
             return true;
         }
         WifiPoint that = (WifiPoint) obj;
-        if (this.coords.equals(that.coords) && this.ssid.equalsIgnoreCase(that.ssid)){
-            return true;
-        }
-        return false;
+        return this.coords.equals(that.coords) && this.ssid.equalsIgnoreCase(that.ssid);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17,31).
+        return new HashCodeBuilder(17, 31).
                 append(coords).
                 append(ssid).
                 toHashCode();

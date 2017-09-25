@@ -4,6 +4,7 @@ import javafx.scene.layout.Region;
 
 /**
  * Class to generate alerts.
+ *
  * @author Ollie Chick
  */
 public class AlertGenerator {
@@ -11,7 +12,8 @@ public class AlertGenerator {
     /**
      * Creates an alert that will pop up and alert the user.
      * Takes two parameters, the title of the popup and the contents of the popup.
-     * @param title the title of the popup
+     *
+     * @param title   the title of the popup
      * @param content the contents of the popup
      */
     public static void createAlert(String title, String content) {
@@ -26,7 +28,8 @@ public class AlertGenerator {
 
     /**
      * Creates an alert with the header "Error" that will pop up and alert the user.
-     * Takes one parameters, the contents of the popup.
+     * Takes one parameter, the contents of the popup.
+     *
      * @param content the contents of the popup
      */
     public static void createAlert(String content) {

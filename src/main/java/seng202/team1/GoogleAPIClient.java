@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import static seng202.team1.CSVLoader.populateRetailers;
 
 
-
 public class GoogleAPIClient {
 
 
@@ -41,7 +40,7 @@ public class GoogleAPIClient {
         ArrayList<seng202.team1.RetailerLocation> retailerPoints;
         try {
             retailerPoints = populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
-        } catch (CsvParserException|IOException e) {
+        } catch (CsvParserException | IOException e) {
             //TODO deal with the exception
             AlertGenerator.createAlert("Error", "Error generating retailers");
             return;
@@ -56,7 +55,7 @@ public class GoogleAPIClient {
             try {
                 Point.Double latlng = googleGeocode(address);
                 System.out.println(latlng.getX() + ", " + latlng.getY());
-            } catch (InterruptedException|ApiException|IOException e) {
+            } catch (InterruptedException | ApiException | IOException e) {
                 //e.printStackTrace();
             }
 
@@ -65,7 +64,7 @@ public class GoogleAPIClient {
 
     // THIS IS A WORK IN PROGRESS - note that it counts towards daily limit
     public static String googleGetDirections(double latOrigin, double lngOrigin, double latDest, double lngDest) throws InterruptedException, ApiException, IOException {
-        LatLng origin =  new LatLng(latOrigin, lngOrigin);
+        LatLng origin = new LatLng(latOrigin, lngOrigin);
         LatLng destination = new LatLng(latDest, lngDest);
         GeoApiContext context = new GeoApiContext.Builder().apiKey(KEY).build();
 
@@ -83,8 +82,7 @@ public class GoogleAPIClient {
     }
 
 
-
-    public static void main(String [ ] args) throws InterruptedException, ApiException, IOException {
+    public static void main(String[] args) throws InterruptedException, ApiException, IOException {
         //BikeDirections b = new BikeDirections("");
         //example
         //System.out.println(googleGeocode("1600 Amphitheatre Parkway Mountain View, CA 94043"));

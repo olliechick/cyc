@@ -32,9 +32,10 @@ import static seng202.team1.CSVLoader.populateBikeTrips;
 /**
  * Logic for the bike table GUI
  * Created on 7/09/17.
+ *
  * @author Josh Bernasconi
  */
-public class BikeTableController extends TableController{
+public class BikeTableController extends TableController {
 
     @FXML
     private ComboBox<String> filterStartComboBox;
@@ -69,15 +70,14 @@ public class BikeTableController extends TableController{
      * criteria.
      * The second section contains the observable properties that it watches for changes on,
      * updating the filter each time one changes.
-     *
-     * TODO leave in for credit?
+     * Adapted from
      * https://stackoverflow.com/questions/33016064/javafx-multiple-textfields-should-filter-one-tableview
      */
     private void setPredicate() {
 
         filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
                         (BikeTrip bikeTrip) -> searchBikeId(bikeTrip) &&
-                                    checkGender(bikeTrip),
+                                checkGender(bikeTrip),
 
                 bikeSearchField.textProperty(),
                 filterGenderComboBox.valueProperty()
@@ -86,6 +86,7 @@ public class BikeTableController extends TableController{
 
     /**
      * Checks if the Bike ID of the given bike trip contains the entered bike ID.
+     *
      * @param bikeTrip Bike trip to check against
      * @return true if bike ID matches, or the text field is empty. False otherwise
      */
@@ -100,6 +101,7 @@ public class BikeTableController extends TableController{
 
     /**
      * Checks if the selected gender matches the gender of the given bike trip.
+     *
      * @param bikeTrip Bike trip to check against
      * @return True if matches or "All" is selected. False otherwise.
      */
@@ -141,7 +143,7 @@ public class BikeTableController extends TableController{
      */
     private void importBikeCsv(final String filename, final boolean isCustomCsv) {
 
-        final Task<ArrayList<BikeTrip>>loadBikeCsv = new Task<ArrayList<BikeTrip>>() {
+        final Task<ArrayList<BikeTrip>> loadBikeCsv = new Task<ArrayList<BikeTrip>>() {
             /**
              * Defines the task to be run on another thread.
              * runLater is then invoked on the UI thread once the code above it,
@@ -155,7 +157,7 @@ public class BikeTableController extends TableController{
                     } else {
                         return populateBikeTrips();
                     }
-                } catch (CsvParserException|IOException e) {
+                } catch (CsvParserException | IOException e) {
                     super.failed();
                     return null;
                 }
@@ -261,13 +263,13 @@ public class BikeTableController extends TableController{
         table.getColumns().clear();
 
         // Attempts to access public properties of name "Property", falls back to get<property>() methods if no property available
-        bikeIdCol.setCellValueFactory( new PropertyValueFactory<>("bikeId"));
-        genderCol.setCellValueFactory( new PropertyValueFactory<>("gender"));
-        durationCol.setCellValueFactory( new PropertyValueFactory<>("Duration"));
-        startLatitudeCol.setCellValueFactory( new PropertyValueFactory<>("startLatitude"));
-        startLongitudeCol.setCellValueFactory( new PropertyValueFactory<>("startLongitude"));
-        endLatitudeCol.setCellValueFactory( new PropertyValueFactory<>("endLatitude"));
-        endLongitudeCol.setCellValueFactory( new PropertyValueFactory<>("endLongitude"));
+        bikeIdCol.setCellValueFactory(new PropertyValueFactory<>("bikeId"));
+        genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        durationCol.setCellValueFactory(new PropertyValueFactory<>("Duration"));
+        startLatitudeCol.setCellValueFactory(new PropertyValueFactory<>("startLatitude"));
+        startLongitudeCol.setCellValueFactory(new PropertyValueFactory<>("startLongitude"));
+        endLatitudeCol.setCellValueFactory(new PropertyValueFactory<>("endLatitude"));
+        endLongitudeCol.setCellValueFactory(new PropertyValueFactory<>("endLongitude"));
 
         startLocCol.getColumns().addAll(startLatitudeCol, startLongitudeCol);
         endLocCol.getColumns().addAll(endLatitudeCol, endLongitudeCol);
@@ -287,6 +289,7 @@ public class BikeTableController extends TableController{
     /**
      * initialises the model for use in the rest of the View.
      * Allows reading and writing to user data.
+     *
      * @param userAccountModel The current user's account.
      */
     void initModel(UserAccountModel userAccountModel) {

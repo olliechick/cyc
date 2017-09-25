@@ -2,11 +2,10 @@ package seng202.team1;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Class to implement routing methods
+ *
  * @author Josh Burt
  */
 public final class Routing {
@@ -15,17 +14,18 @@ public final class Routing {
      * Class for finding common bike routes from a point.
      * Takes a list of bike trips and a point and returns the first 10 trips
      * found for that point or all trips found within 1000m if less than 10 trips exist.
+     *
      * @param ourPoint Point to test from
      * @param triplist list to test against
      * @return list containing all trips meeting the criteria
      */
-    public static ArrayList<BikeTrip> findCommonTripsFromPosition(Point.Float ourPoint, ArrayList<BikeTrip> triplist){
+    public static ArrayList<BikeTrip> findCommonTripsFromPosition(Point.Float ourPoint, ArrayList<BikeTrip> triplist) {
         ArrayList<BikeTrip> results = new ArrayList<>();
         int delta = 100; // allows us to increment the search radius
-        while(results.size() < 9 && delta < 1001){
+        while (results.size() < 9 && delta < 1001) {
             ArrayList<BikeTrip> holder = DataAnalyser.searchBikeTrips(ourPoint.getY(), ourPoint.getX(), delta, triplist);
-            for (BikeTrip t : holder){
-                if ( !results.contains(t)) {
+            for (BikeTrip t : holder) {
+                if (!results.contains(t)) {
                     results.add(t);
                 }
             }

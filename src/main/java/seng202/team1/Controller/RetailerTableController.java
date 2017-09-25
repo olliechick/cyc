@@ -28,11 +28,11 @@ import static seng202.team1.CSVLoader.populateRetailers;
 
 /**
  * Logic for the retailer table GUI
-
  * Created on 7/09/17.
+ *
  * @author Josh Bernasconi
  */
-public class RetailerTableController extends TableController{
+public class RetailerTableController extends TableController {
 
     @FXML
     private ComboBox<String> filterPrimaryComboBox;
@@ -67,15 +67,12 @@ public class RetailerTableController extends TableController{
     /**
      * Checks the combo boxes and street field for data and filters the displayed
      * data accordingly.
-     *
      * The first section of the lambda generates a boolean on each table entry, depending if they fit the
      * criteria.
      * The second section contains the observable properties that it watches for changes on,
      * updating the filter each time one changes.
-     *
-     * TODO leave in for credit?
+     * Adapted from
      * https://stackoverflow.com/questions/33016064/javafx-multiple-textfields-should-filter-one-tableview
-     *
      * TODO thread if slow
      */
     private void setPredicate() {
@@ -93,6 +90,7 @@ public class RetailerTableController extends TableController{
 
     /**
      * Checks the given retailerLocation against the filter in the primary function ComboBox.
+     *
      * @param retailerLocation The retailer Location to check against the filter
      * @return True if "All" is selected, or the primary function of the retailer matches the current filter. False otherwise.
      */
@@ -108,6 +106,7 @@ public class RetailerTableController extends TableController{
     /**
      * Checks the address line 1 of the given retailerLocation against the text in the street
      * search field.
+     *
      * @param retailerLocation The retailer Location to check against the filter
      * @return True is the search box is empty or the retailer address contains the text in the field. False otherwise.
      */
@@ -123,6 +122,7 @@ public class RetailerTableController extends TableController{
 
     /**
      * Check the zip code of the given RetailerLocation against the selected zip code.
+     *
      * @param retailerLocation The retailer Location to check against the filter
      * @return True if zip matches or "All" is selected, false otherwise.
      */
@@ -136,6 +136,7 @@ public class RetailerTableController extends TableController{
 
     /**
      * Generate and set the filter options for the given retailer set.
+     *
      * @param retailerLocations the ArrayList of retailers to generate filters from.
      */
     private void setFilters(ArrayList<RetailerLocation> retailerLocations) {
@@ -155,6 +156,7 @@ public class RetailerTableController extends TableController{
     /**
      * Creates a task to load the csv data, runs it on another thread.
      * The loading animations are shown until load completes, then the UI is updated.
+     *
      * @param filename The filename of the CSV to load.
      */
     private void importRetailerCsv(final String filename, final boolean isCustomCsv) {
@@ -174,7 +176,7 @@ public class RetailerTableController extends TableController{
                     } else {
                         return populateRetailers();
                     }
-                } catch (CsvParserException|IOException e) {
+                } catch (CsvParserException | IOException e) {
                     super.failed();
                     return null;
                 }
@@ -257,11 +259,11 @@ public class RetailerTableController extends TableController{
         table.getColumns().clear();
 
         //Sets up each column to get the correct entry in each dataPoint
-        nameCol.setCellValueFactory( new PropertyValueFactory<>("name"));
-        addressCol.setCellValueFactory( new PropertyValueFactory<>("addressLine1"));
-        primaryCol.setCellValueFactory( new PropertyValueFactory<>("primaryFunction"));
-        secondaryCol.setCellValueFactory( new PropertyValueFactory<>("secondaryFunction"));
-        zipCol.setCellValueFactory( new PropertyValueFactory<>("zipcode"));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        addressCol.setCellValueFactory(new PropertyValueFactory<>("addressLine1"));
+        primaryCol.setCellValueFactory(new PropertyValueFactory<>("primaryFunction"));
+        secondaryCol.setCellValueFactory(new PropertyValueFactory<>("secondaryFunction"));
+        zipCol.setCellValueFactory(new PropertyValueFactory<>("zipcode"));
 
         // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
         filteredData = new FilteredList<>(dataPoints, p -> true);

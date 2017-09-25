@@ -2,6 +2,7 @@ package seng202.team1;
 
 /**
  * Holding class for generic arraylist types later. closer to an interface. Probably needs a better name
+ *
  * @author Josh Burt
  * @author Ollie Chick
  */
@@ -38,6 +39,7 @@ public class DataPoint {
 
     /**
      * Returns the name of the data point. This should be overridden.
+     *
      * @return "Datapoint name"
      */
     public String getName() {
@@ -47,6 +49,7 @@ public class DataPoint {
 
     /**
      * Returns a description of the data point. This should be overridden.
+     *
      * @return "A datapoint."
      */
     public String getDescription() {

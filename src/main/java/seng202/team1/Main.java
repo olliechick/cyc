@@ -10,10 +10,10 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Main class for launching the application
- * Loads the login view and initialises it
- *
+ * Main class for launching the application.
+ * Loads the login view and initialises it.
  * Created on 22/08/17.
+ *
  * @author Josh Bernasconi
  */
 
@@ -23,9 +23,9 @@ public class Main extends Application {
      * Called automatically to load and display the login GUI, the
      * entry point into the application.
      *
+     * @param primaryStage main JavaFX stage, where scenes are displayed.
      * @author Josh Bernasconi
      * @author Cameron Auld
-     * @param primaryStage main JavaFX stage, where scenes are displayed.
      */
     @Override
     public void start(Stage primaryStage) {
@@ -56,7 +56,7 @@ public class Main extends Application {
 
         for (Filename filename : directories) {
             String directory = filename.filename();
-            if (directory.charAt(directory.length()-1) == '/') {
+            if (directory.charAt(directory.length() - 1) == '/') {
                 //is a directory
                 System.out.println("Creating " + directory);
                 new File(directory).mkdirs(); //make the directory (if it doesn't exist)

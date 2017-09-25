@@ -19,8 +19,8 @@ import java.time.LocalDate;
 
 /**
  * Logic for the login GUI
- *
  * Created on 22/08/17.
+ *
  * @author Josh Bernasconi
  * @author Ollie Chick
  */
@@ -83,7 +83,6 @@ public class LoginController {
     private final ObservableList<String> accountTypeList = FXCollections.observableArrayList("User", "Admin", "Analyst");
 
 
-
     @FXML
     public void initialize() {
         genderBox.setItems(genderList);
@@ -103,7 +102,6 @@ public class LoginController {
             FXMLLoader landingLoader = new FXMLLoader(getClass().getResource("/fxml/landingView.fxml"));
             Parent landingView = landingLoader.load();
             LandingController landingController = landingLoader.getController();
-
 
 
             Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Table can take over
@@ -128,8 +126,6 @@ public class LoginController {
             FXMLLoader mapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
             Parent mapView = mapLoader.load();
             MapController mapController = mapLoader.getController();
-
-
 
 
             Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Map can take over
@@ -191,9 +187,10 @@ public class LoginController {
     /**
      * Processes a user sign up.
      * Does not allow empty user names, but does allow empty passwords.
+     *
      * @throws IOException If it can't create the user file.
      */
-    public void signUp() throws IOException{
+    public void signUp() throws IOException {
 
         System.out.println("Sign up button clicked");
         String username = newUsernameTextField.getText();

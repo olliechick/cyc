@@ -14,6 +14,7 @@ import java.io.File;
 /**
  * Logic for the table GUI
  * Created on 22/08/17.
+ *
  * @author Josh Bernasconi
  */
 public class TableController {
@@ -36,7 +37,7 @@ public class TableController {
     public void initialize() {
 
         // Get the selected row on double click and run the data popup
-        table.setRowFactory( tv -> {
+        table.setRowFactory(tv -> {
             TableRow<DataPoint> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2) {
@@ -47,7 +48,7 @@ public class TableController {
                     }
                 }
             });
-            return row ;
+            return row;
         });
     }
 
