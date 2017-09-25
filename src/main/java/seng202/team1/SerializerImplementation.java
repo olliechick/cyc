@@ -46,12 +46,15 @@ public final class SerializerImplementation {
     public static UserAccountModel deserializeUser(String userName) throws IOException {
         UserAccountModel user = null;
         try {
-            FileInputStream inFile = new FileInputStream(USER_DIR + userName + USER_EXT);
+            InputStream inFile =  FileInputStream.class.getResourceAsStream("/users/"+userName+USER_EXT);
+
             ObjectInputStream ois = new ObjectInputStream(inFile);
             user = (UserAccountModel) ois.readObject();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+
         return user;
     }
 }
