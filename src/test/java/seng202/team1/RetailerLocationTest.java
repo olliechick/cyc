@@ -90,7 +90,7 @@ public class RetailerLocationTest extends TestCase {
     }
 
     @Test
-    public void testEqualsSameButDiffernant(){
+    public void testEqualsSameButDifferent(){
         name = "Pearl Bodywork";
         addressLine1 = "60 Pearl Street";
         addressLine2 = "Floor 3";
@@ -108,8 +108,8 @@ public class RetailerLocationTest extends TestCase {
     }
 
     @Test
-    public void testEqualsDifferant(){
-        name = "Pearl Bodywork";
+    public void testEqualsDifferent(){
+        name = "Pearl Bodywor";
         addressLine1 = "60 Pearl Street";
         addressLine2 = "Floor 2";
         city = "New York";
@@ -155,7 +155,7 @@ public class RetailerLocationTest extends TestCase {
     }
 
     @Test
-    public void testHashCodeSameButDifferant(){
+    public void testHashCodeSameButDifferent(){
         name = "Pearl Bodywork";
         addressLine1 = "60 Pearl Street";
         addressLine2 = "Floor 3";
@@ -174,8 +174,8 @@ public class RetailerLocationTest extends TestCase {
     }
 
     @Test
-    public void testHashCodeDifferant(){
-        name = "Pearl Bodywork";
+    public void testHashCodeDifferent(){
+        name = "Pearl Bodywor";
         addressLine1 = "60 Pearl Street";
         addressLine2 = "Floor 2";
         city = "New York";
