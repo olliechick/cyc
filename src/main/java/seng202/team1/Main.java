@@ -30,7 +30,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        //createDirectories();
+        createDirectories();
 
         try {
             FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
