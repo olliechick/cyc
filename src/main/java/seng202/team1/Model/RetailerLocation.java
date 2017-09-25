@@ -216,7 +216,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable{
             return true;
         }
         RetailerLocation that = (RetailerLocation) obj;
-        if (this.name.equalsIgnoreCase(that.name) && this.primaryFunction.equalsIgnoreCase(that.primaryFunction) && this.coords.equals(that.coords)){
+        if (this.name.equalsIgnoreCase(that.name) && this.primaryFunction.equalsIgnoreCase(that.primaryFunction)){
             return true;
         }
         return false;
@@ -227,7 +227,6 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable{
         return new HashCodeBuilder(17,31).
                 append(name).
                 append(primaryFunction).
-                append(coords).
                 toHashCode();
     }
     @Override

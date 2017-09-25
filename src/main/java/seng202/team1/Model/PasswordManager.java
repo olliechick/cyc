@@ -1,4 +1,4 @@
-package seng202.team1;
+package seng202.team1.Model;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;

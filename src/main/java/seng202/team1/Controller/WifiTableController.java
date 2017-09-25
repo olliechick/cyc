@@ -19,7 +19,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.GenerateFields;
-import seng202.team1.SerializerImplementation;
+import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 import seng202.team1.Model.WifiPoint;
 

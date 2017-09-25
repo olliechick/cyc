@@ -1,6 +1,7 @@
 package seng202.team1;
 
 import org.junit.Test;
+import seng202.team1.Model.PasswordManager;
 
 import static org.junit.Assert.*;
 

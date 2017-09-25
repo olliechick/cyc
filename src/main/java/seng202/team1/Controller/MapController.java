@@ -17,6 +17,7 @@ import seng202.team1.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.GenerateFields;
 import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.Model.WifiPoint;
 
 import java.awt.*;
