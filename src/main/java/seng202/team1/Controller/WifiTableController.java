@@ -305,4 +305,9 @@ public class WifiTableController extends TableController{
         importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME, false);
     }
 
+    @Override
+    public void close() {
+        super.close();
+    }
+
 }

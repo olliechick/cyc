@@ -257,6 +257,7 @@ public class BikeTableController extends TableController{
         TableColumn<BikeTrip, Point.Float> endLocCol = new TableColumn<>("End Location");
         TableColumn<BikeTrip, Point.Float> endLatitudeCol = new TableColumn<>("Latitude");
         TableColumn<BikeTrip, Point.Float> endLongitudeCol = new TableColumn<>("Longitude");
+        TableColumn<BikeTrip, Double> distCol= new TableColumn<>("Distance (m)");
         table.getColumns().clear();
 
         // Attempts to access public properties of name "Property", falls back to get<property>() methods if no property available
@@ -267,6 +268,7 @@ public class BikeTableController extends TableController{
         startLongitudeCol.setCellValueFactory( new PropertyValueFactory<>("startLongitude"));
         endLatitudeCol.setCellValueFactory( new PropertyValueFactory<>("endLatitude"));
         endLongitudeCol.setCellValueFactory( new PropertyValueFactory<>("endLongitude"));
+        distCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Double>("tripDistanceTwoD"));
 
         startLocCol.getColumns().addAll(startLatitudeCol, startLongitudeCol);
         endLocCol.getColumns().addAll(endLatitudeCol, endLongitudeCol);
@@ -278,7 +280,7 @@ public class BikeTableController extends TableController{
         sortedData.comparatorProperty().bind(table.comparatorProperty());
 
         table.setItems(sortedData);
-        table.getColumns().addAll(bikeIdCol, genderCol, durationCol, startLocCol, endLocCol);
+        table.getColumns().addAll(bikeIdCol, genderCol, durationCol, distCol, startLocCol, endLocCol);
 
         setFilters();
     }

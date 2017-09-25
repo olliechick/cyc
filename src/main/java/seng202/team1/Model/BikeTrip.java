@@ -3,6 +3,7 @@ package seng202.team1.Model;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -267,6 +268,10 @@ public class BikeTrip extends DataPoint implements java.io.Serializable{
 
     public Double getTripDistance() {
         return tripDistance;
+    }
+
+    public Double getTripDistanceTwoD() {
+        return Double.parseDouble(new DecimalFormat("#.##").format(tripDistance));
     }
 
     public void setTripDistance(Double tripDistance) {
