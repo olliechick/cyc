@@ -58,7 +58,7 @@ public class DataPoint {
 
 
     /**
-     * @param update TODO what is this???
+     * @param update the point's new visibility
      * @return true if a DataPoint's visible bool has changed
      */
     public boolean isUpdated(boolean update) {
