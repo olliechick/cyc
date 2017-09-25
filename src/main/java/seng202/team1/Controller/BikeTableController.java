@@ -172,10 +172,15 @@ public class BikeTableController extends TableController{
 
             public void handle(WorkerStateEvent event) {
 
-                setTableViewBike(loadBikeCsv.getValue());
-                stopLoadingAni();
-                setPredicate();
-                populateCustomBikeTrips();
+                if (loadBikeCsv.getValue() != null) {
+                    setTableViewBike(loadBikeCsv.getValue());
+                    stopLoadingAni();
+                    setPredicate();
+                    populateCustomBikeTrips();
+                } else {
+                    AlertGenerator.createAlert("Error", "Error loading bike trips. Is your csv correct?");
+                    stopLoadingAni();
+                }
             }
         });
 
@@ -186,7 +191,7 @@ public class BikeTableController extends TableController{
             @Override
             public void handle(WorkerStateEvent event) {
 
-                AlertGenerator.createAlert("Error", "Error loading bike trips.");
+                AlertGenerator.createAlert("Error", "Error loading bike trips. Please try again");
                 stopLoadingAni();
             }
         });

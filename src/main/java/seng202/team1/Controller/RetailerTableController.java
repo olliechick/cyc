@@ -175,7 +175,6 @@ public class RetailerTableController extends TableController{
                         return populateRetailers();
                     }
                 } catch (CsvParserException|IOException e) {
-                    //TODO deal with the exception
                     super.failed();
                     return null;
                 }
@@ -189,13 +188,18 @@ public class RetailerTableController extends TableController{
 
             public void handle(WorkerStateEvent event) {
 
-                // Initialise the values in the filter combo boxes now that we have data to work with
-                setFilters(loadRetailerCsv.getValue());
+                if (loadRetailerCsv.getValue() != null) {
+                    // Initialise the values in the filter combo boxes now that we have data to work with
+                    setFilters(loadRetailerCsv.getValue());
 
-                setTableViewRetailer(loadRetailerCsv.getValue());
-                stopLoadingAni();
-                setPredicate();
-                populateCustomRetailerLocations();
+                    setTableViewRetailer(loadRetailerCsv.getValue());
+                    stopLoadingAni();
+                    setPredicate();
+                    populateCustomRetailerLocations();
+                } else {
+                    AlertGenerator.createAlert("Error", "Error loading retailers. Is your csv correct?");
+                    stopLoadingAni();
+                }
 
             }
         });
@@ -204,7 +208,8 @@ public class RetailerTableController extends TableController{
         loadRetailerCsv.setOnFailed(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
-                AlertGenerator.createAlert("Error", "Error loading retailers.");
+                System.out.println("failed");
+                AlertGenerator.createAlert("Error", "Error loading retailers. Please try again");
                 stopLoadingAni();
             }
         });

@@ -182,19 +182,24 @@ public class WifiTableController extends TableController{
              */
             public void handle(WorkerStateEvent event) {
 
-                setFilters(loadWifiCsv.getValue());
+                if (loadWifiCsv.getValue() != null) {
+                    setFilters(loadWifiCsv.getValue());
 
-                setTableViewWifi(loadWifiCsv.getValue());
-                stopLoadingAni();
-                setPredicate();
-                populateCustomWifiPoints();
+                    setTableViewWifi(loadWifiCsv.getValue());
+                    stopLoadingAni();
+                    setPredicate();
+                    populateCustomWifiPoints();
+                } else {
+                    AlertGenerator.createAlert("Error", "Error loading wifis. Is your csv correct?");
+                    stopLoadingAni();
+                }
             }
         });
 
         loadWifiCsv.setOnFailed(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
-                AlertGenerator.createAlert("Error", "Error generating wifis");
+                AlertGenerator.createAlert("Error", "Error generating wifis, please try again");
                 stopLoadingAni();
             }
         });
