@@ -11,7 +11,7 @@ import java.io.*;
  */
 public final class SerializerImplementation {
 
-    private final static String USER_DIR = "src/main/resources/users/";
+    private final static String USER_DIR = "/users/";
     private final static String USER_EXT = ".user";
 
     /**
@@ -46,7 +46,8 @@ public final class SerializerImplementation {
     public static UserAccountModel deserializeUser(String userName) throws IOException {
         UserAccountModel user = null;
         try {
-            FileInputStream inFile = new FileInputStream(USER_DIR + userName + USER_EXT);
+            InputStream inFile =  FileInputStream.class.getResourceAsStream(USER_DIR + userName + USER_EXT);
+            //FileInputStream inFile = new FileInputStream(USER_DIR + userName + USER_EXT);
             ObjectInputStream ois = new ObjectInputStream(inFile);
             user = (UserAccountModel) ois.readObject();
         } catch (ClassNotFoundException e) {

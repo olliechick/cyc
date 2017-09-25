@@ -7,6 +7,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -43,7 +44,8 @@ public class CSVLoader {
      * @throws IOException If an IO error occurs.
      */
     public static ArrayList<CSVRecord> loadCSV(String filename) throws IOException {
-        File csvData = new File(filename);
+        InputStream csvData = File.class.getResourceAsStream(filename);
+
         CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
         return (ArrayList<CSVRecord>) parser.getRecords();
     }
