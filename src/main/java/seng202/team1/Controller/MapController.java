@@ -1,8 +1,7 @@
 package seng202.team1.Controller;
 
 
-import com.google.maps.errors.ApiException;
-import javafx.application.Platform;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -60,6 +59,7 @@ public class MapController {
     public ArrayList<String> uniqueSecondaryFunctions = null;
     public ArrayList<String> uniquePrimaryFunctions = null;
     public ArrayList<String> uniqueProviders = null;
+
     @FXML
     private UserAccountModel model;
     @FXML
@@ -91,8 +91,7 @@ public class MapController {
     private Button switchViewButton;
     @FXML
     private Button AddCustomWIFIButton;
-    @FXML
-    private Button AddCustomRetailerButton;
+
 
 
 
@@ -149,21 +148,18 @@ public class MapController {
                 }); **/
     }
 
-    // JavaScript interface object
+    /** JavaScript interface object. Can be used to pass
+     *
+     *
+      */
+
     public class JavaApp {
-        int position = 0;
         public void alert(Double lat, Double lng) {
             System.out.println(lat + "," + lng);
             Point.Double clickPoint = new Point.Double();
             clickPoint.setLocation(lat, lng);
             userClicks.add(clickPoint);
             System.out.print(userClicks);
-        }
-        public void setMarkerArray(int newPosition ) {
-            position = newPosition;
-        }
-        public int getMarkerArray() {
-            return position;
         }
     }
 
