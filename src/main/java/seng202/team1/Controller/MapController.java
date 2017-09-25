@@ -247,7 +247,7 @@ public class MapController {
     @FXML
     private void loadAllBikeTrips() {
         try {
-            bikeTrips = populateBikeTrips("src/main/resources/csv/biketrip.csv");
+            bikeTrips = populateBikeTrips();
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load bike trips.");
         }
@@ -255,7 +255,7 @@ public class MapController {
     @FXML
     private void loadAllWifi() {
         try {
-            wifiPoints = populateWifiHotspots("src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv");
+            wifiPoints = populateWifiHotspots();
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load WiFi points.");
         }
@@ -273,7 +273,7 @@ public class MapController {
 
     private void loadAllRetailers() {
         try {
-            retailerPoints = populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
+            retailerPoints = populateRetailers();
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load retailers.");
         }
