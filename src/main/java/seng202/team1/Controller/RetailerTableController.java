@@ -215,7 +215,7 @@ public class RetailerTableController extends TableController{
 
         String filename = getCsvFilename();
         if (filename != null) {
-            dataPoints.clear();
+            //dataPoints.clear();
             importRetailerCsv(filename);
         }
     }
@@ -305,6 +305,6 @@ public class RetailerTableController extends TableController{
 
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
-        importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME);
+        importRetailerCsv("/csv/Lower_Manhattan_Retailers.csv");
     }
 }

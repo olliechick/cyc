@@ -60,7 +60,7 @@ public class BikeTableController extends TableController{
     private ObservableList<BikeTrip> dataPoints;
     private FilteredList<BikeTrip> filteredData;
 
-    private final static String DEFAULT_BIKE_TRIPS_FILENAME = "src/main/resources/csv/biketrip.csv";
+    private final static String DEFAULT_BIKE_TRIPS_FILENAME = "/csv/biketrip.csv";
 
     /**
      * Checks the combo boxes and bike ID field for data and filters the displayed

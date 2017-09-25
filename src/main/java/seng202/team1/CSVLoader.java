@@ -6,8 +6,10 @@ import org.apache.commons.csv.CSVRecord;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -22,7 +24,7 @@ import java.util.ArrayList;
  */
 public class CSVLoader {
 
-    private final static String CSV_DIRNAME = "src/main/resources/csv/";
+    private final static String CSV_DIRNAME = "/csv/";
     private final static String DEFAULT_BIKE_TRIPS_FILENAME = CSV_DIRNAME +
             "201512-citibike-tripdata.csv";
     private final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = CSV_DIRNAME +
@@ -44,7 +46,7 @@ public class CSVLoader {
      * @throws IOException If an IO error occurs.
      */
     public static ArrayList<CSVRecord> loadCSV(String filename) throws IOException {
-        InputStream csvData = File.class.getResourceAsStream(filename);
+        InputStream csvData = FileInputStream.class.getResourceAsStream(filename);
 
         CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
         return (ArrayList<CSVRecord>) parser.getRecords();
