@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 
 
-
 public class GoogleAPIClient {
 
 
@@ -68,7 +67,7 @@ public class GoogleAPIClient {
 
     // THIS IS A WORK IN PROGRESS - note that it counts towards daily limit
     public static String googleGetDirections(double latOrigin, double lngOrigin, double latDest, double lngDest) throws InterruptedException, ApiException, IOException {
-        LatLng origin =  new LatLng(latOrigin, lngOrigin);
+        LatLng origin = new LatLng(latOrigin, lngOrigin);
         LatLng destination = new LatLng(latDest, lngDest);
         GeoApiContext context = new GeoApiContext.Builder().apiKey(KEY).build();
 
