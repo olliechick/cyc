@@ -58,7 +58,7 @@ public class WifiTableController extends TableController{
     private ObservableList<WifiPoint> dataPoints;
     private FilteredList<WifiPoint> filteredData;
 
-    private final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "src/main/resources/csv/NYC_Free_Public_WiFi_03292017.csv";
+    private final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "/csv/NYC_Free_Public_WiFi_03292017.csv";
 
     /**
      * Displays the currently logged in user's name at the bottom of the table.
@@ -150,7 +150,7 @@ public class WifiTableController extends TableController{
      * Also sets the loading animation going and stops when finished.
      * @param filename the absolute path to the csv file.
      */
-    private void importWifiCsv(final String filename) {
+    private void importWifiCsv(final String filename, final boolean isCustomCsv) {
 
         final Task<ArrayList<WifiPoint>> loadWifiCsv = new Task<ArrayList<WifiPoint>>() {
             /**
@@ -161,7 +161,11 @@ public class WifiTableController extends TableController{
             //@Override
             protected ArrayList<WifiPoint> call() {
                 try {
-                    return populateWifiHotspots(filename);
+                    if (isCustomCsv) {
+                        return populateWifiHotspots(filename);
+                    } else {
+                        return populateWifiHotspots();
+                    }
                 } catch (CsvParserException|IOException e) {
                     super.failed();
                     return null;
@@ -178,19 +182,24 @@ public class WifiTableController extends TableController{
              */
             public void handle(WorkerStateEvent event) {
 
-                setFilters(loadWifiCsv.getValue());
+                if (loadWifiCsv.getValue() != null) {
+                    setFilters(loadWifiCsv.getValue());
 
-                setTableViewWifi(loadWifiCsv.getValue());
-                stopLoadingAni();
-                setPredicate();
-                populateCustomWifiPoints();
+                    setTableViewWifi(loadWifiCsv.getValue());
+                    stopLoadingAni();
+                    setPredicate();
+                    populateCustomWifiPoints();
+                } else {
+                    AlertGenerator.createAlert("Error", "Error loading wifis. Is your csv correct?");
+                    stopLoadingAni();
+                }
             }
         });
 
         loadWifiCsv.setOnFailed(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
-                AlertGenerator.createAlert("Error", "Error generating wifis");
+                AlertGenerator.createAlert("Error", "Error generating wifis, please try again");
                 stopLoadingAni();
             }
         });
@@ -206,7 +215,7 @@ public class WifiTableController extends TableController{
         String filename = getCsvFilename();
         if (filename != null) {
             dataPoints.clear();
-            importWifiCsv(filename);
+            importWifiCsv(filename, true);
         }
     }
 
@@ -294,7 +303,7 @@ public class WifiTableController extends TableController{
      */
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
-        importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME);
+        importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME, false);
     }
 
 }

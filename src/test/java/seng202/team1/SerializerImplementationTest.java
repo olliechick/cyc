@@ -22,6 +22,7 @@ public class SerializerImplementationTest extends TestCase {
 
     public void setUp() throws Exception {
         super.setUp();
+        Main.createDirectories();
         birthday = LocalDate.of(1993, Month.JANUARY,1);
         username = "testUser";
         password = "password";

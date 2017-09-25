@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
@@ -14,49 +15,14 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.web.WebView?>
 
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuItem?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
     <top>
-        <MenuBar BorderPane.alignment="CENTER">
-            <menus>
-                <Menu mnemonicParsing="false" text="File">
-                    <items>
-                        <Menu mnemonicParsing="false" text="Import CSV">
-                            <items>
-                                <MenuItem mnemonicParsing="false" onAction="#loadAllWifi" text="WiFi" />
-                                <MenuItem mnemonicParsing="false" onAction="#loadAllWifi" text="Retailers" />
-                                <MenuItem mnemonicParsing="false" onAction="#loadAllWifi" text="Bike Trips" />
-                            </items>
-                        </Menu>
-                        <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
-                    </items>
 
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#addCustomWIFI" text="Add Custom Wifi" />
-                    </items>
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#addCustomRetailer" text="Add Custom retailer" />
-                    </items>
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#addCustomBikeTrip" text="Add Custom Bike Trip" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                    </items>
-                </Menu>
-            </menus>
-        </MenuBar>
     </top>
     <bottom>
       <TabPane BorderPane.alignment="CENTER">
          <tabs>
-            <Tab text="Retailers">
+            <Tab closable="false" text="Retailers">
                <content>
                    <GridPane hgap="5.0" vgap="2.0" BorderPane.alignment="CENTER">
                        <columnConstraints>
@@ -81,8 +47,9 @@
                            <ComboBox fx:id="filterPrimaryComboBox" onAction="#updateRetailersPrimary" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                            <ComboBox fx:id="filterSecondaryComboBox" onAction="#updateRetailers" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                            <ComboBox fx:id="filterZipComboBox" onAction="#updateRetailers" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-
-
+                           <Label fx:id="nameLabel" text="Name placeholder" visible="false" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                           <Label fx:id="loadLabel" text="Loading:" visible="false" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                           <ProgressIndicator fx:id="progressSpinner" progress="0.0" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                            <TextField fx:id="streetSearchField" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                         <Button mnemonicParsing="false" onAction="#updateRetailers" text="Search" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                         <ImageView fitHeight="17.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
@@ -93,7 +60,7 @@
                    </GridPane>
                </content>
             </Tab>
-            <Tab text="WiFi">
+            <Tab closable="false" text="WiFi">
                <content>
                    <GridPane hgap="5.0" vgap="2.0" BorderPane.alignment="CENTER">
                        <columnConstraints>
@@ -122,7 +89,7 @@
                    </GridPane>
                </content>
             </Tab>
-            <Tab text="Routes">
+            <Tab closable="false" text="Routes">
                <content>
                   <GridPane hgap="5.0" vgap="2.0">
                      <columnConstraints>

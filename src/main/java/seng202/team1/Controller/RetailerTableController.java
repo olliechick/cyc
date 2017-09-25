@@ -157,7 +157,7 @@ public class RetailerTableController extends TableController{
      * The loading animations are shown until load completes, then the UI is updated.
      * @param filename The filename of the CSV to load.
      */
-    private void importRetailerCsv(final String filename) {
+    private void importRetailerCsv(final String filename, final boolean isCustomCsv) {
 
 
         final Task<ArrayList<RetailerLocation>> loadRetailerCsv = new Task<ArrayList<RetailerLocation>>() {
@@ -169,9 +169,12 @@ public class RetailerTableController extends TableController{
             @Override
             protected ArrayList<RetailerLocation> call() {
                 try {
-                    return populateRetailers(filename);
+                    if (isCustomCsv) {
+                        return populateRetailers(filename);
+                    } else {
+                        return populateRetailers();
+                    }
                 } catch (CsvParserException|IOException e) {
-                    //TODO deal with the exception
                     super.failed();
                     return null;
                 }
@@ -185,13 +188,18 @@ public class RetailerTableController extends TableController{
 
             public void handle(WorkerStateEvent event) {
 
-                // Initialise the values in the filter combo boxes now that we have data to work with
-                setFilters(loadRetailerCsv.getValue());
+                if (loadRetailerCsv.getValue() != null) {
+                    // Initialise the values in the filter combo boxes now that we have data to work with
+                    setFilters(loadRetailerCsv.getValue());
 
-                setTableViewRetailer(loadRetailerCsv.getValue());
-                stopLoadingAni();
-                setPredicate();
-                populateCustomRetailerLocations();
+                    setTableViewRetailer(loadRetailerCsv.getValue());
+                    stopLoadingAni();
+                    setPredicate();
+                    populateCustomRetailerLocations();
+                } else {
+                    AlertGenerator.createAlert("Error", "Error loading retailers. Is your csv correct?");
+                    stopLoadingAni();
+                }
 
             }
         });
@@ -200,7 +208,8 @@ public class RetailerTableController extends TableController{
         loadRetailerCsv.setOnFailed(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
-                AlertGenerator.createAlert("Error", "Error loading retailers.");
+                System.out.println("failed");
+                AlertGenerator.createAlert("Error", "Error loading retailers. Please try again");
                 stopLoadingAni();
             }
         });
@@ -216,7 +225,7 @@ public class RetailerTableController extends TableController{
         String filename = getCsvFilename();
         if (filename != null) {
             dataPoints.clear();
-            importRetailerCsv(filename);
+            importRetailerCsv(filename, true);
         }
     }
 
@@ -305,6 +314,6 @@ public class RetailerTableController extends TableController{
 
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
-        importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME);
+        importRetailerCsv("/csv/Lower_Manhattan_Retailers.csv", false);
     }
 }
