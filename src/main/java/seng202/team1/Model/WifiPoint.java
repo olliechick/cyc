@@ -277,11 +277,7 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
     }
 
     public String toInfoString() {
-        return "Name: " + placeName + "\\n" +
-                "Cost: " + cost + "\\n" +
-                "Provider: " + provider + "\\n" +
-                "SSID: " + ssid + "\\n" +
-                "Since: " + datetimeActivated;
+        return getDescription().replace("\n", "\\n");
 
     }
 }
