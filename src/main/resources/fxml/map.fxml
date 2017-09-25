@@ -15,14 +15,14 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.web.WebView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
     <top>
 
     </top>
     <bottom>
       <TabPane BorderPane.alignment="CENTER">
          <tabs>
-            <Tab text="Retailers">
+            <Tab closable="false" text="Retailers">
                <content>
                    <GridPane hgap="5.0" vgap="2.0" BorderPane.alignment="CENTER">
                        <columnConstraints>
@@ -60,7 +60,7 @@
                    </GridPane>
                </content>
             </Tab>
-            <Tab text="WiFi">
+            <Tab closable="false" text="WiFi">
                <content>
                    <GridPane hgap="5.0" vgap="2.0" BorderPane.alignment="CENTER">
                        <columnConstraints>
@@ -89,7 +89,7 @@
                    </GridPane>
                </content>
             </Tab>
-            <Tab text="Routes">
+            <Tab closable="false" text="Routes">
                <content>
                   <GridPane hgap="5.0" vgap="2.0">
                      <columnConstraints>
@@ -132,12 +132,8 @@
 
         </rowConstraints>
          <children>
-             <Button fx:id="LoadDataButton" mnemonicParsing="false" onAction="#loadData" text="Load data" GridPane.rowIndex="0" GridPane.halignment="CENTER" />
-            <Button fx:id="AddRetailerButton" mnemonicParsing="false" text="Add Retailer"  GridPane.rowIndex="1" GridPane.halignment="CENTER" />
-             <Button fx:id="AddWIFIButton" mnemonicParsing="false" text="Add WIFI Hotspot" onAction="#addWifi" GridPane.rowIndex="2" GridPane.halignment="CENTER" />
-             <Button fx:id="AddBikeTripButton" mnemonicParsing="false" onAction="#testDraw" text="Add Bike Route" GridPane.rowIndex="3" GridPane.halignment="CENTER" />
-             <Button fx:id="ZoomInButton11" mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" GridPane.rowIndex="4" GridPane.halignment="CENTER" />
-             <Button fx:id="ZoomOutButton11" mnemonicParsing="false" onAction="#zoomOut" text="Zoom Out" GridPane.rowIndex="5" GridPane.halignment="CENTER" />
+             <Button fx:id="ZoomInButton11" mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+             <Button fx:id="ZoomOutButton11" mnemonicParsing="false" onAction="#zoomOut" text="Zoom Out" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
          </children>
       </GridPane>
    </left>

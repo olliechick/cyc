@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
+
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.GeocodingResult;
@@ -37,7 +38,7 @@ public class GoogleAPIClient {
     }
 
     public static void getRetailerGeocode() {
-        ArrayList<RetailerLocation> retailerPoints;
+        ArrayList<seng202.team1.RetailerLocation> retailerPoints;
         try {
             retailerPoints = populateRetailers("src/main/resources/csv/Lower_Manhattan_Retailers.csv");
         } catch (CsvParserException|IOException e) {

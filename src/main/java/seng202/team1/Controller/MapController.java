@@ -1,11 +1,14 @@
 package seng202.team1.Controller;
 
 import com.google.maps.errors.ApiException;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
@@ -38,7 +41,8 @@ public class MapController {
     ArrayList<String> uniqueSecondaryFunctions = null;
     ArrayList<String> uniquePrimaryFunctions = null;
     ArrayList<String> uniqueProviders = null;
-
+    private UserAccountModel model;
+    private Stage stage;
     @FXML
     private WebView webView;
 
@@ -78,7 +82,13 @@ public class MapController {
     @FXML
     private Button LoadDataButton;
 
-    private UserAccountModel model;
+
+
+    void initModel(UserAccountModel model, Stage stage) {
+        this.model = model;
+        this.stage = stage;
+
+    }
 
     @FXML
     private void initialize() {
@@ -86,11 +96,25 @@ public class MapController {
         webEngine.setJavaScriptEnabled(true);
         webEngine.load(getClass().getResource("/html/map.html").toString());
         initializeFilters();
+
+        webEngine.getLoadWorker().stateProperty().addListener(
+                new ChangeListener<Worker.State>() {
+                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
+                        if (newState == Worker.State.SUCCEEDED) {
+                            loadData();
+                        }
+                    }
+                });
+
+
+
+
+
     }
 
     @FXML
     private void loadData() {
-        LoadDataButton.setDisable(true);
+
         loadAllWifi();
         loadAllRetailers();
         setFilters();
@@ -173,22 +197,7 @@ public class MapController {
             e.printStackTrace();
         }
     }
-    @FXML
-    private void testDraw() {
-        BikeDirections b = null;
-        try {
-            String directionsTest = GoogleAPIClient.googleGetDirections(40.753517,-73.980948,40.801723,-124.162505);
-            b = new BikeDirections(directionsTest);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ApiException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ArrayList<Point.Double> points = b.getPoints();
-        drawRoute(points);
-    }
+
 
     @FXML
     private void loadAllWifi() {
@@ -448,7 +457,7 @@ public class MapController {
     }
 
 
-    protected void initModel(UserAccountModel userAccountModel) {
+     void initModel(UserAccountModel userAccountModel) {
 
         this.model = userAccountModel;
 

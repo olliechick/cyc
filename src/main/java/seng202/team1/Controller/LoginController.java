@@ -83,6 +83,7 @@ public class LoginController {
     private final ObservableList<String> accountTypeList = FXCollections.observableArrayList("User", "Admin", "Analyst");
 
 
+
     @FXML
     public void initialize() {
         genderBox.setItems(genderList);
@@ -128,11 +129,11 @@ public class LoginController {
             Parent mapView = mapLoader.load();
             MapController mapController = mapLoader.getController();
 
-            // mapController.initModel(model);
-            //mapController.setName();
 
-            Stage stage = (Stage) signUpButton.getScene().getWindow(); //gets the current stage so that Map can take over
 
+
+            Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Map can take over
+            mapController.initModel(model, stage);
             stage.setScene(new Scene(mapView));
             stage.show();
 
