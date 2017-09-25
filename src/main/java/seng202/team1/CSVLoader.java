@@ -36,6 +36,9 @@ public class CSVLoader {
     private final static LocalDateTime EARLIEST_POSSIBLE_DATE = LocalDateTime.of(1900, Month.JANUARY, 1, 0, 0);
 
 
+    public static ArrayList<CSVRecord> loadCSV(String filename) throws IOException {
+        return loadCSV(filename, true);
+    }
     /**
      * Takes a file named filename, which should be a csv, and returns an ArrayList of type
      * CSVRecord.
@@ -45,11 +48,16 @@ public class CSVLoader {
      * @return an ArrayList of CSVRecords of the each row of the csv
      * @throws IOException If an IO error occurs.
      */
-    public static ArrayList<CSVRecord> loadCSV(String filename) throws IOException {
-        InputStream csvData = FileInputStream.class.getResourceAsStream(filename);
-
-        CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
-        return (ArrayList<CSVRecord>) parser.getRecords();
+    public static ArrayList<CSVRecord> loadCSV(String filename, boolean isCustomCsv) throws IOException {
+        if (isCustomCsv) {
+            File csvData = new File(filename);
+            CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
+            return (ArrayList<CSVRecord>) parser.getRecords();
+        } else {
+            InputStream csvData = FileInputStream.class.getResourceAsStream(filename);
+            CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
+            return (ArrayList<CSVRecord>) parser.getRecords();
+        }
     }
 
 
@@ -117,7 +125,14 @@ public class CSVLoader {
      * @throws CsvParserException if it can't find a single valid bike trip
      */
     public static ArrayList<BikeTrip> populateBikeTrips() throws IOException, CsvParserException {
-        return populateBikeTrips(DEFAULT_BIKE_TRIPS_FILENAME);
+        return populateBikeTrips(DEFAULT_BIKE_TRIPS_FILENAME, false);
+    }
+
+
+
+    public static ArrayList<BikeTrip> populateBikeTrips(String filename) throws
+            IOException, CsvParserException {
+        return populateBikeTrips(filename, true);
     }
 
 
@@ -130,11 +145,11 @@ public class CSVLoader {
      * @throws IOException        If an IO error occurs.
      * @throws CsvParserException if it can't find a single valid bike trip
      */
-    public static ArrayList<BikeTrip> populateBikeTrips(String filename) throws
+    public static ArrayList<BikeTrip> populateBikeTrips(String filename, boolean isCustomCsv) throws
             IOException, CsvParserException {
         ArrayList<BikeTrip> trips = new ArrayList<BikeTrip>();
         boolean isValidCsv = false; // assume false unless proven otherwise
-        ArrayList<CSVRecord> tripData = loadCSV(filename);
+        ArrayList<CSVRecord> tripData = loadCSV(filename, isCustomCsv);
 
         for (CSVRecord record : tripData) {
             //First check it is a header row
@@ -221,9 +236,14 @@ public class CSVLoader {
      */
     public static ArrayList<WifiPoint> populateWifiHotspots() throws IOException,
             CsvParserException {
-        return populateWifiHotspots(DEFAULT_WIFI_HOTSPOTS_FILENAME);
+        return populateWifiHotspots(DEFAULT_WIFI_HOTSPOTS_FILENAME, false);
     }
 
+
+    public static ArrayList<WifiPoint> populateWifiHotspots(String filename) throws
+            IOException, CsvParserException {
+        return populateWifiHotspots(filename, true);
+    }
 
     /**
      * Calls the load CSV method and populates an ArrayList with a set of WifiPoint objects from
@@ -234,11 +254,11 @@ public class CSVLoader {
      * @throws IOException        If an IO error occurs.
      * @throws CsvParserException if it can't find a single valid wifi point
      */
-    public static ArrayList<WifiPoint> populateWifiHotspots(String filename) throws
+    public static ArrayList<WifiPoint> populateWifiHotspots(String filename, boolean isCustomCsv) throws
             IOException, CsvParserException {
         ArrayList<WifiPoint> wifiSpots = new ArrayList<WifiPoint>();
         boolean isValidCsv = false; // assume false unless proven otherwise
-        ArrayList<CSVRecord> wifiData = loadCSV(filename);
+        ArrayList<CSVRecord> wifiData = loadCSV(filename, isCustomCsv);
 
         for (CSVRecord record : wifiData) {
             //First check it is a header row
@@ -294,7 +314,12 @@ public class CSVLoader {
      */
     public static ArrayList<RetailerLocation> populateRetailers() throws IOException,
             CsvParserException {
-        return populateRetailers(DEFAULT_RETAILER_LOCATIONS_FILENAME);
+        return populateRetailers(DEFAULT_RETAILER_LOCATIONS_FILENAME, false);
+    }
+
+    public static ArrayList<RetailerLocation> populateRetailers(String filename) throws
+            IOException, CsvParserException {
+        return populateRetailers(filename, true);
     }
 
 
@@ -309,11 +334,11 @@ public class CSVLoader {
      * @throws IOException        If an IO error occurs.
      * @throws CsvParserException if it can't find a single valid retailer
      */
-    public static ArrayList<RetailerLocation> populateRetailers(String filename) throws
+    public static ArrayList<RetailerLocation> populateRetailers(String filename, boolean isCustomCsv) throws
             IOException, CsvParserException {
         ArrayList<RetailerLocation> retailers = new ArrayList<RetailerLocation>(); //array list of retailers
         boolean isValidCsv = false; // assume false unless proven otherwise
-        ArrayList<CSVRecord> retailerData = loadCSV(filename);
+        ArrayList<CSVRecord> retailerData = loadCSV(filename, isCustomCsv);
 
         for (CSVRecord record : retailerData) {
             //First check it is a header row
