@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -152,21 +151,8 @@ public class CSVLoader {
         ArrayList<CSVRecord> tripData = loadCSV(filename, isCustomCsv);
 
         for (CSVRecord record : tripData) {
-            //First check it is a header row
-            boolean isHeaderRow = false;
-            int bikeId = 0;
+            // Process all the attributes - from most to least likely to fail
             try {
-                bikeId = Integer.parseInt(record.get(11));
-            } catch (NumberFormatException e) {
-                //Header row - bike id is not an int
-                isHeaderRow = true;
-            }
-
-            // Now process all the attributes
-            if (!isHeaderRow) {
-                isValidCsv = true;
-                long tripDuration = new Long(record.get(0).trim());
-
                 // Set start time
                 LocalDateTime startTime;
                 try {
@@ -192,10 +178,22 @@ public class CSVLoader {
                 }
 
                 // Other stuff
+                int bikeId = Integer.parseInt(record.get(11));
+
+                int birthYear;
+                String birthYearString = record.get(13);
+                if (birthYearString.isEmpty()) {
+                    //unknown birth year flag
+                    birthYear = -1;
+                } else {
+                    birthYear = Integer.parseInt(birthYearString);
+                }
+
+                long tripDuration = new Long(record.get(0).trim());
                 Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(6)), Float.parseFloat(record.get(5)));
                 Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(10)), Float.parseFloat(record.get(9)));
-                char gender;
 
+                char gender;
                 if (record.get(14).equals("1")) {
                     gender = 'm';
                 } else if (record.get(14).equals("2")) {
@@ -204,24 +202,18 @@ public class CSVLoader {
                     gender = 'u';
                 }
 
-                String birthYearString = record.get(13);
-                int birthYear;
-
-                if (birthYearString.isEmpty()) {
-                    //unknown birth year flag
-                    birthYear = -1;
-                } else {
-                    birthYear = Integer.parseInt(birthYearString);
-                }
-
                 trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,
                         endPoint, bikeId, gender, birthYear, false));
-            }
 
+                isValidCsv = true;
+            } catch (Exception e) {
+            // Some error processing the line - it's either a header field or the csv is invalid.
+            // If this occurs for all lines in the CSV, a CsvParserException is thrown.
         }
+    }
         if (!isValidCsv) {
-            throw new CsvParserException(filename);
-        }
+        throw new CsvParserException(filename);
+    }
         return trips;
     }
 
@@ -261,22 +253,18 @@ public class CSVLoader {
         ArrayList<CSVRecord> wifiData = loadCSV(filename, isCustomCsv);
 
         for (CSVRecord record : wifiData) {
-            //First check it is a header row
-            boolean isHeaderRow = false;
-            int zipcode = 0;
+            // Process all the attributes - from most to least likely to fail
             try {
-                zipcode = Integer.parseInt(record.get(22));
-            } catch (NumberFormatException e) {
-                //Header row - zipcode is not an int
-                isHeaderRow = true;
-            }
+                LocalDateTime datetimeActivated = LocalDateTime.parse(record.get(16), DateTimeFormatter.ofPattern("M/d/yyyy hh:mm:ss a Z"));
+                if (datetimeActivated.isBefore(EARLIEST_POSSIBLE_DATE)) {
+                    // dates earlier than this means that this data is not available
+                    datetimeActivated = null;
+                }
 
-
-            // Now process all the attributes
-            if (!isHeaderRow) {
-                isValidCsv = true;
+                int zipcode = Integer.parseInt(record.get(22));
                 int objectId = Integer.parseInt(record.get(0));
                 Point.Float coords = new Point.Float(Float.parseFloat(record.get(8)), Float.parseFloat(record.get(7)));
+
                 String name = record.get(5);
                 String location = record.get(6);
                 String locationType = record.get(11);
@@ -288,18 +276,19 @@ public class CSVLoader {
                 String remarks = record.get(12);
                 String ssid = record.get(14);
                 String sourceId = record.get(15);
-                LocalDateTime datetimeActivated = LocalDateTime.parse(record.get(16), DateTimeFormatter.ofPattern("M/d/yyyy hh:mm:ss a Z"));
-                if (datetimeActivated.isBefore(EARLIEST_POSSIBLE_DATE)) {
-                    // dates earlier than this means that this data is not available
-                    datetimeActivated = null;
-                }
+
                 wifiSpots.add(new WifiPoint(objectId, coords, name, location, locationType, hood,
                         borough, city, zipcode, cost, provider, remarks, ssid, sourceId, datetimeActivated, false));
-            }
+
+                isValidCsv = true;
+            } catch (Exception e) {
+            // Some error processing the line - it's either a header field or the csv is invalid.
+            // If this occurs for all lines in the CSV, a CsvParserException is thrown.
         }
+    }
         if (!isValidCsv) {
-            throw new CsvParserException(filename);
-        }
+        throw new CsvParserException(filename);
+    }
         return wifiSpots;
     }
 
@@ -341,17 +330,9 @@ public class CSVLoader {
         ArrayList<CSVRecord> retailerData = loadCSV(filename, isCustomCsv);
 
         for (CSVRecord record : retailerData) {
-            // Process all the attributes
+            // Process all the attributes - from most to least likely to fail
             try {
-                String name = record.get(0);
-                String addressLine1 = record.get(1);
-                String addressLine2 = record.get(2);
-                String city = record.get(3);
-                String state = record.get(4);
                 int zipcode = Integer.parseInt(record.get(5));
-                String blockLot = record.get(6);
-                String primaryFunction = record.get(7);
-                String secondaryFunction = record.get(8);
 
                 // Try to get coords
                 Point.Float coords = new Point.Float();
@@ -362,24 +343,34 @@ public class CSVLoader {
                     //no such column as latitude/longitude
                     coords = null;
                 }
+
+                // Get secondary function
+                String secondaryFunction = record.get(8);
                 if (secondaryFunction.length() > 2) {
+                    // Strip off the first bit. E.g. "F-Italian" -> "Italian"
                     secondaryFunction = secondaryFunction.substring(2);
                 }
+
+                // Other stuff
+                String name = record.get(0);
+                String addressLine1 = record.get(1);
+                String addressLine2 = record.get(2);
+                String city = record.get(3);
+                String state = record.get(4);
+                String blockLot = record.get(6);
+                String primaryFunction = record.get(7);
 
                 retailers.add(new RetailerLocation(name, addressLine1, addressLine2, city,
                         state, zipcode, blockLot, primaryFunction,
                         secondaryFunction, coords, false));
 
-                //Successfully parsed all the fields
-                System.out.println("Successful row load for " + filename);
                 isValidCsv = true;
             } catch (Exception e) {
-                // Some error processing the line - probably a header field
-                // Note that if this occurs for all lines in the CSV, a CsvParserException is thrown.
+                // Some error processing the line - it's either a header field or the csv is invalid.
+                // If this occurs for all lines in the CSV, a CsvParserException is thrown.
             }
         }
         if (!isValidCsv) {
-            System.out.println("no valid rows; CsvParserException thrown");
             throw new CsvParserException(filename);
         }
         return retailers;
