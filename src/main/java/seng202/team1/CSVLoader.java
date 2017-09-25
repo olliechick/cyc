@@ -26,7 +26,7 @@ public class CSVLoader {
 
     private final static String CSV_DIRNAME = "/csv/";
     private final static String DEFAULT_BIKE_TRIPS_FILENAME = CSV_DIRNAME +
-            "201512-citibike-tripdata.csv";
+            "201512-citibike-tripdata_1000.csv";
     private final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = CSV_DIRNAME +
             "NYC_Free_Public_WiFi_03292017.csv";
     private final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = CSV_DIRNAME +
