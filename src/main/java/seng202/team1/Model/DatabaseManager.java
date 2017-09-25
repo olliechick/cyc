@@ -1,4 +1,4 @@
-package seng202.team1;
+package seng202.team1.Model;
 
 
 import seng202.team1.Model.BikeTrip;

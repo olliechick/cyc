@@ -15,7 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.Model.CsvHandling.CsvParserException;
-import seng202.team1.GenerateFields;
+import seng202.team1.Model.GenerateFields;
 import seng202.team1.Model.RetailerLocation;
 import seng202.team1.SerializerImplementation;
 import seng202.team1.UserAccountModel;

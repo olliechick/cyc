@@ -1,6 +1,6 @@
 package seng202.team1.Model.Google;
 
-import seng202.team1.DataAnalyser;
+import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.BikeTrip;
 
 import java.awt.*;
