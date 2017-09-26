@@ -1,64 +1,40 @@
+# CYC: Your Cycling
 
-#                             CYC: Your Cycling                              #
+## Creating a runnable JAR
+This project is scaffolded by Maven and uses its directory stucture.
+The file `POM.xml` contains the build instructions for Maven.
 
+To use this, Maven must be installed on the machine.
+This can be checked by running the command `mvn -version` on Linux.
+If it is not installed, it should be installed (see the section on this below).
 
-# Creating a runnable JAR
-This project is scaffolded by Maven and uses this directory stucture.
-POM.xml Contains the build process for Maven
+A tested, runnable jar can be built by navigating into the directory `Seng202Group1`
+and using the command `mvn clean package`.
+This will create the directory `target` with the JAR in it (and remove any previous 
+Maven builds for this project).
+The project can then by run with the command 
+`java -jar target/SENG202Group1-1.0-SNAPSHOT.jar`.
 
-Maven must be installed on the machine
-this can be checked by the command 
+The program will create a directory structure (headed by `src`) to hold the project files
+in the same directory as the `.jar` file.
 
-`mvn -version`
+## Installing Maven
+On Linux: run the command `sudo apt-get install maven`
 
-* On linux the command 
+On OSX: using Homebrew, run the command `brew install maven`
 
-`sudo apt-get install maven`
+On Windows: download Maven from http://maven.apache.org/
+and unzip it to the desired destination (preferably ``C:\usr\bin``).
+Using Windows System Properties, configure the path for maven to point to the 
+unzipped folder.
 
-* On OSX, using Homebrew
+## Importing the project into Intellij
 
-`brew install maven`
+To import the source code, clone the git repository
+with the command `git clone https://eng-git.canterbury.ac.nz/jbu71/Seng202group1.git`.
 
-* On Windows 
+1. On the IntelliJ landing screen, select the option Import Project.
+2. Select the directory it is saved in.
+3. Select Maven and click import.
 
-Download Maven from http://maven.apache.org/
-and unzip it to the desired destination. Preferably \usr\bin
-Using windows system properties configure the path for maven to point to the 
-unzipped folder
-
-Those steps will install maven
-
-A tested, runnable jar can be built by navigating into the dir: Seng202Group1
-using the command: 
-
-`mvn clean package  `
-
-This will create the dir target with the Jar in it and remove any previous 
-Maven builds for this Project
-Changing into the target directory, the project can then by run with the 
-command:
-
-`java -jar SENG202Group1-1.0-SNAPSHOT.jar`
-
-Then a dir to hold the project files in the same dir as the .jar file
-
-
-
-# Importing the project into an IDE
-The use of IntelliJ is recommended.
-
-To Import The Source Code:
-
-clone the git repository, into your current dir, using the git account 
-assigned to the repository either: javanut13 or jpn23
-from eng-git with the following command:
-
-`git clone https://eng-git.canterbury.ac.nz/jbu71/Seng202group1.git`
-
-Close any open projects
-On the IntelliJ landing screen select the option:
-Import Project
-Then select the dir it is saved in 
-Choose Maven (this should be done by default)
-and Click import
-the project should now be open. 
+The project should now be open. 
