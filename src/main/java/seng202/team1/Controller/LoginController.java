@@ -170,7 +170,7 @@ public class LoginController {
             model = user;
             // They got the password right
             if (user.getAccountType().equals("User")) {
-                launchMap();
+                launchLandingScreen();
             } else {
                 // User is admin or analyser
                 launchLandingScreen();
@@ -220,7 +220,7 @@ public class LoginController {
         seng202.team1.UserAccountModel newUser = new seng202.team1.UserAccountModel(gender, accountType, birthday, username, password);
         model = newUser;
         if (newUser.getAccountType().equals("User")) {
-            launchMap();
+            launchLandingScreen();
         } else {
             // User is admin or analyser
             launchLandingScreen();
