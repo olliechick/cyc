@@ -80,18 +80,20 @@ public class LoginController {
     @FXML
     private CheckBox acceptTermsOfService;
 
+    @FXML
+    private Button viewTOS;
+
 
     private UserAccountModel model;
 
     private final ObservableList<String> genderList = FXCollections.observableArrayList("", "Male", "Female");
-
 
     @FXML
     public void initialize() {
         genderBox.setItems(genderList);
         genderBox.getSelectionModel().selectFirst();
         birthdayEntryField.setValue(LocalDate.of(1990, 1, 1));
-        acceptTermsOfService.setSelected(false);
+
     }
 
     /**
@@ -198,7 +200,7 @@ public class LoginController {
         LocalDate birthday = birthdayEntryField.getValue();
         char gender;
 
-
+        System.out.println(acceptTermsOfService.isSelected());
         // Work out gender
         String genderName = genderBox.getValue();
         if (genderName.equals("Male")) {
@@ -221,6 +223,11 @@ public class LoginController {
             newPasswordLabel.setTextFill(Color.RED);
             confirmPasswordLabel.setTextFill(Color.RED);
             AlertGenerator.createAlert("Error", "Passwords do not match please try again.");
+            return;
+        }
+        if(!acceptTermsOfService.isSelected()){
+            acceptTermsOfService.setTextFill(Color.RED);
+            AlertGenerator.createAlert("Error", "You must accept the terms of service to continue");
             return;
         }
 
