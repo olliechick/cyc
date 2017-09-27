@@ -6,7 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import seng202.team1.Controller.AlertGenerator;
-import seng202.team1.Model.Filename;
+import seng202.team1.Model.Directory;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,14 +54,14 @@ public class Main extends Application {
      */
     public static void createDirectories() {
 
-        Filename[] directories = Filename.class.getEnumConstants();
+        Directory[] directories = Directory.class.getEnumConstants();
 
-        for (Filename filename : directories) {
-            String directory = filename.filename();
-            if (directory.charAt(directory.length() - 1) == '/') {
-                //is a directory
-                System.out.println("Creating " + directory);
-                new File(directory).mkdirs(); //make the directory (if it doesn't exist)
+        for (Directory directory : directories) {
+            String directoryString = directory.directory();
+
+            // Try to create directory and throw error popup if its not
+            if (!(new File(directoryString).mkdirs())) {
+                AlertGenerator.createAlert("Error creating directory " + directoryString);
             }
         }
     }

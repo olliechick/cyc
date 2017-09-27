@@ -2,7 +2,6 @@ package seng202.team1.Model;
 
 
 
-import seng202.team1.Model.Filename;
 import seng202.team1.UserAccountModel;
 
 import java.io.*;
@@ -23,7 +22,7 @@ public final class SerializerImplementation {
      */
     public static void serializeUser(UserAccountModel user) {
         try {
-            String userPath = Filename.USERS.filename() + user.getUserName() + USER_EXT;
+            String userPath = Directory.USERS.directory() + user.getUserName() + USER_EXT;
             System.out.println("fileOut: " + userPath);
             FileOutputStream fileOut = new FileOutputStream(userPath);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -50,7 +49,7 @@ public final class SerializerImplementation {
     public static UserAccountModel deserializeUser(String userName) throws IOException {
         UserAccountModel user = null;
         try {
-            String userPath = Filename.USERS.filename() + userName + USER_EXT;
+            String userPath = Directory.USERS.directory() + userName + USER_EXT;
             FileInputStream inFile = new FileInputStream(userPath);
             ObjectInputStream ois = new ObjectInputStream(inFile);
             user = (UserAccountModel) ois.readObject();
