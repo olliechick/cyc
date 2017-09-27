@@ -52,7 +52,11 @@ public class MapController {
     ArrayList<WifiPoint> wifiPoints = null;
     ArrayList<BikeTrip> bikeTrips = null;
     ObservableList<DataPoint> dataPoints = null;
-    ArrayList<Point.Double> userClicks = new ArrayList<>();
+    static ArrayList<Point.Double> userClicks = new ArrayList<>();
+
+    public static ArrayList<Point.Double> getUserClicks() {
+        return userClicks;
+    }
 
 
     public ArrayList<String> uniqueSecondaryFunctions = null;
@@ -495,9 +499,12 @@ public class MapController {
                 if (wifiPoints.contains(newWifiPoint)) {
                     AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
                 } else {
+                    newWifiPoint.setVisible(true);
+                    newWifiPoint.setId(wifiPoints.size());
                     wifiPoints.add(newWifiPoint);
                     addWifi(newWifiPoint.getLatitude(), newWifiPoint.getLongitude(), newWifiPoint.toInfoString());
                     model.addCustomWifiLocation(newWifiPoint);
+                    webView.getEngine().executeScript("document.wifiCluster()");
                     SerializerImplementation.serializeUser(model);
                 }
             }
@@ -506,7 +513,65 @@ public class MapController {
         }
     }
 
+    /**
+     * Creates a pop up to get the data for a new Retailer Location.
+     * If valid data is entered the Retailer is added, if it is not a duplicate.
+     */
+    public void addCustomRetailer() {
+        try {
+            FXMLLoader addRetailerLoader = new FXMLLoader(getClass().getResource("/fxml/AddRetailerDialog.fxml"));
+            Parent root = addRetailerLoader.load();
+            AddRetailerDialogController addRetailerDialog = addRetailerLoader.getController();
+            Stage stage1 = new Stage();
 
+            addRetailerDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+
+            RetailerLocation retailerLocation = addRetailerDialog.getRetailerLocation();
+            if (retailerLocation != null) {
+                if (retailerPoints.contains(retailerLocation)) {
+                    AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
+                } else {
+                    retailerLocation.setVisible(true);
+                    retailerLocation.setId(retailerPoints.size());
+                    retailerPoints.add(retailerLocation);
+                    addRetailer(retailerLocation.getLatitude(), retailerLocation.getLongitude(), retailerLocation.toInfoString());
+                    model.addCustomRetailerLocation(retailerLocation);
+                    webView.getEngine().executeScript("document.retailerCluster()");
+                    SerializerImplementation.serializeUser(model);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addCustomBikeTrip() {
+
+        try {
+            FXMLLoader addBikeLoader = new FXMLLoader(getClass().getResource("/fxml/AddBikeDialog.fxml"));
+            Parent root = addBikeLoader.load();
+            AddBikeDialogController addBikeDialog = addBikeLoader.getController();
+            Stage stage1 = new Stage();
+
+            addBikeDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+
+            BikeTrip test = addBikeDialog.getBikeTrip();
+            if (test != null) {
+                if (bikeTrips.contains(test)) {
+                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
+                } else {
+                    bikeTrips.add(addBikeDialog.getBikeTrip());
+                    model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
+                    SerializerImplementation.serializeUser(model);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * Add the user's custom Wifi points to the current data
      */

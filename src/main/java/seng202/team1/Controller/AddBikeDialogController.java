@@ -18,11 +18,15 @@ import javafx.stage.StageStyle;
 import seng202.team1.BikeTrip;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+
+import static seng202.team1.Controller.MapController.getUserClicks;
 
 /**
  * Logic for the dialog for adding bike trips
@@ -136,6 +140,13 @@ public class AddBikeDialogController {
 
         startAM.setSelected(true);
         stopAM.setSelected(true);
+        ArrayList<Point.Double> userClicks = getUserClicks();
+        Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
+        Point.Double secondToLastPoint = userClicks.get((userClicks.size() - 2));
+        startLatField.setText(Double.toString(secondToLastPoint.getX()));
+        startLongField.setText(Double.toString(secondToLastPoint.getY()));
+        endLatField.setText(Double.toString(lastPoint.getX()));
+        endLongField.setText(Double.toString(lastPoint.getY()));
     }
 
     /**

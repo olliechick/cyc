@@ -12,12 +12,29 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import seng202.team1.RetailerLocation;
 
+import java.awt.*;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+
+import static seng202.team1.Controller.MapController.getUserClicks;
+
 /**
  * Logic for the add Retailer dialog.
  * Created by jbe113 on 20/09/17.
  * @author Josh Bernasconi
  */
 public class AddRetailerDialogController {
+
+    @FXML
+    private TextField latField;
+
+    @FXML
+    private TextField longField;
+
+    @FXML
+    private Label latLabel;
+    @FXML
+    private Label longLabel;
 
     @FXML
     private Label address2Label;
@@ -71,6 +88,10 @@ public class AddRetailerDialogController {
     private int zipcode;
     private String primaryFunction;
     private String secondaryFunction = "Unknown";
+    private float latitude = 0;
+    private float longitude = 0;
+    private Point2D.Float coords = new Point2D.Float();
+
 
     @FXML
     void addRetailer() {
@@ -78,10 +99,11 @@ public class AddRetailerDialogController {
             String city = "New York";
             String state = "NY";
             String blockLot = "Unknown";
+            coords.setLocation(latitude, longitude);
 
             retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city,
                                                     state, zipcode, blockLot, primaryFunction,
-                                                    secondaryFunction, true);
+                                                    secondaryFunction, coords, true);
             stage.close();
         }
     }
@@ -103,6 +125,12 @@ public class AddRetailerDialogController {
         stage.setTitle("Add Retailer Location");
         stage.setScene(new Scene(root));
 
+
+        ArrayList<Point.Double> userClicks = getUserClicks();
+        Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
+        latField.setText(Double.toString(lastPoint.getX()));
+        longField.setText(Double.toString(lastPoint.getY()));
+
     }
 
     /**
@@ -118,6 +146,22 @@ public class AddRetailerDialogController {
         } else {
             name = nameField.getText();
             nameLabel.setTextFill(Color.BLACK);
+        }
+
+        if (latField.getText().isEmpty()) {
+            valid = false;
+            latLabel.setTextFill(Color.RED);
+        } else {
+            latitude = Float.parseFloat(latField.getText());
+            latLabel.setTextFill(Color.BLACK);
+        }
+
+        if (longField.getText().isEmpty()) {
+            valid = false;
+            longLabel.setTextFill(Color.RED);
+        } else {
+            longitude = Float.parseFloat(longField.getText());
+            longLabel.setTextFill(Color.BLACK);
         }
 
         if (addressField.getText().isEmpty()) {
