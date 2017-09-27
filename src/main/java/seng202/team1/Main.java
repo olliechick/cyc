@@ -60,8 +60,10 @@ public class Main extends Application {
             String directoryString = directory.directory();
 
             // Try to create directory and throw error popup if its not
-            if (!(new File(directoryString).mkdirs())) {
+            File file = new File(directoryString);
+            if (!(file.mkdirs()) && !file.isDirectory()) {
                 AlertGenerator.createAlert("Error creating directory " + directoryString);
+                //System.out.println("Error creating directory " + directoryString);
             }
         }
     }

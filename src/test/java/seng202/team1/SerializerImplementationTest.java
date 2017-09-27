@@ -29,12 +29,13 @@ public class SerializerImplementationTest extends TestCase {
         username = "testUser";
         password = "password";
         user = new UserAccountModel(gender, birthday, username, password);
-        expectedFilePath = "src/main/resources/users/testUser.user";
+        expectedFilePath = System.getProperty("user.home") + "/.cyc/users/testUser.user";
         f = new File(expectedFilePath);
     }
 
     public void testSerializeUser() throws Exception {
         SerializerImplementation.serializeUser(user);
+        System.out.println(expectedFilePath);
         assertEquals(true, f.exists());
     }
 

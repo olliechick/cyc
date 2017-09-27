@@ -85,7 +85,7 @@ public class CSVLoaderTest extends TestCase {
     }
 
     public void testPopulateBikeTrips() throws Exception {
-        String filename = csv_resource_dir + "testBiketrip.csv";
+        String filename = csv_resource_dir + "testBiketrips.csv";
         ArrayList<BikeTrip> trips = populateBikeTrips(filename);
         BikeTrip modelBikeTrip = new BikeTrip(551,
                 LocalDateTime.of(2015, Month.DECEMBER, 1, 8, 8, 53),

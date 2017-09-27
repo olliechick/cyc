@@ -20,7 +20,7 @@ public class RoutingTest {
 
     @Before
     public void setUp() throws Exception {
-        bikeTrips = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
+        bikeTrips = CSVLoader.populateBikeTrips("src/test/resources/bikeTripTestData.csv");
         //orignalList = CSVLoader.populateBikeTrips("bikeTripTestData.csv");
     }
 

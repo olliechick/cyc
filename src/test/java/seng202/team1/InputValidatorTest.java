@@ -19,14 +19,14 @@ public class InputValidatorTest {
     String filePath = "src/test/resources/";
     @Test
     public void TestIsDuplicateBikeTripTrue() throws Exception {
-        ArrayList<BikeTrip> trips = CSVLoader.populateBikeTrips(filePath + "testBiketrip.csv");
+        ArrayList<BikeTrip> trips = CSVLoader.populateBikeTrips(filePath + "testBiketrips.csv");
         BikeTrip trip = trips.get(2);
         assertEquals(true, InputValidator.isDuplicateBikeTrip(trip, trips));
     }
 
     @Test
     public void TestIsDuplicateBikeTripFalse() throws Exception {
-        ArrayList<BikeTrip> trips = CSVLoader.populateBikeTrips(filePath + "testBiketrip.csv");
+        ArrayList<BikeTrip> trips = CSVLoader.populateBikeTrips(filePath + "testBiketrips.csv");
 
         LocalDateTime startTime =  LocalDateTime.of(2015, Month.DECEMBER, 30, 23, 50, 0);
         LocalDateTime stopTime = LocalDateTime.of(2015, Month.DECEMBER, 30, 23, 50, 10);

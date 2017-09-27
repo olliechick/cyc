@@ -134,8 +134,8 @@ public class DataAnalyserTest {
 
     @Test
     public void TestFindClosestWifiPointToRoute() throws Exception {
-        ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips(RES_DIR + "testBiketrips.csv");
-        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots(RES_DIR + "testWifi.csv");
+        ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips(RES_DIR + "bikeTripTestData.csv");
+        ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots(RES_DIR + "wifiTester.csv");
         ArrayList<Point2D.Float> waypoints = new ArrayList<Point2D.Float>();
         for (BikeTrip trip : bikeTrips) {
             Point2D.Float point = trip.getStartPoint();
