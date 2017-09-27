@@ -149,7 +149,7 @@
         markerArray[markerArray.length] = marker;;
 
         // This passes the position of the user click/marker back to mapController
-        app.alert(marker.position.lat(), marker.position.lng());
+
 
         /* If the user has clicked twice, for start and end of journey then
            request directions and render the result to the map. Then clear marker
@@ -165,7 +165,11 @@
                     markerArray[i].setMap(null);
 
              }
+             app.alert(marker.position.lat(), marker.position.lng());
              markerArray = [];
+        }
+        else {
+        app.alert(marker.position.lat(), marker.position.lng());
         }
         }
 
