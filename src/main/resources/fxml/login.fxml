@@ -87,15 +87,20 @@
                                     <children>
                                         <Label fx:id="newPasswordLabel" text="Password:" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                                         <TextField fx:id="newUsernameTextField" GridPane.columnIndex="1" />
-                                        <PasswordField fx:id="newPasswordTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <DatePicker fx:id="birthdayEntryField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <ChoiceBox fx:id="genderBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <ChoiceBox fx:id="accountTypeBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <Label fx:id="accountTypeLabel" text="Account type:" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                                        <PasswordField fx:id="newConfirmPasswordTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <DatePicker fx:id="birthdayEntryField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <ChoiceBox fx:id="genderBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <Label fx:id="newUsernameLabel" text="Username:" GridPane.halignment="CENTER" />
-                              <Label fx:id="birthdayLabel" text="Birthday:" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                              <Label fx:id="genderLabel" text="Gender:" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                                        <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUp" text="Sign Up" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+                              <Label fx:id="birthdayLabel" text="Birthday:" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                              <Label fx:id="genderLabel" text="Gender:" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                                        <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUp" text="Sign Up" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+                              <Label id="passwordConfirm" fx:id="confirmPasswordLabel" text="Confirm Password:" GridPane.rowIndex="2" />
+                              <PasswordField fx:id="newPasswordTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="acceptTermsOfService" mnemonicParsing="false" prefHeight="18.0" prefWidth="171.0" text="Accept Terms Of Service" textOverrun="WORD_ELLIPSIS" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                 <font>
+                                    <Font size="8.0" />
+                                 </font>
+                              </CheckBox>
                                     </children>
                                 </GridPane>
                             </children>
