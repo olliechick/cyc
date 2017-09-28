@@ -51,7 +51,7 @@ public class MapController {
     ArrayList<RetailerLocation> retailerPoints = null;
     ArrayList<WifiPoint> wifiPoints = null;
     ArrayList<BikeTrip> bikeTrips = null;
-    ObservableList<DataPoint> dataPoints = null;
+
     static ArrayList<Point.Double> userClicks = new ArrayList<>();
 
     public static ArrayList<Point.Double> getUserClicks() {
@@ -132,7 +132,7 @@ public class MapController {
         loadAllWifi();      // loads all the wifiPoints
         loadAllRetailers(); // loads all the retailerPoints
         setFilters();       // sets the filters based on wifi and retailer points loaded
-        //loadAllBikeTrips();  currently only dynamic, requested routes are shown
+        loadAllBikeTrips(); // currently only dynamic, requested routes are shown
 
         // Add a Java callback object to a WebEngine document can be used to
         //the coordinates of user clicks to the map.
