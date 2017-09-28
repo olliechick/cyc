@@ -1,8 +1,6 @@
 package seng202.team1.Controller;
 
 import javafx.scene.layout.Region;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 /**
  * Class to generate alerts.
