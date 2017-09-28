@@ -211,9 +211,17 @@ public class CSVLoader {
                                     ("yyyy-MM-dd HH:mm:ss"));
                 }
 
-                // Other stuff
-                int bikeId = Integer.parseInt(record.get(11));
+                // Bike ID
+                int bikeId;
+                String bikeIdString = record.get(11);
+                if (bikeIdString.isEmpty()) {
+                    //unknown bike id flag
+                    bikeId = -1;
+                } else {
+                    bikeId = Integer.parseInt(bikeIdString);
+                }
 
+                //Birth year
                 int birthYear;
                 String birthYearString = record.get(13);
                 if (birthYearString.isEmpty()) {
@@ -223,10 +231,7 @@ public class CSVLoader {
                     birthYear = Integer.parseInt(birthYearString);
                 }
 
-                long tripDuration = new Long(record.get(0).trim());
-                Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(6)), Float.parseFloat(record.get(5)));
-                Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(10)), Float.parseFloat(record.get(9)));
-
+                // Gender
                 char gender;
                 if (record.get(14).equals("1")) {
                     gender = 'm';
@@ -236,12 +241,18 @@ public class CSVLoader {
                     gender = 'u';
                 }
 
-                trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,
+                // Other stuff
+                //int StartStationId = Integer.parseInt(record.get(3));
+                long tripDuration = new Long(record.get(0).trim());
+                Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(6)), Float.parseFloat(record.get(5)));
+                Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(10)), Float.parseFloat(record.get(9)));
+
+                trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,// startStationId, endStationId,
                         endPoint, bikeId, gender, birthYear, false));
 
                 isValidCsv = true;
             } catch (Exception e) {
-                // Some error processing the line - it's either a header field or the csv is invalid.
+                // Some error processing the line - it's either a header field or the CSV is invalid.
                 // If this occurs for all lines in the CSV, a CsvParserException is thrown.
             }
         }

@@ -41,7 +41,7 @@ public class BikeTripTest extends TestCase {
         bikeID = 1;
         gender = 'f';
         birthYear = 2000;
-        tripDistance = Double.valueOf(12);
+        tripDistance = 12.0;
         isUserDefinedPoint = false;
 
         bikeTrip = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
@@ -61,6 +61,102 @@ public class BikeTripTest extends TestCase {
                 startStationId, endStationId, bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
         assertEquals(10, biketrip1.getTripDuration());
+    }
+
+    public void testGetDistance1m() {
+        Double distance = 1.23456789;
+        BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
+                startStationId, endStationId, bikeID, gender,
+                birthYear, distance, isUserDefinedPoint);
+        assertEquals("1.23 m", biketrip1.getDistance());
+    }
+
+    public void testGetDistance10m() {
+        Double distance = 12.3456789;
+        BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
+                startStationId, endStationId, bikeID, gender,
+                birthYear, distance, isUserDefinedPoint);
+        assertEquals("12.3 m", biketrip1.getDistance());
+    }
+
+    public void testGetDistance100m() {
+        Double distance = 123.456789;
+        BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
+                startStationId, endStationId, bikeID, gender,
+                birthYear, distance, isUserDefinedPoint);
+        assertEquals("123 m", biketrip1.getDistance());
+    }
+
+    public void testGetDistance1km() {
+        Double distance = 1234.56789;
+        BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
+                startStationId, endStationId, bikeID, gender,
+                birthYear, distance, isUserDefinedPoint);
+        assertEquals("1.23 km", biketrip1.getDistance());
+    }
+
+    public void testGetDistance10km() {
+        Double distance = 12345.6789;
+        BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
+                startStationId, endStationId, bikeID, gender,
+                birthYear, distance, isUserDefinedPoint);
+        assertEquals("12.3 km", biketrip1.getDistance());
+    }
+
+    public void testGetDistanceLong() {
+        Double distance = 123456.789;
+        BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
+                startStationId, endStationId, bikeID, gender,
+                birthYear, distance, isUserDefinedPoint);
+        assertEquals("123 km", biketrip1.getDistance());
+    }
+
+    public void testGetDistance1mRoundUp() {
+        Double distance = 1.239456789;
+        BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
+                startStationId, endStationId, bikeID, gender,
+                birthYear, distance, isUserDefinedPoint);
+        assertEquals("1.24 m", biketrip1.getDistance());
+    }
+
+    public void testGetDistance10mRoundUp() {
+        Double distance = 12.39456789;
+        BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
+                startStationId, endStationId, bikeID, gender,
+                birthYear, distance, isUserDefinedPoint);
+        assertEquals("12.4 m", biketrip1.getDistance());
+    }
+
+    public void testGetDistance100mRoundUp() {
+        Double distance = 123.9456789;
+        BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
+                startStationId, endStationId, bikeID, gender,
+                birthYear, distance, isUserDefinedPoint);
+        assertEquals("124 m", biketrip1.getDistance());
+    }
+
+    public void testGetDistance1kmRoundUp() {
+        Double distance = 1239.456789;
+        BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
+                startStationId, endStationId, bikeID, gender,
+                birthYear, distance, isUserDefinedPoint);
+        assertEquals("1.24 km", biketrip1.getDistance());
+    }
+
+    public void testGetDistance10kmRoundUp() {
+        Double distance = 12394.56789;
+        BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
+                startStationId, endStationId, bikeID, gender,
+                birthYear, distance, isUserDefinedPoint);
+        assertEquals("12.4 km", biketrip1.getDistance());
+    }
+
+    public void testGetDistanceLongRoundUp() {
+        Double distance = 123945.6789;
+        BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
+                startStationId, endStationId, bikeID, gender,
+                birthYear, distance, isUserDefinedPoint);
+        assertEquals("124 km", biketrip1.getDistance());
     }
 
     @Test
@@ -97,7 +193,7 @@ public class BikeTripTest extends TestCase {
                 startPoint, endPoint, startStationId, endStationId, bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
         String expectedString = "Started at 11:50 pm 30 December 2015 and ended 1 day later at " +
-                "12:10 am 1 January 2016\nBike ID: 1\nCyclist: female, born in 2000";
+                "12:10 am 1 January 2016\nDistance: 12 m\nBike ID: 1\nCyclist: female, born in 2000";
         assertEquals(expectedString, bikeTrip1.getDescription());
     }
 

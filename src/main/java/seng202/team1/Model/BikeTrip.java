@@ -32,7 +32,7 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
     private int bikeId;
     private char gender; //u for unknown, m for male, f for female
     private int birthYear;
-    private Double tripDistance; //TODO units?
+    private Double tripDistance; //in metres
     private boolean isUserDefinedPoint;
 
 
@@ -65,6 +65,7 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
         this.bikeId = bikeId;
         this.gender = gender;
         this.birthYear = birthYear;
+        this.tripDistance = tripDistance;
         this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
@@ -97,12 +98,14 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
         this.bikeId = bikeId;
         this.gender = gender;
         this.birthYear = birthYear;
+        this.tripDistance = tripDistance;
         this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
 
     /**
-     * Grandfathered-in constructor for a bike trip. Start and end station IDs are set to -1 flag.
+     * Grandfathered-in constructor for a bike trip that calculates trip distance.
+     * Start and end station IDs are set to -1 flag.
      *
      * @param tripDuration       duration (in seconds) of the bike trip
      * @param startTime          datetime the bike trip started
@@ -134,7 +137,7 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
 
 
     /**
-     * Grandfathered-in constructor for a bike trip that calculates trip duration.
+     * Grandfathered-in constructor for a bike trip that calculates trip duration and distance.
      * Start and end station IDs are set to -1 flag.
      *
      * @param startTime          datetime the bike trip started
@@ -271,6 +274,9 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
         return tripDistance;
     }
 
+    /**
+     * @return trip distance to decimal places
+     */
     public Double getTripDistanceTwoD() {
         return Double.parseDouble(new DecimalFormat("#.##").format(tripDistance));
     }
@@ -336,6 +342,37 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
 
 
     /**
+     * Returns the distance of the trip, contextualised.
+     * Either in m (meters) or km (kilometres). Rounded to the nearest 3 digits of precision.
+     * E.g. "236 m", "73.7 km" (without the quotes).
+     * @return contextualised distance
+     */
+    public String getDistance() {
+        String distance;
+        System.out.println();
+
+        if (tripDistance < 10) {
+            //single digit metres
+            return Double.parseDouble(new DecimalFormat("#.##").format(tripDistance)) + " m";
+        } else if (tripDistance < 100) {
+            //double digit metres
+            return Double.parseDouble(new DecimalFormat("##.#").format(tripDistance)) + " m";
+        } else if (tripDistance < 1e3) {
+            //three digit metres
+            return Math.round(tripDistance) + " m";
+        } else if (tripDistance < 1e4) {
+            //single digit km
+            return Double.parseDouble(new DecimalFormat("#.##").format(tripDistance/1e3)) + " km";
+        } else if (tripDistance < 1e5) {
+            //double digit km
+            return Double.parseDouble(new DecimalFormat("##.#").format(tripDistance/1e3)) + " km";
+        } else {
+            return Math.round(tripDistance/1e3) + " km";
+        }
+    }
+
+
+    /**
      * @return the gender description (male, female, or unknown).
      */
     public String getGenderDescription() {
@@ -371,10 +408,11 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
      * @return description of the bike trip.
      */
     public String getDescription() {
+        // Start
         String start = startTime.format(DateTimeFormatter.ofPattern(DT_FORMAT))
                 .replace("AM", "am").replace("PM", "pm");
 
-        // end: check if including the date (or year) is necessary
+        // End: check if including the date (or year) is necessary
         String end;
         if (startTime.getYear() != stopTime.getYear()) {
             // different years
@@ -388,9 +426,39 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
         }
         end = end.replace("AM", "am").replace("PM", "pm");
 
+        // Coords and distance
+        String coords = "\nFrom: (" + getStartLatitude() + ", " + getStartLongitude() + ")"
+                + "\nTo: (" + getEndLatitude() + ", " + getEndLongitude() + ")";
+        String distance = "\nDistance: " + getDistance();
+
+        // Bike ID
+        String bikeIdString = "";
+        if (bikeId != -1) {
+            bikeIdString = "\nBike ID: " + bikeId;
+        }
+
+        // Cyclist description
+        String cyclistDescription;
+        if (gender == 'u') {
+            if (birthYear == -1) {
+                // Nothing known about cyclist
+                cyclistDescription = "";
+            } else {
+                // Just know birth year
+                cyclistDescription = "\nCyclist: born in " + birthYear;
+            }
+        } else {
+            if (birthYear == -1) {
+                // Just know gender
+                cyclistDescription = "\nCyclist: " + getGenderDescription();
+            } else {
+                // Know both things about cyclist
+                cyclistDescription = "\nCyclist: " + getGenderDescription() + ", born in " + birthYear;
+            }
+        }
+
         // Put together description
-        return String.format("Started at %s and ended %s later at %s\nBike ID: %d\nCyclist: %s, born in %d",
-                start, getDuration(), end, bikeId, getGenderDescription(), birthYear);
+        return "Started at " + start + " and ended " + getDuration() + " later at " + end + coords + distance + bikeIdString + cyclistDescription;
     }
 
 
