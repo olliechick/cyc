@@ -30,8 +30,8 @@ public class DatabaseManager {
      */
     public static void connect() throws SQLException {
         String filename = "sqlite.db";
-        localDatabaseFile = new File(filename);
-        String url = "jdbc:sqlite:" + filename;
+        localDatabaseFile = new File(Directory.DATABASES.directory() + filename);
+        String url = "jdbc:sqlite:" + localDatabaseFile.getAbsolutePath();
 
         if (connection == null) { // No connection yet
             try {

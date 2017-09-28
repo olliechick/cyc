@@ -3,8 +3,8 @@ package seng202.team1.Model;
 public enum Directory {
 
     ROOT(System.getProperty("user.home") + "/.cyc/"),
-    USERS(ROOT.directory() + "users/");
-    //DATABASES(ROOT.directory() + "databases/");
+    USERS(ROOT.directory() + "users/"),
+    DATABASES(ROOT.directory() + "databases/");
 
     private String directory;
 

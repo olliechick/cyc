@@ -29,6 +29,8 @@ public class DatabaseManagerTest {
 
     @BeforeClass
     public static void Initialise() {
+        Main.createDirectories();
+
         LocalDateTime startTime =  LocalDateTime.of(2015, Month.DECEMBER, 30, 23, 50, 0);
         LocalDateTime stopTime = LocalDateTime.of(2015, Month.DECEMBER, 30, 23, 50, 10);
         Point.Float startPoint = new Point.Float((float) 172.581153, (float) -43.522610);
