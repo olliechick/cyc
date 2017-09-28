@@ -97,6 +97,29 @@ public class LoginController {
     }
 
     /**
+     * Changes the scene to display the map to user accounts.
+     */
+    /*private void launchMap() {
+
+        try {
+            // Changes to the map GUI
+
+            FXMLLoader mapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+            Parent mapView = mapLoader.load();
+            MapController mapController = mapLoader.getController();
+
+
+            Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Map can take over
+            mapController.initModel(model, stage);
+            stage.setScene(new Scene(mapView));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace(); //File not found
+        }
+    }*/
+
+    /**
      * Changes the scene to display the landing screen for analyst/admin users.
      */
     private void launchLandingScreen() {
@@ -120,27 +143,19 @@ public class LoginController {
     }
 
     /**
-     * Changes the scene to display the map to user accounts.
+     * Changes the screen to view the TOS
      */
-    /*private void launchMap() {
+    public void showTOS() throws IOException {
+        System.out.println("TOS button pressed");
 
-        try {
-            // Changes to the map GUI
+        FXMLLoader tosLoader = new FXMLLoader(getClass().getResource("/fxml/TOSviewer.fxml"));
+        Parent tosView = tosLoader.load();
+        TOSController tosController = tosLoader.getController();
 
-            FXMLLoader mapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
-            Parent mapView = mapLoader.load();
-            MapController mapController = mapLoader.getController();
-
-
-            Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Map can take over
-            mapController.initModel(model, stage);
-            stage.setScene(new Scene(mapView));
-            stage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace(); //File not found
-        }
-    }*/
+        Stage tosStage = new Stage();
+        tosStage.setScene(new Scene(tosView));
+        tosStage.show();
+    }
 
     /**
      * Gets the username and retrieves the relevant user.
