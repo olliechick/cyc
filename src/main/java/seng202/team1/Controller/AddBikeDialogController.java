@@ -245,6 +245,7 @@ public class AddBikeDialogController {
             stopDate = stopDatePicker.getValue();
             stopDateLabel.setTextFill(Color.BLACK);
         }
+        if (valid){
         if (startDateTime.isBefore(stopDateTime)){
             startDateLabel.setTextFill(Color.BLACK);
             stopDateLabel.setTextFill(Color.BLACK);
@@ -256,7 +257,8 @@ public class AddBikeDialogController {
             startTimeLabel.setTextFill(Color.RED);
             stopTimeLabel.setTextFill(Color.RED);
             valid = false;
-            AlertGenerator.createAlert("Slow down McFly", "Trips must start before they can finish");
+            //AlertGenerator.createAlert("Slow down McFly", "Trips must start before they can finish"); maybe make an alert but shows on wrong stage
+        }
         }
 
 
