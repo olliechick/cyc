@@ -16,6 +16,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import seng202.team1.Model.BikeTrip;
+import seng202.team1.UserAccountModel;
 
 import java.awt.Point;
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Collections;
 
 /**
  * Logic for the dialog for adding bike trips
@@ -116,7 +118,11 @@ public class AddBikeDialogController {
     private LocalDateTime stopDateTime;
     private Point.Float startPoint;
     private Point.Float endPoint;
+    private UserAccountModel model;
 
+    void initModel(UserAccountModel model) {
+        this.model = model;
+    }
     /**
      * Set up the window as a dialog.
      *
@@ -145,8 +151,9 @@ public class AddBikeDialogController {
      */
     public void addBike() {
         if (checkFields()) {
-            char gender = 'u';
-            int birthYear = 1997;
+            char gender = model.getGender();
+            int birthYear = model.getBirthday().getYear();
+            System.out.println(gender+" " +birthYear);
 
             bikeTrip = new BikeTrip(startDateTime, stopDateTime, startPoint, endPoint, bikeID, gender, birthYear, false);
             stage.close();
@@ -237,6 +244,19 @@ public class AddBikeDialogController {
         } else {
             stopDate = stopDatePicker.getValue();
             stopDateLabel.setTextFill(Color.BLACK);
+        }
+        if (startDateTime.isBefore(stopDateTime)){
+            startDateLabel.setTextFill(Color.BLACK);
+            stopDateLabel.setTextFill(Color.BLACK);
+            startTimeLabel.setTextFill(Color.BLACK);
+            stopTimeLabel.setTextFill(Color.BLACK);
+        } else {
+            startDateLabel.setTextFill(Color.RED);
+            stopDateLabel.setTextFill(Color.RED);
+            startTimeLabel.setTextFill(Color.RED);
+            stopTimeLabel.setTextFill(Color.RED);
+            valid = false;
+            AlertGenerator.createAlert("Slow down McFly", "Trips must start before they can finish");
         }
 
 
