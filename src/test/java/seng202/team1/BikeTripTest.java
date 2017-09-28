@@ -173,7 +173,9 @@ public class BikeTripTest extends TestCase {
     @Test
     public void testGetDescriptionSameDay() {
         String expectedString = "Started at 11:50 pm 30 December 2015 and ended 10 seconds later " +
-                "at 11:50 pm\nBike ID: 1\nCyclist: female, born in 2000";
+                "at 11:50 pm\nFrom: (-43.52261, 172.58115)\n" +
+                "To: (-43.52074, 172.57274)\n" +
+                "Distance: 12.0 m\nBike ID: 1\nCyclist: female, born in 2000";
         assertEquals(expectedString, bikeTrip.getDescription());
     }
 
@@ -183,7 +185,9 @@ public class BikeTripTest extends TestCase {
                 endPoint, startStationId, endStationId, bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
         String expectedString = "Started at 11:50 pm 30 December 2015 and ended 20 minutes later " +
-                "at 12:10 am 31 December\nBike ID: 1\nCyclist: female, born in 2000";
+                "at 12:10 am 31 December\nFrom: (-43.52261, 172.58115)\n" +
+                "To: (-43.52074, 172.57274)\n" +
+                "Distance: 12.0 m\nBike ID: 1\nCyclist: female, born in 2000";
         assertEquals(expectedString, bikeTrip1.getDescription());
     }
 
@@ -193,7 +197,9 @@ public class BikeTripTest extends TestCase {
                 startPoint, endPoint, startStationId, endStationId, bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
         String expectedString = "Started at 11:50 pm 30 December 2015 and ended 1 day later at " +
-                "12:10 am 1 January 2016\nDistance: 12 m\nBike ID: 1\nCyclist: female, born in 2000";
+                "12:10 am 1 January 2016\nFrom: (-43.52261, 172.58115)\n" +
+                "To: (-43.52074, 172.57274)\n" +
+                "Distance: 12.0 m\nBike ID: 1\nCyclist: female, born in 2000";
         assertEquals(expectedString, bikeTrip1.getDescription());
     }
 
