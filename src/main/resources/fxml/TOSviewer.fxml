@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.TOSController">
+   <content>
+
+
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                   <ScrollPane fitToWidth="true">
+                      <content>
+                     <TextFlow fx:id="textFlowBox" layoutX="-1.0" layoutY="1.0" prefHeight="354.0" prefWidth="593.0" />
+                      </content>
+                   </ScrollPane>
+               </children>
+            </AnchorPane>
+
+
+   </content>
+</ScrollPane>

@@ -23,7 +23,6 @@ import java.util.ArrayList;
 public class UserAccountModel implements java.io.Serializable {
 
     private char gender;
-    private String accountType;
     private LocalDate birthday;
     private boolean under13;
     private String userName;
@@ -39,7 +38,6 @@ public class UserAccountModel implements java.io.Serializable {
         LocalDate currentDate = LocalDate.now();
         int age = Period.between(birthday, currentDate).getYears();
         this.under13 = age < 13;
-        this.accountType = "User";
         this.userName = userName;
         this.salt = PasswordManager.getNextSalt();
         this.password = PasswordManager.hash(password, salt);
@@ -49,38 +47,6 @@ public class UserAccountModel implements java.io.Serializable {
      * Constructor with account type set to "User" and gender set to unknown.
      */
     public UserAccountModel(LocalDate birthday, String userName, String password) {
-        this.birthday = birthday;
-        LocalDate currentDate = LocalDate.now();
-        int age = Period.between(birthday, currentDate).getYears();
-        this.under13 = age < 13;
-        this.accountType = "User";
-        this.userName = userName;
-        this.salt = PasswordManager.getNextSalt();
-        this.password = PasswordManager.hash(password, salt);
-        this.gender = 'u';
-    }
-
-    /**
-     * Constructor with all parameters set by caller.
-     */
-    public UserAccountModel(char gender, String accountType, LocalDate birthday, String userName, String password) {
-        this.gender = gender;
-        this.accountType = accountType;
-        this.birthday = birthday;
-        LocalDate currentDate = LocalDate.now();
-        int age = Period.between(birthday, currentDate).getYears();
-        this.under13 = age < 13;
-
-        this.userName = userName;
-        this.salt = PasswordManager.getNextSalt();
-        this.password = PasswordManager.hash(password, salt);
-    }
-
-    /**
-     * Constructor with gender set to unknown.
-     */
-    public UserAccountModel(String accountType, LocalDate birthday, String userName, String password) {
-        this.accountType = accountType;
         this.birthday = birthday;
         LocalDate currentDate = LocalDate.now();
         int age = Period.between(birthday, currentDate).getYears();
@@ -100,18 +66,6 @@ public class UserAccountModel implements java.io.Serializable {
             this.gender = gender;
         } else {
             this.gender = 'u';
-        }
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(String accountType) {
-        if (accountType.equalsIgnoreCase("user") || accountType.equalsIgnoreCase("analyst") || accountType.equalsIgnoreCase("admin")) {
-            this.accountType = accountType;
-        } else {
-            this.accountType = "User";
         }
     }
 

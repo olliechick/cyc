@@ -22,6 +22,7 @@ import java.time.LocalDate;
  *
  * @author Josh Bernasconi
  * @author Ollie Chick
+ * @author Josh Burt
  */
 public class LoginController {
 
@@ -41,16 +42,13 @@ public class LoginController {
     private Label birthdayLabel;
 
     @FXML
-    private Label accountTypeLabel;
+    private Label confirmPasswordLabel;
 
     @FXML
     private Label passwordLabel;
 
     @FXML
     private Label newPasswordLabel;
-
-    @FXML
-    private ChoiceBox<String> accountTypeBox;
 
     @FXML
     private Label newUsernameLabel;
@@ -60,6 +58,9 @@ public class LoginController {
 
     @FXML
     private PasswordField newPasswordTextField;
+
+    @FXML
+    private PasswordField newConfirmPasswordTextField;
 
     @FXML
     private Button signUpButton;
@@ -76,20 +77,47 @@ public class LoginController {
     @FXML
     private ChoiceBox<String> genderBox;
 
+    @FXML
+    private CheckBox acceptTermsOfService;
+
+    @FXML
+    private Button viewTOS;
+
+
     private UserAccountModel model;
 
     private final ObservableList<String> genderList = FXCollections.observableArrayList("", "Male", "Female");
-    private final ObservableList<String> accountTypeList = FXCollections.observableArrayList("User", "Admin", "Analyst");
-
 
     @FXML
     public void initialize() {
         genderBox.setItems(genderList);
         genderBox.getSelectionModel().selectFirst();
-        accountTypeBox.setItems(accountTypeList);
-        accountTypeBox.getSelectionModel().selectFirst();
         birthdayEntryField.setValue(LocalDate.of(1990, 1, 1));
+
     }
+
+    /**
+     * Changes the scene to display the map to user accounts.
+     */
+    /*private void launchMap() {
+
+        try {
+            // Changes to the map GUI
+
+            FXMLLoader mapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+            Parent mapView = mapLoader.load();
+            MapController mapController = mapLoader.getController();
+
+
+            Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Map can take over
+            mapController.initModel(model, stage);
+            stage.setScene(new Scene(mapView));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace(); //File not found
+        }
+    }*/
 
     /**
      * Changes the scene to display the landing screen for analyst/admin users.
@@ -115,26 +143,18 @@ public class LoginController {
     }
 
     /**
-     * Changes the scene to display the map to user accounts.
+     * Changes the screen to view the TOS
      */
-    private void launchMap() {
+    public void showTOS() throws IOException {
+        System.out.println("TOS button pressed");
 
-        try {
-            // Changes to the map GUI
+        FXMLLoader tosLoader = new FXMLLoader(getClass().getResource("/fxml/TOSviewer.fxml"));
+        Parent tosView = tosLoader.load();
+        TOSController tosController = tosLoader.getController();
 
-            FXMLLoader mapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
-            Parent mapView = mapLoader.load();
-            MapController mapController = mapLoader.getController();
-
-
-            Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Map can take over
-            mapController.initModel(model, stage);
-            stage.setScene(new Scene(mapView));
-            stage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace(); //File not found
-        }
+        Stage tosStage = new Stage();
+        tosStage.setScene(new Scene(tosView));
+        tosStage.show();
     }
 
     /**
@@ -161,7 +181,7 @@ public class LoginController {
         } catch (IOException e) {
             usernameLabel.setTextFill(Color.RED);
             passwordLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "User does not exist. Please sign up or check your username.");
+            AlertGenerator.createAlert("Error", "Either Username or Password is incorrect. Please try again");
             return;
         }
 
@@ -169,17 +189,14 @@ public class LoginController {
         if (PasswordManager.isExpectedPassword(password, user.getSalt(), user.getPassword())) {
             model = user;
             // They got the password right
-            if (user.getAccountType().equals("User")) {
-                launchLandingScreen();
-            } else {
-                // User is admin or analyser
-                launchLandingScreen();
-            }
+
+            launchLandingScreen();
+
         } else {
             // Wrong password
             usernameLabel.setTextFill(Color.BLACK);
             passwordLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "Incorrect password. Please try again or check your username.");
+            AlertGenerator.createAlert("Error", "Either Username or Password is incorrect. Please try again");
         }
     }
 
@@ -194,10 +211,11 @@ public class LoginController {
         System.out.println("Sign up button clicked");
         String username = newUsernameTextField.getText();
         String password = newPasswordTextField.getText();
+        String confirmPassword = newConfirmPasswordTextField.getText();
         LocalDate birthday = birthdayEntryField.getValue();
         char gender;
-        String accountType = accountTypeBox.getValue();
 
+        System.out.println(acceptTermsOfService.isSelected());
         // Work out gender
         String genderName = genderBox.getValue();
         if (genderName.equals("Male")) {
@@ -216,15 +234,23 @@ public class LoginController {
         } else {
             newUsernameLabel.setTextFill(Color.BLACK);
         }
-
-        seng202.team1.UserAccountModel newUser = new seng202.team1.UserAccountModel(gender, accountType, birthday, username, password);
-        model = newUser;
-        if (newUser.getAccountType().equals("User")) {
-            launchLandingScreen();
-        } else {
-            // User is admin or analyser
-            launchLandingScreen();
+        if (!password.equals(confirmPassword)){
+            newPasswordLabel.setTextFill(Color.RED);
+            confirmPasswordLabel.setTextFill(Color.RED);
+            AlertGenerator.createAlert("Error", "Passwords do not match please try again.");
+            return;
         }
+        if(!acceptTermsOfService.isSelected()){
+            acceptTermsOfService.setTextFill(Color.RED);
+            AlertGenerator.createAlert("Error", "You must accept the terms of service to continue");
+            return;
+        }
+
+        seng202.team1.UserAccountModel newUser = new seng202.team1.UserAccountModel(gender, birthday, username, password);
+        model = newUser;
+        //Launch main view
+        launchLandingScreen();
+
 
         seng202.team1.UserAccountModel.createUser(newUser);
 
