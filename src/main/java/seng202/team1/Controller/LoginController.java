@@ -10,9 +10,11 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import seng202.team1.Model.Directory;
 import seng202.team1.Model.PasswordManager;
 import seng202.team1.UserAccountModel;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 
@@ -245,6 +247,11 @@ public class LoginController {
             AlertGenerator.createAlert("Error", "You must accept the terms of service to continue");
             return;
         }
+        if (userAlreadyExists(username)){
+            usernameLabel.setTextFill(Color.RED);
+            AlertGenerator.createAlert("Error", "A user with that name already exist.\nPlease try another user name");
+            return;
+        }
 
         seng202.team1.UserAccountModel newUser = new seng202.team1.UserAccountModel(gender, birthday, username, password);
         model = newUser;
@@ -254,5 +261,16 @@ public class LoginController {
 
         seng202.team1.UserAccountModel.createUser(newUser);
 
+    }
+
+    /**
+     * Takes a username and returns true if the user already exists
+     * Note will return true if user is somehow a dir.
+     * @param username username entered on sign up
+     * @return If it exists or not
+     */
+    private static boolean userAlreadyExists(String username){
+        File tmp = new File(Directory.USERS.directory()+username+".user");
+        return tmp.exists();
     }
 }
