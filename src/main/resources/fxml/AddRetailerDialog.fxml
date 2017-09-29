@@ -43,14 +43,14 @@
       <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
       <GridPane GridPane.rowIndex="3">
          <children>
-            <Label fx:id="addressLabel" text="Address:">
+            <Label fx:id="addressLabel" text="Address:" GridPane.rowIndex="1">
                <padding>
                   <Insets right="10.0" top="5.0" />
                </padding>
             </Label>
-            <Label fx:id="address2Label" text="Address (line 2):" GridPane.rowIndex="1" />
-            <TextField fx:id="addressField" promptText="123 Example St" GridPane.columnIndex="1" />
-            <TextField fx:id="address2Field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="address2Label" text="Address (pre-line):" />
+            <TextField fx:id="addressField" promptText="123 Example St" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="address2Field" GridPane.columnIndex="1" />
             <Label fx:id="zipLabel" text="ZIP:" GridPane.rowIndex="2">
                <padding>
                   <Insets right="10.0" top="5.0" />
