@@ -96,6 +96,11 @@ public class TableController {
 
             addRetailerDialog.setDialog(stage1, root, retailerLocation);
             stage1.showAndWait();
+
+            RetailerLocation newRetailerLocation = addRetailerDialog.getRetailerLocation();
+            if (newRetailerLocation != null) {
+                retailerLocation.setName(newRetailerLocation.getName());
+            }
         } catch (IOException e) {
             AlertGenerator.createAlert("Oops, something went wrong");
         }

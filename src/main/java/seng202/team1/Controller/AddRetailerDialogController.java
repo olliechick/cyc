@@ -1,8 +1,7 @@
 package seng202.team1.Controller;
 
-import com.sun.org.apache.bcel.internal.generic.RET;
+
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,13 +13,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import seng202.team1.Model.RetailerLocation;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import static seng202.team1.Controller.MapController.getUserClicks;
-
 /**
  * Logic for the add Retailer dialog.
  * Created by jbe113 on 20/09/17.
@@ -141,6 +134,14 @@ public class AddRetailerDialogController {
     public void setDialog(Stage stage1, Parent root, RetailerLocation retailerLocation) {
         setDialog(stage1, root);
 
+        nameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(retailerLocation.getName()));
+        });
+
+        primaryField.textProperty().addListener((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(retailerLocation.getPrimaryFunction()));
+        });
+
         nameField.setText(retailerLocation.getName());
         addressField.setText(retailerLocation.getAddressLine1());
         address2Field.setText(retailerLocation.getAddressLine2());
@@ -149,6 +150,7 @@ public class AddRetailerDialogController {
         zipField.setText(String.valueOf(retailerLocation.getZipcode()));
         latField.setText(String.valueOf(retailerLocation.getLatitude()));
         longField.setText(String.valueOf(retailerLocation.getLongitude()));
+
         addButton.setText("Save");
     }
 
