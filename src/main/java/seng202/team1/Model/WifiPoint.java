@@ -218,10 +218,11 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
         String description = "Location:";
 
         //First bit of location
-        if (!location.isEmpty()) {
+        System.out.println(location);
+        if (location != null && !location.isEmpty()) {
             // Location is defined
             description += " " + location;
-            if (!locationType.isEmpty()) {
+            if (locationType != null && !locationType.isEmpty()) {
                 //Location type is defined
                 description += " (" + locationType + ") -";
             } else {
@@ -230,14 +231,14 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
             }
         } else {
             // Location is empty
-            if (!locationType.isEmpty()) {
+            if (location != null && !locationType.isEmpty()) {
                 // Location type is defined
                 description += " " + locationType + " -";
             }
         }
 
         // Second bit of location
-        if (!placeName.isEmpty()) {
+        if (placeName != null && !placeName.isEmpty()) {
             description += " " + placeName + ",";
         }
         description += " " + hood + ", " + borough + ", " + city + " " + zipcode;
@@ -245,7 +246,7 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
 
         // The rest of description
         description += "\nCost: " + cost;
-        if (!sourceId.isEmpty()) {
+        if (sourceId != null && !sourceId.isEmpty()) {
             description += "\nSource ID: " + sourceId;
         }
         if (datetimeActivated != null) {
@@ -255,7 +256,7 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
         if (objectId != -1) {
             description += "\nID: " + objectId;
         }
-        if (!remarks.isEmpty()) {
+        if (remarks != null && !remarks.isEmpty()) {
             description += "\nRemarks: " + remarks;
         }
 
