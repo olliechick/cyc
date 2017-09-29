@@ -252,6 +252,7 @@ public class CSVLoader {
 
                 isValidCsv = true;
             } catch (Exception e) {
+                System.out.println("Error processing: " + record.toString());
                 // Some error processing the line - it's either a header field or the CSV is invalid.
                 // If this occurs for all lines in the CSV, a CsvParserException is thrown.
             }
@@ -344,6 +345,7 @@ public class CSVLoader {
 
                 isValidCsv = true;
             } catch (Exception e) {
+                System.out.println("Error processing: " + record.toString());
                 // Some error processing the line - it's either a header field or the csv is invalid.
                 // If this occurs for all lines in the CSV, a CsvParserException is thrown.
             }
@@ -408,15 +410,29 @@ public class CSVLoader {
         for (CSVRecord record : retailerData) {
             // Process all the attributes - from most to least likely to fail
             try {
-                int zipcode = Integer.parseInt(record.get(5));
+                // Check if a header
+                if (record.get(0).equals("CnBio_Org_Name")) {
+                    // Throw an exception to be caught by the try-catch block
+                    throw new Exception("Header row");
+                }
+
+                // ZIP code
+                String zipcodeString = record.get(5);
+                int zipcode;
+                if (zipcodeString.isEmpty()) {
+                    // No ZIP code
+                    zipcode = -1;
+                } else {
+                    zipcode = Integer.parseInt(record.get(5));
+                }
 
                 // Try to get coords
                 Point.Float coords = new Point.Float();
                 try {
-                    coords.y = Float.parseFloat(record.get(9)); //latitude
-                    coords.x = Float.parseFloat(record.get(10)); //longitude
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    //no such column as latitude/longitude
+                    coords.y = Float.parseFloat(record.get(10)); //latitude
+                    coords.x = Float.parseFloat(record.get(11)); //longitude
+                } catch (Exception e) {
+                    // Couldn't get the coords for whatever reason. Set them to null.
                     coords = null;
                 }
 
@@ -442,6 +458,7 @@ public class CSVLoader {
 
                 isValidCsv = true;
             } catch (Exception e) {
+                System.out.println("Error processing: " + record.toString());
                 // Some error processing the line - it's either a header field or the csv is invalid.
                 // If this occurs for all lines in the CSV, a CsvParserException is thrown.
             }

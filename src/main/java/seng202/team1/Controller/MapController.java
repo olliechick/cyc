@@ -4,37 +4,28 @@ package seng202.team1.Controller;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-
 import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
-import seng202.team1.*;
 import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
-
-
 import seng202.team1.UserAccountModel;
 
-
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import java.awt.*;
-
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
+import static seng202.team1.Model.CsvHandling.CSVLoader.*;
 import static seng202.team1.Model.GenerateFields.generateSecondaryFunctionsList;
 import static seng202.team1.Model.GenerateFields.generateWifiProviders;
 
@@ -229,6 +220,7 @@ public class MapController {
     }
 
     private void addWifi(float lat, float lng, String title) {
+        System.out.println(title);
         String scriptStr = "document.addWIFIMarker({lat: " + lat + ", lng:  " + lng + "}, 'WIFI2.png', " + "'" + title + "')";
         webView.getEngine().executeScript(scriptStr);
 
