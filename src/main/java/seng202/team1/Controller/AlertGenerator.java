@@ -24,6 +24,7 @@ public class AlertGenerator {
         alert.setContentText(content);
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         alert.getDialogPane().setMinWidth(Region.USE_COMPUTED_SIZE);
+        alert.showAndWait();
     }
 
     /**
