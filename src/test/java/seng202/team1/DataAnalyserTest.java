@@ -160,7 +160,7 @@ public class DataAnalyserTest {
     }
 
     @Test
-    public void TestFindClosesRetailerToWifi() throws Exception {
+    public void TestFindClosestRetailerToWifi() throws Exception {
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots(RES_DIR + "testWifi.csv");
         WifiPoint hotspot = hotspots.get(0);
         ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers(RES_DIR + "Lower_Manhattan_Retailers.csv");

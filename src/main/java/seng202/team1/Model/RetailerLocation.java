@@ -62,8 +62,6 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
         this.state = state;
         this.zipcode = zipcode;
         this.blockLot = blockLot;
-        this.primaryFunction = primaryFunction;
-        this.secondaryFunction = secondaryFunction;
         this.coords = coords;
         this.isUserDefinedPoint = isUserDefinedPoint;
     }
