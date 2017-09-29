@@ -6,6 +6,8 @@ import java.awt.Point;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static org.apache.commons.lang3.StringEscapeUtils.escapeEcmaScript;
+
 /***
  * Class for type of Wifi Points. Has a single constructor which sets all the values of the point.
  * CSV files contain more points but these are the important ones for the app.
@@ -331,8 +333,7 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
     }
 
     public String toInfoString() {
-        return getDescription().replace("\n", "\\n")
-                .replace("'", "\\'");
+        return escapeEcmaScript(getDescription());
 
     }
 }

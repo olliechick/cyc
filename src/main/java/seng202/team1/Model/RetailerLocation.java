@@ -4,6 +4,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.awt.*;
 
+import static org.apache.commons.lang3.StringEscapeUtils.escapeEcmaScript;
+
 /**
  * Class for the retailer locations. Has a single constructor that sets the values for the points.
  * All methods are getters and setters.
@@ -280,9 +282,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     }
 
     public String toInfoString() {
-        return "Name: " + name + "\\n" +
-                "Type: " + primaryFunction + "\\n" +
-                "Subtype: " + secondaryFunction + "\\n";
+        return escapeEcmaScript(getDescription());
 
 
     }
