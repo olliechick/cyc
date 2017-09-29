@@ -18,8 +18,6 @@ public class BikeTripTest extends TestCase {
     LocalDateTime stopTime;
     Point.Float startPoint;
     Point.Float endPoint;
-    int startStationId;
-    int endStationId;
     int bikeID;
     char gender;
     int birthYear;
@@ -36,8 +34,6 @@ public class BikeTripTest extends TestCase {
         stopTime = LocalDateTime.of(2015, Month.DECEMBER, 30, 23, 50, 10);
         startPoint = new Point.Float((float) 172.581153, (float) -43.522610);
         endPoint = new Point.Float((float) 172.572739, (float) -43.520740);
-        startStationId = 5;
-        endStationId = 6;
         bikeID = 1;
         gender = 'f';
         birthYear = 2000;
@@ -45,7 +41,7 @@ public class BikeTripTest extends TestCase {
         isUserDefinedPoint = false;
 
         bikeTrip = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
     }
 
@@ -58,7 +54,7 @@ public class BikeTripTest extends TestCase {
     @Test
     public void testDurationlessConstructor() {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
         assertEquals(10, biketrip1.getTripDuration());
     }
@@ -66,7 +62,7 @@ public class BikeTripTest extends TestCase {
     public void testGetDistance1m() {
         Double distance = 1.23456789;
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
         assertEquals("1.23 m", biketrip1.getDistance());
     }
@@ -74,7 +70,7 @@ public class BikeTripTest extends TestCase {
     public void testGetDistance10m() {
         Double distance = 12.3456789;
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
         assertEquals("12.3 m", biketrip1.getDistance());
     }
@@ -82,7 +78,7 @@ public class BikeTripTest extends TestCase {
     public void testGetDistance100m() {
         Double distance = 123.456789;
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
         assertEquals("123 m", biketrip1.getDistance());
     }
@@ -90,7 +86,7 @@ public class BikeTripTest extends TestCase {
     public void testGetDistance1km() {
         Double distance = 1234.56789;
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
         assertEquals("1.23 km", biketrip1.getDistance());
     }
@@ -98,7 +94,7 @@ public class BikeTripTest extends TestCase {
     public void testGetDistance10km() {
         Double distance = 12345.6789;
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
         assertEquals("12.3 km", biketrip1.getDistance());
     }
@@ -106,7 +102,7 @@ public class BikeTripTest extends TestCase {
     public void testGetDistanceLong() {
         Double distance = 123456.789;
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
         assertEquals("123 km", biketrip1.getDistance());
     }
@@ -114,7 +110,7 @@ public class BikeTripTest extends TestCase {
     public void testGetDistance1mRoundUp() {
         Double distance = 1.239456789;
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
         assertEquals("1.24 m", biketrip1.getDistance());
     }
@@ -122,7 +118,7 @@ public class BikeTripTest extends TestCase {
     public void testGetDistance10mRoundUp() {
         Double distance = 12.39456789;
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
         assertEquals("12.4 m", biketrip1.getDistance());
     }
@@ -130,7 +126,7 @@ public class BikeTripTest extends TestCase {
     public void testGetDistance100mRoundUp() {
         Double distance = 123.9456789;
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+               bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
         assertEquals("124 m", biketrip1.getDistance());
     }
@@ -138,7 +134,7 @@ public class BikeTripTest extends TestCase {
     public void testGetDistance1kmRoundUp() {
         Double distance = 1239.456789;
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
         assertEquals("1.24 km", biketrip1.getDistance());
     }
@@ -146,7 +142,7 @@ public class BikeTripTest extends TestCase {
     public void testGetDistance10kmRoundUp() {
         Double distance = 12394.56789;
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
         assertEquals("12.4 km", biketrip1.getDistance());
     }
@@ -154,7 +150,7 @@ public class BikeTripTest extends TestCase {
     public void testGetDistanceLongRoundUp() {
         Double distance = 123945.6789;
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
         assertEquals("124 km", biketrip1.getDistance());
     }
@@ -182,7 +178,7 @@ public class BikeTripTest extends TestCase {
     @Test
     public void testGetDescriptionDifferentDay() {
         BikeTrip bikeTrip1 = new BikeTrip(startTime, stopTime.plusMinutes(20), startPoint,
-                endPoint, startStationId, endStationId, bikeID, gender,
+                endPoint, bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
         String expectedString = "Started at 11:50 pm 30 December 2015 and ended 20 minutes later " +
                 "at 12:10 am 31 December\nFrom: (-43.52261, 172.58115)\n" +
@@ -194,7 +190,7 @@ public class BikeTripTest extends TestCase {
     @Test
     public void testGetDescriptionDifferentYear() {
         BikeTrip bikeTrip1 = new BikeTrip(startTime, stopTime.plusDays(1).plusMinutes(20),
-                startPoint, endPoint, startStationId, endStationId, bikeID, gender,
+                startPoint, endPoint, bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
         String expectedString = "Started at 11:50 pm 30 December 2015 and ended 1 day later at " +
                 "12:10 am 1 January 2016\nFrom: (-43.52261, 172.58115)\n" +
@@ -216,10 +212,10 @@ public class BikeTripTest extends TestCase {
         isUserDefinedPoint = false;
 
         BikeTrip biketrip1 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
         BikeTrip biketrip2 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
         boolean isSame = biketrip1.equals(biketrip2);
         assertEquals(true, isSame);
@@ -238,10 +234,10 @@ public class BikeTripTest extends TestCase {
         isUserDefinedPoint = false;
 
         BikeTrip biketrip1 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
         BikeTrip biketrip2 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
 
         int hash1 = biketrip1.hashCode();
@@ -262,12 +258,12 @@ public class BikeTripTest extends TestCase {
         isUserDefinedPoint = false;
 
         BikeTrip biketrip1 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
 
         startPoint = new Point.Float((float) 172.581154, (float) -43.522610);
         BikeTrip biketrip2 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
         boolean isSame = biketrip1.equals(biketrip2);
         assertEquals(false, isSame);
@@ -286,12 +282,12 @@ public class BikeTripTest extends TestCase {
         isUserDefinedPoint = false;
 
         BikeTrip biketrip1 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
 
         startPoint = new Point.Float((float) 172.581154, (float) -43.522610);
         BikeTrip biketrip2 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
         boolean isSame = biketrip1.equals(biketrip2);
 
@@ -314,12 +310,12 @@ public class BikeTripTest extends TestCase {
 
 
         BikeTrip biketrip1 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
 
         startTime = LocalDateTime.of(2015, Month.DECEMBER, 31, 23, 50, 0);
         BikeTrip biketrip2 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
         boolean isSame = biketrip1.equals(biketrip2);
         assertEquals(true, isSame);
@@ -339,12 +335,12 @@ public class BikeTripTest extends TestCase {
 
 
         BikeTrip biketrip1 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
 
         startTime = LocalDateTime.of(2015, Month.DECEMBER, 31, 23, 50, 0);
         BikeTrip biketrip2 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
-                startStationId, endStationId, bikeID, gender,
+                bikeID, gender,
                 birthYear, tripDistance, isUserDefinedPoint);
         boolean isSame = biketrip1.equals(biketrip2);
 
