@@ -134,25 +134,27 @@ public class DatabaseManager {
                         break;
                 }
             }
+
+
             if (wifiTableExists) {
                 System.out.println("Wifi table already exists.");
             } else {
-                PreparedStatement s3 = connection.prepareStatement(createWifiTable);
-                s3.execute();
+                PreparedStatement s1 = connection.prepareStatement(createWifiTable);
+                s1.execute();
             }
 
             if (tripTableExists) {
                 System.out.println("Trip table already exists.");
             } else {
-                PreparedStatement s1 = connection.prepareStatement(createTripsTable);
-                s1.execute();
+                PreparedStatement s2 = connection.prepareStatement(createTripsTable);
+                s2.execute();
             }
 
             if (retailerTableExists) {
                 System.out.println("Retailer table already exists.");
             } else {
-                PreparedStatement s2 = connection.prepareStatement(createRetailerTable);
-                s2.execute();
+                PreparedStatement s3 = connection.prepareStatement(createRetailerTable);
+                s3.execute();
             }
 
         } catch (SQLException e) {
@@ -162,7 +164,7 @@ public class DatabaseManager {
 
 
     /**
-     * Checks to see if thedatabase is currently connected.
+     * Checks to see if the database is currently connected.
      *
      * @return true if the database is connected.
      * @author Ridge Nairn
@@ -187,8 +189,10 @@ public class DatabaseManager {
      */
     public static void deleteDatabase() {
         boolean fileSuccessfullyDeleted = localDatabaseFile.delete();
+        File f = new File(Directory.DATABASES.directory() + "sqlite.db-journal");
+        boolean journalSuccessfullyDeleted = f.delete();
         connection = null;
-        if (fileSuccessfullyDeleted) {
+        if (fileSuccessfullyDeleted && journalSuccessfullyDeleted) {
             System.out.println("Database Deleted.");
         }
     }
@@ -275,12 +279,14 @@ public class DatabaseManager {
      * @author Ollie Chick
      */
     public static void addBikeTrip(BikeTrip trip) throws SQLException {
-        // TODO: Don't assume values can be null
         int numOfQs = 14; //number of question marks to put in the statement
+
         String insert = "INSERT INTO trip (duration, startTime, stopTime, startLatitude, " +
                 "startLongitude, endLatitude, endLongitude, startStationId, endStationId, " +
                 "bikeID, gender, birthYear, tripDistance, isUserDefined) VALUES (" +
+
                 new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
+
 
         PreparedStatement statement = getConnection().prepareStatement(insert);
 
@@ -298,10 +304,26 @@ public class DatabaseManager {
         statement.setInt(12, trip.getBirthYear());
         statement.setDouble(13, trip.getTripDistance());
         statement.setBoolean(14, trip.isUserDefinedPoint());
-        statement.executeUpdate();
 
-        getConnection().commit();
+        statement.executeUpdate();
     }
+
+    public static void addBikeTrips(ArrayList<BikeTrip> trips) {
+        for (BikeTrip trip: trips) {
+            try {
+                addBikeTrip(trip);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            getConnection().commit();
+        } catch (SQLException e) {
+            System.out.println("Could not commit.");
+            e.printStackTrace();
+        }
+    }
+
 
 
     /**

@@ -86,8 +86,6 @@ public class DatabaseManagerTest {
     @After
     public void TearDown() {
         DatabaseManager.deleteDatabase();
-        File f = new File("sqlite.db-journal");
-        f.delete();
     }
 
     @Test
@@ -135,7 +133,7 @@ public class DatabaseManagerTest {
 
 
     @Test
-    public void get100BikeTrips() {
+    public void getNumberOfBikeTrips() {
         for (int i = 0; i < 100; i++) {
             try {
                 DatabaseManager.addBikeTrip(trip);
