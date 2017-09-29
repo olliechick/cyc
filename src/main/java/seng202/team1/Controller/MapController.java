@@ -13,37 +13,31 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 import seng202.team1.*;
+import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
-import seng202.team1.Model.GenerateFields;
-import seng202.team1.Model.RetailerLocation;
-import seng202.team1.Model.SerializerImplementation;
-import seng202.team1.Model.WifiPoint;
 
-import seng202.team1.AlertGenerator;
-import seng202.team1.CsvParserException;
-import seng202.team1.GenerateFields;
 
 import seng202.team1.UserAccountModel;
-import seng202.team1.WifiPoint;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import java.awt.*;
 
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
+import static seng202.team1.Model.GenerateFields.generateSecondaryFunctionsList;
+import static seng202.team1.Model.GenerateFields.generateWifiProviders;
 
-import static seng202.team1.CSVLoader.populateBikeTrips;
-import static seng202.team1.CSVLoader.populateRetailers;
-
-import static seng202.team1.CSVLoader.populateWifiHotspots;
-import static seng202.team1.GenerateFields.generateSecondaryFunctionsList;
-import static seng202.team1.GenerateFields.generateWifiProviders;
 
 /**
  * Controller for the map GUI
@@ -619,7 +613,7 @@ public class MapController {
 
         uniqueSecondaryFunctions = generateSecondaryFunctionsList(retailerPoints);
         ArrayList<String> uniqueSecondaryFunctions;
-        uniqueSecondaryFunctions = GenerateFields.generateSecondaryFunctionsList(retailerPoints);
+        uniqueSecondaryFunctions = generateSecondaryFunctionsList(retailerPoints);
         filterSecondaryComboBox.getItems().addAll(uniqueSecondaryFunctions);
         filterSecondaryComboBox.getSelectionModel().selectFirst();
 
