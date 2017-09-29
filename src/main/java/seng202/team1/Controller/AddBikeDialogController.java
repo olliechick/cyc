@@ -3,30 +3,25 @@ package seng202.team1.Controller;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
-
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import seng202.team1.Model.BikeTrip;
 import seng202.team1.UserAccountModel;
 
-import java.awt.Point;
-import java.awt.geom.Point2D;
+import java.awt.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Collections;
+
 import static seng202.team1.Controller.MapController.getUserClicks;
 
 /**
@@ -146,12 +141,24 @@ public class AddBikeDialogController {
         startAM.setSelected(true);
         stopAM.setSelected(true);
         ArrayList<Point.Double> userClicks = getUserClicks();
-        Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
-        Point.Double secondToLastPoint = userClicks.get((userClicks.size() - 2));
-        startLatField.setText(Double.toString(secondToLastPoint.getX()));
-        startLongField.setText(Double.toString(secondToLastPoint.getY()));
-        endLatField.setText(Double.toString(lastPoint.getX()));
-        endLongField.setText(Double.toString(lastPoint.getY()));
+
+        System.out.println("\nuserClicks = " + userClicks);
+        if (userClicks.isEmpty()) {
+            // User has never clicked on the map
+        } else if (userClicks.size() == 1) {
+            // User has clicked once - set this to the start point
+            Point.Double secondToLastPoint = userClicks.get((userClicks.size() - 1));
+            startLatField.setText(Double.toString(secondToLastPoint.getX()));
+            startLongField.setText(Double.toString(secondToLastPoint.getY()));
+        } else {
+            // User has clicked at least twice
+            Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
+            endLatField.setText(Double.toString(lastPoint.getX()));
+            endLongField.setText(Double.toString(lastPoint.getY()));
+            Point.Double secondToLastPoint = userClicks.get((userClicks.size() - 2));
+            startLatField.setText(Double.toString(secondToLastPoint.getX()));
+            startLongField.setText(Double.toString(secondToLastPoint.getY()));
+        }
     }
 
     /**

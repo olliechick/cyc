@@ -129,9 +129,12 @@ public class AddRetailerDialogController {
 
 
         ArrayList<Point.Double> userClicks = getUserClicks();
-        Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
-        latField.setText(Double.toString(lastPoint.getX()));
-        longField.setText(Double.toString(lastPoint.getY()));
+        if (!userClicks.isEmpty()) {
+            // User has clicked
+            Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
+            latField.setText(Double.toString(lastPoint.getX()));
+            longField.setText(Double.toString(lastPoint.getY()));
+        }
 
     }
 
