@@ -76,6 +76,33 @@ public final class DataAnalyser {
     }
 
     /**
+     * returns a list of bike trips close to a point but with in a certain length
+     *
+     * @param searchLat  Latitude to start the search at
+     * @param searchLong Longitude to start the search at
+     * @param delta      radius to search in
+     * @param trips      list of bike trips
+     * @return a list of bike trips close to the point
+     */
+    public static ArrayList<BikeTrip> searchBikeTripsCamsMethod(double searchLat, double searchLong,
+                                                      double delta, ArrayList<BikeTrip> trips, double min, double max) {
+
+        ArrayList<BikeTrip> closestPoints = searchBikeTrips( searchLat, searchLong,
+         delta,trips);
+        ArrayList<BikeTrip> results = new ArrayList<>();
+
+         for (BikeTrip point : closestPoints) {
+            double tripLat = point.getStartLatitude();
+            double tripLong = point.getStartLongitude();
+            double distance = calculateDistance(tripLat,tripLong,searchLat,searchLong);
+            if (distance > min && distance < max){
+                results.add(point);
+            }
+         }
+         return results;
+    }
+
+    /**
      * Takes a latitude, longitude and distance delta and iterates through a list of wifi points
      * Returns all points within the specified distance from the lat and long
      *
