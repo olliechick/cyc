@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.ContextualLength;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
@@ -254,7 +255,7 @@ public class BikeTableController extends TableController {
 
         TableColumn<BikeTrip, Integer> bikeIdCol = new TableColumn<>("Bike ID");
         TableColumn<BikeTrip, Character> genderCol = new TableColumn<>("Gender");
-        TableColumn<BikeTrip, String> durationCol = new TableColumn<>("Duration");
+        TableColumn<BikeTrip, ContextualLength> durationCol = new TableColumn<>("Duration");
         TableColumn<BikeTrip, Point.Float> startLocCol = new TableColumn<>("Start Location");
         TableColumn<BikeTrip, Point.Float> startLatitudeCol = new TableColumn<>("Latitude");
         TableColumn<BikeTrip, Point.Float> startLongitudeCol = new TableColumn<>("Longitude");
@@ -276,7 +277,6 @@ public class BikeTableController extends TableController {
 
         startLocCol.getColumns().addAll(startLatitudeCol, startLongitudeCol);
         endLocCol.getColumns().addAll(endLatitudeCol, endLongitudeCol);
-        durationCol.setSortable(false);
 
         filteredData = new FilteredList<>(dataPoints, p -> true);
 

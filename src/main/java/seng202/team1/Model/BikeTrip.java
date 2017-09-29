@@ -255,10 +255,10 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
      * This means that a trip that took 1 day, 23 hours, 59 minutes, 59 seconds will be "1 day".
      * E.g. "20 minutes", "3 days" (without the quotes).
      *
-     * @return the contextual duration as a string
+     * @return the contextual duration of the trip
      */
-    public String getDuration() {
-        String duration;
+    public ContextualLength getDuration() {
+        String durationString;
 
         // first find the unit of time and how many of those units
         String unit;
@@ -277,14 +277,14 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
             unitCount = tripDuration / (60 * 60 * 24);
         }
 
-        duration = unitCount + " " + unit;
+        durationString = unitCount + " " + unit;
 
         // then check if it's plural
         if (unitCount != 1) {
-            duration += "s";
+            durationString += "s";
         }
 
-        return duration;
+        return new ContextualLength(tripDuration, durationString);
     }
 
 
