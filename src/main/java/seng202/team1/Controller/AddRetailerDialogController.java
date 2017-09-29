@@ -1,6 +1,8 @@
 package seng202.team1.Controller;
 
+import com.sun.org.apache.bcel.internal.generic.RET;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,6 +16,7 @@ import seng202.team1.Model.RetailerLocation;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static seng202.team1.Controller.MapController.getUserClicks;
@@ -128,12 +131,27 @@ public class AddRetailerDialogController {
         stage.setScene(new Scene(root));
 
 
-        ArrayList<Point.Double> userClicks = getUserClicks();
-        Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
-        latField.setText(Double.toString(lastPoint.getX()));
-        longField.setText(Double.toString(lastPoint.getY()));
+//        ArrayList<Point.Double> userClicks = getUserClicks();
+//        Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
+//        latField.setText(Double.toString(lastPoint.getX()));
+//        longField.setText(Double.toString(lastPoint.getY()));
 
     }
+
+    public void setDialog(Stage stage1, Parent root, RetailerLocation retailerLocation) {
+        setDialog(stage1, root);
+
+        nameField.setText(retailerLocation.getName());
+        addressField.setText(retailerLocation.getAddressLine1());
+        address2Field.setText(retailerLocation.getAddressLine2());
+        primaryField.setText(retailerLocation.getPrimaryFunction());
+        secondaryField.setText(retailerLocation.getSecondaryFunction());
+        zipField.setText(String.valueOf(retailerLocation.getZipcode()));
+        latField.setText(String.valueOf(retailerLocation.getLatitude()));
+        longField.setText(String.valueOf(retailerLocation.getLongitude()));
+        addButton.setText("Save");
+    }
+
 
     /**
      * Checks the data entered for validity.

@@ -1,13 +1,21 @@
 package seng202.team1.Controller;
 
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng202.team1.Model.DataPoint;
+import seng202.team1.Model.RetailerLocation;
 
 import java.io.File;
+import java.io.IOException;
 
 
 /**
@@ -35,20 +43,62 @@ public class TableController {
      */
     public void initialize() {
 
-        // Get the selected row on double click and run the data popup
-        table.setRowFactory(tv -> {
-            TableRow<DataPoint> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2) {
-                    DataPoint rowData = row.getItem();
+        //TODO refactor before merge
+        ContextMenu cm = new ContextMenu();
+        MenuItem editMenuItem = new MenuItem("Edit");
+        MenuItem deleteMenuItem = new MenuItem("Delete");
+        cm.getItems().addAll(editMenuItem, deleteMenuItem);
+
+        editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //System.out.println(table.getSelectionModel().getSelectedItem());
+                cm.hide();
+                if (table.getSelectionModel().getSelectedItem() instanceof RetailerLocation) {
+                    editRetailer((RetailerLocation) table.getSelectionModel().getSelectedItem());
+                } else {
+                    System.out.println("Editing: " + table.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
+
+        table.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                cm.hide();
+
+                if (event.getButton() == MouseButton.SECONDARY)
+                {
+                    if (table.getSelectionModel().getSelectedItem() != null) {
+                        cm.show(table, event.getScreenX(), event.getScreenY());
+                    }
+                }
+
+                if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
+
+                    DataPoint rowData = table.getSelectionModel().getSelectedItem();
 
                     if (rowData != null) {
                         showDataPopup(table.getSelectionModel().getSelectedItem());
                     }
                 }
-            });
-            return row;
+            }
         });
+    }
+
+    public void editRetailer(RetailerLocation retailerLocation) {
+        try {
+            FXMLLoader addRetailerLoader = new FXMLLoader(getClass().getResource("/fxml/AddRetailerDialog.fxml"));
+            Parent root = addRetailerLoader.load();
+            AddRetailerDialogController addRetailerDialog = addRetailerLoader.getController();
+            Stage stage1 = new Stage();
+
+            addRetailerDialog.setDialog(stage1, root, retailerLocation);
+            stage1.showAndWait();
+        } catch (IOException e) {
+            AlertGenerator.createAlert("Oops, something went wrong");
+        }
     }
 
     /**
