@@ -66,8 +66,10 @@ public class RetailerLocationTest extends TestCase {
 
     @Test
     public void testGetDescription() {
-        String expectedString = "Address: Floor 2, 60 Pearl Street, New York, NY 10004\nFunction: Personal and " +
-                "Professional Services (Spa)";
+        String expectedString = "Address: Floor 2, 60 Pearl Street, New York, NY 10004\n" +
+                "Block-Lot: 7-38\n" +
+                "Co-ordinates: (40.70342, -74.01107)\n" +
+                "Function: Personal and Professional Services (Spa)";
         assertEquals(expectedString, retailerLocation.getDescription());
     }
 
