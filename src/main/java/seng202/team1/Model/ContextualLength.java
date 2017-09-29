@@ -8,19 +8,34 @@ package seng202.team1.Model;
  */
 public class ContextualLength implements Comparable<ContextualLength>{
 
-    private int length;
+    private double length;
     private String lengthString;
+
+    public ContextualLength(double length, String lengthString) {
+        this.length = length;
+        this.lengthString = lengthString;
+    }
 
     public ContextualLength(int length, String lengthString) {
         this.length = length;
         this.lengthString = lengthString;
     }
 
-    public int getLength() {
+    public ContextualLength(long length, String lengthString) {
+        this.length = length;
+        this.lengthString = lengthString;
+    }
+
+    public ContextualLength(float length, String lengthString) {
+        this.length = length;
+        this.lengthString = lengthString;
+    }
+
+    public double getLength() {
         return length;
     }
 
-    public void setLength(int length) {
+    public void setLength(double length) {
         this.length = length;
     }
 
@@ -33,7 +48,7 @@ public class ContextualLength implements Comparable<ContextualLength>{
     }
 
     public int compareTo(ContextualLength otherLength) {
-        return this.length - otherLength.getLength();
+        return (int) (this.length - otherLength.getLength());
     }
 
     public String toString() {
