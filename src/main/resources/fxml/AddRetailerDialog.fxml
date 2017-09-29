@@ -11,7 +11,7 @@
 
 <GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vgap="20.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.AddRetailerDialogController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="621.0" minWidth="10.0" prefWidth="621.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="621.0" minWidth="10.0" prefWidth="400.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="67.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
@@ -26,18 +26,18 @@
       <RowConstraints />
   </rowConstraints>
    <children>
-      <Label text="Add a custom Retailer Location" GridPane.halignment="CENTER" />
+      <Label text="Add a custom retailer location" GridPane.halignment="CENTER" />
       <GridPane GridPane.rowIndex="1">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="193.0" minWidth="10.0" prefWidth="157.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="154.0" minWidth="10.0" prefWidth="131.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="244.0" minWidth="10.0" prefWidth="240.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label fx:id="nameLabel" prefHeight="15.0" prefWidth="153.0" text="Retailer Name:" />
-            <TextField fx:id="nameField" prefHeight="25.0" prefWidth="251.0" GridPane.columnIndex="1" />
+            <Label fx:id="nameLabel" prefHeight="15.0" prefWidth="131.0" text="Name:" />
+            <TextField fx:id="nameField" prefHeight="25.0" prefWidth="251.0" promptText="Buy n Large" GridPane.columnIndex="1" />
          </children>
       </GridPane>
       <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
@@ -48,15 +48,15 @@
                   <Insets right="10.0" top="5.0" />
                </padding>
             </Label>
-            <Label fx:id="address2Label" text="Address 2:" GridPane.rowIndex="1" />
-            <TextField fx:id="addressField" GridPane.columnIndex="1" />
+            <Label fx:id="address2Label" text="Address (line 2):" GridPane.rowIndex="1" />
+            <TextField fx:id="addressField" promptText="123 Example St" GridPane.columnIndex="1" />
             <TextField fx:id="address2Field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label fx:id="zipLabel" text="ZIP:" GridPane.rowIndex="2">
                <padding>
                   <Insets right="10.0" top="5.0" />
                </padding>
             </Label>
-            <TextField fx:id="zipField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="zipField" promptText="10002" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="154.0" minWidth="10.0" prefWidth="131.0" />
@@ -71,18 +71,18 @@
       <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
        <GridPane GridPane.rowIndex="5">
            <children>
-               <Label fx:id="latLabel" text="Latitiude:" GridPane.rowIndex="1">
+               <Label fx:id="latLabel" text="Longitude:" GridPane.rowIndex="1">
                    <padding>
                        <Insets right="10.0" top="5.0" />
                    </padding>
                </Label>
-               <Label fx:id="longLabel" text="Longitude:">
+               <Label fx:id="longLabel" text="Latitude:">
                    <padding>
                        <Insets right="10.0" top="5.0" />
                    </padding>
                </Label>
-               <TextField fx:id="latField" GridPane.columnIndex="1" />
-               <TextField fx:id="longField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               <TextField fx:id="latField" promptText="41.12345" GridPane.columnIndex="1" />
+               <TextField fx:id="longField" promptText="-73.12345" GridPane.columnIndex="1" GridPane.rowIndex="1" />
            </children>
            <columnConstraints>
                <ColumnConstraints hgrow="SOMETIMES" maxWidth="154.0" minWidth="10.0" prefWidth="129.0" />
@@ -96,17 +96,17 @@
        <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
       <GridPane GridPane.rowIndex="7">
          <children>
-            <Label fx:id="secondaryLabel" text="Secondary Function:" GridPane.rowIndex="1">
+            <Label fx:id="secondaryLabel" text="Secondary function:" GridPane.rowIndex="1">
                <padding>
                   <Insets right="10.0" top="5.0" />
                </padding>
             </Label>
-            <Label fx:id="primaryLabel" text="Primary Function:">
+            <Label fx:id="primaryLabel" text="Primary function:">
                <padding>
                   <Insets right="10.0" top="5.0" />
                </padding>
             </Label>
-            <TextField fx:id="primaryField" GridPane.columnIndex="1" />
+            <TextField fx:id="primaryField" promptText="Shopping" GridPane.columnIndex="1" />
             <TextField fx:id="secondaryField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
          <columnConstraints>

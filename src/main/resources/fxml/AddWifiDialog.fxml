@@ -95,7 +95,7 @@
                   <Insets right="10.0" top="5.0" />
                </padding>
             </Label>
-            <TextField fx:id="latField" promptText="40.12345" GridPane.columnIndex="1" />
+            <TextField fx:id="latField" promptText="41.12345" GridPane.columnIndex="1" />
             <TextField fx:id="longField" promptText="-73.12345" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
          <columnConstraints>
