@@ -27,10 +27,11 @@ import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.UserAccountModel;
 
 
+import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import java.awt.*;
+
 
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
@@ -100,6 +101,22 @@ public class MapController {
     private Button switchViewButton;
     @FXML
     private Button AddCustomWIFIButton;
+    @FXML
+    private Button searchForRouteButton;
+    @FXML
+    private TextField startingLatTextField;
+    @FXML
+    private TextField startingLongTextField;
+    @FXML
+    private TextField endingLatTextField;
+    @FXML
+    private TextField endingLongTextField;
+    @FXML
+    private TextField distanceFromPointTextField;
+    @FXML
+    private Label resultsLabel;
+
+
 
 
 
@@ -111,6 +128,7 @@ public class MapController {
     void initModel(UserAccountModel model, Stage stage) {
         this.model = model;
         this.stage = stage;
+        resultsLabel.setText("");
 
     }
 
@@ -256,7 +274,51 @@ public class MapController {
         webView.getEngine().executeScript(scriptStr);
     }
 
+    public void findResults() {
+        System.out.println("Search Button Pressed");
+        Double startingLat = 0.00;
+        Double startingLong = 0.00;
+        try {
+            startingLat = Double.parseDouble(startingLatTextField.getText());
+            startingLong = Double.parseDouble(startingLongTextField.getText());
+        } catch (NumberFormatException e) {
+            System.out.println("Bad Starting Lat or Long"); // We want these to pass to allow different search types
+        }
+        Double endingLat = 0.00;
+        Double endingLong = 0.00;
+        try {
+            endingLat = Double.parseDouble(endingLatTextField.getText());
+            endingLong = Double.parseDouble(endingLongTextField.getText());
+        } catch (NumberFormatException e) {
+            System.out.println("Bad Ending Lat or Long");// We want these to pass to allow different search types
+        }
+        double delta = 0.00;
+        try {
+            delta = Double.parseDouble(distanceFromPointTextField.getText());
+        } catch (NumberFormatException e) {
+            System.out.println("Bad Delta");
+            AlertGenerator.createAlert("Error", "Distance from point must be a number");
+            return;
+        }
 
+        ArrayList<BikeTrip> results = new ArrayList<>();
+
+        if (endingLat.equals(0.00)|| endingLong.equals(0.00) && startingLat != 0.00 && startingLong != 0.00) {
+            results = DataAnalyser.searchBikeTrips(startingLat,startingLong,delta,bikeTrips);
+        }
+        if  (endingLat != (0.00) && endingLong != (0.00) && (startingLat.equals(0.00) || startingLong.equals(0.00))){
+            results = DataAnalyser.searchBikeTrips(endingLat,endingLong,delta,bikeTrips);
+        }
+        System.out.println("Results Found");
+        if(results.size() == 0){
+            resultsLabel.setText("No results were found");
+        } else {
+            resultsLabel.setText(results.get(0).getDescription());
+        }
+
+
+
+    }
 
 
     @FXML
