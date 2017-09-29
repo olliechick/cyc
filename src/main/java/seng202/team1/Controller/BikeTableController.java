@@ -307,4 +307,11 @@ public class BikeTableController extends TableController {
         ArrayList<BikeTrip> customTrips = model.getCustomBikeTrips();
         dataPoints.addAll(customTrips);
     }
+
+    public void clearFilters() {
+        filterStartComboBox.getSelectionModel().selectFirst();
+        filterEndComboBox.getSelectionModel().selectFirst();
+        filterGenderComboBox.getSelectionModel().selectFirst();
+        bikeSearchField.clear();
+    }
 }

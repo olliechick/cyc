@@ -317,4 +317,10 @@ public class RetailerTableController extends TableController {
         this.model = userAccountModel;
         importRetailerCsv("/csv/Lower_Manhattan_Retailers.csv", false);
     }
+
+    public void clearFilters() {
+        filterPrimaryComboBox.getSelectionModel().selectFirst();
+        filterZipComboBox.getSelectionModel().selectFirst();
+        streetSearchField.clear();
+    }
 }

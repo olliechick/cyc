@@ -315,4 +315,10 @@ public class WifiTableController extends TableController {
         super.close();
     }
 
+    public void clearFilters() {
+        filterCostComboBox.getSelectionModel().selectFirst();
+        filterProviderComboBox.getSelectionModel().selectFirst();
+        filterBoroughComboBox.getSelectionModel().selectFirst();
+    }
+
 }
