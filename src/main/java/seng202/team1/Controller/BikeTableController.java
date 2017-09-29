@@ -267,12 +267,12 @@ public class BikeTableController extends TableController {
         // Attempts to access public properties of name "Property", falls back to get<property>() methods if no property available
         bikeIdCol.setCellValueFactory( new PropertyValueFactory<>("bikeId"));
         genderCol.setCellValueFactory( new PropertyValueFactory<>("genderDescription"));
-        durationCol.setCellValueFactory( new PropertyValueFactory<>("Duration"));
+        durationCol.setCellValueFactory( new PropertyValueFactory<>("duration"));
         startLatitudeCol.setCellValueFactory( new PropertyValueFactory<>("startLatitude"));
         startLongitudeCol.setCellValueFactory( new PropertyValueFactory<>("startLongitude"));
         endLatitudeCol.setCellValueFactory( new PropertyValueFactory<>("endLatitude"));
         endLongitudeCol.setCellValueFactory( new PropertyValueFactory<>("endLongitude"));
-        distCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Double>("tripDistanceTwoD"));
+        distCol.setCellValueFactory( new PropertyValueFactory<>("distance"));
 
         startLocCol.getColumns().addAll(startLatitudeCol, startLongitudeCol);
         endLocCol.getColumns().addAll(endLatitudeCol, endLongitudeCol);
