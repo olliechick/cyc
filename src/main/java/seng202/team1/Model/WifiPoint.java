@@ -47,7 +47,6 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
         this.provider = provider;
         this.city = city;
         this.zipcode = zipcode;
-        this.cost = cost;
         this.remarks = remarks;
         this.ssid = ssid;
         this.sourceId = sourceId;
@@ -201,35 +200,64 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
 
     /**
      * Returns the name of the WiFi point (SSID chosen as this is what will appear on the user's device
-     * for them to connect to).
+     * for them to connect to). If the point is user defined, this will be appended by " (user-defined)".
      */
     public String getName() {
-        return ssid;
+        String name = ssid;
+        if (isUserDefinedPoint) {
+            name += " (user-defined)";
+        }
+        return name;
     }
 
 
     /**
-     * Returns a description of the WiFi point.
+     * @return description of the WiFi point.
      */
     public String getDescription() {
-        //TODO make a more robust description that checks if each value is null
-        String description;
-        if (datetimeActivated == null) {
-            description = String.format("Location: %s (%s) - %s, %s, %s, %s %d (%f, %f)\nCost: %s\n" +
-                            "Provider: %s\nSSID: %s\nSourceID: %s\nID: %d",
-                    location, locationType, placeName, hood, borough,
-                    city, zipcode, getLatitude(), getLongitude(), cost, provider, ssid, sourceId,
-                    objectId);
+        String description = "Location:";
+
+        //First bit of location
+        if (!location.isEmpty()) {
+            // Location is defined
+            description += " " + location;
+            if (!locationType.isEmpty()) {
+                //Location type is defined
+                description += " (" + locationType + ") -";
+            } else {
+                // Location type is empty
+                description += " -";
+            }
         } else {
-
-            description = String.format("Location: %s (%s) - %s, %s, %s, %s %d (%f, %f)\nCost: %s\n" +
-                            "Provider: %s\nSSID: %s\nSourceID: %s\nActivated: %s\nID: %d",
-                    location, locationType, placeName, hood, borough,
-                    city, zipcode, getLatitude(), getLongitude(), cost, provider, ssid, sourceId,
-                    datetimeActivated.format(DateTimeFormatter.ofPattern("h:mm:ss a d/M/yyyy")),
-                    objectId);
-
+            // Location is empty
+            if (!locationType.isEmpty()) {
+                // Location type is defined
+                description += " " + locationType;
+            }
         }
+
+        // Second bit of location
+        if (!placeName.isEmpty()) {
+            description += " " + placeName + ",";
+        }
+        description += " " + hood + ", " + borough + ", " + city + " " + zipcode;
+        description += "\nCoordinates: (" + getLatitude() + ", " + getLongitude() + ")";
+
+        // The rest of description
+        description += "\nCost: " + cost;
+        if (!sourceId.isEmpty()) {
+            description += "\nSource ID: " + sourceId;
+        }
+        if (datetimeActivated != null) {
+            description += "\nActivated: " + datetimeActivated.format(DateTimeFormatter.ofPattern("h:mm:ss a d/M/yyyy"));
+        }
+        if (objectId != -1) {
+            description += "\nID: " + objectId;
+        }
+        if (!remarks.isEmpty()) {
+            description += "\nRemarks: " + remarks;
+        }
+
         return description;
     }
 

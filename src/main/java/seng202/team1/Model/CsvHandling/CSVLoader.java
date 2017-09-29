@@ -326,6 +326,9 @@ public class CSVLoader {
 
                 String name = record.get(5);
                 String location = record.get(6);
+                if (location.isEmpty()) {
+                    location = null;
+                }
                 String locationType = record.get(11);
                 String hood = record.get(20);
                 String borough = record.get(18);
