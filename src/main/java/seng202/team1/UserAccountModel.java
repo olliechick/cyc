@@ -4,6 +4,7 @@ import seng202.team1.Model.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -112,8 +113,15 @@ public class UserAccountModel implements java.io.Serializable {
     private ArrayList<RetailerLocation> customRetailerLocations = new ArrayList<>();
     private ArrayList<WifiPoint> customWifiPoints = new ArrayList<>();
 
+
+
     public ArrayList<BikeTrip> getCustomBikeTrips() {
-        return customBikeTrips;
+
+            DatabaseManager.open();
+            ArrayList<BikeTrip> result = DatabaseManager.getUserTrips(userName);
+            DatabaseManager.close();
+            return result;
+
     }
 
     public ArrayList<RetailerLocation> getCustomRetailerLocations() {
@@ -125,7 +133,14 @@ public class UserAccountModel implements java.io.Serializable {
     }
 
     public void addCustomBikeTrip(BikeTrip bikeTrip) {
-        customBikeTrips.add(bikeTrip);
+        try {
+            //TODO: Have this thrown further up
+            DatabaseManager.open();
+            DatabaseManager.addBikeTrip(bikeTrip, userName);
+            DatabaseManager.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void addCustomRetailerLocation(RetailerLocation retailerLocation) {

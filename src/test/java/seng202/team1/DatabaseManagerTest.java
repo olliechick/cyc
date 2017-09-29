@@ -9,6 +9,7 @@ import seng202.team1.Model.WifiPoint;
 import java.awt.*;
 import java.io.File;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 
@@ -26,6 +27,7 @@ public class DatabaseManagerTest {
     private static BikeTrip trip;
     private static RetailerLocation retailer;
     private static WifiPoint wifi;
+    private static UserAccountModel model;
 
     @BeforeClass
     public static void Initialise() {
@@ -39,6 +41,7 @@ public class DatabaseManagerTest {
         char gender = 'f';
         int birthYear = 2000;
         boolean isUserDefinedPoint = false;
+        LocalDate birthdate = LocalDate.of(1997, 9, 15);
 
         String name = "Pearl Bodywork";
         String addressLine1 = "60 Pearl Street";
@@ -64,6 +67,7 @@ public class DatabaseManagerTest {
         String ssid = "Free Wifi Hotspot";
         String sourceID = "";
 
+        model = new UserAccountModel(gender, birthdate, "TestAccount", "bad_password");
 
         retailer = new RetailerLocation(name, addressLine1, addressLine2, city, state,
                 zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
@@ -85,6 +89,8 @@ public class DatabaseManagerTest {
 
     @After
     public void TearDown() {
+
+        DatabaseManager.close();
         DatabaseManager.deleteDatabase();
     }
 
@@ -117,6 +123,7 @@ public class DatabaseManagerTest {
             e.printStackTrace();
         }
 
+        System.out.println(DatabaseManager.getWifiPoints().get(0));
         assertEquals(wifi, DatabaseManager.getWifiPoints().get(0));
     }
 
@@ -124,11 +131,11 @@ public class DatabaseManagerTest {
     public void addBikeTrip() {
 
         try {
-            DatabaseManager.addBikeTrip(trip);
+            DatabaseManager.addBikeTrip(trip, model.getUserName());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        assertEquals(trip, DatabaseManager.getAllTrips().get(0));
+        assertEquals(trip, DatabaseManager.getUserTrips(model.getUserName()).get(0));
     }
 
 
@@ -136,7 +143,7 @@ public class DatabaseManagerTest {
     public void getNumberOfBikeTrips() {
         for (int i = 0; i < 100; i++) {
             try {
-                DatabaseManager.addBikeTrip(trip);
+                DatabaseManager.addBikeTrip(trip, model.getUserName());
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -144,6 +151,16 @@ public class DatabaseManagerTest {
         assertEquals(100, DatabaseManager.getNumberOfBikeTrips());
     }
 
+    @Test
+    public void getOnlyUserTrips() {
+        try {
+            DatabaseManager.addBikeTrip(trip, model.getUserName());
+            DatabaseManager.addBikeTrip(trip, "notMyUser");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        assertEquals(1, DatabaseManager.getUserTrips(model.getUserName()).size());
+    }
 
 
 }

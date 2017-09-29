@@ -31,6 +31,7 @@ public class DatabaseManager {
     public static void connect() throws SQLException {
         String filename = "sqlite.db";
         localDatabaseFile = new File(Directory.DATABASES.directory() + filename);
+        boolean databaseExists = localDatabaseFile.exists();
         String url = "jdbc:sqlite:" + localDatabaseFile.getAbsolutePath();
 
         if (connection == null) { // No connection yet
@@ -38,9 +39,12 @@ public class DatabaseManager {
                 DriverManager.registerDriver(new org.sqlite.JDBC());
                 connection = DriverManager.getConnection(url);
                 connection.setAutoCommit(false);
-                if (connection != null) {
-                    System.out.println("Database established and connected.");
+                if (databaseExists) {
+                    System.out.println("Database connected.");
+                } else {
                     createDatabaseTables();
+                    System.out.println("Database established and connected.");
+
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -56,6 +60,7 @@ public class DatabaseManager {
         String createTripsTable = "CREATE TABLE trip\n" +
                 "(\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
+                "    username TEXT,\n" +
                 "    duration BIGINT,\n" +
                 "    startTime TEXT,\n" +
                 "    stopTime TEXT,\n" +
@@ -141,6 +146,7 @@ public class DatabaseManager {
             } else {
                 PreparedStatement s1 = connection.prepareStatement(createWifiTable);
                 s1.execute();
+                System.out.println("Wifi table created.");
             }
 
             if (tripTableExists) {
@@ -148,6 +154,7 @@ public class DatabaseManager {
             } else {
                 PreparedStatement s2 = connection.prepareStatement(createTripsTable);
                 s2.execute();
+                System.out.println("Trip table created.");
             }
 
             if (retailerTableExists) {
@@ -155,6 +162,8 @@ public class DatabaseManager {
             } else {
                 PreparedStatement s3 = connection.prepareStatement(createRetailerTable);
                 s3.execute();
+                System.out.println("Retailer table created.");
+
             }
 
         } catch (SQLException e) {
@@ -192,7 +201,7 @@ public class DatabaseManager {
         File f = new File(Directory.DATABASES.directory() + "sqlite.db-journal");
         boolean journalSuccessfullyDeleted = f.delete();
         connection = null;
-        if (fileSuccessfullyDeleted && journalSuccessfullyDeleted) {
+        if (fileSuccessfullyDeleted) {
             System.out.println("Database Deleted.");
         }
     }
@@ -274,16 +283,17 @@ public class DatabaseManager {
      * Adds a single bike trip record to the database.
      *
      * @param trip An instance of BikeTrip to be added to the trip database table.
+     * @param username The username of the account the trip is tied to.
      * @throws SQLException when the row could not be inserted
      * @author Ridge Nairn
      * @author Ollie Chick
      */
-    public static void addBikeTrip(BikeTrip trip) throws SQLException {
-        int numOfQs = 14; //number of question marks to put in the statement
+    public static void addBikeTrip(BikeTrip trip, String username) throws SQLException {
+        int numOfQs = 15; //number of question marks to put in the statement
 
         String insert = "INSERT INTO trip (duration, startTime, stopTime, startLatitude, " +
                 "startLongitude, endLatitude, endLongitude, startStationId, endStationId, " +
-                "bikeID, gender, birthYear, tripDistance, isUserDefined) VALUES (" +
+                "bikeID, gender, birthYear, tripDistance, isUserDefined, username) VALUES (" +
 
                 new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
 
@@ -304,23 +314,53 @@ public class DatabaseManager {
         statement.setInt(12, trip.getBirthYear());
         statement.setDouble(13, trip.getTripDistance());
         statement.setBoolean(14, trip.isUserDefinedPoint());
+        statement.setString(15, username);
 
-        statement.executeUpdate();
+
+        statement.execute();
+
+        System.out.println("Bike trip added to database.");
     }
 
-    public static void addBikeTrips(ArrayList<BikeTrip> trips) {
+    public static void addBikeTrips(ArrayList<BikeTrip> trips, String username) {
         for (BikeTrip trip: trips) {
             try {
-                addBikeTrip(trip);
+                addBikeTrip(trip, username);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void open() {
+
+        boolean databaseExists = localDatabaseFile.exists();
+        String url = "jdbc:sqlite:" + localDatabaseFile.getAbsolutePath();
+
         try {
-            getConnection().commit();
+            DriverManager.registerDriver(new org.sqlite.JDBC());
+            connection = DriverManager.getConnection(url);
+            connection.setAutoCommit(false);
+            if (databaseExists) {
+                System.out.println("Database connected.");
+            } else {
+                createDatabaseTables();
+                System.out.println("Database established and connected.");
+
+            }
         } catch (SQLException e) {
-            System.out.println("Could not commit.");
             e.printStackTrace();
+        }
+    }
+
+    public static void close() {
+        if (isDatabaseConnected()) {
+            try {
+                getConnection().commit();
+                getConnection().close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -338,12 +378,7 @@ public class DatabaseManager {
     }
 
 
-    public static void uploadLocalRecords() {
-        // TODO: Implement upload all local records to remote database
-    }
-
-
-    /**
+    /*
      * Fetches an ArrayList of BikeTrips from the database, of m - n size.
      *
      * @param n lower bound to be fetched, inclusive.
@@ -351,6 +386,7 @@ public class DatabaseManager {
      * @return An ArrayList of BikeTrip objects of size m - n.
      * @author Ridge Nairn
      */
+    /*
     public static ArrayList<BikeTrip> getTrips(int n, int m) {
         String statement = "SELECT * FROM trip WHERE id >= ? AND id <= ?";
         PreparedStatement preparedStatement;
@@ -396,10 +432,50 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         return result;
-    }
+    } */
 
-    public static ArrayList<BikeTrip> getAllTrips() {
-        return getTrips(0, getNumberOfBikeTrips());
+    public static ArrayList<BikeTrip> getUserTrips(String username) {
+        String statement = "SELECT * FROM trip WHERE username=?";
+        PreparedStatement preparedStatement;
+        ArrayList<BikeTrip> result = new ArrayList<>();
+        try {
+            preparedStatement = getConnection().prepareStatement(statement);
+            preparedStatement.setString(1, username);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                String startTimeString = rs.getString("startTime");
+                String stopTimeString = rs.getString("stopTime");
+                Long duration = rs.getLong("duration");
+                Float startLatitude = rs.getFloat("startLatitude");
+                Float startLongitude = rs.getFloat("startLongitude");
+                Float endLatitude = rs.getFloat("endLatitude");
+                Float endLongitude = rs.getFloat("endLongitude");
+                int startStationId = rs.getInt("startStationId");
+                int endStationId = rs.getInt("endStationId");
+                int bikeID = rs.getInt("bikeID");
+                char gender = rs.getString("gender").toCharArray()[0];
+                int birthYear = rs.getInt("birthYear");
+                double tripDistance = rs.getDouble("tripDistance");
+                boolean isUserDefined = rs.getBoolean("isUserDefined");
+
+                LocalDateTime startTime = LocalDateTime.parse(startTimeString);
+                LocalDateTime stopTime = LocalDateTime.parse(stopTimeString);
+
+                Point.Float startPoint = new Point.Float(startLongitude, startLatitude);
+                Point.Float stopPoint = new Point.Float(endLongitude, endLatitude);
+
+                BikeTrip trip = new BikeTrip(duration, startTime, stopTime, startPoint, stopPoint,
+                        startStationId, endStationId, bikeID, gender,
+                        birthYear, tripDistance, isUserDefined);
+
+                result.add(trip);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public static ArrayList<RetailerLocation> getRetailers() {

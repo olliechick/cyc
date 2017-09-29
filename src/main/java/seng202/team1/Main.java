@@ -6,10 +6,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import seng202.team1.Controller.AlertGenerator;
+import seng202.team1.Model.DatabaseManager;
 import seng202.team1.Model.Directory;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * Main class for launching the application.
