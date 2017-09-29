@@ -429,11 +429,17 @@ public class CSVLoader {
                 // Try to get coords
                 Point.Float coords = new Point.Float();
                 try {
-                    coords.y = Float.parseFloat(record.get(10)); //latitude
-                    coords.x = Float.parseFloat(record.get(11)); //longitude
+                    coords.y = Float.parseFloat(record.get(9)); //latitude
+                    coords.x = Float.parseFloat(record.get(10)); //longitude
                 } catch (Exception e) {
-                    // Couldn't get the coords for whatever reason. Set them to null.
-                    coords = null;
+                    //Now try in cols 10 and 11
+                    try {
+                        coords.y = Float.parseFloat(record.get(10)); //latitude
+                        coords.x = Float.parseFloat(record.get(11)); //longitude
+                    } catch (Exception e2) {
+                        // Couldn't get the coords for whatever reason. Set them to null.
+                        coords = null;
+                    }
                 }
 
                 // Get secondary function

@@ -70,6 +70,7 @@ public class WifiPointTest {
     public void testGetDescription() {
         String expectedString = "Location: 179 WEST 26 STREET (Outdoor Kiosk) - mn-05-123662, Midtown-Midtown South, Manhattan, New York 10001\n" +
                 "Coordinates: (40.745968, -73.99404)\n" +
+                "Provider: LinkNYC - Citybridge\n" +
                 "Cost: Free\n" +
                 "Source ID: LINK-00869\n" +
                 "Activated: 12:00:00 am 18/1/2017\n" +
