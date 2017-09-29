@@ -197,6 +197,7 @@ public class RetailerTableController extends TableController {
                     stopLoadingAni();
                     setPredicate();
                     populateCustomRetailerLocations();
+                    clearFilters();
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading retailers. Is your csv correct?");
                     stopLoadingAni();

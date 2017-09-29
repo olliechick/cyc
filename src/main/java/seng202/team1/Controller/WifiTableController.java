@@ -193,6 +193,7 @@ public class WifiTableController extends TableController {
                     stopLoadingAni();
                     setPredicate();
                     populateCustomWifiPoints();
+                    clearFilters();
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading wifis. Is your csv correct?");
                     stopLoadingAni();

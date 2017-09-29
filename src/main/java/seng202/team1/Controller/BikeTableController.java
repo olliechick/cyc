@@ -178,6 +178,7 @@ public class BikeTableController extends TableController {
                     stopLoadingAni();
                     setPredicate();
                     populateCustomBikeTrips();
+                    clearFilters();
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading bike trips. Is your csv correct?");
                     stopLoadingAni();
