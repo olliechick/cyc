@@ -265,6 +265,9 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
         description += "\nCoordinates: (" + getLatitude() + ", " + getLongitude() + ")";
 
         // The rest of description
+        if (provider != null && !provider.isEmpty()) {
+            description += "\nProvider: " + provider;
+        }
         description += "\nCost: " + cost;
         if (sourceId != null && !sourceId.isEmpty()) {
             description += "\nSource ID: " + sourceId;
@@ -328,7 +331,8 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
     }
 
     public String toInfoString() {
-        return getDescription().replace("\n", "\\n");
+        return getDescription().replace("\n", "\\n")
+                .replace("'", "\\'");
 
     }
 }
