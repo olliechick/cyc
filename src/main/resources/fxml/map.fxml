@@ -132,8 +132,12 @@
 
         </rowConstraints>
          <children>
-             <Button fx:id="ZoomInButton11" mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-             <Button fx:id="ZoomOutButton11" mnemonicParsing="false" onAction="#zoomOut" text="Zoom Out" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+             <Button fx:id="addCustomBikeTripButton" mnemonicParsing="false" onAction="#addCustomBikeTrip" text="Add Route" GridPane.rowIndex="0" GridPane.halignment="CENTER" />
+             <Button fx:id="addCustomRetailerButton" mnemonicParsing="false" onAction="#addCustomRetailer" text="Add Retailer" GridPane.rowIndex="1" GridPane.halignment="CENTER" />
+             <Button fx:id="addCustomWIFIButton" mnemonicParsing="false" onAction="#addCustomWIFI" text="Add WIFI" GridPane.rowIndex="2" GridPane.halignment="CENTER" />
+             <Button fx:id="switchViewButton" mnemonicParsing="false" onAction="#switchView" text="Switch View" GridPane.rowIndex="3" GridPane.halignment="CENTER" />
+             <Button fx:id="ZoomInButton11" mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" GridPane.rowIndex="4" GridPane.halignment="CENTER" />
+             <Button fx:id="ZoomOutButton11" mnemonicParsing="false" onAction="#zoomOut" text="Zoom Out" GridPane.rowIndex="5" GridPane.halignment="CENTER" />
          </children>
       </GridPane>
    </left>

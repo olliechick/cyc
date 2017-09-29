@@ -1,18 +1,23 @@
 package seng202.team1.Controller;
 
+
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Label;
+
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import netscape.javascript.JSObject;
 import seng202.team1.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.GenerateFields;
@@ -20,18 +25,28 @@ import seng202.team1.Model.RetailerLocation;
 import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.Model.WifiPoint;
 
-import java.awt.*;
+import seng202.team1.AlertGenerator;
+import seng202.team1.CsvParserException;
+import seng202.team1.GenerateFields;
+
+import seng202.team1.UserAccountModel;
+import seng202.team1.WifiPoint;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
-import static seng202.team1.Model.GenerateFields.generateSecondaryFunctionsList;
-import static seng202.team1.Model.GenerateFields.generateWifiProviders;
+import java.awt.*;
+
+
+import static seng202.team1.CSVLoader.populateBikeTrips;
+import static seng202.team1.CSVLoader.populateRetailers;
+
+import static seng202.team1.CSVLoader.populateWifiHotspots;
+import static seng202.team1.GenerateFields.generateSecondaryFunctionsList;
+import static seng202.team1.GenerateFields.generateWifiProviders;
 
 /**
- * Logic for the map GUI
- *
+ * Controller for the map GUI
  * @author Cameron Auld
  * @author Ollie Chick
  * Created by cga51 on 06/09/17.
@@ -40,12 +55,22 @@ public class MapController {
 
     ArrayList<RetailerLocation> retailerPoints = null;
     ArrayList<WifiPoint> wifiPoints = null;
+    ArrayList<BikeTrip> bikeTrips = null;
+
+    static ArrayList<Point.Double> userClicks = new ArrayList<>();
+
+    public static ArrayList<Point.Double> getUserClicks() {
+        return userClicks;
+    }
 
 
-    ArrayList<String> uniqueSecondaryFunctions = null;
-    ArrayList<String> uniquePrimaryFunctions = null;
-    ArrayList<String> uniqueProviders = null;
+    public ArrayList<String> uniqueSecondaryFunctions = null;
+    public ArrayList<String> uniquePrimaryFunctions = null;
+    public ArrayList<String> uniqueProviders = null;
+
+    @FXML
     private UserAccountModel model;
+    @FXML
     private Stage stage;
     @FXML
     private WebView webView;
@@ -78,13 +103,15 @@ public class MapController {
     private ComboBox filterProviderComboBox;
 
     @FXML
-    private Label loadLabel;
+    private Button switchViewButton;
+    @FXML
+    private Button AddCustomWIFIButton;
+
+
+
 
     @FXML
     private WebEngine webEngine;
-
-    @FXML
-    private Button LoadDataButton;
 
 
     void initModel(UserAccountModel model, Stage stage) {
@@ -100,6 +127,7 @@ public class MapController {
         webEngine.load(getClass().getResource("/html/map.html").toString());
         initializeFilters();
 
+        // Check the map has been loaded before attempting to add markers to it.
         webEngine.getLoadWorker().stateProperty().addListener(
                 new ChangeListener<Worker.State>() {
                     public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
@@ -110,15 +138,40 @@ public class MapController {
                 });
 
 
+
+
+
     }
 
-    @FXML
+
     private void loadData() {
 
-        loadAllWifi();
-        loadAllRetailers();
-        setFilters();
+        loadAllWifi();      // loads all the wifiPoints
+        loadAllRetailers(); // loads all the retailerPoints
+        setFilters();       // sets the filters based on wifi and retailer points loaded
+        loadAllBikeTrips(); // currently only dynamic, requested routes are shown
+
+        // Add a Java callback object to a WebEngine document can be used to
+        //the coordinates of user clicks to the map.
+        JSObject win = (JSObject) webEngine.executeScript("window");
+        win.setMember("app", new JavaApp());
     }
+
+    /** JavaScript interface object. Can be used to pass
+     *
+     *
+      */
+
+    public class JavaApp {
+        public void alert(Double lat, Double lng) {
+            System.out.println(lat + "," + lng);
+            Point.Double clickPoint = new Point.Double();
+            clickPoint.setLocation(lat, lng);
+            userClicks.add(clickPoint);
+            System.out.print(userClicks);
+        }
+    }
+
 
     @FXML
     private void zoomIn() {
@@ -129,6 +182,39 @@ public class MapController {
     @FXML
     private void zoomOut() {
         webView.getEngine().executeScript("document.zoomOut()");
+
+    }
+    @FXML
+    private void suggestRouteFromPoint() {
+        Point.Double coordinates = userClicks.get(userClicks.size()-1);
+        System.out.print(coordinates);
+        ArrayList<BikeTrip> suggested = DataAnalyser.searchBikeTrips(coordinates.getX(), coordinates.getY(),
+        20000,  bikeTrips);
+        BikeTrip first = suggested.get(0);
+        webView.getEngine().executeScript("document.calcRoute({lat: " + first.getStartLatitude() + ", lng:  " +
+                first.getStartLongitude() + "}, {lat: " + first.getEndLatitude() + ", lng:  " + first.getEndLongitude() +"})");
+
+    }
+
+    @FXML
+    private void switchView() {
+        try {
+            // Changes to the table choosing GUI
+            FXMLLoader landingLoader = new FXMLLoader(getClass().getResource("/fxml/landingView.fxml"));
+            Parent landingView = landingLoader.load();
+            LandingController landingController = landingLoader.getController();
+
+
+
+            Stage stage = (Stage) switchViewButton.getScene().getWindow(); //gets the current stage so that Table can take over
+
+            landingController.initModel(model, stage);
+            stage.setScene(new Scene(landingView));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace(); //File not found
+        }
 
     }
 
@@ -177,24 +263,14 @@ public class MapController {
     }
 
 
-    public void addWifi() {
+
+
+    @FXML
+    private void loadAllBikeTrips() {
         try {
-            FXMLLoader addWifiLoader = new FXMLLoader(getClass().getResource("/fxml/AddWifiDialog.fxml"));
-            Parent root = addWifiLoader.load();
-            AddWifiDialogController addWifiDialog = addWifiLoader.getController();
-            Stage stage1 = new Stage();
-
-            addWifiDialog.setDialog(stage1, root);
-            stage1.showAndWait();
-
-            WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
-            if (newWifiPoint != null) {
-                wifiPoints.add(newWifiPoint);
-                model.addCustomWifiLocation(newWifiPoint);
-                SerializerImplementation.serializeUser(model);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            bikeTrips = populateBikeTrips();
+        } catch (CsvParserException | IOException e) {
+            AlertGenerator.createAlert("Error", "Cannot load bike trips.");
         }
     }
 
@@ -217,7 +293,7 @@ public class MapController {
         webView.getEngine().executeScript("document.wifiCluster()");
     }
 
-    @FXML
+
     private void loadAllRetailers() {
         try {
             retailerPoints = populateRetailers();
@@ -247,7 +323,7 @@ public class MapController {
 
     @FXML
     private void updateRetailersPrimary() {
-        ArrayList<RetailerLocation> retailers = new ArrayList<RetailerLocation>();
+        ArrayList<RetailerLocation> retailers = new ArrayList<>();
         for (int i = 0; i < retailerPoints.size(); i++) {
 
             RetailerLocation retailerLocation = retailerPoints.get(i);
@@ -318,10 +394,11 @@ public class MapController {
     }
 
 
-    /**
-     * checks the given retailerLocation against the filter in the primary function ComboBox.
-     */
     private boolean checkPrimary(RetailerLocation retailerLocation) {
+        /**
+         * checks the given retailerLocation against the filter in the primary function ComboBox.
+         *
+         */
         if ("All".equals(filterPrimaryComboBox.getValue())) {
             return true;
         } else {
@@ -329,10 +406,11 @@ public class MapController {
         }
     }
 
-    /**
-     * checks the given retailerLocation against the filter in the primary function ComboBox.
-     */
     private boolean checkSecondary(RetailerLocation retailerLocation) {
+        /**
+         * checks the given retailerLocation against the filter in the primary function ComboBox.
+         *
+         */
         if ("All".equals(filterSecondaryComboBox.getValue())) {
             return true;
         } else {
@@ -340,11 +418,11 @@ public class MapController {
         }
     }
 
-    /**
-     * Checks the address line 1 of the given retailerLocation against the text in the street
-     * search field.
-     */
     private boolean checkStreet(RetailerLocation retailerLocation) {
+        /**
+         * Checks the address line 1 of the given retailerLocation against the text in the street
+         * search field.
+         */
         if (streetSearchField.getText().isEmpty()) {
             return true;
         } else {
@@ -389,6 +467,15 @@ public class MapController {
     }
 
 
+
+        /**
+         * Sets the filter options, those that are dynamically updated after
+         * wifi and retailer points are loaded are initialized to 'All'.
+         * Those for which the few possible values are known in advance are
+         * hard coded.
+         */
+
+        // Retailer filters
     /**
      * Sets the filter options
      * TODO don't hard code
@@ -416,16 +503,115 @@ public class MapController {
         filterProviderComboBox.getSelectionModel().selectFirst();
     }
 
+    /**
+     * Opens a dialog for the user to enter data for a new Wifi Point.
+     * If valid, checks it doesn't match any existing points and adds it to the table,
+     * as well as the user's list of custom points.
+     */
+    @FXML
+    private void addCustomWIFI() {
+        try {
+            FXMLLoader addWifiLoader = new FXMLLoader(getClass().getResource("/fxml/AddWifiDialog.fxml"));
+            Parent root = addWifiLoader.load();
+            AddWifiDialogController addWifiDialog = addWifiLoader.getController();
+            Stage stage1 = new Stage();
+
+            addWifiDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+
+            WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
+            if (newWifiPoint != null) {
+                if (wifiPoints.contains(newWifiPoint)) {
+                    AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
+                } else {
+                    newWifiPoint.setVisible(true);
+                    newWifiPoint.setId(wifiPoints.size());
+                    wifiPoints.add(newWifiPoint);
+                    addWifi(newWifiPoint.getLatitude(), newWifiPoint.getLongitude(), newWifiPoint.toInfoString());
+                    model.addCustomWifiLocation(newWifiPoint);
+                    webView.getEngine().executeScript("document.wifiCluster()");
+                    SerializerImplementation.serializeUser(model);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
-     * Sets the filter options
-     * TODO don't hard code
+     * Creates a pop up to get the data for a new Retailer Location.
+     * If valid data is entered the Retailer is added, if it is not a duplicate.
      */
+    public void addCustomRetailer() {
+        try {
+            FXMLLoader addRetailerLoader = new FXMLLoader(getClass().getResource("/fxml/AddRetailerDialog.fxml"));
+            Parent root = addRetailerLoader.load();
+            AddRetailerDialogController addRetailerDialog = addRetailerLoader.getController();
+            Stage stage1 = new Stage();
+
+            addRetailerDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+
+            RetailerLocation retailerLocation = addRetailerDialog.getRetailerLocation();
+            if (retailerLocation != null) {
+                if (retailerPoints.contains(retailerLocation)) {
+                    AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
+                } else {
+                    retailerLocation.setVisible(true);
+                    retailerLocation.setId(retailerPoints.size());
+                    retailerPoints.add(retailerLocation);
+                    addRetailer(retailerLocation.getLatitude(), retailerLocation.getLongitude(), retailerLocation.toInfoString());
+                    model.addCustomRetailerLocation(retailerLocation);
+                    webView.getEngine().executeScript("document.retailerCluster()");
+                    SerializerImplementation.serializeUser(model);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addCustomBikeTrip() {
+
+        try {
+            FXMLLoader addBikeLoader = new FXMLLoader(getClass().getResource("/fxml/AddBikeDialog.fxml"));
+            Parent root = addBikeLoader.load();
+            AddBikeDialogController addBikeDialog = addBikeLoader.getController();
+            Stage stage1 = new Stage();
+
+            addBikeDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+
+            BikeTrip test = addBikeDialog.getBikeTrip();
+            if (test != null) {
+                if (bikeTrips.contains(test)) {
+                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
+                } else {
+                    bikeTrips.add(addBikeDialog.getBikeTrip());
+                    model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
+                    SerializerImplementation.serializeUser(model);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Add the user's custom Wifi points to the current data
+     */
+    private void populateCustomWifiPoints() {
+        ArrayList<WifiPoint> customWifi = model.getCustomWifiPoints();
+        wifiPoints.addAll(customWifi);
+    }
+
     private void setFilters() {
+        /**
+         * Sets the filter options that are dynamically generated based on the loaded
+         * wifi and retailer points.
+         */
 
-        // Retailers
-
-        ArrayList<String> uniquePrimaryFunctions;
+        // Retailer filters
         uniquePrimaryFunctions = GenerateFields.generatePrimaryFunctionsList(retailerPoints);
         filterPrimaryComboBox.getItems().addAll(uniquePrimaryFunctions);
         filterPrimaryComboBox.getSelectionModel().selectFirst();
@@ -440,7 +626,7 @@ public class MapController {
         filterZipComboBox.getItems().addAll(10004, 10005, 10038, 10007);
         filterZipComboBox.getSelectionModel().selectFirst();
 
-        // WiFi
+        // WIFI filters
 
         filterBoroughComboBox.getItems().addAll("Manhattan", "Brooklyn", "Queens", "The Bronx", "Staten Island");
         filterBoroughComboBox.getSelectionModel().selectFirst();
@@ -453,9 +639,12 @@ public class MapController {
         filterProviderComboBox.getSelectionModel().selectFirst();
 
     }
+    @FXML
+    public void close() {
+        stage.close();
+    }
 
-
-    void initModel(UserAccountModel userAccountModel) {
+     void initModel(UserAccountModel userAccountModel) {
 
         this.model = userAccountModel;
 

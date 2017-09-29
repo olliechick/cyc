@@ -126,7 +126,11 @@ public class LandingController {
         try {
             FXMLLoader mapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
             Parent mapView = mapLoader.load();
+            MapController mapController = mapLoader.getController();
 
+
+
+            mapController.initModel(model, stage);
             Stage stage1 = new Stage();
             stage1.setScene(new Scene(mapView));
             stage1.initModality(Modality.APPLICATION_MODAL);

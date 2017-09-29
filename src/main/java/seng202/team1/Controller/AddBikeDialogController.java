@@ -19,12 +19,15 @@ import seng202.team1.Model.BikeTrip;
 import seng202.team1.UserAccountModel;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Collections;
+import static seng202.team1.Controller.MapController.getUserClicks;
 
 /**
  * Logic for the dialog for adding bike trips
@@ -127,7 +130,7 @@ public class AddBikeDialogController {
      * Set up the window as a dialog.
      *
      * @param stage1 the new stage to use to display
-     * @param root   root fxml node
+     * @param root root fxml node
      */
     void setDialog(Stage stage1, Parent root) {
         stage = stage1;
@@ -142,11 +145,19 @@ public class AddBikeDialogController {
 
         startAM.setSelected(true);
         stopAM.setSelected(true);
+        ArrayList<Point.Double> userClicks = getUserClicks();
+        Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
+        Point.Double secondToLastPoint = userClicks.get((userClicks.size() - 2));
+        startLatField.setText(Double.toString(secondToLastPoint.getX()));
+        startLongField.setText(Double.toString(secondToLastPoint.getY()));
+        endLatField.setText(Double.toString(lastPoint.getX()));
+        endLongField.setText(Double.toString(lastPoint.getY()));
     }
 
     /**
      * Check the fields for validity and if so, add the bike trip.
      * Else warn of errors.
+     *
      * TODO add checking and text field actual use
      */
     public void addBike() {
