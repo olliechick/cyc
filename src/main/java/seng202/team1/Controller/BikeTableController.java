@@ -178,6 +178,7 @@ public class BikeTableController extends TableController {
                     stopLoadingAni();
                     setPredicate();
                     populateCustomBikeTrips();
+                    clearFilters();
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading bike trips. Is your csv correct?");
                     stopLoadingAni();
@@ -306,5 +307,12 @@ public class BikeTableController extends TableController {
     private void populateCustomBikeTrips() {
         ArrayList<BikeTrip> customTrips = model.getCustomBikeTrips();
         dataPoints.addAll(customTrips);
+    }
+
+    public void clearFilters() {
+        filterStartComboBox.getSelectionModel().selectFirst();
+        filterEndComboBox.getSelectionModel().selectFirst();
+        filterGenderComboBox.getSelectionModel().selectFirst();
+        bikeSearchField.clear();
     }
 }

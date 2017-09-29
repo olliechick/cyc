@@ -197,6 +197,7 @@ public class RetailerTableController extends TableController {
                     stopLoadingAni();
                     setPredicate();
                     populateCustomRetailerLocations();
+                    clearFilters();
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading retailers. Is your csv correct?");
                     stopLoadingAni();
@@ -316,5 +317,11 @@ public class RetailerTableController extends TableController {
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
         importRetailerCsv("/csv/Lower_Manhattan_Retailers.csv", false);
+    }
+
+    public void clearFilters() {
+        filterPrimaryComboBox.getSelectionModel().selectFirst();
+        filterZipComboBox.getSelectionModel().selectFirst();
+        streetSearchField.clear();
     }
 }

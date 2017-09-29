@@ -193,6 +193,7 @@ public class WifiTableController extends TableController {
                     stopLoadingAni();
                     setPredicate();
                     populateCustomWifiPoints();
+                    clearFilters();
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading wifis. Is your csv correct?");
                     stopLoadingAni();
@@ -313,6 +314,12 @@ public class WifiTableController extends TableController {
     @Override
     public void close() {
         super.close();
+    }
+
+    public void clearFilters() {
+        filterCostComboBox.getSelectionModel().selectFirst();
+        filterProviderComboBox.getSelectionModel().selectFirst();
+        filterBoroughComboBox.getSelectionModel().selectFirst();
     }
 
 }
