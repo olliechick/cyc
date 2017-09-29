@@ -29,7 +29,7 @@
       <RowConstraints maxHeight="123.0" minHeight="0.0" prefHeight="10.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label text="Add a custom bike trip" GridPane.halignment="CENTER" />
+      <Label fx:id="addBikeTripLabel" text="Add a custom bike trip" GridPane.halignment="CENTER" />
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647">
          <children>
             <Label fx:id="idLabel" prefHeight="20.0" prefWidth="78.0" text="Bike ID:">

@@ -63,6 +63,9 @@ public class AddBikeDialogController {
     private DatePicker stopDatePicker;
 
     @FXML
+    private Label addBikeTripLabel;
+
+    @FXML
     private Label idLabel;
 
     @FXML
@@ -186,37 +189,59 @@ public class AddBikeDialogController {
     private boolean checkFields() {
         boolean valid = true;
 
+        // Bike ID
         try {
             bikeID = Integer.parseInt(idField.getText());
             idLabel.setTextFill(Color.BLACK);
         } catch (NumberFormatException e) {
             //bike id is not an int
-            valid = false;
             idLabel.setTextFill(Color.RED);
+            valid = false;
         }
 
+        // Start latitude
+        Float startLat = Float.valueOf(0);
         try {
-            startPoint = new Point.Float(Float.parseFloat(startLatField.getText()), Float.parseFloat(startLongField.getText()));
+            startLat = Float.parseFloat(startLatField.getText());
             startLatLabel.setTextFill(Color.BLACK);
+        } catch (NumberFormatException e) {
+            startLatLabel.setTextFill(Color.RED);
+            valid = false;
+        }
+
+        // Start longitude
+        Float startLong = Float.valueOf(0);
+        try {
+            startLong = Float.parseFloat(startLongField.getText());
             startLongLabel.setTextFill(Color.BLACK);
         } catch (NumberFormatException e) {
-            valid = false;
-            startLatLabel.setTextFill(Color.RED);
             startLongLabel.setTextFill(Color.RED);
+            valid = false;
         }
 
+        // End latitude
+        Float endLat = Float.valueOf(0);
         try {
-            endPoint = new Point.Float(Float.parseFloat(endLatField.getText()), Float.parseFloat(endLongField.getText()));
+            endLat = Float.parseFloat(endLatField.getText());
             endLatLabel.setTextFill(Color.BLACK);
-            endLongLabel.setTextFill(Color.BLACK);
         } catch (NumberFormatException e) {
             endLatLabel.setTextFill(Color.RED);
+            valid = false;
+        }
+
+        // End longitude
+        Float endLong = Float.valueOf(0);
+        try {
+            endLong = Float.parseFloat(endLongField.getText());
+            endLongLabel.setTextFill(Color.BLACK);
+        } catch (NumberFormatException e) {
             endLongLabel.setTextFill(Color.RED);
             valid = false;
         }
 
+        // Start time
         try {
-            startTime = LocalTime.parse(startTimeField.getText(), DateTimeFormatter.ofPattern("HH:mm:ss"));
+            startTime = LocalTime.parse(startTimeField.getText(), DateTimeFormatter.ofPattern("H:m:s"));
             if (startPM.isSelected()) {
                 if (startTime.getHour() < 12) {
                     startTime = startTime.plusHours(12);
@@ -224,12 +249,23 @@ public class AddBikeDialogController {
             }
             startTimeLabel.setTextFill(Color.BLACK);
         } catch (DateTimeParseException e) {
-            valid = false;
-            startTimeLabel.setTextFill(Color.RED);
+            try {
+                startTime = LocalTime.parse(startTimeField.getText(), DateTimeFormatter.ofPattern("H:m"));
+                if (startPM.isSelected()) {
+                    if (startTime.getHour() < 12) {
+                        startTime = startTime.plusHours(12);
+                    }
+                }
+                startTimeLabel.setTextFill(Color.BLACK);
+            } catch (DateTimeParseException e2) {
+                startTimeLabel.setTextFill(Color.RED);
+                valid = false;
+            }
         }
 
+        // Stop time
         try {
-            stopTime = LocalTime.parse(stopTimeField.getText(), DateTimeFormatter.ofPattern("HH:mm:ss"));
+            stopTime = LocalTime.parse(stopTimeField.getText(), DateTimeFormatter.ofPattern("H:m:s"));
             if (stopPM.isSelected()) {
                 if (stopTime.getHour() < 12) {
                     stopTime = stopTime.plusHours(12);
@@ -237,25 +273,30 @@ public class AddBikeDialogController {
             }
             stopTimeLabel.setTextFill(Color.BLACK);
         } catch (DateTimeParseException e) {
-            stopTimeLabel.setTextFill(Color.RED);
-            valid = false;
+            try {
+                stopTime = LocalTime.parse(stopTimeField.getText(), DateTimeFormatter.ofPattern("H:m"));
+                if (stopPM.isSelected()) {
+                    if (stopTime.getHour() < 12) {
+                        stopTime = stopTime.plusHours(12);
+                    }
+                }
+                stopTimeLabel.setTextFill(Color.BLACK);
+            } catch (DateTimeParseException e2) {
+                stopTimeLabel.setTextFill(Color.RED);
+                valid = false;
+            }
         }
 
+        // Start date
         if (startDatePicker.getValue() == null) {
-            valid = false;
             startDateLabel.setTextFill(Color.RED);
+            valid = false;
         } else {
             startDate = startDatePicker.getValue();
             startDateLabel.setTextFill(Color.BLACK);
         }
 
-        try {
-            startDateTime = startDate.atTime(startTime);
-            stopDateTime = stopDate.atTime(stopTime);
-        } catch (NullPointerException e) {
-            valid = false;
-        }
-
+        // Stop date
         if (stopDatePicker.getValue() == null) {
             stopDateLabel.setTextFill(Color.RED);
             valid = false;
@@ -263,22 +304,37 @@ public class AddBikeDialogController {
             stopDate = stopDatePicker.getValue();
             stopDateLabel.setTextFill(Color.BLACK);
         }
-        if (valid){
-        if (startDateTime.isBefore(stopDateTime)){
-            startDateLabel.setTextFill(Color.BLACK);
-            stopDateLabel.setTextFill(Color.BLACK);
-            startTimeLabel.setTextFill(Color.BLACK);
-            stopTimeLabel.setTextFill(Color.BLACK);
-        } else {
-            startDateLabel.setTextFill(Color.RED);
-            stopDateLabel.setTextFill(Color.RED);
-            startTimeLabel.setTextFill(Color.RED);
-            stopTimeLabel.setTextFill(Color.RED);
+
+        // Stop Date
+        try {
+            startDateTime = startDate.atTime(startTime);
+            stopDateTime = stopDate.atTime(stopTime);
+        } catch (NullPointerException e) {
             valid = false;
-            //AlertGenerator.createAlert("Slow down McFly", "Trips must start before they can finish"); maybe make an alert but shows on wrong stage
-        }
         }
 
+        // Create start and end points and
+        // check start datetime is before stop datetime
+        if (valid) {
+            startPoint = new Point.Float(startLong, startLat);
+            endPoint = new Point.Float(endLong, endLat);
+            if (startDateTime.isBefore(stopDateTime)){
+                startDateLabel.setTextFill(Color.BLACK);
+                stopDateLabel.setTextFill(Color.BLACK);
+                startTimeLabel.setTextFill(Color.BLACK);
+                stopTimeLabel.setTextFill(Color.BLACK);
+                addBikeTripLabel.setText("Add a custom bike trip"); //default
+            } else {
+                startDateLabel.setTextFill(Color.RED);
+                stopDateLabel.setTextFill(Color.RED);
+                startTimeLabel.setTextFill(Color.RED);
+                stopTimeLabel.setTextFill(Color.RED);
+                valid = false;
+                addBikeTripLabel.setText("Trips must start before they can finish");
+                // AlertGenerator.createAlert("Slow down McFly", "Trips must start before they can finish");
+                // maybe make an alert but shows on wrong stage - it currently just adjusts the header label
+            }
+        }
 
         return valid;
     }
