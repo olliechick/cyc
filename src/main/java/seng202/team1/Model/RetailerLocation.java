@@ -24,6 +24,21 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     private Point.Float coords;
     private Double distanceFrom; // stores the distance from point
 
+    /**
+     * Constructor for RetailerLocation
+     *
+     * @param name               Name of retailer
+     * @param addressLine1       First line of address
+     * @param addressLine2       Pre-line of address (e.g. Floor 2)
+     * @param city               City retailer is in
+     * @param state              State retailer is in
+     * @param zipcode            ZIP code retailer is in
+     * @param blockLot           block-lot of retailer
+     * @param primaryFunction    primary function of retailer
+     * @param secondaryFunction  secondary function of retailer
+     * @param coords             co-ordinates of retailer in the form (longitude, latitude)
+     * @param isUserDefinedPoint true if the retailer is user-defined
+     */
     public RetailerLocation(String name, String addressLine1, String addressLine2,
                             String city, String state, int zipcode, String blockLot, String primaryFunction,
                             String secondaryFunction, Point.Float coords, boolean isUserDefinedPoint) {
@@ -52,21 +67,24 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     }
 
     /**
-     * Overloaded constructor without coords.
+     * Constructor for RetailerLocation without co-ordinates.
+     *
+     * @param name               Name of retailer
+     * @param addressLine1       First line of address
+     * @param addressLine2       Pre-line of address (e.g. Floor 2)
+     * @param city               City retailer is in
+     * @param state              State retailer is in
+     * @param zipcode            ZIP code retailer is in
+     * @param blockLot           block-lot of retailer
+     * @param primaryFunction    primary function of retailer
+     * @param secondaryFunction  secondary function of retailer
+     * @param isUserDefinedPoint true if the retailer is user-defined
      */
     public RetailerLocation(String name, String addressLine1, String addressLine2, String city, String state,
                             int zipcode, String blockLot, String primaryFunction, String secondaryFunction,
                             boolean isUserDefinedPoint) {
-        this.name = name;
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
-        this.city = city;
-        this.state = state;
-        this.zipcode = zipcode;
-        this.blockLot = blockLot;
-        this.primaryFunction = primaryFunction;
-        this.secondaryFunction = secondaryFunction;
-        this.isUserDefinedPoint = isUserDefinedPoint;
+        this(name, addressLine1, addressLine2, city, state, zipcode, blockLot,
+                primaryFunction, secondaryFunction, null, isUserDefinedPoint);
     }
 
     public String getName() {

@@ -32,6 +32,26 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
     private LocalDateTime datetimeActivated;
     private Double distanceFrom; // variable used for sorting the distance from a point
 
+    /**
+     * Constructor for WifiPoint
+     *
+     * @param objectId           ID of object
+     * @param coords             co-ordinates of WiFi
+     * @param placeName          name of the place where the WiFi is - e.g. Wingate Park
+     * @param location           location of WiFi, usually an address
+     * @param locationType       type of location - e.g. Outdoor Kiosk
+     * @param hood               neighbourhood where WiFi is - e.g. Chinatown
+     * @param borough            borough where WiFi is
+     * @param city               city where WiFi is
+     * @param zipcode            ZIP code of where WiFi is
+     * @param cost               cost of WiFi (Free, Limited Free, or Partner Site)
+     * @param provider           provider of WiFi
+     * @param remarks            any remarks about the WiFi
+     * @param ssid               SSID of WiFi - this is the "name" of the WiFi a user sees on their device
+     * @param sourceId           Source ID of WiFi
+     * @param datetimeActivated  date and time the WiFi was activated
+     * @param isUserDefinedPoint true if the WiFi point is user-defined
+     */
     public WifiPoint(int objectId, Point.Float coords, String placeName, String location, String locationType, String hood,
                      String borough, String city, int zipcode, String cost, String provider, String remarks, String ssid,
                      String sourceId, LocalDateTime datetimeActivated, boolean isUserDefinedPoint) {
