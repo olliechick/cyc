@@ -232,7 +232,7 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
             // Location is empty
             if (!locationType.isEmpty()) {
                 // Location type is defined
-                description += " " + locationType;
+                description += " " + locationType + " -";
             }
         }
 
@@ -249,7 +249,8 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
             description += "\nSource ID: " + sourceId;
         }
         if (datetimeActivated != null) {
-            description += "\nActivated: " + datetimeActivated.format(DateTimeFormatter.ofPattern("h:mm:ss a d/M/yyyy"));
+            String activatedString = "\nActivated: " + datetimeActivated.format(DateTimeFormatter.ofPattern("h:mm:ss a d/M/yyyy"));
+            description += activatedString.replace("AM", "am").replace("PM", "pm");
         }
         if (objectId != -1) {
             description += "\nID: " + objectId;
@@ -263,7 +264,7 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         if (this == obj) {
@@ -281,7 +282,6 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
                 toHashCode();
 
     }
-
 
     @Override
     public String toString() {
@@ -301,6 +301,8 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
                 ", ssid='" + ssid + '\'' +
                 ", sourceId='" + sourceId + '\'' +
                 ", datetimeActivated=" + datetimeActivated +
+                ", distanceFrom=" + distanceFrom +
+                ", isUserDefinedPoint=" + isUserDefinedPoint +
                 '}';
     }
 

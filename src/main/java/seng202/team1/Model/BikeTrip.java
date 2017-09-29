@@ -418,12 +418,11 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
                 cyclistDescription = "\nCyclist: born in " + birthYear;
             }
         } else {
-            if (birthYear == -1) {
-                // Just know gender
-                cyclistDescription = "\nCyclist: " + getGenderDescription();
-            } else {
+            // We know the gender
+            cyclistDescription = "\nCyclist: " + getGenderDescription();
+            if (!(birthYear == -1)) {
                 // Know both things about cyclist
-                cyclistDescription = "\nCyclist: " + getGenderDescription() + ", born in " + birthYear;
+                cyclistDescription += ", born in " + birthYear;
             }
         }
 
