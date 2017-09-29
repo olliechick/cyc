@@ -15,9 +15,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import seng202.team1.Model.WifiPoint;
 
-
-import java.awt.Point;
-import java.awt.geom.Point2D;
+import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -129,10 +127,13 @@ public class AddWifiDialogController {
         costComboBox.getSelectionModel().selectFirst();
 
 
-            ArrayList<Point.Double> userClicks = getUserClicks();
+        ArrayList<Point.Double> userClicks = getUserClicks();
+        if (!userClicks.isEmpty()) {
+            // User has clicked
             Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
             latField.setText(Double.toString(lastPoint.getX()));
             longField.setText(Double.toString(lastPoint.getY()));
+        }
 
     }
 
