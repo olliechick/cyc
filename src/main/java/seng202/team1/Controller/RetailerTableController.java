@@ -7,6 +7,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -61,6 +62,19 @@ public class RetailerTableController extends TableController {
     void setName() {
         nameLabel.setText("Logged in as: " + model.getUserName());
         nameLabel.setVisible(true);
+    }
+
+    void initContextMenu() {
+        super.editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //System.out.println(table.getSelectionModel().getSelectedItem());
+                cm.hide();
+                if (table.getSelectionModel().getSelectedItem() != null) {
+                    editRetailer(table.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
     }
 
     /**
@@ -323,5 +337,29 @@ public class RetailerTableController extends TableController {
         filterPrimaryComboBox.getSelectionModel().selectFirst();
         filterZipComboBox.getSelectionModel().selectFirst();
         streetSearchField.clear();
+    }
+
+    @Override
+    protected void editRetailer(RetailerLocation retailerLocation) {
+        try {
+            FXMLLoader addRetailerLoader = new FXMLLoader(getClass().getResource("/fxml/AddRetailerDialog.fxml"));
+            Parent root = addRetailerLoader.load();
+            AddRetailerDialogController addRetailerDialog = addRetailerLoader.getController();
+            Stage stage1 = new Stage();
+
+            addRetailerDialog.setDialog(stage1, root, retailerLocation);
+            stage1.showAndWait();
+
+            RetailerLocation newRetailerLocation = addRetailerDialog.getRetailerLocation();
+            if (newRetailerLocation != null) {
+                if (dataPoints.contains(newRetailerLocation)) {
+                    AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
+                } else {
+                    retailerLocation.setAllProperties(newRetailerLocation);
+                }
+            }
+        } catch (IOException e) {
+            AlertGenerator.createAlert("Oops, something went wrong");
+        }
     }
 }

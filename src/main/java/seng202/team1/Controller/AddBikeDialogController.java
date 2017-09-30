@@ -16,15 +16,18 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.RetailerLocation;
 import seng202.team1.UserAccountModel;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 import java.util.Collections;
 import static seng202.team1.Controller.MapController.getUserClicks;
@@ -145,13 +148,47 @@ public class AddBikeDialogController {
 
         startAM.setSelected(true);
         stopAM.setSelected(true);
-        ArrayList<Point.Double> userClicks = getUserClicks();
-        Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
-        Point.Double secondToLastPoint = userClicks.get((userClicks.size() - 2));
-        startLatField.setText(Double.toString(secondToLastPoint.getX()));
-        startLongField.setText(Double.toString(secondToLastPoint.getY()));
-        endLatField.setText(Double.toString(lastPoint.getX()));
-        endLongField.setText(Double.toString(lastPoint.getY()));
+//        ArrayList<Point.Double> userClicks = getUserClicks();
+//        Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
+//        Point.Double secondToLastPoint = userClicks.get((userClicks.size() - 2));
+//        startLatField.setText(Double.toString(secondToLastPoint.getX()));
+//        startLongField.setText(Double.toString(secondToLastPoint.getY()));
+//        endLatField.setText(Double.toString(lastPoint.getX()));
+//        endLongField.setText(Double.toString(lastPoint.getY()));
+    }
+
+    void setDialog(Stage stage1, Parent root, BikeTrip bikeTrip) {
+        setDialog(stage1, root);
+
+        startLatField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getStartLatitude())));
+        }));
+
+        startLongField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getStartLongitude())));
+        }));
+
+        endLatField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getEndLatitude())));
+        }));
+
+        endLongField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getEndLongitude())));
+        }));
+
+        idField.setText(String.valueOf(bikeTrip.getBikeId()));
+        startTimeField.setText(bikeTrip.getStartTime().toLocalTime().toString());
+        stopTimeField.setText(bikeTrip.getStopTime().toLocalTime().toString());
+
+        startDatePicker.setValue(bikeTrip.getStartTime().toLocalDate());
+        stopDatePicker.setValue(bikeTrip.getStopTime().toLocalDate());
+
+        startLatField.setText(String.valueOf(bikeTrip.getStartLatitude()));
+        startLongField.setText(String.valueOf(bikeTrip.getStartLongitude()));
+        endLatField.setText(String.valueOf(bikeTrip.getEndLatitude()));
+        endLongField.setText(String.valueOf(bikeTrip.getEndLongitude()));
+
+        addButton.setText("Save");
     }
 
     /**

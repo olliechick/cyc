@@ -431,6 +431,20 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
         return "Started at " + start + " and ended " + getDuration() + " later at " + end + coords + distance + bikeIdString + cyclistDescription;
     }
 
+    public void setAllProperties(BikeTrip newBikeTrip) {
+        this.tripDuration = Duration.between(newBikeTrip.getStartTime(), newBikeTrip.getStopTime()).getSeconds();
+        this.startTime = newBikeTrip.getStartTime();
+        this.stopTime = newBikeTrip.getStopTime();
+        this.startPoint = newBikeTrip.getStartPoint();
+        this.endPoint = newBikeTrip.getEndPoint();
+        this.bikeId = newBikeTrip.getBikeId();
+        this.gender = newBikeTrip.getGender();
+        this.birthYear = newBikeTrip.getBirthYear();
+        this.tripDistance = DataAnalyser.calculateDistance(newBikeTrip.getStartPoint().getX(), newBikeTrip.getStartPoint().getY(),
+                newBikeTrip.getEndPoint().getX(), newBikeTrip.getEndPoint().getY());
+        this.isUserDefinedPoint = true;
+    }
+
 
     @Override
     public boolean equals(Object obj) {

@@ -38,29 +38,18 @@ public class TableController {
 
     private Stage stage;
 
+    protected ContextMenu cm = new ContextMenu();
+    protected MenuItem editMenuItem = new MenuItem("Edit");
+    protected MenuItem deleteMenuItem = new MenuItem("Delete");
+
     /**
      * Run automatically when the fxml is loaded by an FXMLLoader
      */
     public void initialize() {
 
         //TODO refactor before merge
-        ContextMenu cm = new ContextMenu();
-        MenuItem editMenuItem = new MenuItem("Edit");
-        MenuItem deleteMenuItem = new MenuItem("Delete");
         cm.getItems().addAll(editMenuItem, deleteMenuItem);
 
-        editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                //System.out.println(table.getSelectionModel().getSelectedItem());
-                cm.hide();
-                if (table.getSelectionModel().getSelectedItem() instanceof RetailerLocation) {
-                    editRetailer((RetailerLocation) table.getSelectionModel().getSelectedItem());
-                } else {
-                    System.out.println("Editing: " + table.getSelectionModel().getSelectedItem());
-                }
-            }
-        });
 
         table.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
@@ -87,24 +76,7 @@ public class TableController {
         });
     }
 
-    public void editRetailer(RetailerLocation retailerLocation) {
-        try {
-            FXMLLoader addRetailerLoader = new FXMLLoader(getClass().getResource("/fxml/AddRetailerDialog.fxml"));
-            Parent root = addRetailerLoader.load();
-            AddRetailerDialogController addRetailerDialog = addRetailerLoader.getController();
-            Stage stage1 = new Stage();
-
-            addRetailerDialog.setDialog(stage1, root, retailerLocation);
-            stage1.showAndWait();
-
-            RetailerLocation newRetailerLocation = addRetailerDialog.getRetailerLocation();
-            if (newRetailerLocation != null) {
-                retailerLocation.setName(newRetailerLocation.getName());
-            }
-        } catch (IOException e) {
-            AlertGenerator.createAlert("Oops, something went wrong");
-        }
-    }
+    protected void editRetailer(RetailerLocation retailerLocation) {}
 
     /**
      * Opens a FileChooser popup, allowing the user to choose a file.

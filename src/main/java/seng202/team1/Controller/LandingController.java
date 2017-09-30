@@ -49,6 +49,7 @@ public class LandingController {
 
             retailerTableController.initModel(model);
             retailerTableController.setName();
+            retailerTableController.initContextMenu();
 
             Stage stage1 = new Stage();
             stage1.setMinWidth(1000);
@@ -76,6 +77,7 @@ public class LandingController {
 
             bikeTableController.initModel(model);
             bikeTableController.setName();
+            bikeTableController.initContextMenu();
 
             Stage stage1 = new Stage();
             stage1.setMinWidth(1000);
