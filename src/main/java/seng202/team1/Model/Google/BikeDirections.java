@@ -67,6 +67,9 @@ public class BikeDirections {
     }
 
 
+
+
+
     public LocalDate getDateRetrieved() {
         return dateRetrieved;
     }

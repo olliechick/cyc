@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-
+<html>
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
@@ -169,6 +169,8 @@
         var labelIndex = 0;
         var markerArray = [];
 
+        var circleArray = [];
+
         // WIFI and retailer marker arrays
         var wifiMarkerArray = [];
         var retailerMarkerArray = [];
@@ -247,6 +249,12 @@
        directionsService.route(request, function(response, status) {
     if (status == 'OK') {
       directionsDisplay.setDirections(response);
+      var myJSON = JSON.stringify(response);
+      //document.getElementById("right-panel").innerHTML = myJSON;
+      currentRoute = myJSON;
+     // currentRoute.setAttribute("map", "currentRoute");
+      app.directions(myJSON);
+
     }
               else {
             window.alert('Directions request failed due to ' + status);
@@ -281,6 +289,35 @@
          maxZoom: 16});
         }
 
+
+    document.circleWIFI = function circleWIFI(index, icon, iconRevert)
+    {
+        wifiMarkerArray[index].setVisible(true);
+        wifiMarkerArray[index].setIcon(icon);
+        setTimeout(function () {
+        wifiMarkerArray[index].setIcon(iconRevert);
+        }, 10000);
+
+    }
+
+    document.circlePoint = function circlePoint(latLng)
+    {
+    var circledPoint = new google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35,
+            map: map,
+            center: latLng,
+            radius: 30
+          });
+          circleArray.push(circledPoint);
+    }
+
+
+
+
     /* Generic add marker function  takes LatLng literal, icon path and title
        returns the created marker.
       */
@@ -311,8 +348,14 @@
     document.addRetailerMarker = function addRetailerMarker(latlng, icon, title)
     {
         var marker = document.addMarker(latlng, icon, title);
+                        marker.addListener('click', function() {
+          retailerListner.wifiToRetailer(marker.position.lat(), marker.position.lng());
+
+        });
         retailerMarkerArray.push(marker);
     }
+
+
 
     /* UpdateswifiMarkerCluster to include only markers that getVisible returns
        true for. Note this must iterate through entire wifiMarkerArray.

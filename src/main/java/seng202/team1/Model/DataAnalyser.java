@@ -367,6 +367,25 @@ public final class DataAnalyser {
         return index;
     }
 
+// TODO
+    public static int findClosestWifiPointToRetailer(ArrayList<WifiPoint> hotspots, Float latitude, Float longitude) {
+        int index = -1;
+        double distance = 1000000000;
+        double testDistance;
+        int i = 0;
+
+        for (WifiPoint hotspot : hotspots) {
+            testDistance = calculateDistance(hotspot.getLatitude(), hotspot.getLongitude(), latitude, longitude);
+            if (testDistance < distance) {
+                distance = testDistance;
+                index = i;
+            }
+            i++;
+        }
+
+        return index;
+    }
+
 
     /**
      * Takes a list of wifiPoints and a point and sorts the list in place based on the distance

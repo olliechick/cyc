@@ -19,11 +19,14 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import seng202.team1.*;
 import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 
 
+import seng202.team1.Model.Google.BikeDirections;
 import seng202.team1.UserAccountModel;
 
 
@@ -35,6 +38,7 @@ import java.awt.*;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
+import static seng202.team1.Model.DataAnalyser.findClosestWifiPointToRetailer;
 import static seng202.team1.Model.GenerateFields.generateSecondaryFunctionsList;
 import static seng202.team1.Model.GenerateFields.generateWifiProviders;
 
@@ -61,6 +65,9 @@ public class MapController {
     public ArrayList<String> uniqueSecondaryFunctions = null;
     public ArrayList<String> uniquePrimaryFunctions = null;
     public ArrayList<String> uniqueProviders = null;
+    JavaApp clickListner;
+    JavaApp retailerListner;
+
 
     @FXML
     private UserAccountModel model;
@@ -140,15 +147,19 @@ public class MapController {
 
     private void loadData() {
 
+        clickListner = new JavaApp();
+        retailerListner = new JavaApp();
+        // Add a Java callback object to a WebEngine document can be used to
+        //the coordinates of user clicks to the map.
+        JSObject win = (JSObject) webEngine.executeScript("window");
+        win.setMember("retailerListner", retailerListner);
+
         loadAllWifi();      // loads all the wifiPoints
         loadAllRetailers(); // loads all the retailerPoints
         setFilters();       // sets the filters based on wifi and retailer points loaded
         loadAllBikeTrips(); // currently only dynamic, requested routes are shown
+        win.setMember("app", clickListner);
 
-        // Add a Java callback object to a WebEngine document can be used to
-        //the coordinates of user clicks to the map.
-        JSObject win = (JSObject) webEngine.executeScript("window");
-        win.setMember("app", new JavaApp());
     }
 
     /** JavaScript interface object. Can be used to pass
@@ -164,9 +175,33 @@ public class MapController {
             userClicks.add(clickPoint);
             System.out.print(userClicks);
         }
+
+        public void directions(String route) {
+            System.out.print(route);
+            System.out.println("");
+
+        }
+        public void wifiToRetailer(Double lat, Double lng) {
+            nearestWifi(lat, lng);
+
+        }
     }
+    public void testPrint(String route) {
+        //Document doc = webEngine.getDocument();
+       // Element el = doc.getElementById("map");
+       // String route = el.getAttribute("currentRoute");
+        System.out.print(route);
+        System.out.println("");
+    }
+    public void nearestWifi(Double lat, Double lng) {
+        System.out.println("Test");
+        int indexOfWifi = findClosestWifiPointToRetailer(wifiPoints, lat.floatValue(), lng.floatValue());
+        System.out.println(indexOfWifi);
+        String scriptStr = "document.circleWIFI(" + indexOfWifi + ", 'WIFISELECTED.png', 'WIFI2.png')";
+        webView.getEngine().executeScript(scriptStr);
+        System.out.println(indexOfWifi);
 
-
+    }
     @FXML
     private void zoomIn() {
         webView.getEngine().executeScript("document.zoomIn()");
