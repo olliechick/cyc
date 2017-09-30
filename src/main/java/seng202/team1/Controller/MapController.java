@@ -70,6 +70,20 @@ public class MapController {
     JavaApp retailerListner;
 
 
+    // Some control booleans
+    private boolean showRetailersNearRoute = true;
+    private boolean showOnlyNearestRetailerToRoute = false;
+    private boolean showWIFINearRoute = true;
+    private boolean showOnlyNearestWIFIToRoute = false;
+    private boolean showWIFINearRetailer = true;
+    private boolean showOnlyNearestWIFIToRetailer = false;
+
+    private int wifiSearchDistance = 200;
+    private int retailerSearchDistance = 200;
+    private int retailerToWIFISearchDistance = 200;
+    private boolean drawRouteUsingPolyLines = false;
+
+
     @FXML
     private UserAccountModel model;
     @FXML
@@ -110,8 +124,6 @@ public class MapController {
     private Button AddCustomWIFIButton;
 
 
-
-
     @FXML
     private WebEngine webEngine;
 
@@ -140,9 +152,6 @@ public class MapController {
                 });
 
 
-
-
-
     }
 
 
@@ -163,75 +172,90 @@ public class MapController {
 
     }
 
-    /** JavaScript interface object. Can be used to pass
-     *
-     *
-      */
+    /**
+     * JavaScript interface object. Can be used to pass
+     */
 
     public class JavaApp {
         public void alert(Double lat, Double lng) {
-            System.out.println(lat + "," + lng);
+            //System.out.println(lat + "," + lng);
             Point.Double clickPoint = new Point.Double();
             clickPoint.setLocation(lat, lng);
             userClicks.add(clickPoint);
-            System.out.print(userClicks);
+            //System.out.print(userClicks);
         }
 
         public void directions(String route) {
-            System.out.print(route);
-            System.out.println("");
             try {
                 BikeDirections dir = new BikeDirections(route, true);
-                ArrayList<Integer> indexes = searchWifiPointsOnRoute(dir.getPoints(), wifiPoints, 500);
-                for (int i = 0; i < indexes.size(); i++) {
-                    String scriptStr = "document.circleWIFI(" + indexes.get(i) + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                if (showWIFINearRoute) {
+                    ArrayList<Integer> indexes = searchWifiPointsOnRoute(dir.getPoints(), wifiPoints, wifiSearchDistance);
+                    for (int i = 0; i < indexes.size(); i++) {
+                        String scriptStr = "document.circleWIFI(" + indexes.get(i) + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                        webView.getEngine().executeScript(scriptStr);
+                    }
+                } else if (showOnlyNearestWIFIToRoute) {
+                    WifiPoint wifiPoint = findClosestWifiToRoute(dir.getPoints(), wifiPoints);
+                    int indexOfWifi = wifiPoints.indexOf(wifiPoint);
+                    String scriptStr = "document.circleWIFI(" + indexOfWifi + ", 'WIFISELECTED.png', 'WIFI2.png')";
                     webView.getEngine().executeScript(scriptStr);
                 }
 
+                if (showRetailersNearRoute) {
+                    ArrayList<Integer> indexes = searchRetailerLocationsOnRoute(dir.getPoints(), retailerPoints, retailerSearchDistance);
+                    for (int i = 0; i < indexes.size(); i++) {
+                        String scriptStr = "document.circleRetailer(" + indexes.get(i) + ", 'DEPARTMENTSTORESELECTED.png', 'departmentstore.png')";
+                        webView.getEngine().executeScript(scriptStr);
+                    }
+                } else if (showOnlyNearestRetailerToRoute) {
+                    int indexOfRetailer = findClosestRetailerToBikeTrip(dir.getPoints(), retailerPoints);
+                    String scriptStr1 = "document.circleRetailer(" + indexOfRetailer + ", 'DEPARTMENTSTORESELECTED.png', 'departmentstore.png')";
+                    webView.getEngine().executeScript(scriptStr1);
+                }
+                if (drawRouteUsingPolyLines) {
+                    drawRoute(dir.getPoints());
+                }
 
-
-            /**    //WIFI
-                WifiPoint wifiPoint = findClosestWifiToRoute(dir.getPoints(), wifiPoints);
-                int indexOfWifi = wifiPoints.indexOf(wifiPoint);
-                //System.out.println(indexOfWifi);
-                String scriptStr = "document.circleWIFI(" + indexOfWifi + ", 'WIFISELECTED.png', 'WIFI2.png')";
-                webView.getEngine().executeScript(scriptStr);
-
-                int indexOfRetailer = findClosestRetailerToBikeTrip(dir.getPoints(), retailerPoints);
-                String scriptStr1 = "document.circleRetailer(" + indexOfRetailer + ", 'DEPARTMENTSTORESELECTED.png', 'departmentstore.png')";
-                webView.getEngine().executeScript(scriptStr1);
-                //System.out.println(indexOfWifi);
-
-                //drawRoute(dir.getPoints());
-                **/
             } catch (Exception e) {
                 System.out.print(e);
             }
-            System.out.print("testing");
 
 
         }
+
         public void wifiToRetailer(Double lat, Double lng) {
             nearestWifi(lat, lng);
 
         }
     }
+
     public void testPrint(String route) {
         //Document doc = webEngine.getDocument();
-       // Element el = doc.getElementById("map");
-       // String route = el.getAttribute("currentRoute");
+        // Element el = doc.getElementById("map");
+        // String route = el.getAttribute("currentRoute");
         System.out.print(route);
         System.out.println("");
     }
+
     public void nearestWifi(Double lat, Double lng) {
         System.out.println("Test");
-        int indexOfWifi = findClosestWifiPointToRetailer(wifiPoints, lat.floatValue(), lng.floatValue());
-        System.out.println(indexOfWifi);
-        String scriptStr = "document.circleWIFI(" + indexOfWifi + ", 'WIFISELECTED.png', 'WIFI2.png')";
-        webView.getEngine().executeScript(scriptStr);
-        System.out.println(indexOfWifi);
 
+        if (showWIFINearRetailer) {
+            ArrayList<Integer> indexes = searchWifiPoints(lat, lng, retailerToWIFISearchDistance, wifiPoints, true);
+            for (int i = 0; i < indexes.size(); i++) {
+                String scriptStr = "document.circleWIFI(" + indexes.get(i) + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                webView.getEngine().executeScript(scriptStr);
+            }
+        } else if (showOnlyNearestWIFIToRetailer) {
+            int indexOfWifi = findClosestWifiPointToRetailer(wifiPoints, lat.floatValue(), lng.floatValue());
+            System.out.println(indexOfWifi);
+            String scriptStr = "document.circleWIFI(" + indexOfWifi + ", 'WIFISELECTED.png', 'WIFI2.png')";
+            webView.getEngine().executeScript(scriptStr);
+        }
     }
+
+
+
     @FXML
     private void zoomIn() {
         webView.getEngine().executeScript("document.zoomIn()");
@@ -583,11 +607,15 @@ public class MapController {
                 if (wifiPoints.contains(newWifiPoint)) {
                     AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
                 } else {
+                    System.out.println(wifiPoints.size());
                     newWifiPoint.setVisible(true);
                     newWifiPoint.setId(wifiPoints.size());
                     wifiPoints.add(newWifiPoint);
+                    System.out.println(wifiPoints.size());
                     addWifi(newWifiPoint.getLatitude(), newWifiPoint.getLongitude(), newWifiPoint.toInfoString());
+                    System.out.print(newWifiPoint);
                     model.addCustomWifiLocation(newWifiPoint);
+                    updateWIFI();
                     webView.getEngine().executeScript("document.wifiCluster()");
                     SerializerImplementation.serializeUser(model);
                 }
@@ -621,7 +649,7 @@ public class MapController {
                     retailerPoints.add(retailerLocation);
                     addRetailer(retailerLocation.getLatitude(), retailerLocation.getLongitude(), retailerLocation.toInfoString());
                     model.addCustomRetailerLocation(retailerLocation);
-                    webView.getEngine().executeScript("document.retailerCluster()");
+                    updateRetailers();
                     SerializerImplementation.serializeUser(model);
                 }
             }

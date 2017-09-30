@@ -97,6 +97,30 @@ public final class DataAnalyser {
         }
         return results;
     }
+
+    public static ArrayList<Integer> searchRetailerLocationsOnRoute(ArrayList<Point2D.Float> waypoints, ArrayList<RetailerLocation> locations, double delta){
+        Set<Integer> uniqueIndexes = new HashSet<>(locations.size());
+        ArrayList<Integer> indexes = new ArrayList<>();
+        ArrayList<Integer> indexesCurrent;
+        Double searchLat;
+        Double searchLong;
+        Point.Float pointFloat;
+        for (int i = 0; i < waypoints.size(); i++) {
+            pointFloat = waypoints.get(i);
+            searchLat = pointFloat.getY();
+            searchLong = pointFloat.getX();
+            indexesCurrent = searchRetailerLocations(searchLat, searchLong, delta, locations, true);
+            //System.out.println(indexesCurrent);
+            uniqueIndexes.addAll(indexesCurrent);
+            //System.out.println(uniqueIndexes);
+        }
+        indexes.addAll(uniqueIndexes);
+        //System.out.print(indexes);
+        return indexes;
+    }
+
+
+
     public static ArrayList<Integer> searchWifiPointsOnRoute(ArrayList<Point2D.Float> waypoints, ArrayList<WifiPoint> hotspots, double delta){
         Set<Integer> uniqueIndexes = new HashSet<>(hotspots.size());
         ArrayList<Integer> indexes = new ArrayList<>();
@@ -137,6 +161,24 @@ public final class DataAnalyser {
             return results;
         }
 
+
+    public static ArrayList<Integer> searchRetailerLocations(double searchLat, double searchLong,
+                                                      double delta, ArrayList<RetailerLocation> retailers, boolean returnIndex) {
+        ArrayList<Integer> results = new ArrayList<>();
+        RetailerLocation location;
+        for (int i = 0; i < retailers.size(); i++) {
+            location = retailers.get(i);
+            // Unfortunately an 0(n) with the current data set.
+            // Perhaps we need to sort based on Lat and long to decrease time complexity
+            double spotLong = location.getLongitude();
+            double spotLat = location.getLatitude();
+            if (calculateDistance(searchLat, searchLong, spotLat, spotLong) < delta) {
+                results.add(i);
+            }
+        }
+
+        return results;
+    }
 
     /**
      * Takes a Biketrip and returns the closest WifiPoint, within 1000m, to the start of the bike trip.
