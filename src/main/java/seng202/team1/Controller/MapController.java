@@ -62,6 +62,8 @@ public class MapController {
     public ArrayList<String> uniqueSecondaryFunctions = null;
     public ArrayList<String> uniquePrimaryFunctions = null;
     public ArrayList<String> uniqueProviders = null;
+    public ArrayList<BikeTrip> tripsNearPoint = null;
+    public int currentTripCounter = 0;
 
     @FXML
     private UserAccountModel model;
@@ -115,7 +117,10 @@ public class MapController {
     private TextField distanceFromPointTextField;
     @FXML
     private Label resultsLabel;
-
+    @FXML
+    private Button nextButton;
+    @FXML
+    private Button previousButton;
 
 
 
@@ -275,6 +280,8 @@ public class MapController {
     }
 
     public void findResults() {
+        tripsNearPoint = null; // resest the list
+        currentTripCounter = 0; // reset the counter
         System.out.println("Search Button Pressed");
         Double startingLat = 0.00;
         Double startingLong = 0.00;
@@ -309,14 +316,48 @@ public class MapController {
         if  (endingLat != (0.00) && endingLong != (0.00) && (startingLat.equals(0.00) || startingLong.equals(0.00))){
             results = DataAnalyser.searchBikeTrips(endingLat,endingLong,delta,bikeTrips);
         }
+        if (endingLat != 0.00 && endingLong != 0 && startingLat != 0.00 && startingLong != 0){
+            results = DataAnalyser.searchBikeTrips(startingLat,startingLong,delta,bikeTrips);
+            ArrayList<BikeTrip> holder = DataAnalyser.searchBikeTrips(endingLat,endingLong,delta,bikeTrips);
+            for (BikeTrip trip : holder){
+                results.add(trip);
+            }
+        }
         System.out.println("Results Found");
         if(results.size() == 0){
             resultsLabel.setText("No results were found");
         } else {
             resultsLabel.setText(results.get(0).getDescription());
+            tripsNearPoint = results;
+        }
+        tripsNearPoint = results;
+    }
+
+    @FXML
+    private void nextTrip(){
+        currentTripCounter++;
+        if (tripsNearPoint != null && currentTripCounter < tripsNearPoint.size()) {
+            resultsLabel.setText(tripsNearPoint.get(currentTripCounter).getDescription());
+        } else if ( tripsNearPoint == null){
+            resultsLabel.setText("No points have been found or you have not yet searched please try again");
+        } else if (currentTripCounter >= tripsNearPoint.size()){
+            resultsLabel.setText("You have reached the end of the list");
+            currentTripCounter = tripsNearPoint.size(); // stops someone running the value very high
         }
 
+    }
 
+    @FXML
+    private void previousTrip() {
+        currentTripCounter--;
+        if (tripsNearPoint != null && currentTripCounter >= 0){
+            resultsLabel.setText(tripsNearPoint.get(currentTripCounter).getDescription());
+        } else if ( tripsNearPoint  == null) {
+            resultsLabel.setText("No points have been found or you have not yet searched please try again");
+        } else if (currentTripCounter < 0){
+            resultsLabel.setText("You have reached the start of the list");
+            currentTripCounter = 0; // stops someone running the value very low
+        }
 
     }
 

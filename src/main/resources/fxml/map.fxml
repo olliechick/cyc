@@ -137,6 +137,8 @@
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding>
                         </Label>
+                        <Button fx:id="nextButton" mnemonicParsing="false" onAction="#nextTrip" text="Next" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                        <Button fx:id="previousButton" mnemonicParsing="false" onAction="#previousTrip" text="Previous" GridPane.columnIndex="6" />
                      </children>
                   </GridPane>
                </content>
