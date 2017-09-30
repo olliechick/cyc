@@ -262,7 +262,7 @@ public class BikeTableController extends TableController {
         TableColumn<BikeTrip, Point.Float> endLocCol = new TableColumn<>("End Location");
         TableColumn<BikeTrip, Point.Float> endLatitudeCol = new TableColumn<>("Latitude");
         TableColumn<BikeTrip, Point.Float> endLongitudeCol = new TableColumn<>("Longitude");
-        TableColumn<BikeTrip, Double> distCol= new TableColumn<>("Distance (m)");
+        TableColumn<BikeTrip, ContextualLength> distCol= new TableColumn<>("Distance (m)");
         table.getColumns().clear();
 
         // Attempts to access public properties of name "Property", falls back to get<property>() methods if no property available

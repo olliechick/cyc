@@ -292,30 +292,33 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
      * Returns the distance of the trip, contextualised.
      * Either in m (meters) or km (kilometres). Rounded to the nearest 3 digits of precision.
      * E.g. "236 m", "73.7 km" (without the quotes).
-     * @return contextualised distance
+     * Currently coded for trips 1m - 999km.
+     * @return the contextualised distance of the trip
      */
-    public String getDistance() {
-        String distance;
-        System.out.println();
+    public ContextualLength getDistance() {
+        String distanceString;
 
         if (tripDistance < 10) {
-            //single digit metres
-            return Double.parseDouble(new DecimalFormat("#.##").format(tripDistance)) + " m";
+            //single digit metres (and below)
+            distanceString = Double.parseDouble(new DecimalFormat("#.##").format(tripDistance)) + " m";
         } else if (tripDistance < 100) {
             //double digit metres
-            return Double.parseDouble(new DecimalFormat("##.#").format(tripDistance)) + " m";
+            distanceString = Double.parseDouble(new DecimalFormat("##.#").format(tripDistance)) + " m";
         } else if (tripDistance < 1e3) {
             //three digit metres
-            return Math.round(tripDistance) + " m";
+            distanceString = Math.round(tripDistance) + " m";
         } else if (tripDistance < 1e4) {
             //single digit km
-            return Double.parseDouble(new DecimalFormat("#.##").format(tripDistance/1e3)) + " km";
+            distanceString = Double.parseDouble(new DecimalFormat("#.##").format(tripDistance/1e3)) + " km";
         } else if (tripDistance < 1e5) {
             //double digit km
-            return Double.parseDouble(new DecimalFormat("##.#").format(tripDistance/1e3)) + " km";
+            distanceString = Double.parseDouble(new DecimalFormat("##.#").format(tripDistance/1e3)) + " km";
         } else {
-            return Math.round(tripDistance/1e3) + " km";
+            //triple digit km (and above)
+            distanceString = Math.round(tripDistance/1e3) + " km";
         }
+
+        return new ContextualLength(tripDistance, distanceString);
     }
 
 
