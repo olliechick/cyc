@@ -339,8 +339,7 @@ public class RetailerTableController extends TableController {
         streetSearchField.clear();
     }
 
-    @Override
-    protected void editRetailer(RetailerLocation retailerLocation) {
+    private void editRetailer(RetailerLocation retailerLocation) {
         try {
             FXMLLoader addRetailerLoader = new FXMLLoader(getClass().getResource("/fxml/AddRetailerDialog.fxml"));
             Parent root = addRetailerLoader.load();

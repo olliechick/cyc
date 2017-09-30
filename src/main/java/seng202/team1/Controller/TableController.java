@@ -24,7 +24,7 @@ import java.io.IOException;
  *
  * @author Josh Bernasconi
  */
-public class TableController {
+public abstract class TableController {
 
 
     @FXML
@@ -75,8 +75,6 @@ public class TableController {
             }
         });
     }
-
-    protected void editRetailer(RetailerLocation retailerLocation) {}
 
     /**
      * Opens a FileChooser popup, allowing the user to choose a file.
@@ -137,4 +135,6 @@ public class TableController {
     public void close() {
         stage.close();
     }
+
+    abstract void initContextMenu();
 }
