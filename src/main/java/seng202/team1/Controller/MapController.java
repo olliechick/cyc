@@ -30,6 +30,7 @@ import seng202.team1.Model.Google.BikeDirections;
 import seng202.team1.UserAccountModel;
 
 
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -39,6 +40,7 @@ import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
 import static seng202.team1.Model.DataAnalyser.findClosestWifiPointToRetailer;
+import static seng202.team1.Model.DataAnalyser.findClosestWifiToRoute;
 import static seng202.team1.Model.GenerateFields.generateSecondaryFunctionsList;
 import static seng202.team1.Model.GenerateFields.generateWifiProviders;
 
@@ -179,6 +181,22 @@ public class MapController {
         public void directions(String route) {
             System.out.print(route);
             System.out.println("");
+            try {
+                BikeDirections dir = new BikeDirections(route, true);
+                WifiPoint wifiPoint = findClosestWifiToRoute(dir.getPoints(), wifiPoints);
+                int indexOfWifi = wifiPoints.indexOf(wifiPoint);
+                System.out.println(indexOfWifi);
+                String scriptStr = "document.circleWIFI(" + indexOfWifi + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                webView.getEngine().executeScript(scriptStr);
+                System.out.println(indexOfWifi);
+
+                drawRoute(dir.getPoints());
+
+            } catch (Exception e) {
+                System.out.print(e);
+            }
+            System.out.print("testing");
+
 
         }
         public void wifiToRetailer(Double lat, Double lng) {
@@ -274,9 +292,9 @@ public class MapController {
         webView.getEngine().executeScript(scriptStr);
     }
 
-    private String latLngArray(ArrayList<Point.Double> points) {
+    private String latLngArray(ArrayList<Point.Float> points) {
         String latLng = "[";
-        Point.Double point;
+        Point.Float point;
         for (int i = 0; i < (points.size() - 1); i++) {
             point = points.get(i);
             latLng += "{lat: " + point.getY() + ", lng: " + point.getX() + "},";
@@ -286,7 +304,7 @@ public class MapController {
         return latLng;
     }
 
-    private void drawRoute(ArrayList<Point.Double> points) {
+    public void drawRoute(ArrayList<Point.Float> points) {
         String scriptStr = "document.drawRoute(" + latLngArray(points) + ")";
         webView.getEngine().executeScript(scriptStr);
     }
