@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-
+<html>
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
@@ -16,42 +16,40 @@
         margin: 0;
         padding: 0;
       }
+
       #right-panel {
         font-family: 'Roboto','sans-serif';
-        line-height: 30px;
-        padding-left: 10px;
+        line-height: 20px;
+        padding-left: 5px;
+        padding-right: 5px;
       }
 
       #right-panel select, #right-panel input {
-        font-size: 15px;
+        font-size: 11px;
       }
 
       #right-panel select {
         width: 100%;
       }
 
-      #right-panel i {
-        font-size: 12px;
+      #right-panel  {
+        font-size: 11px;
       }
       #right-panel {
         height: 100%;
         float: right;
-        width: 390px;
+        width: 180px;
         overflow: auto;
       }
       #map {
-        margin-right: 400px;
+        margin-right: 100px;
       }
-      #floating-panel {
-        background: #fff;
-        padding: 5px;
-        font-size: 14px;
-        font-family: Arial;
-        border: 1px solid #ccc;
-        box-shadow: 0 2px 2px rgba(33, 33, 33, 0.4);
-        display: none;
-      }
+
       @media print {
+        #map {
+          height: 500px;
+          margin: 0;
+        }
         #right-panel {
           float: none;
           width: auto;
@@ -60,8 +58,8 @@
     </style>
 </head>
 <body>
-<div id="map"></div>
 <div id="right-panel"></div>
+<div id="map"></div>
 
 <script>
 
@@ -171,6 +169,8 @@
         var labelIndex = 0;
         var markerArray = [];
 
+        var circleArray = [];
+
         // WIFI and retailer marker arrays
         var wifiMarkerArray = [];
         var retailerMarkerArray = [];
@@ -249,6 +249,12 @@
        directionsService.route(request, function(response, status) {
     if (status == 'OK') {
       directionsDisplay.setDirections(response);
+      var myJSON = JSON.stringify(response);
+      //document.getElementById("right-panel").innerHTML = myJSON;
+      currentRoute = myJSON;
+     // currentRoute.setAttribute("map", "currentRoute");
+      app.directions(myJSON);
+
     }
               else {
             window.alert('Directions request failed due to ' + status);
@@ -266,7 +272,7 @@
         {imagePath: 'wifiCluster/bluewifi',
          ignoreHiddenMarkers: true,
          zoomOnClick: false,
-         maxZoom: 16});
+         maxZoom: 13});
         }
 
 
@@ -280,8 +286,45 @@
         {imagePath: 'retailerCluster/pink',
         ignoreHiddenMarkers: true,
         zoomOnClick: false,
-         maxZoom: 16});
+         maxZoom: 15});
         }
+
+    document.circleRetailer = function circleRetailer(index, icon, iconRevert)
+    {
+        //retailerMarkerArray[index].setVisible(true);
+        retailerMarkerArray[index].setIcon(icon);
+        setTimeout(function () {
+        retailerMarkerArray[index].setIcon(iconRevert);
+        }, 10000);
+
+    }
+    document.circleWIFI = function circleWIFI(index, icon, iconRevert)
+    {
+        wifiMarkerArray[index].setVisible(true);
+        wifiMarkerArray[index].setIcon(icon);
+        setTimeout(function () {
+        wifiMarkerArray[index].setIcon(iconRevert);
+        }, 10000);
+
+    }
+
+    document.circlePoint = function circlePoint(latLng)
+    {
+    var circledPoint = new google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35,
+            map: map,
+            center: latLng,
+            radius: 30
+          });
+          circleArray.push(circledPoint);
+    }
+
+
+
 
     /* Generic add marker function  takes LatLng literal, icon path and title
        returns the created marker.
@@ -313,8 +356,14 @@
     document.addRetailerMarker = function addRetailerMarker(latlng, icon, title)
     {
         var marker = document.addMarker(latlng, icon, title);
+                        marker.addListener('click', function() {
+          retailerListner.wifiToRetailer(marker.position.lat(), marker.position.lng());
+
+        });
         retailerMarkerArray.push(marker);
     }
+
+
 
     /* UpdateswifiMarkerCluster to include only markers that getVisible returns
        true for. Note this must iterate through entire wifiMarkerArray.

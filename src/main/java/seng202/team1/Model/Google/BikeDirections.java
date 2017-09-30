@@ -12,19 +12,19 @@ public class BikeDirections {
 
     private ArrayList<String> polylines;
     private LocalDate dateRetrieved;
-    private Point.Double startPoint;
-    private Point.Double endPoint;
-    private ArrayList<Point.Double> points;
+    private Point.Float startPoint;
+    private Point.Float endPoint;
+    private ArrayList<Point.Float> points;
     private int distance; // in metres
     private String distanceDescription; // human readable
     private int duration; // in seconds
     private String durationDescription; // human readable
 
-    public ArrayList<Point.Double> getPoints() {
+    public ArrayList<Point.Float> getPoints() {
         return points;
     }
 
-    public void setPoints(ArrayList<Point.Double> points) {
+    public void setPoints(ArrayList<Point.Float> points) {
         this.points = points;
     }
 
@@ -49,7 +49,7 @@ public class BikeDirections {
 
             JSONObject step = steps.getJSONObject(i);
             String polyline = step.getJSONObject("polyline").getString("points");
-            ArrayList<Point.Double> thesePoints = decodePoly(polyline);
+            ArrayList<Point.Float> thesePoints = decodePoly(polyline);
 
             polylines.add(polyline);
             points.addAll(thesePoints);
@@ -65,6 +65,39 @@ public class BikeDirections {
 
         //Note that this function can only deal with one route.
     }
+    public BikeDirections(String jsonString, boolean isMap) {
+
+        // A sample JSON String pulled from the Google API:
+        // jsonString = GoogleAPIClient.googleGetDirections(40.745968480330795, -73.99403913047428, 40.745968480330795,-74.13915300041297);
+
+        JSONArray legs = new JSONObject(jsonString).getJSONArray("routes").getJSONObject(0)
+                .getJSONArray("legs");
+        JSONArray steps = legs.getJSONObject(0).getJSONArray("steps");
+
+        polylines = new ArrayList<>();
+        points = new ArrayList<>();
+        for (int i = 0; i < steps.length(); i++) {
+
+            JSONObject step = steps.getJSONObject(i);
+            String polyline = step.getJSONObject("polyline").getString("points");
+            ArrayList<Point.Float> thesePoints = decodePoly(polyline);
+
+            polylines.add(polyline);
+            points.addAll(thesePoints);
+        }
+
+        dateRetrieved = LocalDate.now();
+        startPoint = points.get(0);
+        endPoint = points.get(points.size() - 1);
+       // distanceDescription = legs.getJSONObject(0).getJSONObject("distance").getString("humanReadable");
+       // durationDescription = legs.getJSONObject(0).getJSONObject("duration").getString("humanReadable");
+       // distance = legs.getJSONObject(0).getJSONObject("distance").getInt("inMeters");
+       // duration = legs.getJSONObject(0).getJSONObject("duration").getInt("inSeconds");
+
+        //Note that this function can only deal with one route.
+    }
+
+
 
 
     public LocalDate getDateRetrieved() {
@@ -83,9 +116,9 @@ public class BikeDirections {
      * @param encoded The encoded polyline
      * @return the set of points
      */
-    private static ArrayList<Point.Double> decodePoly(String encoded) {
+    private static ArrayList<Point.Float> decodePoly(String encoded) {
 
-        ArrayList<Point.Double> poly = new ArrayList<Point.Double>();
+        ArrayList<Point.Float> poly = new ArrayList<>();
         int index = 0, len = encoded.length();
         int lat = 0, lng = 0;
 
@@ -108,8 +141,9 @@ public class BikeDirections {
             } while (b >= 0x20);
             int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
             lng += dlng;
-
-            Point.Double p = new Point.Double(lng / 1e5, lat / 1e5);
+            Float lngFloat = (float) lng;
+            Float latFloat = (float) lat;
+            Point.Float p = new Point.Float((( lngFloat ) / 100000), ((latFloat) / 100000));
             poly.add(p);
         }
 
