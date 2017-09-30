@@ -32,6 +32,7 @@
                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                        </columnConstraints>
                        <rowConstraints>
                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -42,8 +43,8 @@
                            <Label text="Retailer filters:" />
                            <Label text="Primary Function:" GridPane.columnIndex="1" />
                            <Label text="Secondary Function:" GridPane.columnIndex="2" />
-                           <Label text="Address:" GridPane.columnIndex="4" />
                            <Label text="ZIP:" GridPane.columnIndex="3" />
+                           <Label text="Address:" GridPane.columnIndex="4" />
                            <ComboBox fx:id="filterPrimaryComboBox" onAction="#updateRetailersPrimary" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                            <ComboBox fx:id="filterSecondaryComboBox" onAction="#updateRetailers" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                            <ComboBox fx:id="filterZipComboBox" onAction="#updateRetailers" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
@@ -52,6 +53,7 @@
                            <ProgressIndicator fx:id="progressSpinner" progress="0.0" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                            <TextField fx:id="streetSearchField" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                         <Button mnemonicParsing="false" onAction="#updateRetailers" text="Search" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                           <Button mnemonicParsing="false" onAction="#clearFiltersRetailers" text="Clear" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                         <ImageView fitHeight="17.0" fitWidth="131.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
                        </children>
                        <padding>
@@ -64,6 +66,7 @@
                <content>
                    <GridPane hgap="5.0" vgap="2.0" BorderPane.alignment="CENTER">
                        <columnConstraints>
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -82,6 +85,7 @@
                            <ComboBox fx:id="filterBoroughComboBox" onAction="#updateWIFI" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                            <ComboBox fx:id="filterCostComboBox" onAction="#updateWIFI" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                            <ComboBox fx:id="filterProviderComboBox" onAction="#updateWIFI" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                           <Button mnemonicParsing="false" onAction="#clearFiltersWIFI" text="Clear" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
                        </children>
                        <padding>
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

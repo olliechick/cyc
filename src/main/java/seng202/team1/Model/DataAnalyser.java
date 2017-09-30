@@ -6,9 +6,7 @@ import seng202.team1.Model.WifiPoint;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 /**
  * Static class that handles all of the data analysis required.
@@ -99,6 +97,46 @@ public final class DataAnalyser {
         }
         return results;
     }
+    public static ArrayList<Integer> searchWifiPointsOnRoute(ArrayList<Point2D.Float> waypoints, ArrayList<WifiPoint> hotspots, double delta){
+        Set<Integer> uniqueIndexes = new HashSet<>(hotspots.size());
+        ArrayList<Integer> indexes = new ArrayList<>();
+        ArrayList<Integer> indexesCurrent;
+        Double searchLat;
+        Double searchLong;
+        Point.Float pointFloat;
+        for (int i = 0; i < waypoints.size(); i++) {
+            pointFloat = waypoints.get(i);
+            searchLat = pointFloat.getY();
+            searchLong = pointFloat.getX();
+            indexesCurrent = searchWifiPoints(searchLat, searchLong, delta, hotspots, true);
+            //System.out.println(indexesCurrent);
+            uniqueIndexes.addAll(indexesCurrent);
+            //System.out.println(uniqueIndexes);
+        }
+        indexes.addAll(uniqueIndexes);
+        //System.out.print(indexes);
+        return indexes;
+    }
+
+
+    public static ArrayList<Integer> searchWifiPoints(double searchLat, double searchLong,
+                                                        double delta, ArrayList<WifiPoint> hotspots, boolean returnIndex) {
+        ArrayList<Integer> results = new ArrayList<>();
+        WifiPoint point;
+        for (int i = 0; i < hotspots.size(); i++) {
+            point = hotspots.get(i);
+            // Unfortunately an 0(n) with the current data set.
+            // Perhaps we need to sort based on Lat and long to decrease time complexity
+            double spotLong = point.getLongitude();
+            double spotLat = point.getLatitude();
+            if (calculateDistance(searchLat, searchLong, spotLat, spotLong) < delta) {
+                results.add(i);
+            }
+        }
+
+            return results;
+        }
+
 
     /**
      * Takes a Biketrip and returns the closest WifiPoint, within 1000m, to the start of the bike trip.

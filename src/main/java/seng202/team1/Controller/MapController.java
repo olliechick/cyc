@@ -39,8 +39,7 @@ import java.awt.*;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
-import static seng202.team1.Model.DataAnalyser.findClosestWifiPointToRetailer;
-import static seng202.team1.Model.DataAnalyser.findClosestWifiToRoute;
+import static seng202.team1.Model.DataAnalyser.*;
 import static seng202.team1.Model.GenerateFields.generateSecondaryFunctionsList;
 import static seng202.team1.Model.GenerateFields.generateWifiProviders;
 
@@ -183,15 +182,28 @@ public class MapController {
             System.out.println("");
             try {
                 BikeDirections dir = new BikeDirections(route, true);
+                ArrayList<Integer> indexes = searchWifiPointsOnRoute(dir.getPoints(), wifiPoints, 500);
+                for (int i = 0; i < indexes.size(); i++) {
+                    String scriptStr = "document.circleWIFI(" + indexes.get(i) + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                    webView.getEngine().executeScript(scriptStr);
+                }
+
+
+
+            /**    //WIFI
                 WifiPoint wifiPoint = findClosestWifiToRoute(dir.getPoints(), wifiPoints);
                 int indexOfWifi = wifiPoints.indexOf(wifiPoint);
-                System.out.println(indexOfWifi);
+                //System.out.println(indexOfWifi);
                 String scriptStr = "document.circleWIFI(" + indexOfWifi + ", 'WIFISELECTED.png', 'WIFI2.png')";
                 webView.getEngine().executeScript(scriptStr);
-                System.out.println(indexOfWifi);
 
-                drawRoute(dir.getPoints());
+                int indexOfRetailer = findClosestRetailerToBikeTrip(dir.getPoints(), retailerPoints);
+                String scriptStr1 = "document.circleRetailer(" + indexOfRetailer + ", 'DEPARTMENTSTORESELECTED.png', 'departmentstore.png')";
+                webView.getEngine().executeScript(scriptStr1);
+                //System.out.println(indexOfWifi);
 
+                //drawRoute(dir.getPoints());
+                **/
             } catch (Exception e) {
                 System.out.print(e);
             }
@@ -686,6 +698,23 @@ public class MapController {
         filterProviderComboBox.getSelectionModel().selectFirst();
 
     }
+    @FXML
+    private void clearFiltersRetailers() {
+        filterPrimaryComboBox.getSelectionModel().selectFirst();
+        filterSecondaryComboBox.getSelectionModel().selectFirst();
+        filterZipComboBox.getSelectionModel().selectFirst();
+        streetSearchField.clear();
+        updateRetailers();
+    }
+
+    @FXML
+    private void clearFiltersWIFI() {
+        filterCostComboBox.getSelectionModel().selectFirst();
+        filterProviderComboBox.getSelectionModel().selectFirst();
+        filterBoroughComboBox.getSelectionModel().selectFirst();
+        updateWIFI();
+    }
+
     @FXML
     public void close() {
         stage.close();
