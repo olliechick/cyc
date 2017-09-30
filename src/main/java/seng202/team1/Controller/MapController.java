@@ -28,6 +28,7 @@ import seng202.team1.UserAccountModel;
 
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -206,7 +207,7 @@ public class MapController {
         Point.Double coordinates = userClicks.get(userClicks.size()-1);
         System.out.print(coordinates);
         ArrayList<BikeTrip> suggested = DataAnalyser.searchBikeTrips(coordinates.getX(), coordinates.getY(),
-        20000,  bikeTrips);
+        20000,  bikeTrips,true);
         BikeTrip first = suggested.get(0);
         webView.getEngine().executeScript("document.calcRoute({lat: " + first.getStartLatitude() + ", lng:  " +
                 first.getStartLongitude() + "}, {lat: " + first.getEndLatitude() + ", lng:  " + first.getEndLongitude() +"})");
@@ -262,9 +263,9 @@ public class MapController {
         webView.getEngine().executeScript(scriptStr);
     }
 
-    private String latLngArray(ArrayList<Point.Double> points) {
+    private String latLngArray(ArrayList<Point.Float> points) {
         String latLng = "[";
-        Point.Double point;
+        Point.Float point;
         for (int i = 0; i < (points.size() - 1); i++) {
             point = points.get(i);
             latLng += "{lat: " + point.getY() + ", lng: " + point.getX() + "},";
@@ -274,8 +275,27 @@ public class MapController {
         return latLng;
     }
 
-    private void drawRoute(ArrayList<Point.Double> points) {
+    //Does not work yet feel free to fix.
+    private String latLngRoute(ArrayList<Point.Float> points) {
+        String latLng = "";
+        Point.Float point;
+        for (int i = 0; i < (points.size() - 1); i++) {
+            point = points.get(i);
+            latLng += "lat: " + Double.toString(point.getY()) + ", lng: " + Double.toString(point.getX()) + ",";
+        }
+        point = points.get((points.size() - 1));
+        latLng += "lat: " + Double.toString(point.getY() )+ ", lng: " + Double.toString(point.getX()) + "))";
+        return latLng;
+    }
+
+    private void drawRoute(ArrayList<Point.Float> points) {
         String scriptStr = "document.drawRoute(" + latLngArray(points) + ")";
+        webView.getEngine().executeScript(scriptStr);
+    }
+
+    private void generateRoute(ArrayList<Point.Float> points) {
+        System.out.println("Generating Route");
+        String scriptStr = "document.calcRoute(" + latLngRoute(points) + ")";
         webView.getEngine().executeScript(scriptStr);
     }
 
@@ -299,36 +319,36 @@ public class MapController {
         } catch (NumberFormatException e) {
             System.out.println("Bad Ending Lat or Long");// We want these to pass to allow different search types
         }
-        double delta = 0.00;
+        double delta = 10;
         try {
             delta = Double.parseDouble(distanceFromPointTextField.getText());
         } catch (NumberFormatException e) {
-            System.out.println("Bad Delta");
-            AlertGenerator.createAlert("Error", "Distance from point must be a number");
-            return;
+            System.out.println("Using default Delta");
         }
 
         ArrayList<BikeTrip> results = new ArrayList<>();
 
         if (endingLat.equals(0.00)|| endingLong.equals(0.00) && startingLat != 0.00 && startingLong != 0.00) {
-            results = DataAnalyser.searchBikeTrips(startingLat,startingLong,delta,bikeTrips);
+            results = DataAnalyser.searchBikeTrips(startingLat,startingLong,delta,bikeTrips,true);
         }
         if  (endingLat != (0.00) && endingLong != (0.00) && (startingLat.equals(0.00) || startingLong.equals(0.00))){
-            results = DataAnalyser.searchBikeTrips(endingLat,endingLong,delta,bikeTrips);
+            results = DataAnalyser.searchBikeTrips(endingLat,endingLong,delta,bikeTrips,false);
         }
         if (endingLat != 0.00 && endingLong != 0 && startingLat != 0.00 && startingLong != 0){
-            results = DataAnalyser.searchBikeTrips(startingLat,startingLong,delta,bikeTrips);
-            ArrayList<BikeTrip> holder = DataAnalyser.searchBikeTrips(endingLat,endingLong,delta,bikeTrips);
-            for (BikeTrip trip : holder){
-                results.add(trip);
-            }
+            results = DataAnalyser.searchBikeTrips(startingLat,startingLong,delta,bikeTrips,true);
+            results =  DataAnalyser.searchBikeTrips(endingLat,endingLong,delta,results,false); // takes the list of trips that start at one point and then finds those that end at another point
+
         }
         System.out.println("Results Found");
         if(results.size() == 0){
             resultsLabel.setText("No results were found");
+            results = null;
         } else {
             resultsLabel.setText(results.get(0).getDescription());
-            tripsNearPoint = results;
+            ArrayList<Point.Float> route1 = new ArrayList<>();
+            route1.add(results.get(0).getStartPoint());
+            route1.add(results.get(0).getEndPoint());
+            generateRoute(route1);
         }
         tripsNearPoint = results;
     }
@@ -338,6 +358,10 @@ public class MapController {
         currentTripCounter++;
         if (tripsNearPoint != null && currentTripCounter < tripsNearPoint.size()) {
             resultsLabel.setText(tripsNearPoint.get(currentTripCounter).getDescription());
+            ArrayList<Point.Float> route1 = new ArrayList<>();
+            route1.add(tripsNearPoint.get(currentTripCounter).getStartPoint());
+            route1.add(tripsNearPoint.get(currentTripCounter).getEndPoint());
+            generateRoute(route1);
         } else if ( tripsNearPoint == null){
             resultsLabel.setText("No points have been found or you have not yet searched please try again");
         } else if (currentTripCounter >= tripsNearPoint.size()){
@@ -352,6 +376,10 @@ public class MapController {
         currentTripCounter--;
         if (tripsNearPoint != null && currentTripCounter >= 0){
             resultsLabel.setText(tripsNearPoint.get(currentTripCounter).getDescription());
+            ArrayList<Point.Float> route1 = new ArrayList<>();
+            route1.add(tripsNearPoint.get(currentTripCounter).getStartPoint());
+            route1.add(tripsNearPoint.get(currentTripCounter).getEndPoint());
+            generateRoute(route1);
         } else if ( tripsNearPoint  == null) {
             resultsLabel.setText("No points have been found or you have not yet searched please try again");
         } else if (currentTripCounter < 0){

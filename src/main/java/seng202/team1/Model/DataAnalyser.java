@@ -57,17 +57,25 @@ public final class DataAnalyser {
      * @param searchLong Longitude to start the search at
      * @param delta      radius to search in
      * @param trips      list of bike trips
+     * @param isStart    true if the start of the trip or false for the end of the trip
      * @return a list of bike trips close to the point
      */
     public static ArrayList<BikeTrip> searchBikeTrips(double searchLat, double searchLong,
-                                                      double delta, ArrayList<BikeTrip> trips) {
+                                                      double delta, ArrayList<BikeTrip> trips, boolean isStart) {
         ArrayList<BikeTrip> results = new ArrayList<BikeTrip>();
 
         for (BikeTrip trip : trips) {
             // unfortunately an 0(n) with the current data set.
             // Perhaps we need to sort bike trips based on lat and long to decrease time complexity
-            double tripLong = trip.getStartLongitude();
-            double tripLat = trip.getStartLatitude();
+            double tripLong;
+            double tripLat;
+            if (isStart) {
+                tripLong = trip.getStartLongitude();
+                tripLat = trip.getStartLatitude();
+            } else {
+                tripLong = trip.getEndLongitude();
+                tripLat = trip.getEndLatitude();
+            }
             if (calculateDistance(searchLat, searchLong, tripLat, tripLong) < (delta + 10)) {
                 results.add(trip);
             }
@@ -88,7 +96,7 @@ public final class DataAnalyser {
                                                       double delta, ArrayList<BikeTrip> trips, double min, double max) {
 
         ArrayList<BikeTrip> closestPoints = searchBikeTrips( searchLat, searchLong,
-         delta,trips);
+         delta,trips,true);
         ArrayList<BikeTrip> results = new ArrayList<>();
 
          for (BikeTrip point : closestPoints) {
