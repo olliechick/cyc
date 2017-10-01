@@ -79,7 +79,7 @@ public class MapController {
     private boolean showOnlyNearestWIFIToRetailer = false;
 
     private int wifiSearchDistance = 200;
-    private int retailerSearchDistance = 50;
+    private int retailerSearchDistance = 80;
     private int retailerToWIFISearchDistance = 200;
     private boolean drawRouteUsingPolyLines = false;
 
@@ -173,6 +173,23 @@ public class MapController {
         loadAllRetailers(); // loads all the retailerPoints
         setFilters();       // sets the filters based on wifi and retailer points loaded
         loadAllBikeTrips(); // currently only dynamic, requested routes are shown
+        win.setMember("app", clickListner);
+
+    }
+
+    private void reloadData() {
+
+        clickListner = new JavaApp();
+        retailerListner = new JavaApp();
+        // Add a Java callback object to a WebEngine document can be used to
+        //the coordinates of user clicks to the map.
+        JSObject win = (JSObject) webEngine.executeScript("window");
+        win.setMember("retailerListner", retailerListner);
+
+        reloadAllWifi();      // loads all the wifiPoints
+        reloadAllRetailers(); // loads all the retailerPoints
+        //setFilters();       // sets the filters based on wifi and retailer points loaded
+        //reloadAllBikeTrips(); // currently only dynamic, requested routes are shown
         win.setMember("app", clickListner);
 
     }
@@ -399,12 +416,37 @@ public class MapController {
     }
 
 
+    private void reloadAllWifi() {
+        WifiPoint point;
+        for (int i = 0; i < wifiPoints.size(); i++) {
+            point = wifiPoints.get(i);
+            point.setId(i);
+            point.setVisible(true);
+            addWifi(point.getLatitude(), point.getLongitude(), point.toInfoString());
+
+        }
+        webView.getEngine().executeScript("document.wifiCluster()");
+    }
+
+
     private void loadAllRetailers() {
         try {
             retailerPoints = populateRetailers();
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load retailers.");
         }
+        RetailerLocation point;
+        for (int i = 0; i < retailerPoints.size(); i++) {
+            point = retailerPoints.get(i);
+            point.setId(i);
+            point.setVisible(true);
+            addRetailer(point.getLatitude(), point.getLongitude(), point.toInfoString());
+        }
+        webView.getEngine().executeScript("document.retailerCluster()");
+
+    }
+
+    private void reloadAllRetailers() {
         RetailerLocation point;
         for (int i = 0; i < retailerPoints.size(); i++) {
             point = retailerPoints.get(i);
@@ -763,6 +805,23 @@ public class MapController {
         filterProviderComboBox.getSelectionModel().selectFirst();
         filterBoroughComboBox.getSelectionModel().selectFirst();
         updateWIFI();
+    }
+
+    @FXML
+    private void resetMap() {
+        webView.getEngine().loadContent("");
+        webEngine.load(getClass().getResource("/html/map.html").toString());
+
+        // Check the map has been loaded before attempting to add markers to it.
+        webEngine.getLoadWorker().stateProperty().addListener(
+                new ChangeListener<Worker.State>() {
+                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
+                        if (newState == Worker.State.SUCCEEDED) {
+                            reloadData();
+                        }
+                    }
+                });
+
     }
 
     @FXML

@@ -166,7 +166,7 @@
             <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="5.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
              <TableView />
@@ -197,14 +197,16 @@
                      <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
                      <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
                      <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
+                     <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
                  </rowConstraints>
                  <children>
                      <Button fx:id="addCustomBikeTripButton" mnemonicParsing="false" onAction="#addCustomBikeTrip" text="Add Route" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
                      <Button fx:id="addCustomRetailerButton" mnemonicParsing="false" onAction="#addCustomRetailer" text="Add Retailer" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
                      <Button fx:id="addCustomWIFIButton" mnemonicParsing="false" onAction="#addCustomWIFI" text="Add WIFI" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                      <Button fx:id="switchViewButton" mnemonicParsing="false" onAction="#switchView" text="Switch View" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                     <Button fx:id="ZoomInButton11" mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                     <Button fx:id="ZoomOutButton11" mnemonicParsing="false" onAction="#zoomOut" text="Zoom Out" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                     <Button fx:id="resetMapButton" mnemonicParsing="false" onAction="#resetMap" text="Reset Map" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                     <Button fx:id="ZoomInButton11" mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                     <Button fx:id="ZoomOutButton11" mnemonicParsing="false" onAction="#zoomOut" text="Zoom Out" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
                  </children>
              </GridPane>
          </children>
