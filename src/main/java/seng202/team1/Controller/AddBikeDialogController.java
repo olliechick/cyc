@@ -172,8 +172,11 @@ public class AddBikeDialogController {
         root.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ENTER && !addButton.isDisabled()) {
-                    addBike();
+                if (event.getCode() == KeyCode.ENTER) {
+                    checkFields();
+                    if (!addButton.isDisabled()) {
+                        addBike();
+                    }
                 } else if (event.getCode() == KeyCode.ESCAPE) {
                     stage1.close();
                 }

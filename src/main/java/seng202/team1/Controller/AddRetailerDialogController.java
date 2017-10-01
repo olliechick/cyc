@@ -143,8 +143,11 @@ public class AddRetailerDialogController {
         root.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ENTER && !addButton.isDisabled()) {
-                    addRetailer();
+                if (event.getCode() == KeyCode.ENTER) {
+                    checkFields();
+                    if (!addButton.isDisabled()) {
+                        addRetailer();
+                    }
                 } else if (event.getCode() == KeyCode.ESCAPE) {
                     stage1.close();
                 }
@@ -203,16 +206,26 @@ public class AddRetailerDialogController {
             valid = false;
             latLabel.setTextFill(Color.RED);
         } else {
-            latitude = Float.parseFloat(latField.getText());
-            latLabel.setTextFill(Color.BLACK);
+            try {
+                latitude = Float.parseFloat(latField.getText());
+                latLabel.setTextFill(Color.BLACK);
+            } catch (NumberFormatException e) {
+                valid = false;
+                latLabel.setTextFill(Color.RED);
+            }
         }
 
         if (longField.getText().isEmpty()) {
             valid = false;
             longLabel.setTextFill(Color.RED);
         } else {
-            longitude = Float.parseFloat(longField.getText());
-            longLabel.setTextFill(Color.BLACK);
+            try {
+                longitude = Float.parseFloat(longField.getText());
+                longLabel.setTextFill(Color.BLACK);
+            } catch (NumberFormatException e) {
+                valid = false;
+                longLabel.setTextFill(Color.RED);
+            }
         }
 
         if (addressField.getText().isEmpty()) {
