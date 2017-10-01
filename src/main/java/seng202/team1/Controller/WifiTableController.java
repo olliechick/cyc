@@ -53,8 +53,6 @@ public class WifiTableController extends TableController {
     private Label nameLabel;
 
     private UserAccountModel model;
-    private Stage stage;
-
     private ObservableList<WifiPoint> dataPoints;
     private FilteredList<WifiPoint> filteredData;
 
@@ -68,6 +66,9 @@ public class WifiTableController extends TableController {
         nameLabel.setVisible(true);
     }
 
+    /**
+     * Initialise the context menu buttons to point to the correct methods, edit and delete
+     */
     void initContextMenu() {
         super.editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -78,6 +79,56 @@ public class WifiTableController extends TableController {
                 }
             }
         });
+
+        super.deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                cm.hide();
+                if (table.getSelectionModel().getSelectedItem() != null) {
+                    deleteWifi(table.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
+    }
+
+    /**
+     * Open a dialog with all the details of the currently selected Wifi filled out,
+     * to allow the user to modify the data.
+     * Saves the changes if they are valid.
+     *
+     * @param selectedWifiPoint the currently selected Wifi
+     */
+    private void editWifi(WifiPoint selectedWifiPoint) {
+        try {
+            FXMLLoader addWifiLoader = new FXMLLoader(getClass().getResource("/fxml/AddWifiDialog.fxml"));
+            Parent root = addWifiLoader.load();
+            AddWifiDialogController addWifiDialog = addWifiLoader.getController();
+            Stage stage1 = new Stage();
+
+            addWifiDialog.setDialog(stage1, root, selectedWifiPoint);
+            stage1.showAndWait();
+
+            WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
+            if (newWifiPoint != null) {
+                if (dataPoints.contains(newWifiPoint)) {
+                    AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
+                } else {
+                    selectedWifiPoint.setAllProperties(newWifiPoint);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Delete the currently selected Wifi from the list of displayed data.
+     *
+     * @param selectedWifi The currently selected wifi.
+     */
+    private void deleteWifi(WifiPoint selectedWifi) {
+        //TODO add a removedWifi list to userAccountModel and add to there, then remove all those on load.
+        dataPoints.removeAll(selectedWifi);
     }
 
     /**
@@ -316,46 +367,23 @@ public class WifiTableController extends TableController {
     }
 
     /**
-     * initialises the model for use in the rest of the View
-     * Will allow for accessing user data once implemented
+     * Initialise this controllers UserAccountModel to be the current user,
+     * and load the default data.
+     *
+     * @param userAccountModel the details of the currently logged in user.
      */
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
         importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME, false);
     }
 
-    @Override
-    public void close() {
-        super.close();
-    }
-
+    /**
+     * Clear all input in the filters
+     */
     public void clearFilters() {
         filterCostComboBox.getSelectionModel().selectFirst();
         filterProviderComboBox.getSelectionModel().selectFirst();
         filterBoroughComboBox.getSelectionModel().selectFirst();
-    }
-
-    private void editWifi(WifiPoint wifiPoint) {
-        try {
-            FXMLLoader addWifiLoader = new FXMLLoader(getClass().getResource("/fxml/AddWifiDialog.fxml"));
-            Parent root = addWifiLoader.load();
-            AddWifiDialogController addWifiDialog = addWifiLoader.getController();
-            Stage stage1 = new Stage();
-
-            addWifiDialog.setDialog(stage1, root, wifiPoint);
-            stage1.showAndWait();
-
-            WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
-            if (newWifiPoint != null) {
-                if (dataPoints.contains(newWifiPoint)) {
-                    AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
-                } else {
-                    wifiPoint.setAllProperties(newWifiPoint);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }

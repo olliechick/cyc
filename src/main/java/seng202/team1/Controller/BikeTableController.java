@@ -57,8 +57,6 @@ public class BikeTableController extends TableController {
     private Label nameLabel;
 
     private UserAccountModel model;
-    private Stage stage;
-
     private ObservableList<BikeTrip> dataPoints;
     private FilteredList<BikeTrip> filteredData;
 
@@ -114,11 +112,17 @@ public class BikeTableController extends TableController {
         }
     }
 
+    /**
+     * Display the currently logged in users name at the bottom of the table
+     */
     void setName() {
         nameLabel.setText("Logged in as: " + model.getUserName());
         nameLabel.setVisible(true);
     }
 
+    /**
+     * Initialise the context menu buttons to point to the correct methods, edit and delete
+     */
     void initContextMenu() {
         super.editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -129,6 +133,58 @@ public class BikeTableController extends TableController {
                 }
             }
         });
+
+        super.deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                cm.hide();
+                if (table.getSelectionModel().getSelectedItem() != null) {
+                    deleteBikeTrip(table.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
+    }
+
+    /**
+     * Open a dialog with all the details of the currently selected Bike Trip filled out,
+     * to allow the user to modify the data.
+     * Saves the changes if they are valid.
+     *
+     * @param selectedBikeTrip The currently selected bike trip.
+     */
+    private void editBikeTrip(BikeTrip selectedBikeTrip) {
+        try {
+            FXMLLoader addBikeLoader = new FXMLLoader(getClass().getResource("/fxml/AddBikeDialog.fxml"));
+            Parent root = addBikeLoader.load();
+            AddBikeDialogController addBikeDialog = addBikeLoader.getController();
+            Stage stage1 = new Stage();
+
+            addBikeDialog.setDialog(stage1, root, selectedBikeTrip);
+            addBikeDialog.initModel(model);
+            stage1.showAndWait();
+
+            BikeTrip newBikeTrip = addBikeDialog.getBikeTrip();
+            if (newBikeTrip != null) {
+                if (dataPoints.contains(newBikeTrip)) {
+                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
+                } else {
+                    selectedBikeTrip.setAllProperties(newBikeTrip);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Delete the currently selected bike trip from the list of trips
+     *
+     * @param selectedBikeTrip The currently selected bike trip.
+     */
+    private void deleteBikeTrip(BikeTrip selectedBikeTrip) {
+        //TODO add a removedBiketrips list to userAccountModel and add to there, then remove all those on load.
+        dataPoints.remove(selectedBikeTrip);
     }
 
     /**
@@ -303,10 +359,10 @@ public class BikeTableController extends TableController {
     }
 
     /**
-     * initialises the model for use in the rest of the View.
-     * Allows reading and writing to user data.
+     * Initialise this controllers UserAccountModel to be the current user,
+     * and load the default data.
      *
-     * @param userAccountModel The current user's account.
+     * @param userAccountModel the details of the currently logged in user.
      */
     void initModel(UserAccountModel userAccountModel) {
 
@@ -322,6 +378,9 @@ public class BikeTableController extends TableController {
         dataPoints.addAll(customTrips);
     }
 
+    /**
+     * Clear all input in the filters
+     */
     public void clearFilters() {
         filterStartComboBox.getSelectionModel().selectFirst();
         filterEndComboBox.getSelectionModel().selectFirst();
@@ -329,28 +388,4 @@ public class BikeTableController extends TableController {
         bikeSearchField.clear();
     }
 
-    private void editBikeTrip(BikeTrip bikeTrip) {
-        try {
-            FXMLLoader addBikeLoader = new FXMLLoader(getClass().getResource("/fxml/AddBikeDialog.fxml"));
-            Parent root = addBikeLoader.load();
-            AddBikeDialogController addBikeDialog = addBikeLoader.getController();
-            Stage stage1 = new Stage();
-
-            addBikeDialog.setDialog(stage1, root, bikeTrip);
-            addBikeDialog.initModel(model);
-            stage1.showAndWait();
-
-            BikeTrip newBikeTrip = addBikeDialog.getBikeTrip();
-            if (newBikeTrip != null) {
-                if (dataPoints.contains(newBikeTrip)) {
-                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
-                } else {
-                    bikeTrip.setAllProperties(newBikeTrip);
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
