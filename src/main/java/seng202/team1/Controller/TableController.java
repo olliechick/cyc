@@ -1,7 +1,6 @@
 package seng202.team1.Controller;
 
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +11,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng202.team1.Model.DataPoint;
-import seng202.team1.Model.RetailerLocation;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +45,6 @@ public abstract class TableController {
      */
     public void initialize() {
 
-        //TODO refactor before merge
         cm.getItems().addAll(editMenuItem, deleteMenuItem);
 
 
@@ -128,10 +125,18 @@ public abstract class TableController {
         AlertGenerator.createAlert(data.getName(), data.getDescription());
     }
 
+    /**
+     * Set this controllers stage, allowing it to close properly
+     *
+     * @param curStage The stage this view is displayed on.
+     */
     void setStage(Stage curStage) {
         stage = curStage;
     }
 
+    /**
+     * Open the about screen.
+     */
     public void openAbout() {
         try {
             FXMLLoader showAbout = new FXMLLoader(getClass().getResource("/fxml/aboutView.fxml"));
@@ -147,9 +152,17 @@ public abstract class TableController {
 
     }
 
+    /**
+     * Close the stage.
+     */
     public void close() {
         stage.close();
     }
 
+    /**
+     * Initialise the context menu buttons to perform the correct actions.
+     * Must setOnAction for both editMenuItem and deleteMenuItem
+     *
+     */
     abstract void initContextMenu();
 }

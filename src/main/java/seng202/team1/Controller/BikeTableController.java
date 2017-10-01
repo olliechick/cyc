@@ -57,8 +57,6 @@ public class BikeTableController extends TableController {
     private Label nameLabel;
 
     private UserAccountModel model;
-    private Stage stage;
-
     private ObservableList<BikeTrip> dataPoints;
     private FilteredList<BikeTrip> filteredData;
 

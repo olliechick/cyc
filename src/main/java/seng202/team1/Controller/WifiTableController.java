@@ -53,8 +53,6 @@ public class WifiTableController extends TableController {
     private Label nameLabel;
 
     private UserAccountModel model;
-    private Stage stage;
-
     private ObservableList<WifiPoint> dataPoints;
     private FilteredList<WifiPoint> filteredData;
 

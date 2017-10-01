@@ -1,7 +1,6 @@
 package seng202.team1.Controller;
 
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,8 +18,6 @@ import seng202.team1.Model.BikeTrip;
 import seng202.team1.UserAccountModel;
 
 import java.awt.Point;
-import java.awt.geom.Point2D;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

@@ -50,11 +50,10 @@ public class RetailerTableController extends TableController {
     private TableView<RetailerLocation> table;
 
     private UserAccountModel model;
-
     private ObservableList<RetailerLocation> dataPoints;
     private FilteredList<RetailerLocation> filteredData;
 
-    private final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "src/main/resources/csv/Lower_Manhattan_Retailers.csv";
+    private final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "/csv/Lower_Manhattan_Retailers.csv";
 
     /**
      * Display the user name at the bottom of the table
@@ -387,7 +386,7 @@ public class RetailerTableController extends TableController {
      */
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
-        importRetailerCsv("/csv/Lower_Manhattan_Retailers.csv", false);
+        importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME, false);
     }
 
     /**
