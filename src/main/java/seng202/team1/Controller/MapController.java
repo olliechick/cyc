@@ -22,11 +22,17 @@ import seng202.team1.Model.Google.BikeDirections;
 import seng202.team1.UserAccountModel;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static seng202.team1.Model.CsvHandling.CSVLoader.*;
+import java.awt.*;
+
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
 import static seng202.team1.Model.DataAnalyser.*;
+import static seng202.team1.Model.CsvHandling.CSVLoader.*;
 import static seng202.team1.Model.GenerateFields.generateSecondaryFunctionsList;
 import static seng202.team1.Model.GenerateFields.generateWifiProviders;
 
@@ -67,7 +73,7 @@ public class MapController {
     private boolean showOnlyNearestWIFIToRetailer = false;
 
     private int wifiSearchDistance = 200;
-    private int retailerSearchDistance = 200;
+    private int retailerSearchDistance = 80;
     private int retailerToWIFISearchDistance = 200;
     private boolean drawRouteUsingPolyLines = false;
 
@@ -112,6 +118,8 @@ public class MapController {
     private Button AddCustomWIFIButton;
 
 
+
+
     @FXML
     private WebEngine webEngine;
 
@@ -140,6 +148,9 @@ public class MapController {
                 });
 
 
+
+
+
     }
 
 
@@ -160,6 +171,24 @@ public class MapController {
 
     }
 
+    private void reloadData() {
+        removeAllFilters();
+        initializeFilters();
+        clickListner = new JavaApp();
+        retailerListner = new JavaApp();
+        // Add a Java callback object to a WebEngine document can be used to
+        //the coordinates of user clicks to the map.
+        JSObject win = (JSObject) webEngine.executeScript("window");
+        win.setMember("retailerListner", retailerListner);
+
+        reloadAllWifi();      // loads all the wifiPoints
+        reloadAllRetailers(); // loads all the retailerPoints
+        setFilters();       // sets the filters based on wifi and retailer points loaded
+        //reloadAllBikeTrips(); // currently only dynamic, requested routes are shown
+        win.setMember("app", clickListner);
+
+    }
+
     /**
      * JavaScript interface object. Can be used to pass
      */
@@ -176,8 +205,16 @@ public class MapController {
                 BikeDirections dir = new BikeDirections(route, true);
                 if (showWIFINearRoute) {
                     ArrayList<Integer> indexes = searchWifiPointsOnRoute(dir.getPoints(), wifiPoints, wifiSearchDistance);
-                    for (int index : indexes) {
-                        String scriptStr = "document.circleWIFI(" + index + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                    ArrayList<WIFIPointDistance> pointDistances = new ArrayList<>();
+                    for (int i = 0; i < indexes.size(); i++) {
+                        String scriptStr = "document.circleWIFI(" + indexes.get(i) + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                        webView.getEngine().executeScript(scriptStr);
+                        WIFIPointDistance pointDistance = new WIFIPointDistance(wifiPoints.get(indexes.get(i)), indexes.get(i));
+                        pointDistances.add(pointDistance);
+                    }
+                    ArrayList<WIFIPointDistance> sortedPointDistances = sortedWIFIPointsByMinimumDistanceToRoute(pointDistances, dir.getPoints());
+                    for (int i = 0; i < sortedPointDistances.size(); i++) {
+                        String scriptStr = "document.circleAndNumberWIFI(" + sortedPointDistances.get(i).getIndexMap() + ", 'WIFISELECTED.png', '" + Integer.toString(i+1) +"')";
                         webView.getEngine().executeScript(scriptStr);
                     }
                 } else if (showOnlyNearestWIFIToRoute) {
@@ -189,8 +226,16 @@ public class MapController {
 
                 if (showRetailersNearRoute) {
                     ArrayList<Integer> indexes = searchRetailerLocationsOnRoute(dir.getPoints(), retailerPoints, retailerSearchDistance);
-                    for (int index : indexes) {
-                        String scriptStr = "document.circleRetailer(" + index + ", 'DEPARTMENTSTORESELECTED.png', 'departmentstore.png')";
+                    ArrayList<RetailerPointDistance> pointDistances = new ArrayList<>();
+                    for (int i = 0; i < indexes.size(); i++) {
+                        String scriptStr = "document.circleRetailer(" + indexes.get(i) + ", 'DEPARTMENTSTORESELECTED.png', 'departmentstore.png')";
+                        webView.getEngine().executeScript(scriptStr);
+                        RetailerPointDistance pointDistance = new RetailerPointDistance(retailerPoints.get(indexes.get(i)), indexes.get(i));
+                        pointDistances.add(pointDistance);
+                    }
+                    ArrayList<RetailerPointDistance> sortedPointDistances = sortedRetailerPointsByMinimumDistanceToRoute(pointDistances, dir.getPoints());
+                    for (int i = 0; i < sortedPointDistances.size(); i++) {
+                        String scriptStr = "document.circleAndNumberRetailer(" + sortedPointDistances.get(i).getIndexMap() + ", 'DEPARTMENTSTORESELECTED.png', '" + Integer.toString(i+1) +"')";
                         webView.getEngine().executeScript(scriptStr);
                     }
                 } else if (showOnlyNearestRetailerToRoute) {
@@ -210,7 +255,29 @@ public class MapController {
         }
 
         public void wifiToRetailer(Double lat, Double lng) {
-            nearestWifi(lat, lng);
+            if (showWIFINearRetailer) {
+                ArrayList<WIFIPointDistance> pointDistances = new ArrayList<>();
+                ArrayList<Integer> indexes = searchWifiPoints(lat, lng, retailerToWIFISearchDistance, wifiPoints, true);
+                for (int i = 0; i < indexes.size(); i++) {
+                    String scriptStr = "document.circleWIFI(" + indexes.get(i) + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                    webView.getEngine().executeScript(scriptStr);
+                    WIFIPointDistance pointDistance = new WIFIPointDistance(wifiPoints.get(indexes.get(i)), indexes.get(i));
+                    pointDistances.add(pointDistance);
+                }
+                Point2D.Float waypoint = new Point2D.Float(lng.floatValue(), lat.floatValue());
+                ArrayList<Point2D.Float> waypoints = new ArrayList<>();
+                waypoints.add(waypoint);
+                ArrayList<WIFIPointDistance> sortedPointDistances = sortedWIFIPointsByMinimumDistanceToRoute(pointDistances, waypoints );
+                for (int i = 0; i < sortedPointDistances.size(); i++) {
+                    String scriptStr = "document.circleAndNumberWIFI(" + sortedPointDistances.get(i).getIndexMap() + ", 'WIFISELECTED.png', '" + Integer.toString(i+1) +"')";
+                    webView.getEngine().executeScript(scriptStr);
+                }
+            } else if (showOnlyNearestWIFIToRetailer) {
+                int indexOfWifi = findClosestWifiPointToRetailer(wifiPoints, lat.floatValue(), lng.floatValue());
+                System.out.println(indexOfWifi);
+                String scriptStr = "document.circleWIFI(" + indexOfWifi + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                webView.getEngine().executeScript(scriptStr);
+            }
 
         }
     }
@@ -221,24 +288,14 @@ public class MapController {
         // String route = el.getAttribute("currentRoute");
         System.out.print(route);
         System.out.println("");
+
     }
 
-    public void nearestWifi(Double lat, Double lng) {
-        System.out.println("Test");
 
-        if (showWIFINearRetailer) {
-            ArrayList<Integer> indexes = searchWifiPoints(lat, lng, retailerToWIFISearchDistance, wifiPoints, true);
-            for (int index : indexes) {
-                String scriptStr = "document.circleWIFI(" + index + ", 'WIFISELECTED.png', 'WIFI2.png')";
-                webView.getEngine().executeScript(scriptStr);
-            }
-        } else if (showOnlyNearestWIFIToRetailer) {
-            int indexOfWifi = findClosestWifiPointToRetailer(wifiPoints, lat.floatValue(), lng.floatValue());
-            System.out.println(indexOfWifi);
-            String scriptStr = "document.circleWIFI(" + indexOfWifi + ", 'WIFISELECTED.png', 'WIFI2.png')";
-            webView.getEngine().executeScript(scriptStr);
-        }
-    }
+
+
+
+
 
 
     @FXML
@@ -344,12 +401,37 @@ public class MapController {
     }
 
 
+    private void reloadAllWifi() {
+        WifiPoint point;
+        for (int i = 0; i < wifiPoints.size(); i++) {
+            point = wifiPoints.get(i);
+            point.setId(i);
+            point.setVisible(true);
+            addWifi(point.getLatitude(), point.getLongitude(), point.toInfoString());
+
+        }
+        webView.getEngine().executeScript("document.wifiCluster()");
+    }
+
+
     private void loadAllRetailers() {
         try {
             retailerPoints = populateRetailers();
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load retailers.");
         }
+        RetailerLocation point;
+        for (int i = 0; i < retailerPoints.size(); i++) {
+            point = retailerPoints.get(i);
+            point.setId(i);
+            point.setVisible(true);
+            addRetailer(point.getLatitude(), point.getLongitude(), point.toInfoString());
+        }
+        webView.getEngine().executeScript("document.retailerCluster()");
+
+    }
+
+    private void reloadAllRetailers() {
         RetailerLocation point;
         for (int i = 0; i < retailerPoints.size(); i++) {
             point = retailerPoints.get(i);
@@ -708,6 +790,36 @@ public class MapController {
         filterProviderComboBox.getSelectionModel().selectFirst();
         filterBoroughComboBox.getSelectionModel().selectFirst();
         updateWIFI();
+    }
+
+    @FXML
+    private void removeAllFilters() {
+        filterPrimaryComboBox.getItems().clear();
+        filterSecondaryComboBox.getItems().clear();
+        filterZipComboBox.getItems().clear();
+        streetSearchField.clear();
+
+        filterCostComboBox.getItems().clear();
+        filterProviderComboBox.getItems().clear();
+        filterBoroughComboBox.getItems().clear();
+
+    }
+
+    @FXML
+    private void resetMap() {
+        webView.getEngine().loadContent("");
+        webEngine.load(getClass().getResource("/html/map.html").toString());
+
+        // Check the map has been loaded before attempting to add markers to it.
+        webEngine.getLoadWorker().stateProperty().addListener(
+                new ChangeListener<Worker.State>() {
+                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
+                        if (newState == Worker.State.SUCCEEDED) {
+                            reloadData();
+                        }
+                    }
+                });
+
     }
 
     @FXML
