@@ -7,11 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import seng202.team1.Model.DatabaseManager;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * Gives the data analysis enabled users options on which table to open.

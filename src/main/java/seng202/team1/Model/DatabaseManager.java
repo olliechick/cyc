@@ -43,6 +43,7 @@ public class DatabaseManager {
         String createRetailerTable = "CREATE TABLE retailer\n" +
                 "(\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
+                "    username TEXT,\n" +
                 "    name TEXT NOT NULL,\n" +
                 "    addressLine1 TEXT,\n" +
                 "    addressLine2 TEXT,\n" +
@@ -60,6 +61,7 @@ public class DatabaseManager {
         String createWifiTable = "CREATE TABLE wifi\n" +
                 "(\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
+                "    username TEXT,\n" +
                 "    objectID INTEGER,\n" +
                 "    latitude FLOAT,\n" +
                 "    longitude FLOAT,\n" +
@@ -167,6 +169,9 @@ public class DatabaseManager {
         if (fileSuccessfullyDeleted) {
             System.out.println("Database Deleted.");
         }
+        if (journalSuccessfullyDeleted) {
+            System.out.println("Journal files successfully deleted.");
+        }
     }
 
 
@@ -178,14 +183,17 @@ public class DatabaseManager {
      * @throws SQLException when record cannot be added.
      * @author Ridge Nairn
      */
-    public static void addRecord(DataPoint point) throws SQLException {
-        // TODO: Implement Record Adding to correct table, based on subclass
+    public static void addRecord(DataPoint point, String username) throws SQLException {
         PreparedStatement preparedStatement;
         String statement;
+        int numOfQs; //number of question marks to put in the statement
+
 
         if (point instanceof RetailerLocation) {
+            numOfQs = 12;
             statement = "INSERT INTO retailer (name, addressLine1, addressLine2, city, state, zipcode, blockLot, " +
-                    "primaryFunction, secondaryFunction, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "primaryFunction, secondaryFunction, latitude, longitude, username) " +
+                    "VALUES (" + new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
             RetailerLocation retailer = (RetailerLocation) point;
 
             preparedStatement = getConnection().prepareStatement(statement);
@@ -201,14 +209,17 @@ public class DatabaseManager {
             preparedStatement.setString(8, retailer.getPrimaryFunction());
             preparedStatement.setString(9, retailer.getSecondaryFunction());
             preparedStatement.setFloat(10, retailer.getLatitude());
+
             preparedStatement.setFloat(11, retailer.getLongitude());
+            preparedStatement.setString(12, username);
 
             preparedStatement.execute();
 
         } else if (point instanceof WifiPoint) {
+            numOfQs = 17;
             statement = "INSERT INTO wifi (objectID, latitude, longitude, placeName, location, locationType, " +
-                    "hood, borough, city, zipcode, cost, provider, remarks, SSID, sourceId, datetimeactivated) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "hood, borough, city, zipcode, cost, provider, remarks, SSID, sourceId, datetimeactivated, username) " +
+                    "VALUES (" + new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
             WifiPoint wifiPoint = (WifiPoint) point;
 
             preparedStatement = getConnection().prepareStatement(statement);
@@ -230,11 +241,12 @@ public class DatabaseManager {
             preparedStatement.setString(13, wifiPoint.getRemarks());
             preparedStatement.setString(14, wifiPoint.getSsid());
             preparedStatement.setString(15, wifiPoint.getSourceId());
+
             preparedStatement.setString(16, wifiPoint.getDatetimeActivated().toString());
+            preparedStatement.setString(17, username);
 
-            preparedStatement.addBatch();
+            preparedStatement.execute();
 
-            preparedStatement.executeBatch();
 
         } else {
             System.out.println("Unexpected type.");

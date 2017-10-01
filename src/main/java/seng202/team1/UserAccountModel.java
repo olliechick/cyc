@@ -109,17 +109,13 @@ public class UserAccountModel implements java.io.Serializable {
 
 //from dummy Model
 
-    private ArrayList<BikeTrip> customBikeTrips = new ArrayList<>();
-    private ArrayList<RetailerLocation> customRetailerLocations = new ArrayList<>();
-    private ArrayList<WifiPoint> customWifiPoints = new ArrayList<>();
-
-
 
     public ArrayList<BikeTrip> getCustomBikeTrips() {
         ArrayList<BikeTrip> result = new ArrayList<>();
         try {
             DatabaseManager.open();
             result = DatabaseManager.getUserTrips(userName);
+            System.out.println(String.format("%d custom trips retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -128,11 +124,30 @@ public class UserAccountModel implements java.io.Serializable {
     }
 
     public ArrayList<RetailerLocation> getCustomRetailerLocations() {
-        return customRetailerLocations;
+        ArrayList<RetailerLocation> result = new ArrayList<>();
+        try {
+            DatabaseManager.open();
+            result = DatabaseManager.getRetailers();
+            System.out.println(String.format("%d custom retailers retrieved.", result.size()));
+            DatabaseManager.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public ArrayList<WifiPoint> getCustomWifiPoints() {
-        return customWifiPoints;
+        ArrayList<WifiPoint> result = new ArrayList<>();
+        try {
+            DatabaseManager.open();
+            result = DatabaseManager.getWifiPoints();
+            System.out.println(String.format("%d custom wifi points retrieved.", result.size()));
+            DatabaseManager.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+
     }
 
     public void addCustomBikeTrip(BikeTrip bikeTrip) {
@@ -147,11 +162,25 @@ public class UserAccountModel implements java.io.Serializable {
     }
 
     public void addCustomRetailerLocation(RetailerLocation retailerLocation) {
-        customRetailerLocations.add(retailerLocation);
+        try {
+            //TODO: Have this thrown further up
+            DatabaseManager.open();
+            DatabaseManager.addRecord(retailerLocation, userName);
+            DatabaseManager.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void addCustomWifiLocation(WifiPoint wifiPoint) {
-        customWifiPoints.add(wifiPoint);
+        try {
+            //TODO: Have this thrown further up
+            DatabaseManager.open();
+            DatabaseManager.addRecord(wifiPoint, userName);
+            DatabaseManager.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void createUser(UserAccountModel user) {

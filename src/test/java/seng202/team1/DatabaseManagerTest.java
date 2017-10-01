@@ -110,7 +110,7 @@ public class DatabaseManagerTest {
     @Test
     public void addRetailerPoint() {
         try {
-            DatabaseManager.addRecord(retailer);
+            DatabaseManager.addRecord(retailer, null);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -120,7 +120,7 @@ public class DatabaseManagerTest {
     @Test
     public void addWifiPoint() {
         try {
-            DatabaseManager.addRecord(wifi);
+            DatabaseManager.addRecord(wifi, null);
         } catch (SQLException e) {
             e.printStackTrace();
         }
