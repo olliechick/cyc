@@ -243,6 +243,22 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     }
 
 
+    public void setAllProperties(RetailerLocation newRetailerProperties) {
+
+        this.name = newRetailerProperties.getName();
+        this.addressLine1 = newRetailerProperties.getAddressLine1();
+        this.addressLine2 = newRetailerProperties.getAddressLine2();
+        this.city = newRetailerProperties.getCity();
+        this.state = newRetailerProperties.getState();
+        this.zipcode = newRetailerProperties.getZipcode();
+        this.blockLot = newRetailerProperties.getBlockLot();
+        this.primaryFunction = newRetailerProperties.getPrimaryFunction();
+        this.secondaryFunction = newRetailerProperties.getSecondaryFunction();
+        this.coords = newRetailerProperties.getCoords();
+        this.distanceFrom = newRetailerProperties.getDistanceFrom();
+
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

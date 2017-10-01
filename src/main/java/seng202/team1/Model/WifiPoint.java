@@ -287,6 +287,27 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
         return description;
     }
 
+    public void setAllProperties(WifiPoint wifiPoint) {
+        this.objectId = wifiPoint.getObjectId();
+        this.coords = wifiPoint.getCoords();
+        this.placeName = wifiPoint.getPlaceName();
+        this.location = wifiPoint.getLocation();
+        this.locationType = wifiPoint.getLocationType();
+        this.hood = wifiPoint.getHood();
+        this.borough = wifiPoint.getBorough();
+        this.cost = wifiPoint.getCost();
+        this.location = wifiPoint.getLocation();
+        this.provider = wifiPoint.getProvider();
+        this.city = wifiPoint.getCity();
+        this.zipcode = wifiPoint.getZipcode();
+        this.cost = wifiPoint.getCost();
+        this.remarks = wifiPoint.getRemarks();
+        this.ssid = wifiPoint.getSsid();
+        this.sourceId = wifiPoint.getSourceId();
+        this.datetimeActivated = wifiPoint.getDatetimeActivated();
+        this.isUserDefinedPoint = true;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null || getClass() != obj.getClass()) {

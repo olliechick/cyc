@@ -14,7 +14,9 @@ import javafx.stage.StageStyle;
 import seng202.team1.Model.BikeTrip;
 import seng202.team1.UserAccountModel;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.geom.Point2D;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -162,6 +164,40 @@ public class AddBikeDialogController {
             startLatField.setText(Double.toString(secondToLastPoint.getX()));
             startLongField.setText(Double.toString(secondToLastPoint.getY()));
         }
+    }
+
+    void setDialog(Stage stage1, Parent root, BikeTrip bikeTrip) {
+        setDialog(stage1, root);
+
+        startLatField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getStartLatitude())));
+        }));
+
+        startLongField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getStartLongitude())));
+        }));
+
+        endLatField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getEndLatitude())));
+        }));
+
+        endLongField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getEndLongitude())));
+        }));
+
+        idField.setText(String.valueOf(bikeTrip.getBikeId()));
+        startTimeField.setText(bikeTrip.getStartTime().toLocalTime().toString());
+        stopTimeField.setText(bikeTrip.getStopTime().toLocalTime().toString());
+
+        startDatePicker.setValue(bikeTrip.getStartTime().toLocalDate());
+        stopDatePicker.setValue(bikeTrip.getStopTime().toLocalDate());
+
+        startLatField.setText(String.valueOf(bikeTrip.getStartLatitude()));
+        startLongField.setText(String.valueOf(bikeTrip.getStartLongitude()));
+        endLatField.setText(String.valueOf(bikeTrip.getEndLatitude()));
+        endLongField.setText(String.valueOf(bikeTrip.getEndLongitude()));
+
+        addButton.setText("Save");
     }
 
     /**

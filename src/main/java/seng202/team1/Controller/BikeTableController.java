@@ -7,6 +7,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -116,6 +117,18 @@ public class BikeTableController extends TableController {
     void setName() {
         nameLabel.setText("Logged in as: " + model.getUserName());
         nameLabel.setVisible(true);
+    }
+
+    void initContextMenu() {
+        super.editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                cm.hide();
+                if (table.getSelectionModel().getSelectedItem() != null) {
+                    editBikeTrip(table.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
     }
 
     /**
@@ -314,5 +327,30 @@ public class BikeTableController extends TableController {
         filterEndComboBox.getSelectionModel().selectFirst();
         filterGenderComboBox.getSelectionModel().selectFirst();
         bikeSearchField.clear();
+    }
+
+    private void editBikeTrip(BikeTrip bikeTrip) {
+        try {
+            FXMLLoader addBikeLoader = new FXMLLoader(getClass().getResource("/fxml/AddBikeDialog.fxml"));
+            Parent root = addBikeLoader.load();
+            AddBikeDialogController addBikeDialog = addBikeLoader.getController();
+            Stage stage1 = new Stage();
+
+            addBikeDialog.setDialog(stage1, root, bikeTrip);
+            addBikeDialog.initModel(model);
+            stage1.showAndWait();
+
+            BikeTrip newBikeTrip = addBikeDialog.getBikeTrip();
+            if (newBikeTrip != null) {
+                if (dataPoints.contains(newBikeTrip)) {
+                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
+                } else {
+                    bikeTrip.setAllProperties(newBikeTrip);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -7,6 +7,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -65,6 +66,18 @@ public class WifiTableController extends TableController {
     void setName() {
         nameLabel.setText("Logged in as: " + model.getUserName());
         nameLabel.setVisible(true);
+    }
+
+    void initContextMenu() {
+        super.editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                cm.hide();
+                if (table.getSelectionModel().getSelectedItem() != null) {
+                    editWifi(table.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
     }
 
     /**
@@ -320,6 +333,29 @@ public class WifiTableController extends TableController {
         filterCostComboBox.getSelectionModel().selectFirst();
         filterProviderComboBox.getSelectionModel().selectFirst();
         filterBoroughComboBox.getSelectionModel().selectFirst();
+    }
+
+    private void editWifi(WifiPoint wifiPoint) {
+        try {
+            FXMLLoader addWifiLoader = new FXMLLoader(getClass().getResource("/fxml/AddWifiDialog.fxml"));
+            Parent root = addWifiLoader.load();
+            AddWifiDialogController addWifiDialog = addWifiLoader.getController();
+            Stage stage1 = new Stage();
+
+            addWifiDialog.setDialog(stage1, root, wifiPoint);
+            stage1.showAndWait();
+
+            WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
+            if (newWifiPoint != null) {
+                if (dataPoints.contains(newWifiPoint)) {
+                    AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
+                } else {
+                    wifiPoint.setAllProperties(newWifiPoint);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

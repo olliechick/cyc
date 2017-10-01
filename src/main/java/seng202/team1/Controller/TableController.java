@@ -1,13 +1,21 @@
 package seng202.team1.Controller;
 
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng202.team1.Model.DataPoint;
+import seng202.team1.Model.RetailerLocation;
 
 import java.io.File;
+import java.io.IOException;
 
 
 /**
@@ -16,7 +24,7 @@ import java.io.File;
  *
  * @author Josh Bernasconi
  */
-public class TableController {
+public abstract class TableController {
 
 
     @FXML
@@ -30,24 +38,41 @@ public class TableController {
 
     private Stage stage;
 
+    protected ContextMenu cm = new ContextMenu();
+    protected MenuItem editMenuItem = new MenuItem("Edit");
+    protected MenuItem deleteMenuItem = new MenuItem("Delete");
+
     /**
      * Run automatically when the fxml is loaded by an FXMLLoader
      */
     public void initialize() {
 
-        // Get the selected row on double click and run the data popup
-        table.setRowFactory(tv -> {
-            TableRow<DataPoint> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2) {
-                    DataPoint rowData = row.getItem();
+        //TODO refactor before merge
+        cm.getItems().addAll(editMenuItem, deleteMenuItem);
+
+
+        table.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                cm.hide();
+
+                if (event.getButton() == MouseButton.SECONDARY)
+                {
+                    if (table.getSelectionModel().getSelectedItem() != null) {
+                        cm.show(table, event.getScreenX(), event.getScreenY());
+                    }
+                }
+
+                if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
+
+                    DataPoint rowData = table.getSelectionModel().getSelectedItem();
 
                     if (rowData != null) {
                         showDataPopup(table.getSelectionModel().getSelectedItem());
                     }
                 }
-            });
-            return row;
+            }
         });
     }
 
@@ -110,4 +135,6 @@ public class TableController {
     public void close() {
         stage.close();
     }
+
+    abstract void initContextMenu();
 }

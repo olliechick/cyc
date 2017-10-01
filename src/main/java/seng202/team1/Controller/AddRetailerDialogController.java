@@ -92,14 +92,15 @@ public class AddRetailerDialogController {
     private float latitude = 0;
     private float longitude = 0;
     private Point2D.Float coords = new Point2D.Float();
+    private String city = "New York";
+    private String state = "NY";
+    private String blockLot = "Unknown";
 
 
     @FXML
     void addRetailer() {
         if (checkFields()) {
-            String city = "New York";
-            String state = "NY";
-            String blockLot = "Unknown";
+
             coords.setLocation(latitude, longitude);
 
             retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city,
@@ -137,6 +138,36 @@ public class AddRetailerDialogController {
         }
 
     }
+
+    public void setDialog(Stage stage1, Parent root, RetailerLocation retailerLocation) {
+        setDialog(stage1, root);
+
+        city = retailerLocation.getCity();
+        state = retailerLocation.getState();
+        blockLot = retailerLocation.getBlockLot();
+        latitude = retailerLocation.getLatitude();
+        longitude = retailerLocation.getLongitude();
+
+        nameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(retailerLocation.getName()));
+        });
+
+        primaryField.textProperty().addListener((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(retailerLocation.getPrimaryFunction()));
+        });
+
+        nameField.setText(retailerLocation.getName());
+        addressField.setText(retailerLocation.getAddressLine1());
+        address2Field.setText(retailerLocation.getAddressLine2());
+        primaryField.setText(retailerLocation.getPrimaryFunction());
+        secondaryField.setText(retailerLocation.getSecondaryFunction());
+        zipField.setText(String.valueOf(retailerLocation.getZipcode()));
+        latField.setText(String.valueOf(retailerLocation.getLatitude()));
+        longField.setText(String.valueOf(retailerLocation.getLongitude()));
+
+        addButton.setText("Save");
+    }
+
 
     /**
      * Checks the data entered for validity.
