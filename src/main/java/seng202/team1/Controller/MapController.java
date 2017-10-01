@@ -264,7 +264,29 @@ public class MapController {
         }
 
         public void wifiToRetailer(Double lat, Double lng) {
-            nearestWifi(lat, lng);
+            if (showWIFINearRetailer) {
+                ArrayList<WIFIPointDistance> pointDistances = new ArrayList<>();
+                ArrayList<Integer> indexes = searchWifiPoints(lat, lng, retailerToWIFISearchDistance, wifiPoints, true);
+                for (int i = 0; i < indexes.size(); i++) {
+                    String scriptStr = "document.circleWIFI(" + indexes.get(i) + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                    webView.getEngine().executeScript(scriptStr);
+                    WIFIPointDistance pointDistance = new WIFIPointDistance(wifiPoints.get(indexes.get(i)), indexes.get(i));
+                    pointDistances.add(pointDistance);
+                }
+                Point2D.Float waypoint = new Point2D.Float(lng.floatValue(), lat.floatValue());
+                ArrayList<Point2D.Float> waypoints = new ArrayList<>();
+                waypoints.add(waypoint);
+                ArrayList<WIFIPointDistance> sortedPointDistances = sortedWIFIPointsByMinimumDistanceToRoute(pointDistances, waypoints );
+                for (int i = 0; i < sortedPointDistances.size(); i++) {
+                    String scriptStr = "document.circleAndNumberWIFI(" + sortedPointDistances.get(i).getIndexMap() + ", 'WIFISELECTED.png', '" + Integer.toString(i+1) +"')";
+                    webView.getEngine().executeScript(scriptStr);
+                }
+            } else if (showOnlyNearestWIFIToRetailer) {
+                int indexOfWifi = findClosestWifiPointToRetailer(wifiPoints, lat.floatValue(), lng.floatValue());
+                System.out.println(indexOfWifi);
+                String scriptStr = "document.circleWIFI(" + indexOfWifi + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                webView.getEngine().executeScript(scriptStr);
+            }
 
         }
     }
@@ -275,24 +297,13 @@ public class MapController {
         // String route = el.getAttribute("currentRoute");
         System.out.print(route);
         System.out.println("");
+
     }
 
-    public void nearestWifi(Double lat, Double lng) {
-        System.out.println("Test");
 
-        if (showWIFINearRetailer) {
-            ArrayList<Integer> indexes = searchWifiPoints(lat, lng, retailerToWIFISearchDistance, wifiPoints, true);
-            for (int i = 0; i < indexes.size(); i++) {
-                String scriptStr = "document.circleWIFI(" + indexes.get(i) + ", 'WIFISELECTED.png', 'WIFI2.png')";
-                webView.getEngine().executeScript(scriptStr);
-            }
-        } else if (showOnlyNearestWIFIToRetailer) {
-            int indexOfWifi = findClosestWifiPointToRetailer(wifiPoints, lat.floatValue(), lng.floatValue());
-            System.out.println(indexOfWifi);
-            String scriptStr = "document.circleWIFI(" + indexOfWifi + ", 'WIFISELECTED.png', 'WIFI2.png')";
-            webView.getEngine().executeScript(scriptStr);
-        }
-    }
+
+
+
 
 
 
