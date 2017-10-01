@@ -211,9 +211,17 @@ public class CSVLoader {
                                     ("yyyy-MM-dd HH:mm:ss"));
                 }
 
-                // Other stuff
-                int bikeId = Integer.parseInt(record.get(11));
+                // Bike ID
+                int bikeId;
+                String bikeIdString = record.get(11);
+                if (bikeIdString.isEmpty()) {
+                    //unknown bike id flag
+                    bikeId = -1;
+                } else {
+                    bikeId = Integer.parseInt(bikeIdString);
+                }
 
+                //Birth year
                 int birthYear;
                 String birthYearString = record.get(13);
                 if (birthYearString.isEmpty()) {
@@ -223,10 +231,7 @@ public class CSVLoader {
                     birthYear = Integer.parseInt(birthYearString);
                 }
 
-                long tripDuration = new Long(record.get(0).trim());
-                Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(6)), Float.parseFloat(record.get(5)));
-                Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(10)), Float.parseFloat(record.get(9)));
-
+                // Gender
                 char gender;
                 if (record.get(14).equals("1")) {
                     gender = 'm';
@@ -236,12 +241,19 @@ public class CSVLoader {
                     gender = 'u';
                 }
 
-                trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,
+                // Other stuff
+                //int StartStationId = Integer.parseInt(record.get(3));
+                long tripDuration = new Long(record.get(0).trim());
+                Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(6)), Float.parseFloat(record.get(5)));
+                Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(10)), Float.parseFloat(record.get(9)));
+
+                trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,// startStationId, endStationId,
                         endPoint, bikeId, gender, birthYear, false));
 
                 isValidCsv = true;
             } catch (Exception e) {
-                // Some error processing the line - it's either a header field or the csv is invalid.
+                System.out.println("Error processing: " + record.toString());
+                // Some error processing the line - it's either a header field or the CSV is invalid.
                 // If this occurs for all lines in the CSV, a CsvParserException is thrown.
             }
         }
@@ -315,6 +327,9 @@ public class CSVLoader {
 
                 String name = record.get(5);
                 String location = record.get(6);
+                if (location.isEmpty()) {
+                    location = null;
+                }
                 String locationType = record.get(11);
                 String hood = record.get(20);
                 String borough = record.get(18);
@@ -330,6 +345,7 @@ public class CSVLoader {
 
                 isValidCsv = true;
             } catch (Exception e) {
+                System.out.println("Error processing: " + record.toString());
                 // Some error processing the line - it's either a header field or the csv is invalid.
                 // If this occurs for all lines in the CSV, a CsvParserException is thrown.
             }
@@ -394,16 +410,36 @@ public class CSVLoader {
         for (CSVRecord record : retailerData) {
             // Process all the attributes - from most to least likely to fail
             try {
-                int zipcode = Integer.parseInt(record.get(5));
+                // Check if a header
+                if (record.get(0).equals("CnBio_Org_Name")) {
+                    // Throw an exception to be caught by the try-catch block
+                    throw new Exception("Header row");
+                }
+
+                // ZIP code
+                String zipcodeString = record.get(5);
+                int zipcode;
+                if (zipcodeString.isEmpty()) {
+                    // No ZIP code
+                    zipcode = -1;
+                } else {
+                    zipcode = Integer.parseInt(record.get(5));
+                }
 
                 // Try to get coords
                 Point.Float coords = new Point.Float();
                 try {
                     coords.y = Float.parseFloat(record.get(9)); //latitude
                     coords.x = Float.parseFloat(record.get(10)); //longitude
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    //no such column as latitude/longitude
-                    coords = null;
+                } catch (Exception e) {
+                    //Now try in cols 10 and 11
+                    try {
+                        coords.y = Float.parseFloat(record.get(10)); //latitude
+                        coords.x = Float.parseFloat(record.get(11)); //longitude
+                    } catch (Exception e2) {
+                        // Couldn't get the coords for whatever reason. Set them to null.
+                        coords = null;
+                    }
                 }
 
                 // Get secondary function
@@ -428,6 +464,7 @@ public class CSVLoader {
 
                 isValidCsv = true;
             } catch (Exception e) {
+                System.out.println("Error processing: " + record.toString());
                 // Some error processing the line - it's either a header field or the csv is invalid.
                 // If this occurs for all lines in the CSV, a CsvParserException is thrown.
             }

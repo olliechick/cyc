@@ -155,17 +155,17 @@ public class DataAnalyserTest {
         }
         ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers(RES_DIR + "Lower_Manhattan_Retailers.csv");
         int result = DataAnalyser.findClosestRetailerToBikeTrip(waypoints, retailers);
-        assertEquals(90, result);
+        assertEquals(763, result);
 
     }
 
     @Test
-    public void TestFindClosesRetailerToWifi() throws Exception {
+    public void TestFindClosestRetailerToWifi() throws Exception {
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots(RES_DIR + "testWifi.csv");
         WifiPoint hotspot = hotspots.get(0);
         ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers(RES_DIR + "Lower_Manhattan_Retailers.csv");
         int result = DataAnalyser.findClosestRetailerToWifiPoint(hotspot, retailers);
-        assertEquals(543, result);
+        assertEquals(565, result);
 
     }
 
@@ -195,18 +195,18 @@ public class DataAnalyserTest {
     @Test
     public void TestSortRetailerByDistanceFromPoint() throws Exception {
         ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers(RES_DIR + "Lower_Manhattan_Retailers.csv");
-        ArrayList<RetailerLocation> orignalList = CSVLoader.populateRetailers(RES_DIR + "Lower_Manhattan_Retailers.csv");
+        ArrayList<RetailerLocation> originalList = CSVLoader.populateRetailers(RES_DIR + "Lower_Manhattan_Retailers.csv");
         for (int i = retailers.size() - 1; i > 4; i--) { // cut the list to a more manageable size backwards for efficiency
             retailers.remove(i);
-            orignalList.remove(i);
+            originalList.remove(i);
         }
         Point.Float testPoint = new Point2D.Float((float) -73.96753849952732, (float) 40.76045675959568);
         DataAnalyser.sortRetailerByDistanceFromPoint(retailers, testPoint);
-        assertEquals(retailers.get(0), orignalList.get(4));
-        assertEquals(retailers.get(1), orignalList.get(2));
-        assertEquals(retailers.get(2), orignalList.get(3));
-        assertEquals(retailers.get(3), orignalList.get(1));
-        assertEquals(retailers.get(4), orignalList.get(0));
+        assertEquals(retailers.get(0), originalList.get(4));
+        assertEquals(retailers.get(1), originalList.get(2));
+        assertEquals(retailers.get(2), originalList.get(3));
+        assertEquals(retailers.get(3), originalList.get(1));
+        assertEquals(retailers.get(4), originalList.get(0));
 
     }
 }

@@ -2,21 +2,30 @@ package seng202.team1.Controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import seng202.team1.Model.WifiPoint;
 
+
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+
+import static seng202.team1.Controller.MapController.getUserClicks;
 
 
 /**
@@ -73,7 +82,7 @@ public class AddWifiDialogController {
     private Label costLabel;
 
     @FXML
-    private TextField remarksField;
+    private TextArea remarksField;
 
     @FXML
     private Label longLabel;
@@ -101,6 +110,12 @@ public class AddWifiDialogController {
     private int zip;
     private String hood;
     private String provider;
+    private int objectId = -1;
+    private String placeName = "Unknown";
+    private String locationType = "Unknown";
+    private String city = "New York";
+    private String sourceId = "Unknown";
+    private LocalDateTime dateTimeActivated;
 
     private WifiPoint wifiPoint;
 
@@ -122,6 +137,70 @@ public class AddWifiDialogController {
 
         costComboBox.setItems(costs);
         costComboBox.getSelectionModel().selectFirst();
+
+
+        ArrayList<Point.Double> userClicks = getUserClicks();
+        if (!userClicks.isEmpty()) {
+            // User has clicked
+            Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
+            latField.setText(Double.toString(lastPoint.getX()));
+            longField.setText(Double.toString(lastPoint.getY()));
+        }
+
+        root.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ENTER) {
+                    checkFields();
+                    if (!addButton.isDisabled()) {
+                        addWifi();
+                    }
+                } else if (event.getCode() == KeyCode.ESCAPE) {
+                    stage1.close();
+                }
+            }
+        });
+
+    }
+
+    void setDialog(Stage stage1, Parent root, WifiPoint wifiPoint) {
+        setDialog(stage1, root);
+
+        objectId = wifiPoint.getObjectId();
+        placeName = wifiPoint.getPlaceName();
+        locationType = wifiPoint.getLocationType();
+        city = wifiPoint.getCity();
+        sourceId = wifiPoint.getSourceId();
+        dateTimeActivated = wifiPoint.getDatetimeActivated();
+
+        //coords, ssid
+        ssidField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(wifiPoint.getSsid()));
+        }));
+
+        latField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(String.valueOf(wifiPoint.getLatitude())));
+        }));
+
+        longField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            addButton.setDisable(newValue.equals(String.valueOf(wifiPoint.getLongitude())));
+        }));
+
+        ssidField.setText(wifiPoint.getSsid());
+        streetField.setText(wifiPoint.getLocation());
+        zipField.setText(String.valueOf(wifiPoint.getZipcode()));
+        hoodField.setText(wifiPoint.getHood());
+        boroComboBox.getSelectionModel().select(wifiPoint.getBorough());
+        latField.setText(String.valueOf(wifiPoint.getLatitude()));
+        longField.setText(String.valueOf(wifiPoint.getLongitude()));
+        provField.setText(wifiPoint.getProvider());
+        costComboBox.getSelectionModel().select(wifiPoint.getCost());
+        if (wifiPoint.getRemarks() != null) {
+            remarksField.setText(wifiPoint.getRemarks());
+        }
+
+        addButton.setText("Save");
+        stage.setTitle("Edit Wifi Point");
     }
 
     /**
@@ -131,12 +210,8 @@ public class AddWifiDialogController {
     @FXML
     void addWifi() {
         if (checkFields()) {
-            int objectId = -1;
             Point.Float coords = new Point.Float(latitude, longitude);
-            String placeName = "Unknown";
-            String locationType = "Unknown";
             String boro = boroComboBox.getValue();
-            String city = "New York";
             String cost = costComboBox.getValue();
             String remarks;
 
@@ -146,8 +221,9 @@ public class AddWifiDialogController {
                 remarks = remarksField.getText();
             }
 
-            String sourceId = "Unknown";
-            LocalDateTime dateTimeActivated = LocalDateTime.now();
+            if (dateTimeActivated == null) {
+                dateTimeActivated = LocalDateTime.now();
+            }
 
 
             wifiPoint = new WifiPoint(objectId, coords, placeName, street, locationType, hood, boro, city, zip, cost, provider, remarks, ssid, sourceId, dateTimeActivated, true);

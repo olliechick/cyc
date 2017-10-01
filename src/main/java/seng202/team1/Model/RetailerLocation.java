@@ -4,6 +4,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.awt.*;
 
+import static org.apache.commons.lang3.StringEscapeUtils.escapeEcmaScript;
+
 /**
  * Class for the retailer locations. Has a single constructor that sets the values for the points.
  * All methods are getters and setters.
@@ -24,6 +26,21 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     private Point.Float coords;
     private Double distanceFrom; // stores the distance from point
 
+    /**
+     * Constructor for RetailerLocation
+     *
+     * @param name               Name of retailer
+     * @param addressLine1       First line of address
+     * @param addressLine2       Pre-line of address (e.g. Floor 2)
+     * @param city               City retailer is in
+     * @param state              State retailer is in
+     * @param zipcode            ZIP code retailer is in
+     * @param blockLot           block-lot of retailer
+     * @param primaryFunction    primary function of retailer
+     * @param secondaryFunction  secondary function of retailer
+     * @param coords             co-ordinates of retailer in the form (longitude, latitude)
+     * @param isUserDefinedPoint true if the retailer is user-defined
+     */
     public RetailerLocation(String name, String addressLine1, String addressLine2,
                             String city, String state, int zipcode, String blockLot, String primaryFunction,
                             String secondaryFunction, Point.Float coords, boolean isUserDefinedPoint) {
@@ -45,28 +62,29 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
         this.state = state;
         this.zipcode = zipcode;
         this.blockLot = blockLot;
-        this.primaryFunction = primaryFunction;
-        this.secondaryFunction = secondaryFunction;
         this.coords = coords;
         this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
     /**
-     * Overloaded constructor without coords.
+     * Constructor for RetailerLocation without co-ordinates.
+     *
+     * @param name               Name of retailer
+     * @param addressLine1       First line of address
+     * @param addressLine2       Pre-line of address (e.g. Floor 2)
+     * @param city               City retailer is in
+     * @param state              State retailer is in
+     * @param zipcode            ZIP code retailer is in
+     * @param blockLot           block-lot of retailer
+     * @param primaryFunction    primary function of retailer
+     * @param secondaryFunction  secondary function of retailer
+     * @param isUserDefinedPoint true if the retailer is user-defined
      */
     public RetailerLocation(String name, String addressLine1, String addressLine2, String city, String state,
                             int zipcode, String blockLot, String primaryFunction, String secondaryFunction,
                             boolean isUserDefinedPoint) {
-        this.name = name;
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
-        this.city = city;
-        this.state = state;
-        this.zipcode = zipcode;
-        this.blockLot = blockLot;
-        this.primaryFunction = primaryFunction;
-        this.secondaryFunction = secondaryFunction;
-        this.isUserDefinedPoint = isUserDefinedPoint;
+        this(name, addressLine1, addressLine2, city, state, zipcode, blockLot,
+                primaryFunction, secondaryFunction, null, isUserDefinedPoint);
     }
 
     public String getName() {
@@ -165,35 +183,6 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
         this.distanceFrom = distanceFrom;
     }
 
-    /**
-     * Returns the full address of the retailer.
-     *
-     * @return retailer's address
-     */
-    public String getAddress() {
-
-        String address; //address to return
-
-        // Check if the address has a line 2
-        if (addressLine2.isEmpty()) {
-            address = addressLine1 + ", " + city + ", " + state + " " + zipcode;
-        } else {
-            address = addressLine2 + ", " + addressLine1 + ", " + city + ", " + state + " " + zipcode;
-        }
-
-        return address;
-    }
-
-    /**
-     * Returns a description of the retailer.
-     *
-     * @return description of retailer
-     */
-    public String getDescription() {
-
-        return String.format("Address: %s\nFunction: %s (%s)", getAddress(), primaryFunction, secondaryFunction);
-    }
-
     public float getLongitude() {
         return coords.x;
     }
@@ -208,6 +197,66 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
 
     public void setLatitude(float latitude) {
         this.coords.y = latitude;
+    }
+
+
+    /**
+     * Returns the full address of the retailer.
+     *
+     * @return retailer's address
+     */
+    public String getAddress() {
+
+        String address = ""; //address to return
+
+        // Check if the address has a line 2
+        if (!addressLine2.isEmpty()) {
+            //There is a preline
+            address += addressLine2 + ", ";
+        }
+        if (!addressLine1.isEmpty()) {
+            //There is a main line
+            address += addressLine1 + ", ";
+        }
+        address += city + ", " + state;
+        if (zipcode != -1) {
+            address += " " + zipcode;
+        }
+
+        return address;
+    }
+
+
+    /**
+     * Returns a description of the retailer.
+     *
+     * @return description of retailer
+     */
+    public String getDescription() {
+
+        String description = "Address: " + getAddress();
+        description += "\nBlock-Lot: " + blockLot;
+        description += "\nCo-ordinates: (" + getLatitude() + ", " + getLongitude() + ")";
+        description += "\nFunction: " + primaryFunction + " (" + secondaryFunction + ")";
+
+        return description;
+    }
+
+
+    public void setAllProperties(RetailerLocation newRetailerProperties) {
+
+        this.name = newRetailerProperties.getName();
+        this.addressLine1 = newRetailerProperties.getAddressLine1();
+        this.addressLine2 = newRetailerProperties.getAddressLine2();
+        this.city = newRetailerProperties.getCity();
+        this.state = newRetailerProperties.getState();
+        this.zipcode = newRetailerProperties.getZipcode();
+        this.blockLot = newRetailerProperties.getBlockLot();
+        this.primaryFunction = newRetailerProperties.getPrimaryFunction();
+        this.secondaryFunction = newRetailerProperties.getSecondaryFunction();
+        this.coords = newRetailerProperties.getCoords();
+        this.distanceFrom = newRetailerProperties.getDistanceFrom();
+
     }
 
     @Override
@@ -247,9 +296,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     }
 
     public String toInfoString() {
-        return "Name: " + name + "\\n" +
-                "Type: " + primaryFunction + "\\n" +
-                "Subtype: " + secondaryFunction + "\\n";
+        return escapeEcmaScript(getDescription());
 
 
     }

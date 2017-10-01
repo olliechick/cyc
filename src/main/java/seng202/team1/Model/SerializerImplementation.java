@@ -23,7 +23,7 @@ public final class SerializerImplementation {
     public static void serializeUser(UserAccountModel user) {
         try {
             String userPath = Directory.USERS.directory() + user.getUserName() + USER_EXT;
-            System.out.println("fileOut: " + userPath);
+            System.out.println("Saving to file: " + userPath);
             FileOutputStream fileOut = new FileOutputStream(userPath);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(user);

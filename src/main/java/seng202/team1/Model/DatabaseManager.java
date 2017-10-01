@@ -1,11 +1,6 @@
 package seng202.team1.Model;
 
 
-import seng202.team1.Model.BikeTrip;
-import seng202.team1.Model.DataPoint;
-import seng202.team1.Model.RetailerLocation;
-import seng202.team1.Model.WifiPoint;
-
 import java.awt.*;
 import java.io.File;
 import java.sql.*;
@@ -276,8 +271,8 @@ public class DatabaseManager {
         statement.setFloat(6, trip.getEndLatitude());
         statement.setFloat(7, trip.getEndLongitude());
         statement.setInt(8, trip.getBikeId());
-        statement.setInt(9, trip.getStartStationId());
-        statement.setInt(10, trip.getEndStationId());
+        //statement.setInt(9, trip.getStartStationId());
+        //statement.setInt(10, trip.getEndStationId());
         statement.setString(11, Character.toString(trip.getGender()));
         statement.setInt(12, trip.getBirthYear());
         statement.setDouble(13, trip.getTripDistance());
@@ -397,7 +392,7 @@ public class DatabaseManager {
 
 
                 BikeTrip trip = new BikeTrip(duration, startTime, stopTime, startPoint, stopPoint,
-                        startStationId, endStationId, bikeID, gender,
+                        /*startStationId, endStationId, */bikeID, gender,
                         birthYear, tripDistance, isUserDefined);
 
                 result.add(trip);

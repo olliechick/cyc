@@ -6,6 +6,8 @@ import java.awt.Point;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static org.apache.commons.lang3.StringEscapeUtils.escapeEcmaScript;
+
 /***
  * Class for type of Wifi Points. Has a single constructor which sets all the values of the point.
  * CSV files contain more points but these are the important ones for the app.
@@ -32,6 +34,26 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
     private LocalDateTime datetimeActivated;
     private Double distanceFrom; // variable used for sorting the distance from a point
 
+    /**
+     * Constructor for WifiPoint
+     *
+     * @param objectId           ID of object
+     * @param coords             co-ordinates of WiFi
+     * @param placeName          name of the place where the WiFi is - e.g. Wingate Park
+     * @param location           location of WiFi, usually an address
+     * @param locationType       type of location - e.g. Outdoor Kiosk
+     * @param hood               neighbourhood where WiFi is - e.g. Chinatown
+     * @param borough            borough where WiFi is
+     * @param city               city where WiFi is
+     * @param zipcode            ZIP code of where WiFi is
+     * @param cost               cost of WiFi (Free, Limited Free, or Partner Site)
+     * @param provider           provider of WiFi
+     * @param remarks            any remarks about the WiFi
+     * @param ssid               SSID of WiFi - this is the "name" of the WiFi a user sees on their device
+     * @param sourceId           Source ID of WiFi
+     * @param datetimeActivated  date and time the WiFi was activated
+     * @param isUserDefinedPoint true if the WiFi point is user-defined
+     */
     public WifiPoint(int objectId, Point.Float coords, String placeName, String location, String locationType, String hood,
                      String borough, String city, int zipcode, String cost, String provider, String remarks, String ssid,
                      String sourceId, LocalDateTime datetimeActivated, boolean isUserDefinedPoint) {
@@ -47,7 +69,6 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
         this.provider = provider;
         this.city = city;
         this.zipcode = zipcode;
-        this.cost = cost;
         this.remarks = remarks;
         this.ssid = ssid;
         this.sourceId = sourceId;
@@ -201,41 +222,95 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
 
     /**
      * Returns the name of the WiFi point (SSID chosen as this is what will appear on the user's device
-     * for them to connect to).
+     * for them to connect to). If the point is user defined, this will be appended by " (user-defined)".
      */
     public String getName() {
-        return ssid;
+        String name = ssid;
+        if (isUserDefinedPoint) {
+            name += " (user-defined)";
+        }
+        return name;
     }
 
 
     /**
-     * Returns a description of the WiFi point.
+     * @return description of the WiFi point.
      */
     public String getDescription() {
-        //TODO make a more robust description that checks if each value is null
-        String description;
-        if (datetimeActivated == null) {
-            description = String.format("Location: %s (%s) - %s, %s, %s, %s %d (%f, %f)\nCost: %s\n" +
-                            "Provider: %s\nSSID: %s\nSourceID: %s\nID: %d",
-                    location, locationType, placeName, hood, borough,
-                    city, zipcode, getLatitude(), getLongitude(), cost, provider, ssid, sourceId,
-                    objectId);
+        String description = "Location:";
+
+        //First bit of location
+        if (location != null && !location.isEmpty()) {
+            // Location is defined
+            description += " " + location;
+            if (locationType != null && !locationType.isEmpty()) {
+                //Location type is defined
+                description += " (" + locationType + ") -";
+            } else {
+                // Location type is empty
+                description += " -";
+            }
         } else {
-
-            description = String.format("Location: %s (%s) - %s, %s, %s, %s %d (%f, %f)\nCost: %s\n" +
-                            "Provider: %s\nSSID: %s\nSourceID: %s\nActivated: %s\nID: %d",
-                    location, locationType, placeName, hood, borough,
-                    city, zipcode, getLatitude(), getLongitude(), cost, provider, ssid, sourceId,
-                    datetimeActivated.format(DateTimeFormatter.ofPattern("h:mm:ss a d/M/yyyy")),
-                    objectId);
-
+            // Location is empty
+            if (location != null && !locationType.isEmpty()) {
+                // Location type is defined
+                description += " " + locationType + " -";
+            }
         }
+
+        // Second bit of location
+        if (placeName != null && !placeName.isEmpty()) {
+            description += " " + placeName + ",";
+        }
+        description += " " + hood + ", " + borough + ", " + city + " " + zipcode;
+        description += "\nCoordinates: (" + getLatitude() + ", " + getLongitude() + ")";
+
+        // The rest of description
+        if (provider != null && !provider.isEmpty()) {
+            description += "\nProvider: " + provider;
+        }
+        description += "\nCost: " + cost;
+        if (sourceId != null && !sourceId.isEmpty()) {
+            description += "\nSource ID: " + sourceId;
+        }
+        if (datetimeActivated != null) {
+            String activatedString = "\nActivated: " + datetimeActivated.format(DateTimeFormatter.ofPattern("h:mm:ss a d/M/yyyy"));
+            description += activatedString.replace("AM", "am").replace("PM", "pm");
+        }
+        if (objectId != -1) {
+            description += "\nID: " + objectId;
+        }
+        if (remarks != null && !remarks.isEmpty()) {
+            description += "\nRemarks: " + remarks;
+        }
+
         return description;
+    }
+
+    public void setAllProperties(WifiPoint wifiPoint) {
+        this.objectId = wifiPoint.getObjectId();
+        this.coords = wifiPoint.getCoords();
+        this.placeName = wifiPoint.getPlaceName();
+        this.location = wifiPoint.getLocation();
+        this.locationType = wifiPoint.getLocationType();
+        this.hood = wifiPoint.getHood();
+        this.borough = wifiPoint.getBorough();
+        this.cost = wifiPoint.getCost();
+        this.location = wifiPoint.getLocation();
+        this.provider = wifiPoint.getProvider();
+        this.city = wifiPoint.getCity();
+        this.zipcode = wifiPoint.getZipcode();
+        this.cost = wifiPoint.getCost();
+        this.remarks = wifiPoint.getRemarks();
+        this.ssid = wifiPoint.getSsid();
+        this.sourceId = wifiPoint.getSourceId();
+        this.datetimeActivated = wifiPoint.getDatetimeActivated();
+        this.isUserDefinedPoint = true;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         if (this == obj) {
@@ -253,7 +328,6 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
                 toHashCode();
 
     }
-
 
     @Override
     public String toString() {
@@ -273,11 +347,13 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
                 ", ssid='" + ssid + '\'' +
                 ", sourceId='" + sourceId + '\'' +
                 ", datetimeActivated=" + datetimeActivated +
+                ", distanceFrom=" + distanceFrom +
+                ", isUserDefinedPoint=" + isUserDefinedPoint +
                 '}';
     }
 
     public String toInfoString() {
-        return getDescription().replace("\n", "\\n");
+        return escapeEcmaScript(getDescription());
 
     }
 }

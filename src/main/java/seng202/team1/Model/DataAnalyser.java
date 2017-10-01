@@ -1,14 +1,8 @@
 package seng202.team1.Model;
 
-import seng202.team1.Model.BikeTrip;
-import seng202.team1.Model.RetailerLocation;
-import seng202.team1.Model.WifiPoint;
-
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 /**
  * Static class that handles all of the data analysis required.
@@ -97,6 +91,84 @@ public final class DataAnalyser {
                 results.add(hotspot);
             }
         }
+        return results;
+    }
+
+    public static ArrayList<Integer> searchRetailerLocationsOnRoute(ArrayList<Point2D.Float> waypoints, ArrayList<RetailerLocation> locations, double delta){
+        Set<Integer> uniqueIndexes = new HashSet<>(locations.size());
+        ArrayList<Integer> indexes = new ArrayList<>();
+        ArrayList<Integer> indexesCurrent;
+        Double searchLat;
+        Double searchLong;
+        for (Point.Float waypoint : waypoints) {
+            searchLat = waypoint.getY();
+            searchLong = waypoint.getX();
+            indexesCurrent = searchRetailerLocations(searchLat, searchLong, delta, locations, true);
+            //System.out.println(indexesCurrent);
+            uniqueIndexes.addAll(indexesCurrent);
+            //System.out.println(uniqueIndexes);
+        }
+        indexes.addAll(uniqueIndexes);
+        //System.out.print(indexes);
+        return indexes;
+    }
+
+
+
+    public static ArrayList<Integer> searchWifiPointsOnRoute(ArrayList<Point2D.Float> waypoints, ArrayList<WifiPoint> hotspots, double delta){
+        Set<Integer> uniqueIndexes = new HashSet<>(hotspots.size());
+        ArrayList<Integer> indexes = new ArrayList<>();
+        ArrayList<Integer> indexesCurrent;
+        Double searchLat;
+        Double searchLong;
+        for (Point.Float waypoint : waypoints) {
+            searchLat = waypoint.getY();
+            searchLong = waypoint.getX();
+            indexesCurrent = searchWifiPoints(searchLat, searchLong, delta, hotspots, true);
+            //System.out.println(indexesCurrent);
+            uniqueIndexes.addAll(indexesCurrent);
+            //System.out.println(uniqueIndexes);
+        }
+        indexes.addAll(uniqueIndexes);
+        //System.out.print(indexes);
+        return indexes;
+    }
+
+
+    public static ArrayList<Integer> searchWifiPoints(double searchLat, double searchLong,
+                                                        double delta, ArrayList<WifiPoint> hotspots, boolean returnIndex) {
+        ArrayList<Integer> results = new ArrayList<>();
+        WifiPoint point;
+        for (int i = 0; i < hotspots.size(); i++) {
+            point = hotspots.get(i);
+            // Unfortunately an 0(n) with the current data set.
+            // Perhaps we need to sort based on Lat and long to decrease time complexity
+            double spotLong = point.getLongitude();
+            double spotLat = point.getLatitude();
+            if (calculateDistance(searchLat, searchLong, spotLat, spotLong) < delta) {
+                results.add(i);
+            }
+        }
+
+            return results;
+        }
+
+
+    public static ArrayList<Integer> searchRetailerLocations(double searchLat, double searchLong,
+                                                      double delta, ArrayList<RetailerLocation> retailers, boolean returnIndex) {
+        ArrayList<Integer> results = new ArrayList<>();
+        RetailerLocation location;
+        for (int i = 0; i < retailers.size(); i++) {
+            location = retailers.get(i);
+            // Unfortunately an 0(n) with the current data set.
+            // Perhaps we need to sort based on Lat and long to decrease time complexity
+            double spotLong = location.getLongitude();
+            double spotLat = location.getLatitude();
+            if (calculateDistance(searchLat, searchLong, spotLat, spotLong) < delta) {
+                results.add(i);
+            }
+        }
+
         return results;
     }
 
@@ -276,7 +348,6 @@ public final class DataAnalyser {
      * @param toSort ArrayList of bike trips to be sorted
      */
     public static void sortTripsByDistance(ArrayList<BikeTrip> toSort) {
-        System.out.println(toSort.size() + " sort " + toSort);
         Collections.sort(toSort, new Comparator<BikeTrip>() {
             @Override
             public int compare(BikeTrip o1, BikeTrip o2) {
@@ -357,6 +428,25 @@ public final class DataAnalyser {
 
         for (WifiPoint hotspot : hotspots) {
             testDistance = calculateDistance(hotspot.getLatitude(), hotspot.getLongitude(), retailer.getLatitude(), retailer.getLongitude());
+            if (testDistance < distance) {
+                distance = testDistance;
+                index = i;
+            }
+            i++;
+        }
+
+        return index;
+    }
+
+// TODO
+    public static int findClosestWifiPointToRetailer(ArrayList<WifiPoint> hotspots, Float latitude, Float longitude) {
+        int index = -1;
+        double distance = 1000000000;
+        double testDistance;
+        int i = 0;
+
+        for (WifiPoint hotspot : hotspots) {
+            testDistance = calculateDistance(hotspot.getLatitude(), hotspot.getLongitude(), latitude, longitude);
             if (testDistance < distance) {
                 distance = testDistance;
                 index = i;

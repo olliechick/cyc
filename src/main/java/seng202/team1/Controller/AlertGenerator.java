@@ -1,5 +1,6 @@
 package seng202.team1.Controller;
 
+import javafx.scene.control.Alert;
 import javafx.scene.layout.Region;
 
 /**
@@ -17,7 +18,7 @@ public class AlertGenerator {
      * @param content the contents of the popup
      */
     public static void createAlert(String title, String content) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);

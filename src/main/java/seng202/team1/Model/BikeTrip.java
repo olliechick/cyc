@@ -27,12 +27,10 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
     private LocalDateTime stopTime;
     private Point.Float startPoint;
     private Point.Float endPoint;
-    private int startStationId;
-    private int endStationId;
     private int bikeId;
     private char gender; //u for unknown, m for male, f for female
     private int birthYear;
-    private Double tripDistance; //TODO units?
+    private Double tripDistance; //in metres
     private boolean isUserDefinedPoint;
 
 
@@ -44,65 +42,51 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
      * @param stopTime           datetime the bike trip ended
      * @param startPoint         co-ordinates of the bike trip's origin
      * @param endPoint           co-ordinates of the bike trip's terminus
-     * @param startStationId     station ID of the start point. Null if didn't start at a station
-     * @param endStationId       station ID of the end point. Null if didn't end at a station
      * @param bikeId             the ID of the bike
      * @param gender             the gender of the bike's rider (m, f, or u)
      * @param birthYear          the year of birth of the rider
-     * @param isUserDefinedPoint whether the point is user-defined or loaded from file
+     * @param isUserDefinedPoint true if the point is user-defined or loaded from file
      */
     public BikeTrip(long tripDuration, LocalDateTime startTime, LocalDateTime stopTime,
-                    Point.Float startPoint, Point.Float endPoint, int startStationId,
-                    int endStationId, int bikeId, char gender, int birthYear, Double tripDistance,
+                    Point.Float startPoint, Point.Float endPoint, int bikeId, char gender,
+                    int birthYear, Double tripDistance,
                     boolean isUserDefinedPoint) {
         this.tripDuration = tripDuration;
         this.startTime = startTime;
         this.stopTime = stopTime;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
-        this.startStationId = startStationId;
-        this.endStationId = endStationId;
         this.bikeId = bikeId;
         this.gender = gender;
         this.birthYear = birthYear;
+        this.tripDistance = tripDistance;
         this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
 
     /**
-     * Constructor for a bike trip that calculates tripDuration.
+     * Constructor for a bike trip that calculates trip duration.
      *
      * @param startTime          datetime the bike trip started
      * @param stopTime           datetime the bike trip ended
      * @param startPoint         co-ordinates of the bike trip's origin
      * @param endPoint           co-ordinates of the bike trip's terminus
-     * @param startStationId     station ID of the start point. -1 flag if didn't start at a station
-     * @param endStationId       station ID of the end point. -1 flag if didn't end at a station
      * @param bikeId             the ID of the bike
      * @param gender             the gender of the bike's rider (m, f, or u)
      * @param birthYear          the year of birth of the rider
-     * @param isUserDefinedPoint whether the point is user-defined or loaded from file
+     * @param isUserDefinedPoint true if the point is user-defined
      */
     public BikeTrip(LocalDateTime startTime, LocalDateTime stopTime,
-                    Point.Float startPoint, Point.Float endPoint, int startStationId,
-                    int endStationId, int bikeId, char gender, int birthYear, Double tripDistance,
-                    boolean isUserDefinedPoint) {
+                    Point.Float startPoint, Point.Float endPoint, int bikeId, char gender,
+                    int birthYear, Double tripDistance, boolean isUserDefinedPoint) {
+        this(0, startTime, stopTime, startPoint, endPoint, bikeId, gender, birthYear,
+                tripDistance, isUserDefinedPoint);
         this.tripDuration = Duration.between(startTime, stopTime).getSeconds();
-        this.startTime = startTime;
-        this.stopTime = stopTime;
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
-        this.startStationId = startStationId;
-        this.endStationId = endStationId;
-        this.bikeId = bikeId;
-        this.gender = gender;
-        this.birthYear = birthYear;
-        this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
 
     /**
-     * Grandfathered-in constructor for a bike trip. Start and end station IDs are set to -1 flag.
+     * Constructor for a bike trip that calculates trip distance.
      *
      * @param tripDuration       duration (in seconds) of the bike trip
      * @param startTime          datetime the bike trip started
@@ -112,30 +96,20 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
      * @param bikeId             the ID of the bike
      * @param gender             the gender of the bike's rider (m, f, or u)
      * @param birthYear          the year of birth of the rider
-     * @param isUserDefinedPoint whether the point is user-defined or loaded from file
+     * @param isUserDefinedPoint true if the point is user-defined
      */
     public BikeTrip(long tripDuration, LocalDateTime startTime, LocalDateTime stopTime,
                     Point.Float startPoint, Point.Float endPoint, int bikeId, char gender,
                     int birthYear, boolean isUserDefinedPoint) {
-        this.tripDuration = tripDuration;
-        this.startTime = startTime;
-        this.stopTime = stopTime;
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
-        this.startStationId = -1;
-        this.endStationId = -1;
-        this.bikeId = bikeId;
-        this.gender = gender;
-        this.birthYear = birthYear;
+        this(tripDuration, startTime, stopTime, startPoint, endPoint, bikeId, gender, birthYear,
+                0.0, isUserDefinedPoint);
         this.tripDistance = DataAnalyser.calculateDistance(startPoint.getX(), startPoint.getY(),
                 endPoint.getX(), endPoint.getY());
-        this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
 
     /**
-     * Grandfathered-in constructor for a bike trip that calculates trip duration.
-     * Start and end station IDs are set to -1 flag.
+     * Constructor for a bike trip that calculates trip duration and distance.
      *
      * @param startTime          datetime the bike trip started
      * @param stopTime           datetime the bike trip ended
@@ -144,24 +118,16 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
      * @param bikeId             the ID of the bike
      * @param gender             the gender of the bike's rider (m, f, or u)
      * @param birthYear          the year of birth of the rider
-     * @param isUserDefinedPoint whether the point is user-defined or loaded from file
+     * @param isUserDefinedPoint true if the point is user-defined
      */
     public BikeTrip(LocalDateTime startTime, LocalDateTime stopTime,
                     Point.Float startPoint, Point.Float endPoint, int bikeId, char gender,
                     int birthYear, boolean isUserDefinedPoint) {
+        this(0, startTime, stopTime, startPoint, endPoint, bikeId, gender, birthYear,
+                0.0, isUserDefinedPoint);
         this.tripDuration = Duration.between(startTime, stopTime).getSeconds();
-        this.startTime = startTime;
-        this.stopTime = stopTime;
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
-        this.startStationId = -1;
-        this.endStationId = -1;
-        this.bikeId = bikeId;
-        this.gender = gender;
-        this.birthYear = birthYear;
         this.tripDistance = DataAnalyser.calculateDistance(startPoint.getX(), startPoint.getY(),
                 endPoint.getX(), endPoint.getY());
-        this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
 
@@ -271,28 +237,15 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
         return tripDistance;
     }
 
+    /**
+     * @return trip distance to decimal places
+     */
     public Double getTripDistanceTwoD() {
         return Double.parseDouble(new DecimalFormat("#.##").format(tripDistance));
     }
 
     public void setTripDistance(Double tripDistance) {
         this.tripDistance = tripDistance;
-    }
-
-    public int getStartStationId() {
-        return startStationId;
-    }
-
-    public void setStartStationId(int startStationId) {
-        this.startStationId = startStationId;
-    }
-
-    public int getEndStationId() {
-        return endStationId;
-    }
-
-    public void setEndStationId(int endStationId) {
-        this.endStationId = endStationId;
     }
 
 
@@ -302,10 +255,10 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
      * This means that a trip that took 1 day, 23 hours, 59 minutes, 59 seconds will be "1 day".
      * E.g. "20 minutes", "3 days" (without the quotes).
      *
-     * @return the contextual duration as a string
+     * @return the contextual duration of the trip
      */
-    public String getDuration() {
-        String duration;
+    public ContextualLength getDuration() {
+        String durationString;
 
         // first find the unit of time and how many of those units
         String unit;
@@ -324,14 +277,48 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
             unitCount = tripDuration / (60 * 60 * 24);
         }
 
-        duration = unitCount + " " + unit;
+        durationString = unitCount + " " + unit;
 
         // then check if it's plural
         if (unitCount != 1) {
-            duration += "s";
+            durationString += "s";
         }
 
-        return duration;
+        return new ContextualLength(tripDuration, durationString);
+    }
+
+
+    /**
+     * Returns the distance of the trip, contextualised.
+     * Either in m (meters) or km (kilometres). Rounded to the nearest 3 digits of precision.
+     * E.g. "236 m", "73.7 km" (without the quotes).
+     * Currently coded for trips 1m - 999km.
+     * @return the contextualised distance of the trip
+     */
+    public ContextualLength getDistance() {
+        String distanceString;
+
+        if (tripDistance < 10) {
+            //single digit metres (and below)
+            distanceString = Double.parseDouble(new DecimalFormat("#.##").format(tripDistance)) + " m";
+        } else if (tripDistance < 100) {
+            //double digit metres
+            distanceString = Double.parseDouble(new DecimalFormat("##.#").format(tripDistance)) + " m";
+        } else if (tripDistance < 1e3) {
+            //three digit metres
+            distanceString = Math.round(tripDistance) + " m";
+        } else if (tripDistance < 1e4) {
+            //single digit km
+            distanceString = Double.parseDouble(new DecimalFormat("#.##").format(tripDistance/1e3)) + " km";
+        } else if (tripDistance < 1e5) {
+            //double digit km
+            distanceString = Double.parseDouble(new DecimalFormat("##.#").format(tripDistance/1e3)) + " km";
+        } else {
+            //triple digit km (and above)
+            distanceString = Math.round(tripDistance/1e3) + " km";
+        }
+
+        return new ContextualLength(tripDistance, distanceString);
     }
 
 
@@ -363,7 +350,11 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
     public String getName() {
         String start = startTime.format(DateTimeFormatter.ofPattern(DT_FORMAT))
                 .replace("AM", "am").replace("PM", "pm");
-        return String.format("Trip at %s", start);
+        if (isUserDefinedPoint) {
+            return "User-defined trip at " + start;
+        } else {
+            return "Trip at " + start;
+        }
     }
 
 
@@ -371,10 +362,11 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
      * @return description of the bike trip.
      */
     public String getDescription() {
+        // Start
         String start = startTime.format(DateTimeFormatter.ofPattern(DT_FORMAT))
                 .replace("AM", "am").replace("PM", "pm");
 
-        // end: check if including the date (or year) is necessary
+        // End: check if including the date (or year) is necessary
         String end;
         if (startTime.getYear() != stopTime.getYear()) {
             // different years
@@ -388,9 +380,52 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
         }
         end = end.replace("AM", "am").replace("PM", "pm");
 
+        // Coords and distance
+        String coords = "\nFrom: (" + getStartLatitude() + ", " + getStartLongitude() + ")"
+                + "\nTo: (" + getEndLatitude() + ", " + getEndLongitude() + ")";
+        String distance = "\nDistance: " + getDistance();
+
+        // Bike ID
+        String bikeIdString = "";
+        if (bikeId != -1) {
+            bikeIdString = "\nBike ID: " + bikeId;
+        }
+
+        // Cyclist description
+        String cyclistDescription;
+        if (gender == 'u') {
+            if (birthYear == -1) {
+                // Nothing known about cyclist
+                cyclistDescription = "";
+            } else {
+                // Just know birth year
+                cyclistDescription = "\nCyclist: born in " + birthYear;
+            }
+        } else {
+            // We know the gender
+            cyclistDescription = "\nCyclist: " + getGenderDescription();
+            if (!(birthYear == -1)) {
+                // Know both things about cyclist
+                cyclistDescription += ", born in " + birthYear;
+            }
+        }
+
         // Put together description
-        return String.format("Started at %s and ended %s later at %s\nBike ID: %d\nCyclist: %s, born in %d",
-                start, getDuration(), end, bikeId, getGenderDescription(), birthYear);
+        return "Started at " + start + " and ended " + getDuration() + " later at " + end + coords + distance + bikeIdString + cyclistDescription;
+    }
+
+    public void setAllProperties(BikeTrip newBikeTrip) {
+        this.tripDuration = Duration.between(newBikeTrip.getStartTime(), newBikeTrip.getStopTime()).getSeconds();
+        this.startTime = newBikeTrip.getStartTime();
+        this.stopTime = newBikeTrip.getStopTime();
+        this.startPoint = newBikeTrip.getStartPoint();
+        this.endPoint = newBikeTrip.getEndPoint();
+        this.bikeId = newBikeTrip.getBikeId();
+        this.gender = newBikeTrip.getGender();
+        this.birthYear = newBikeTrip.getBirthYear();
+        this.tripDistance = DataAnalyser.calculateDistance(newBikeTrip.getStartPoint().getX(), newBikeTrip.getStartPoint().getY(),
+                newBikeTrip.getEndPoint().getX(), newBikeTrip.getEndPoint().getY());
+        this.isUserDefinedPoint = true;
     }
 
 

@@ -51,6 +51,7 @@ public class LandingController {
 
             retailerTableController.initModel(model);
             retailerTableController.setName();
+            retailerTableController.initContextMenu();
 
             Stage stage1 = new Stage();
             stage1.setMinWidth(1000);
@@ -78,6 +79,7 @@ public class LandingController {
 
             bikeTableController.initModel(model);
             bikeTableController.setName();
+            bikeTableController.initContextMenu();
 
             Stage stage1 = new Stage();
             stage1.setMinWidth(1000);
@@ -106,6 +108,7 @@ public class LandingController {
 
             wifiTableController.initModel(model);
             wifiTableController.setName();
+            wifiTableController.initContextMenu();
 
             Stage stage1 = new Stage();
             stage1.setMinWidth(1000);
@@ -128,8 +131,11 @@ public class LandingController {
         try {
             FXMLLoader mapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
             Parent mapView = mapLoader.load();
+            MapController mapController = mapLoader.getController();
+
 
             Stage stage1 = new Stage();
+            mapController.initModel(model, stage1);
             stage1.setScene(new Scene(mapView));
             stage1.initModality(Modality.APPLICATION_MODAL);
             stage1.showAndWait();

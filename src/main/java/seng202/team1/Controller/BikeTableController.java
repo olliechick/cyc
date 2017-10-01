@@ -7,6 +7,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.ContextualLength;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
@@ -108,7 +110,7 @@ public class BikeTableController extends TableController {
         if (filterGenderComboBox.getValue().equals("All")) {
             return true;
         } else {
-            return ((char) filterGenderComboBox.getValue() == bikeTrip.getGender());
+            return (filterGenderComboBox.getValue() == bikeTrip.getGenderDescription());
         }
     }
 
@@ -117,13 +119,25 @@ public class BikeTableController extends TableController {
         nameLabel.setVisible(true);
     }
 
+    void initContextMenu() {
+        super.editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                cm.hide();
+                if (table.getSelectionModel().getSelectedItem() != null) {
+                    editBikeTrip(table.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
+    }
+
     /**
      * Sets the filter ComboBox options.
      */
     private void setFilters() {
 
         filterGenderComboBox.getItems().clear();
-        filterGenderComboBox.getItems().addAll("All", 'm', 'f', 'u');
+        filterGenderComboBox.getItems().addAll("All", "male", "female", "unknown");
         filterGenderComboBox.getSelectionModel().selectFirst();
 
         filterStartComboBox.getItems().clear();
@@ -178,6 +192,7 @@ public class BikeTableController extends TableController {
                     stopLoadingAni();
                     setPredicate();
                     populateCustomBikeTrips();
+                    clearFilters();
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading bike trips. Is your csv correct?");
                     stopLoadingAni();
@@ -253,29 +268,28 @@ public class BikeTableController extends TableController {
 
         TableColumn<BikeTrip, Integer> bikeIdCol = new TableColumn<>("Bike ID");
         TableColumn<BikeTrip, Character> genderCol = new TableColumn<>("Gender");
-        TableColumn<BikeTrip, String> durationCol = new TableColumn<>("Duration");
+        TableColumn<BikeTrip, ContextualLength> durationCol = new TableColumn<>("Duration");
         TableColumn<BikeTrip, Point.Float> startLocCol = new TableColumn<>("Start Location");
         TableColumn<BikeTrip, Point.Float> startLatitudeCol = new TableColumn<>("Latitude");
         TableColumn<BikeTrip, Point.Float> startLongitudeCol = new TableColumn<>("Longitude");
         TableColumn<BikeTrip, Point.Float> endLocCol = new TableColumn<>("End Location");
         TableColumn<BikeTrip, Point.Float> endLatitudeCol = new TableColumn<>("Latitude");
         TableColumn<BikeTrip, Point.Float> endLongitudeCol = new TableColumn<>("Longitude");
-        TableColumn<BikeTrip, Double> distCol= new TableColumn<>("Distance (m)");
+        TableColumn<BikeTrip, ContextualLength> distCol= new TableColumn<>("Distance (m)");
         table.getColumns().clear();
 
         // Attempts to access public properties of name "Property", falls back to get<property>() methods if no property available
         bikeIdCol.setCellValueFactory( new PropertyValueFactory<>("bikeId"));
-        genderCol.setCellValueFactory( new PropertyValueFactory<>("gender"));
-        durationCol.setCellValueFactory( new PropertyValueFactory<>("Duration"));
+        genderCol.setCellValueFactory( new PropertyValueFactory<>("genderDescription"));
+        durationCol.setCellValueFactory( new PropertyValueFactory<>("duration"));
         startLatitudeCol.setCellValueFactory( new PropertyValueFactory<>("startLatitude"));
         startLongitudeCol.setCellValueFactory( new PropertyValueFactory<>("startLongitude"));
         endLatitudeCol.setCellValueFactory( new PropertyValueFactory<>("endLatitude"));
         endLongitudeCol.setCellValueFactory( new PropertyValueFactory<>("endLongitude"));
-        distCol.setCellValueFactory( new PropertyValueFactory<BikeTrip, Double>("tripDistanceTwoD"));
+        distCol.setCellValueFactory( new PropertyValueFactory<>("distance"));
 
         startLocCol.getColumns().addAll(startLatitudeCol, startLongitudeCol);
         endLocCol.getColumns().addAll(endLatitudeCol, endLongitudeCol);
-        durationCol.setSortable(false);
 
         filteredData = new FilteredList<>(dataPoints, p -> true);
 
@@ -306,5 +320,37 @@ public class BikeTableController extends TableController {
     private void populateCustomBikeTrips() {
         ArrayList<BikeTrip> customTrips = model.getCustomBikeTrips();
         dataPoints.addAll(customTrips);
+    }
+
+    public void clearFilters() {
+        filterStartComboBox.getSelectionModel().selectFirst();
+        filterEndComboBox.getSelectionModel().selectFirst();
+        filterGenderComboBox.getSelectionModel().selectFirst();
+        bikeSearchField.clear();
+    }
+
+    private void editBikeTrip(BikeTrip bikeTrip) {
+        try {
+            FXMLLoader addBikeLoader = new FXMLLoader(getClass().getResource("/fxml/AddBikeDialog.fxml"));
+            Parent root = addBikeLoader.load();
+            AddBikeDialogController addBikeDialog = addBikeLoader.getController();
+            Stage stage1 = new Stage();
+
+            addBikeDialog.setDialog(stage1, root, bikeTrip);
+            addBikeDialog.initModel(model);
+            stage1.showAndWait();
+
+            BikeTrip newBikeTrip = addBikeDialog.getBikeTrip();
+            if (newBikeTrip != null) {
+                if (dataPoints.contains(newBikeTrip)) {
+                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
+                } else {
+                    bikeTrip.setAllProperties(newBikeTrip);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

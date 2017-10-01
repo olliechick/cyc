@@ -65,15 +65,19 @@ public class WifiPointTest {
     public void testName() {
         assertEquals(wifiPoint.getSsid(), wifiPoint.getName());
     }
-/* Broken
+
     @Test
     public void testGetDescription() {
-        String expectedString = "Location: 179 WEST 26 STREET - mn-05-123662 (Outdoor Kiosk), Midtown-Midtown South, "
-        + "Manhattan, New York 10001 (40.745968, -73.994039)\nCost: Free\nProvider: LinkNYC - Citybridge\n"
-        + "SSID: LinkNYC Free Wi-Fi\nSourceID: LINK-008695\nActivated: 12:00:00 am 1/18/2017\nID " +
-                "998";
+        String expectedString = "Location: 179 WEST 26 STREET (Outdoor Kiosk) - mn-05-123662, Midtown-Midtown South, Manhattan, New York 10001\n" +
+                "Coordinates: (40.745968, -73.99404)\n" +
+                "Provider: LinkNYC - Citybridge\n" +
+                "Cost: Free\n" +
+                "Source ID: LINK-00869\n" +
+                "Activated: 12:00:00 am 18/1/2017\n" +
+                "ID: 998\n" +
+                "Remarks: Tablet Internet -phone , Free 1 GB Wi-FI Service";
         assertEquals(expectedString, wifiPoint.getDescription());
-    }*/
+    }
 
     @Test
     public void TestEqualsSame(){

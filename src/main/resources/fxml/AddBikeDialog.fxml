@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="499.0" prefWidth="737.0" vgap="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.AddBikeDialogController">
+<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="386.0" prefWidth="737.0" vgap="20.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.AddBikeDialogController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="332.0" minWidth="10.0" prefWidth="332.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="216.0" minWidth="9.0" prefWidth="9.0" />
@@ -13,15 +21,15 @@
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="67.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="98.0" minHeight="10.0" prefHeight="12.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="123.0" minHeight="10.0" prefHeight="93.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="11.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="90.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="41.0" minHeight="0.0" prefHeight="13.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="59.0" minHeight="0.0" prefHeight="46.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="98.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="123.0" minHeight="0.0" prefHeight="8.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="150.0" minHeight="10.0" prefHeight="66.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="149.0" minHeight="10.0" prefHeight="76.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="122.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="123.0" minHeight="0.0" prefHeight="10.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label text="Add a Custom Bike Trip" GridPane.halignment="CENTER" />
+      <Label fx:id="addBikeTripLabel" text="Add a custom bike trip" GridPane.halignment="CENTER" />
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647">
          <children>
             <Label fx:id="idLabel" prefHeight="20.0" prefWidth="78.0" text="Bike ID:">
@@ -29,109 +37,106 @@
                   <Insets right="10.0" top="5.0" />
                </padding>
             </Label>
-            <TextField fx:id="idField" />
+            <TextField fx:id="idField" promptText="12345" />
          </children>
       </HBox>
       <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <Label fx:id="startTimeLabel" text="Start Time:">
+                  <Label fx:id="startTimeLabel" prefHeight="20.0" prefWidth="70.0" text="Time:">
                      <padding>
                         <Insets right="10.0" top="5.0" />
-                     </padding>
-                  </Label>
+                     </padding></Label>
                   <TextField fx:id="startTimeField" prefHeight="25.0" prefWidth="110.0" promptText="hh:mm:ss" />
-                  <RadioButton fx:id="startAM" mnemonicParsing="false" text="AM" />
-                  <RadioButton fx:id="startPM" mnemonicParsing="false" text="PM" />
+                  <RadioButton fx:id="startAM" mnemonicParsing="false" text="am" />
+                  <RadioButton fx:id="startPM" mnemonicParsing="false" text="pm" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="startDateLabel" text="Start Date:   ">
+                  <Label fx:id="startDateLabel" prefHeight="20.0" prefWidth="80.0" text="Date:">
                      <padding>
                         <Insets right="10.0" top="5.0" />
                      </padding>
                   </Label>
-                  <DatePicker fx:id="startDatePicker" prefHeight="25.0" prefWidth="128.0" />
+                  <DatePicker fx:id="startDatePicker" prefHeight="25.0" prefWidth="128.0" promptText="d/mm/yyyy" />
                </children>
             </HBox>
          </children>
       </VBox>
-      <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+      <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="3" />
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <Label fx:id="stopTimeLabel" text="Stop Time:">
+                  <Label fx:id="stopTimeLabel" prefHeight="20.0" prefWidth="70.0" text="Time:">
                      <padding>
                         <Insets right="10.0" top="5.0" />
                      </padding>
                   </Label>
                   <TextField fx:id="stopTimeField" prefHeight="25.0" prefWidth="110.0" promptText="hh:mm:ss" />
-                  <RadioButton fx:id="stopAM" mnemonicParsing="false" text="AM" />
-                  <RadioButton fx:id="stopPM" mnemonicParsing="false" text="PM" />
+                  <RadioButton fx:id="stopAM" mnemonicParsing="false" text="am" />
+                  <RadioButton fx:id="stopPM" mnemonicParsing="false" text="pm" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="stopDateLabel" text="Stop Date:   ">
+                  <Label fx:id="stopDateLabel" prefHeight="20.0" prefWidth="80.0" text="Date:">
                      <padding>
                         <Insets right="10.0" top="5.0" />
                      </padding>
                   </Label>
-                  <DatePicker fx:id="stopDatePicker" prefHeight="25.0" prefWidth="128.0" />
+                  <DatePicker fx:id="stopDatePicker" prefHeight="25.0" prefWidth="128.0" promptText="d/mm/yyyy" />
                </children>
             </HBox>
          </children>
       </VBox>
-      <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="4">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="startLatLabel" prefHeight="20.0" prefWidth="83.0" text="Start Lat:">
+                  <Label fx:id="startLatLabel" prefHeight="20.0" prefWidth="80.0" text="Latitude:">
                      <padding>
                         <Insets right="10.0" top="5.0" />
                      </padding>
                   </Label>
-                  <TextField fx:id="startLatField" />
+                  <TextField fx:id="startLatField" promptText="41.12345" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="startLongLabel" text="Start Long:">
+                  <Label fx:id="startLongLabel" prefHeight="20.0" prefWidth="80.0" text="Longitude:">
                      <padding>
                         <Insets right="10.0" top="5.0" />
                      </padding>
                   </Label>
-                  <TextField fx:id="startLongField" />
+                  <TextField fx:id="startLongField" promptText="-73.12345" />
                </children>
             </HBox>
          </children>
       </VBox>
-      <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="endLatLabel" prefHeight="20.0" prefWidth="76.0" text="End Lat:">
+                  <Label fx:id="endLatLabel" prefHeight="20.0" prefWidth="80.0" text="Latitude:">
                      <padding>
                         <Insets right="10.0" top="5.0" />
                      </padding>
                   </Label>
-                  <TextField fx:id="endLatField" />
+                  <TextField fx:id="endLatField" promptText="41.12346" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="endLongLabel" text="End Long:">
+                  <Label fx:id="endLongLabel" prefHeight="20.0" prefWidth="80.0" text="Longitude:">
                      <padding>
                         <Insets right="10.0" top="5.0" />
                      </padding>
                   </Label>
-                  <TextField fx:id="endLongField" />
+                  <TextField fx:id="endLongField" promptText="-73.12346" />
                </children>
             </HBox>
          </children>
@@ -139,6 +144,16 @@
       <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
       <Button fx:id="addButton" mnemonicParsing="false" onAction="#addBike" text="Add" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
       <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Cancel" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+      <Label fx:id="startLatLabel1" prefHeight="20.0" prefWidth="83.0" text="Start point" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+         <padding>
+            <Insets right="10.0" top="5.0" />
+         </padding>
+      </Label>
+      <Label fx:id="startLatLabel11" layoutX="160.0" layoutY="273.0" prefHeight="20.0" prefWidth="83.0" text="End point" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+         <padding>
+            <Insets right="10.0" top="5.0" />
+         </padding>
+      </Label>
    </children>
    <padding>
       <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
