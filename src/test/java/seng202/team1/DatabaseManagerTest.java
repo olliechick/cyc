@@ -88,8 +88,11 @@ public class DatabaseManagerTest {
 
     @After
     public void TearDown() {
-
-        DatabaseManager.close();
+        try {
+            DatabaseManager.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         DatabaseManager.deleteDatabase();
     }
 

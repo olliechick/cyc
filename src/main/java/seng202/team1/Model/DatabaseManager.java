@@ -295,7 +295,11 @@ public class DatabaseManager {
         }
     }
 
-    public static void open() throws SQLException {
+    /**
+     * Opens the database connection, creating it if it does not exist. Does not register JDBC driver.
+     * @throws SQLException could not get driver connection, or change autocommit parameter.
+     */
+    public static void open() throws SQLException{
 
         String filename = "sqlite.db";
         localDatabaseFile = new File(Directory.DATABASES.directory() + filename);
@@ -310,11 +314,16 @@ public class DatabaseManager {
         } else {
             createDatabaseTables();
             System.out.println("Database established and connected.");
-
         }
 
     }
 
+    /**
+     * Opens the database connection, creating it if it does not exist.
+     *
+     * @param initialize registers the JDBC driver, for initial loading on some machines.
+     * @throws SQLException could not register driver, or could not open database.
+     */
     public static void open(boolean initialize) throws SQLException{
         if (initialize) {
             DriverManager.registerDriver(new org.sqlite.JDBC());
@@ -322,14 +331,15 @@ public class DatabaseManager {
         open();
     }
 
-    public static void close() {
+    /**
+     * Closes the database connection. Called after a set of actions are performed
+     * so the database is freed for use elsewhere without conflict.
+     * @throws SQLException Could not commit transactions, or close the connection to the database.
+     */
+    public static void close() throws SQLException{
         if (isDatabaseConnected()) {
-            try {
-                getConnection().commit();
-                getConnection().close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            getConnection().commit();
+            getConnection().close();
         }
     }
 
@@ -346,62 +356,6 @@ public class DatabaseManager {
         return false; // TODO: Implement
     }
 
-
-    /*
-     * Fetches an ArrayList of BikeTrips from the database, of m - n size.
-     *
-     * @param n lower bound to be fetched, inclusive.
-     * @param m upper bound to be fetched, exclusive.
-     * @return An ArrayList of BikeTrip objects of size m - n.
-     * @author Ridge Nairn
-     */
-    /*
-    public static ArrayList<BikeTrip> getTrips(int n, int m) {
-        String statement = "SELECT * FROM trip WHERE id >= ? AND id <= ?";
-        PreparedStatement preparedStatement;
-        ArrayList<BikeTrip> result = new ArrayList<>();
-        try {
-            preparedStatement = getConnection().prepareStatement(statement);
-
-            preparedStatement.setInt(1, n);
-            preparedStatement.setInt(2, m);
-
-            ResultSet rs = preparedStatement.executeQuery();
-
-            while (rs.next()) {
-                String startTimeString = rs.getString("startTime");
-                String stopTimeString = rs.getString("stopTime");
-                Long duration = rs.getLong("duration");
-                Float startLatitude = rs.getFloat("startLatitude");
-                Float startLongitude = rs.getFloat("startLongitude");
-                Float endLatitude = rs.getFloat("endLatitude");
-                Float endLongitude = rs.getFloat("endLongitude");
-                int startStationId = rs.getInt("startStationId");
-                int endStationId = rs.getInt("endStationId");
-                int bikeID = rs.getInt("bikeID");
-                char gender = rs.getString("gender").toCharArray()[0];
-                int birthYear = rs.getInt("birthYear");
-                double tripDistance = rs.getDouble("tripDistance");
-                boolean isUserDefined = rs.getBoolean("isUserDefined");
-
-                LocalDateTime startTime = LocalDateTime.parse(startTimeString);
-                LocalDateTime stopTime = LocalDateTime.parse(stopTimeString);
-
-                Point.Float startPoint = new Point.Float(startLongitude, startLatitude);
-                Point.Float stopPoint = new Point.Float(endLongitude, endLatitude);
-
-
-                BikeTrip trip = new BikeTrip(duration, startTime, stopTime, startPoint, stopPoint,
-                        /*startStationId, endStationId, */bikeID, gender,
-                        birthYear, tripDistance, isUserDefined);
-
-                result.add(trip);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
-    } */
 
     public static ArrayList<BikeTrip> getUserTrips(String username) {
         String statement = "SELECT * FROM trip WHERE username=?";
@@ -436,8 +390,7 @@ public class DatabaseManager {
                 Point.Float stopPoint = new Point.Float(endLongitude, endLatitude);
 
                 BikeTrip trip = new BikeTrip(duration, startTime, stopTime, startPoint, stopPoint,
-                        startStationId, endStationId, bikeID, gender,
-                        birthYear, tripDistance, isUserDefined);
+                        bikeID, gender, birthYear, tripDistance, isUserDefined);
 
                 result.add(trip);
             }
