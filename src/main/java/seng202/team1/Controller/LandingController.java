@@ -132,9 +132,8 @@ public class LandingController {
             MapController mapController = mapLoader.getController();
 
 
-
-            mapController.initModel(model, stage);
             Stage stage1 = new Stage();
+            mapController.initModel(model, stage1);
             stage1.setScene(new Scene(mapView));
             stage1.initModality(Modality.APPLICATION_MODAL);
             stage1.showAndWait();

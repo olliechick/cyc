@@ -267,23 +267,7 @@ public class MapController {
 
     @FXML
     private void switchView() {
-        try {
-            // Changes to the table choosing GUI
-            FXMLLoader landingLoader = new FXMLLoader(getClass().getResource("/fxml/landingView.fxml"));
-            Parent landingView = landingLoader.load();
-            LandingController landingController = landingLoader.getController();
-
-
-            Stage stage = (Stage) switchViewButton.getScene().getWindow(); //gets the current stage so that Table can take over
-
-            landingController.initModel(model, stage);
-            stage.setScene(new Scene(landingView));
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace(); //File not found
-        }
-
+        stage.close();
     }
 
     private void showRetailer(int index) {

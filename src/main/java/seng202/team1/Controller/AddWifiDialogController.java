@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -78,7 +79,7 @@ public class AddWifiDialogController {
     private Label costLabel;
 
     @FXML
-    private TextField remarksField;
+    private TextArea remarksField;
 
     @FXML
     private Label longLabel;
@@ -177,7 +178,9 @@ public class AddWifiDialogController {
         longField.setText(String.valueOf(wifiPoint.getLongitude()));
         provField.setText(wifiPoint.getProvider());
         costComboBox.getSelectionModel().select(wifiPoint.getCost());
-        remarksField.setText(wifiPoint.getDescription());
+        if (wifiPoint.getRemarks() != null) {
+            remarksField.setText(wifiPoint.getRemarks());
+        }
 
         addButton.setText("Save");
         stage.setTitle("Edit Wifi Point");
