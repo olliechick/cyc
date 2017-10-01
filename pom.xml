@@ -35,6 +35,7 @@
                                         <Main-Class>seng202.team1.Main</Main-Class>
                                         <X-Compile-Source-JDK>1.8</X-Compile-Source-JDK>
                                         <X-Compile-Target-JDK>1.8</X-Compile-Target-JDK>
+                                        <Implementation-Version>${version}</Implementation-Version>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>

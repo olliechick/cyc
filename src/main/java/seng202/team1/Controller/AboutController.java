@@ -25,7 +25,13 @@ public class AboutController {
 
     @FXML
     public void initialize() {
-        versionText.setText("Implement getting Version value from somewhere");
+        Package p = getClass().getPackage();
+        String version = p.getImplementationVersion();
+        if (version == null) {
+            versionText.setText("");
+        } else {
+            versionText.setText(String.format("Version %s", version));
+        }
     }
 
     void setStage(Stage curStage, Parent root) {
