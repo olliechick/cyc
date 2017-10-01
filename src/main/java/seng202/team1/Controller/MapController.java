@@ -79,7 +79,7 @@ public class MapController {
     private boolean showOnlyNearestWIFIToRetailer = false;
 
     private int wifiSearchDistance = 200;
-    private int retailerSearchDistance = 200;
+    private int retailerSearchDistance = 50;
     private int retailerToWIFISearchDistance = 200;
     private boolean drawRouteUsingPolyLines = false;
 
@@ -195,8 +195,16 @@ public class MapController {
                 BikeDirections dir = new BikeDirections(route, true);
                 if (showWIFINearRoute) {
                     ArrayList<Integer> indexes = searchWifiPointsOnRoute(dir.getPoints(), wifiPoints, wifiSearchDistance);
+                    ArrayList<WIFIPointDistance> pointDistances = new ArrayList<>();
                     for (int i = 0; i < indexes.size(); i++) {
                         String scriptStr = "document.circleWIFI(" + indexes.get(i) + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                        webView.getEngine().executeScript(scriptStr);
+                        WIFIPointDistance pointDistance = new WIFIPointDistance(wifiPoints.get(indexes.get(i)), indexes.get(i));
+                        pointDistances.add(pointDistance);
+                    }
+                    ArrayList<WIFIPointDistance> sortedPointDistances = sortedWIFIPointsByMinimumDistanceToRoute(pointDistances, dir.getPoints());
+                    for (int i = 0; i < sortedPointDistances.size(); i++) {
+                        String scriptStr = "document.circleAndNumberWIFI(" + sortedPointDistances.get(i).getIndexMap() + ", 'WIFISELECTED.png', '" + Integer.toString(i+1) +"')";
                         webView.getEngine().executeScript(scriptStr);
                     }
                 } else if (showOnlyNearestWIFIToRoute) {
@@ -208,8 +216,16 @@ public class MapController {
 
                 if (showRetailersNearRoute) {
                     ArrayList<Integer> indexes = searchRetailerLocationsOnRoute(dir.getPoints(), retailerPoints, retailerSearchDistance);
+                    ArrayList<RetailerPointDistance> pointDistances = new ArrayList<>();
                     for (int i = 0; i < indexes.size(); i++) {
                         String scriptStr = "document.circleRetailer(" + indexes.get(i) + ", 'DEPARTMENTSTORESELECTED.png', 'departmentstore.png')";
+                        webView.getEngine().executeScript(scriptStr);
+                        RetailerPointDistance pointDistance = new RetailerPointDistance(retailerPoints.get(indexes.get(i)), indexes.get(i));
+                        pointDistances.add(pointDistance);
+                    }
+                    ArrayList<RetailerPointDistance> sortedPointDistances = sortedRetailerPointsByMinimumDistanceToRoute(pointDistances, dir.getPoints());
+                    for (int i = 0; i < sortedPointDistances.size(); i++) {
+                        String scriptStr = "document.circleAndNumberRetailer(" + sortedPointDistances.get(i).getIndexMap() + ", 'DEPARTMENTSTORESELECTED.png', '" + Integer.toString(i+1) +"')";
                         webView.getEngine().executeScript(scriptStr);
                     }
                 } else if (showOnlyNearestRetailerToRoute) {

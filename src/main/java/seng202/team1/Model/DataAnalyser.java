@@ -97,8 +97,53 @@ public final class DataAnalyser {
         }
         return results;
     }
+    public static ArrayList<WIFIPointDistance> sortedWIFIPointsByMinimumDistanceToRoute(ArrayList<WIFIPointDistance> points, ArrayList<Point2D.Float> waypoints) {
+        WIFIPointDistance current;
+        Double currentDistance;
+        Point2D.Float currentWayPoint;
+        for (int i = 0; i < points.size(); i++)
+        {
+            current = points.get(i);
+            for (int j = 0; j < waypoints.size(); j++) {
+                currentWayPoint = waypoints.get(j);
+                currentDistance = calculateDistance(current.getThisPoint().getLatitude(),current.getThisPoint().getLongitude() ,currentWayPoint.getY(),currentWayPoint.getX());
+                if (currentDistance < current.getDistance()) {
+                    current.setDistance(currentDistance);
+                    current.setOtherPoint(new Point2D.Double(currentWayPoint.getY(), currentWayPoint.getX()));
+                }
+            }
+
+
+        }
+        points.sort(Comparator.comparing(WIFIPointDistance::getDistance));
+        return points;
+    }
+
+    public static ArrayList<RetailerPointDistance> sortedRetailerPointsByMinimumDistanceToRoute(ArrayList<RetailerPointDistance> points, ArrayList<Point2D.Float> waypoints) {
+        RetailerPointDistance current;
+        Double currentDistance;
+        Point2D.Float currentWayPoint;
+        for (int i = 0; i < points.size(); i++)
+        {
+            current = points.get(i);
+            for (int j = 0; j < waypoints.size(); j++) {
+                currentWayPoint = waypoints.get(j);
+                currentDistance = calculateDistance(current.getThisPoint().getLatitude(),current.getThisPoint().getLongitude() ,currentWayPoint.getY(),currentWayPoint.getX());
+                if (currentDistance < current.getDistance()) {
+                    current.setDistance(currentDistance);
+                    current.setOtherPoint(new Point2D.Double(currentWayPoint.getY(), currentWayPoint.getX()));
+                }
+            }
+
+
+        }
+        points.sort(Comparator.comparing(RetailerPointDistance::getDistance));
+        return points;
+    }
+
 
     public static ArrayList<Integer> searchRetailerLocationsOnRoute(ArrayList<Point2D.Float> waypoints, ArrayList<RetailerLocation> locations, double delta){
+
         Set<Integer> uniqueIndexes = new HashSet<>(locations.size());
         ArrayList<Integer> indexes = new ArrayList<>();
         ArrayList<Integer> indexesCurrent;
