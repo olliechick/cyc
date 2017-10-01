@@ -162,6 +162,7 @@ public class MapController {
 
     private void loadData() {
 
+
         clickListner = new JavaApp();
         retailerListner = new JavaApp();
         // Add a Java callback object to a WebEngine document can be used to
@@ -178,7 +179,8 @@ public class MapController {
     }
 
     private void reloadData() {
-
+        removeAllFilters();
+        initializeFilters();
         clickListner = new JavaApp();
         retailerListner = new JavaApp();
         // Add a Java callback object to a WebEngine document can be used to
@@ -188,7 +190,7 @@ public class MapController {
 
         reloadAllWifi();      // loads all the wifiPoints
         reloadAllRetailers(); // loads all the retailerPoints
-        //setFilters();       // sets the filters based on wifi and retailer points loaded
+        setFilters();       // sets the filters based on wifi and retailer points loaded
         //reloadAllBikeTrips(); // currently only dynamic, requested routes are shown
         win.setMember("app", clickListner);
 
@@ -805,6 +807,19 @@ public class MapController {
         filterProviderComboBox.getSelectionModel().selectFirst();
         filterBoroughComboBox.getSelectionModel().selectFirst();
         updateWIFI();
+    }
+
+    @FXML
+    private void removeAllFilters() {
+        filterPrimaryComboBox.getItems().clear();
+        filterSecondaryComboBox.getItems().clear();
+        filterZipComboBox.getItems().clear();
+        streetSearchField.clear();
+
+        filterCostComboBox.getItems().clear();
+        filterProviderComboBox.getItems().clear();
+        filterBoroughComboBox.getItems().clear();
+
     }
 
     @FXML
