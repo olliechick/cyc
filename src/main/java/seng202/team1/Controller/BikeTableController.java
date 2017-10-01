@@ -109,7 +109,7 @@ public class BikeTableController extends TableController {
         if (filterGenderComboBox.getValue().equals("All")) {
             return true;
         } else {
-            return ((char) filterGenderComboBox.getValue() == bikeTrip.getGender());
+            return (filterGenderComboBox.getValue() == bikeTrip.getGenderDescription());
         }
     }
 
@@ -124,7 +124,7 @@ public class BikeTableController extends TableController {
     private void setFilters() {
 
         filterGenderComboBox.getItems().clear();
-        filterGenderComboBox.getItems().addAll("All", 'm', 'f', 'u');
+        filterGenderComboBox.getItems().addAll("All", "male", "female", "unknown");
         filterGenderComboBox.getSelectionModel().selectFirst();
 
         filterStartComboBox.getItems().clear();
