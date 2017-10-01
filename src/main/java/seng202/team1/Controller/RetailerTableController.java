@@ -64,6 +64,9 @@ public class RetailerTableController extends TableController {
         nameLabel.setVisible(true);
     }
 
+    /**
+     * Initialise the context menu buttons to point to the correct methods, edit and delete
+     */
     void initContextMenu() {
         super.editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -75,6 +78,55 @@ public class RetailerTableController extends TableController {
                 }
             }
         });
+        super.deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                cm.hide();
+                if (table.getSelectionModel().getSelectedItem() != null) {
+                    deleteRetailer(table.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
+    }
+
+    /**
+     * Open a dialog with all the details of the currently selected Retailer filled out,
+     * to allow the user to modify the data.
+     * Saves the changes if they are valid.
+     *
+     * @param selectedRetailerLocation the currently selected Retailer Location
+     */
+    private void editRetailer(RetailerLocation selectedRetailerLocation) {
+        try {
+            FXMLLoader addRetailerLoader = new FXMLLoader(getClass().getResource("/fxml/AddRetailerDialog.fxml"));
+            Parent root = addRetailerLoader.load();
+            AddRetailerDialogController addRetailerDialog = addRetailerLoader.getController();
+            Stage stage1 = new Stage();
+
+            addRetailerDialog.setDialog(stage1, root, selectedRetailerLocation);
+            stage1.showAndWait();
+
+            RetailerLocation newRetailerLocation = addRetailerDialog.getRetailerLocation();
+            if (newRetailerLocation != null) {
+                if (dataPoints.contains(newRetailerLocation)) {
+                    AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
+                } else {
+                    selectedRetailerLocation.setAllProperties(newRetailerLocation);
+                }
+            }
+        } catch (IOException e) {
+            AlertGenerator.createAlert("Oops, something went wrong");
+        }
+    }
+
+    /**
+     * Delete the selected retailer from the list of currently displayed retailers
+     *
+     * @param selectedItem the selected Retailer Location to delete.
+     */
+    private void deleteRetailer(RetailerLocation selectedItem) {
+        //TODO add a removedRetailers list to userAccountModel and add to there, then remove all those on load.
+        dataPoints.remove(selectedItem);
     }
 
     /**
@@ -327,37 +379,24 @@ public class RetailerTableController extends TableController {
         dataPoints.addAll(customRetailerLocations);
     }
 
+    /**
+     * Initialise this controllers UserAccountModel to be the current user,
+     * and load the default data.
+     *
+     * @param userAccountModel the details of the currently logged in user.
+     */
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
         importRetailerCsv("/csv/Lower_Manhattan_Retailers.csv", false);
     }
 
+    /**
+     * Clear all input in the filters
+     */
     public void clearFilters() {
         filterPrimaryComboBox.getSelectionModel().selectFirst();
         filterZipComboBox.getSelectionModel().selectFirst();
         streetSearchField.clear();
     }
 
-    private void editRetailer(RetailerLocation retailerLocation) {
-        try {
-            FXMLLoader addRetailerLoader = new FXMLLoader(getClass().getResource("/fxml/AddRetailerDialog.fxml"));
-            Parent root = addRetailerLoader.load();
-            AddRetailerDialogController addRetailerDialog = addRetailerLoader.getController();
-            Stage stage1 = new Stage();
-
-            addRetailerDialog.setDialog(stage1, root, retailerLocation);
-            stage1.showAndWait();
-
-            RetailerLocation newRetailerLocation = addRetailerDialog.getRetailerLocation();
-            if (newRetailerLocation != null) {
-                if (dataPoints.contains(newRetailerLocation)) {
-                    AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
-                } else {
-                    retailerLocation.setAllProperties(newRetailerLocation);
-                }
-            }
-        } catch (IOException e) {
-            AlertGenerator.createAlert("Oops, something went wrong");
-        }
-    }
 }
