@@ -173,7 +173,6 @@ public class MapController {
 
     private void reloadData() {
         removeAllFilters();
-        initializeFilters();
         clickListner = new JavaApp();
         retailerListner = new JavaApp();
         // Add a Java callback object to a WebEngine document can be used to
@@ -794,14 +793,17 @@ public class MapController {
 
     @FXML
     private void removeAllFilters() {
-        filterPrimaryComboBox.getItems().clear();
-        filterSecondaryComboBox.getItems().clear();
-        filterZipComboBox.getItems().clear();
+        uniqueSecondaryFunctions = null;
+        uniquePrimaryFunctions = null;
+        uniqueProviders = null;
+        filterPrimaryComboBox.getItems().remove(1, filterPrimaryComboBox.getItems().size());
+        filterSecondaryComboBox.getItems().remove(1, filterSecondaryComboBox.getItems().size());
+        filterZipComboBox.getItems().remove(1, filterZipComboBox.getItems().size());
         streetSearchField.clear();
 
-        filterCostComboBox.getItems().clear();
-        filterProviderComboBox.getItems().clear();
-        filterBoroughComboBox.getItems().clear();
+        filterCostComboBox.getItems().remove(1, filterCostComboBox.getItems().size());
+        filterProviderComboBox.getItems().remove(1, filterProviderComboBox.getItems().size());
+        filterBoroughComboBox.getItems().remove(1, filterBoroughComboBox.getItems().size());
 
     }
 
