@@ -132,6 +132,21 @@ public abstract class TableController {
         stage = curStage;
     }
 
+    public void openAbout() {
+        try {
+            FXMLLoader showAbout = new FXMLLoader(getClass().getResource("/fxml/aboutView.fxml"));
+            Parent root = showAbout.load();
+            Stage stage = new Stage();
+            AboutController aboutController = showAbout.getController();
+            aboutController.setStage(stage, root);
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void close() {
         stage.close();
     }
