@@ -48,7 +48,7 @@ public class BikeTripTest extends TestCase {
     @Test
     public void testGetDuration() {
         String expectedString = "10 seconds";
-        assertEquals(expectedString, bikeTrip.getDuration());
+        assertEquals(expectedString, bikeTrip.getDuration().toString());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class BikeTripTest extends TestCase {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
-        assertEquals("1.23 m", biketrip1.getDistance());
+        assertEquals("1.23 m", biketrip1.getDistance().toString());
     }
 
     public void testGetDistance10m() {
@@ -72,7 +72,7 @@ public class BikeTripTest extends TestCase {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
-        assertEquals("12.3 m", biketrip1.getDistance());
+        assertEquals("12.3 m", biketrip1.getDistance().toString());
     }
 
     public void testGetDistance100m() {
@@ -80,7 +80,7 @@ public class BikeTripTest extends TestCase {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
-        assertEquals("123 m", biketrip1.getDistance());
+        assertEquals("123 m", biketrip1.getDistance().toString());
     }
 
     public void testGetDistance1km() {
@@ -88,7 +88,7 @@ public class BikeTripTest extends TestCase {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
-        assertEquals("1.23 km", biketrip1.getDistance());
+        assertEquals("1.23 km", biketrip1.getDistance().toString());
     }
 
     public void testGetDistance10km() {
@@ -96,7 +96,7 @@ public class BikeTripTest extends TestCase {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
-        assertEquals("12.3 km", biketrip1.getDistance());
+        assertEquals("12.3 km", biketrip1.getDistance().toString());
     }
 
     public void testGetDistanceLong() {
@@ -104,7 +104,7 @@ public class BikeTripTest extends TestCase {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
-        assertEquals("123 km", biketrip1.getDistance());
+        assertEquals("123 km", biketrip1.getDistance().toString());
     }
 
     public void testGetDistance1mRoundUp() {
@@ -112,7 +112,7 @@ public class BikeTripTest extends TestCase {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
-        assertEquals("1.24 m", biketrip1.getDistance());
+        assertEquals("1.24 m", biketrip1.getDistance().toString());
     }
 
     public void testGetDistance10mRoundUp() {
@@ -120,7 +120,7 @@ public class BikeTripTest extends TestCase {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
-        assertEquals("12.4 m", biketrip1.getDistance());
+        assertEquals("12.4 m", biketrip1.getDistance().toString());
     }
 
     public void testGetDistance100mRoundUp() {
@@ -128,7 +128,7 @@ public class BikeTripTest extends TestCase {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
                bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
-        assertEquals("124 m", biketrip1.getDistance());
+        assertEquals("124 m", biketrip1.getDistance().toString());
     }
 
     public void testGetDistance1kmRoundUp() {
@@ -136,7 +136,7 @@ public class BikeTripTest extends TestCase {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
-        assertEquals("1.24 km", biketrip1.getDistance());
+        assertEquals("1.24 km", biketrip1.getDistance().toString());
     }
 
     public void testGetDistance10kmRoundUp() {
@@ -144,7 +144,7 @@ public class BikeTripTest extends TestCase {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
-        assertEquals("12.4 km", biketrip1.getDistance());
+        assertEquals("12.4 km", biketrip1.getDistance().toString());
     }
 
     public void testGetDistanceLongRoundUp() {
@@ -152,7 +152,7 @@ public class BikeTripTest extends TestCase {
         BikeTrip biketrip1 = new BikeTrip(startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, distance, isUserDefinedPoint);
-        assertEquals("124 km", biketrip1.getDistance());
+        assertEquals("124 km", biketrip1.getDistance().toString());
     }
 
     @Test
