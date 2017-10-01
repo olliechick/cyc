@@ -7,7 +7,6 @@ import seng202.team1.Model.RetailerLocation;
 import seng202.team1.Model.WifiPoint;
 
 import java.awt.*;
-import java.io.File;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -80,7 +79,7 @@ public class DatabaseManagerTest {
     @Before
     public void SetUp() {
         try {
-            DatabaseManager.connect();
+            DatabaseManager.open();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -161,6 +160,5 @@ public class DatabaseManagerTest {
         }
         assertEquals(1, DatabaseManager.getUserTrips(model.getUserName()).size());
     }
-
 
 }

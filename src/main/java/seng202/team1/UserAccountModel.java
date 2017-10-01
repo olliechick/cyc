@@ -116,12 +116,15 @@ public class UserAccountModel implements java.io.Serializable {
 
 
     public ArrayList<BikeTrip> getCustomBikeTrips() {
-
+        ArrayList<BikeTrip> result = new ArrayList<>();
+        try {
             DatabaseManager.open();
-            ArrayList<BikeTrip> result = DatabaseManager.getUserTrips(userName);
+            result = DatabaseManager.getUserTrips(userName);
             DatabaseManager.close();
-            return result;
-
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public ArrayList<RetailerLocation> getCustomRetailerLocations() {

@@ -22,38 +22,6 @@ public class DatabaseManager {
     private static Connection connection;
     private static File localDatabaseFile;
 
-    /**
-     * Creates local database file, and required tables.
-     *
-     * @throws SQLException when database cannot be connected to / instantiated.
-     * @author Ridge Nairn
-     */
-    public static void connect() throws SQLException {
-        String filename = "sqlite.db";
-        localDatabaseFile = new File(Directory.DATABASES.directory() + filename);
-        boolean databaseExists = localDatabaseFile.exists();
-        String url = "jdbc:sqlite:" + localDatabaseFile.getAbsolutePath();
-
-        if (connection == null) { // No connection yet
-            try {
-                DriverManager.registerDriver(new org.sqlite.JDBC());
-                connection = DriverManager.getConnection(url);
-                connection.setAutoCommit(false);
-                if (databaseExists) {
-                    System.out.println("Database connected.");
-                } else {
-                    createDatabaseTables();
-                    System.out.println("Database established and connected.");
-
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        } else { // Database already exists
-            System.out.println("Database already exists.");
-        }
-    }
-
 
     private static void createDatabaseTables() {
         // TODO: Create required tables for database
@@ -332,25 +300,31 @@ public class DatabaseManager {
         }
     }
 
-    public static void open() {
+    public static void open() throws SQLException {
+
+        String filename = "sqlite.db";
+        localDatabaseFile = new File(Directory.DATABASES.directory() + filename);
 
         boolean databaseExists = localDatabaseFile.exists();
         String url = "jdbc:sqlite:" + localDatabaseFile.getAbsolutePath();
 
-        try {
-            DriverManager.registerDriver(new org.sqlite.JDBC());
-            connection = DriverManager.getConnection(url);
-            connection.setAutoCommit(false);
-            if (databaseExists) {
-                System.out.println("Database connected.");
-            } else {
-                createDatabaseTables();
-                System.out.println("Database established and connected.");
+        connection = DriverManager.getConnection(url);
+        connection.setAutoCommit(false);
+        if (databaseExists) {
+            System.out.println("Database connected.");
+        } else {
+            createDatabaseTables();
+            System.out.println("Database established and connected.");
 
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
+
+    }
+
+    public static void open(boolean initialize) throws SQLException{
+        if (initialize) {
+            DriverManager.registerDriver(new org.sqlite.JDBC());
+        }
+        open();
     }
 
     public static void close() {
