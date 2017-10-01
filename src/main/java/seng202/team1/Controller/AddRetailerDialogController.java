@@ -1,11 +1,14 @@
 package seng202.team1.Controller;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -136,6 +139,17 @@ public class AddRetailerDialogController {
             latField.setText(Double.toString(lastPoint.getX()));
             longField.setText(Double.toString(lastPoint.getY()));
         }
+
+        root.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ENTER && !addButton.isDisabled()) {
+                    addRetailer();
+                } else if (event.getCode() == KeyCode.ESCAPE) {
+                    stage1.close();
+                }
+            }
+        });
 
     }
 

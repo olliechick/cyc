@@ -1,5 +1,7 @@
 package seng202.team1.Controller;
 
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -7,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -164,6 +168,17 @@ public class AddBikeDialogController {
             startLatField.setText(Double.toString(secondToLastPoint.getX()));
             startLongField.setText(Double.toString(secondToLastPoint.getY()));
         }
+
+        root.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ENTER && !addButton.isDisabled()) {
+                    addBike();
+                } else if (event.getCode() == KeyCode.ESCAPE) {
+                    stage1.close();
+                }
+            }
+        });
     }
 
     void setDialog(Stage stage1, Parent root, BikeTrip bikeTrip) {
