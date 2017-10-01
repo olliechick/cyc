@@ -240,7 +240,6 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
         String description = "Location:";
 
         //First bit of location
-        System.out.println(location);
         if (location != null && !location.isEmpty()) {
             // Location is defined
             description += " " + location;

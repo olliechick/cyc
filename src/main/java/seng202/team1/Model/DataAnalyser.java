@@ -1,9 +1,5 @@
 package seng202.team1.Model;
 
-import seng202.team1.Model.BikeTrip;
-import seng202.team1.Model.RetailerLocation;
-import seng202.team1.Model.WifiPoint;
-
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -104,11 +100,9 @@ public final class DataAnalyser {
         ArrayList<Integer> indexesCurrent;
         Double searchLat;
         Double searchLong;
-        Point.Float pointFloat;
-        for (int i = 0; i < waypoints.size(); i++) {
-            pointFloat = waypoints.get(i);
-            searchLat = pointFloat.getY();
-            searchLong = pointFloat.getX();
+        for (Point.Float waypoint : waypoints) {
+            searchLat = waypoint.getY();
+            searchLong = waypoint.getX();
             indexesCurrent = searchRetailerLocations(searchLat, searchLong, delta, locations, true);
             //System.out.println(indexesCurrent);
             uniqueIndexes.addAll(indexesCurrent);
@@ -127,11 +121,9 @@ public final class DataAnalyser {
         ArrayList<Integer> indexesCurrent;
         Double searchLat;
         Double searchLong;
-        Point.Float pointFloat;
-        for (int i = 0; i < waypoints.size(); i++) {
-            pointFloat = waypoints.get(i);
-            searchLat = pointFloat.getY();
-            searchLong = pointFloat.getX();
+        for (Point.Float waypoint : waypoints) {
+            searchLat = waypoint.getY();
+            searchLong = waypoint.getX();
             indexesCurrent = searchWifiPoints(searchLat, searchLong, delta, hotspots, true);
             //System.out.println(indexesCurrent);
             uniqueIndexes.addAll(indexesCurrent);
@@ -356,7 +348,6 @@ public final class DataAnalyser {
      * @param toSort ArrayList of bike trips to be sorted
      */
     public static void sortTripsByDistance(ArrayList<BikeTrip> toSort) {
-        System.out.println(toSort.size() + " sort " + toSort);
         Collections.sort(toSort, new Comparator<BikeTrip>() {
             @Override
             public int compare(BikeTrip o1, BikeTrip o2) {

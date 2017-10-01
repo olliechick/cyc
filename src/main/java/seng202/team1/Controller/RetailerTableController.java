@@ -210,7 +210,6 @@ public class RetailerTableController extends TableController {
         loadRetailerCsv.setOnFailed(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
-                System.out.println("failed");
                 AlertGenerator.createAlert("Error", "Error loading retailers. Please try again");
                 stopLoadingAni();
             }

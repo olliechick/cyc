@@ -1,7 +1,6 @@
 package seng202.team1.Controller;
 
 
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -17,35 +16,24 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import seng202.team1.*;
 import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
-
-
 import seng202.team1.Model.Google.BikeDirections;
 import seng202.team1.UserAccountModel;
 
-
-import java.awt.geom.Point2D;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import java.awt.*;
-
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
-import static seng202.team1.Model.DataAnalyser.*;
 import static seng202.team1.Model.CsvHandling.CSVLoader.*;
+import static seng202.team1.Model.DataAnalyser.*;
 import static seng202.team1.Model.GenerateFields.generateSecondaryFunctionsList;
 import static seng202.team1.Model.GenerateFields.generateWifiProviders;
 
 
 /**
  * Controller for the map GUI
+ *
  * @author Cameron Auld
  * @author Ollie Chick
  * Created by cga51 on 06/09/17.
@@ -124,8 +112,6 @@ public class MapController {
     private Button AddCustomWIFIButton;
 
 
-
-
     @FXML
     private WebEngine webEngine;
 
@@ -154,9 +140,6 @@ public class MapController {
                 });
 
 
-
-
-
     }
 
 
@@ -183,11 +166,9 @@ public class MapController {
 
     public class JavaApp {
         public void alert(Double lat, Double lng) {
-            //System.out.println(lat + "," + lng);
             Point.Double clickPoint = new Point.Double();
             clickPoint.setLocation(lat, lng);
             userClicks.add(clickPoint);
-            //System.out.print(userClicks);
         }
 
         public void directions(String route) {
@@ -195,8 +176,8 @@ public class MapController {
                 BikeDirections dir = new BikeDirections(route, true);
                 if (showWIFINearRoute) {
                     ArrayList<Integer> indexes = searchWifiPointsOnRoute(dir.getPoints(), wifiPoints, wifiSearchDistance);
-                    for (int i = 0; i < indexes.size(); i++) {
-                        String scriptStr = "document.circleWIFI(" + indexes.get(i) + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                    for (int index : indexes) {
+                        String scriptStr = "document.circleWIFI(" + index + ", 'WIFISELECTED.png', 'WIFI2.png')";
                         webView.getEngine().executeScript(scriptStr);
                     }
                 } else if (showOnlyNearestWIFIToRoute) {
@@ -208,8 +189,8 @@ public class MapController {
 
                 if (showRetailersNearRoute) {
                     ArrayList<Integer> indexes = searchRetailerLocationsOnRoute(dir.getPoints(), retailerPoints, retailerSearchDistance);
-                    for (int i = 0; i < indexes.size(); i++) {
-                        String scriptStr = "document.circleRetailer(" + indexes.get(i) + ", 'DEPARTMENTSTORESELECTED.png', 'departmentstore.png')";
+                    for (int index : indexes) {
+                        String scriptStr = "document.circleRetailer(" + index + ", 'DEPARTMENTSTORESELECTED.png', 'departmentstore.png')";
                         webView.getEngine().executeScript(scriptStr);
                     }
                 } else if (showOnlyNearestRetailerToRoute) {
@@ -247,8 +228,8 @@ public class MapController {
 
         if (showWIFINearRetailer) {
             ArrayList<Integer> indexes = searchWifiPoints(lat, lng, retailerToWIFISearchDistance, wifiPoints, true);
-            for (int i = 0; i < indexes.size(); i++) {
-                String scriptStr = "document.circleWIFI(" + indexes.get(i) + ", 'WIFISELECTED.png', 'WIFI2.png')";
+            for (int index : indexes) {
+                String scriptStr = "document.circleWIFI(" + index + ", 'WIFISELECTED.png', 'WIFI2.png')";
                 webView.getEngine().executeScript(scriptStr);
             }
         } else if (showOnlyNearestWIFIToRetailer) {
@@ -258,7 +239,6 @@ public class MapController {
             webView.getEngine().executeScript(scriptStr);
         }
     }
-
 
 
     @FXML
@@ -272,15 +252,16 @@ public class MapController {
         webView.getEngine().executeScript("document.zoomOut()");
 
     }
+
     @FXML
     private void suggestRouteFromPoint() {
-        Point.Double coordinates = userClicks.get(userClicks.size()-1);
+        Point.Double coordinates = userClicks.get(userClicks.size() - 1);
         System.out.print(coordinates);
         ArrayList<BikeTrip> suggested = DataAnalyser.searchBikeTrips(coordinates.getX(), coordinates.getY(),
-        20000,  bikeTrips);
+                20000, bikeTrips);
         BikeTrip first = suggested.get(0);
         webView.getEngine().executeScript("document.calcRoute({lat: " + first.getStartLatitude() + ", lng:  " +
-                first.getStartLongitude() + "}, {lat: " + first.getEndLatitude() + ", lng:  " + first.getEndLongitude() +"})");
+                first.getStartLongitude() + "}, {lat: " + first.getEndLatitude() + ", lng:  " + first.getEndLongitude() + "})");
 
     }
 
@@ -291,7 +272,6 @@ public class MapController {
             FXMLLoader landingLoader = new FXMLLoader(getClass().getResource("/fxml/landingView.fxml"));
             Parent landingView = landingLoader.load();
             LandingController landingController = landingLoader.getController();
-
 
 
             Stage stage = (Stage) switchViewButton.getScene().getWindow(); //gets the current stage so that Table can take over
@@ -323,7 +303,6 @@ public class MapController {
     }
 
     private void addWifi(float lat, float lng, String title) {
-        System.out.println(title);
         String scriptStr = "document.addWIFIMarker({lat: " + lat + ", lng:  " + lng + "}, 'WIFI2.png', " + "'" + title + "')";
         webView.getEngine().executeScript(scriptStr);
 
@@ -350,8 +329,6 @@ public class MapController {
         String scriptStr = "document.drawRoute(" + latLngArray(points) + ")";
         webView.getEngine().executeScript(scriptStr);
     }
-
-
 
 
     @FXML
@@ -483,11 +460,10 @@ public class MapController {
     }
 
 
+    /**
+     * checks the given retailerLocation against the filter in the primary function ComboBox.
+     */
     private boolean checkPrimary(RetailerLocation retailerLocation) {
-        /**
-         * checks the given retailerLocation against the filter in the primary function ComboBox.
-         *
-         */
         if ("All".equals(filterPrimaryComboBox.getValue())) {
             return true;
         } else {
@@ -495,11 +471,10 @@ public class MapController {
         }
     }
 
+    /**
+     * checks the given retailerLocation against the filter in the primary function ComboBox.
+     */
     private boolean checkSecondary(RetailerLocation retailerLocation) {
-        /**
-         * checks the given retailerLocation against the filter in the primary function ComboBox.
-         *
-         */
         if ("All".equals(filterSecondaryComboBox.getValue())) {
             return true;
         } else {
@@ -507,11 +482,11 @@ public class MapController {
         }
     }
 
+    /**
+     * Checks the address line 1 of the given retailerLocation against the text in the street
+     * search field.
+     */
     private boolean checkStreet(RetailerLocation retailerLocation) {
-        /**
-         * Checks the address line 1 of the given retailerLocation against the text in the street
-         * search field.
-         */
         if (streetSearchField.getText().isEmpty()) {
             return true;
         } else {
@@ -556,15 +531,15 @@ public class MapController {
     }
 
 
+    /**
+     * Sets the filter options, those that are dynamically updated after
+     * wifi and retailer points are loaded are initialized to 'All'.
+     * Those for which the few possible values are known in advance are
+     * hard coded.
+     */
 
-        /**
-         * Sets the filter options, those that are dynamically updated after
-         * wifi and retailer points are loaded are initialized to 'All'.
-         * Those for which the few possible values are known in advance are
-         * hard coded.
-         */
+    // Retailer filters
 
-        // Retailer filters
     /**
      * Sets the filter options
      * TODO don't hard code
@@ -619,7 +594,7 @@ public class MapController {
                     wifiPoints.add(newWifiPoint);
                     System.out.println(wifiPoints.size());
                     addWifi(newWifiPoint.getLatitude(), newWifiPoint.getLongitude(), newWifiPoint.toInfoString());
-                    System.out.print(newWifiPoint);
+                    //System.out.print(newWifiPoint);
                     model.addCustomWifiLocation(newWifiPoint);
                     updateWIFI();
                     webView.getEngine().executeScript("document.wifiCluster()");
@@ -690,6 +665,7 @@ public class MapController {
             e.printStackTrace();
         }
     }
+
     /**
      * Add the user's custom Wifi points to the current data
      */
@@ -698,11 +674,11 @@ public class MapController {
         wifiPoints.addAll(customWifi);
     }
 
+    /**
+     * Sets the filter options that are dynamically generated based on the loaded
+     * wifi and retailer points.
+     */
     private void setFilters() {
-        /**
-         * Sets the filter options that are dynamically generated based on the loaded
-         * wifi and retailer points.
-         */
 
         // Retailer filters
         uniquePrimaryFunctions = GenerateFields.generatePrimaryFunctionsList(retailerPoints);
@@ -732,6 +708,7 @@ public class MapController {
         filterProviderComboBox.getSelectionModel().selectFirst();
 
     }
+
     @FXML
     private void clearFiltersRetailers() {
         filterPrimaryComboBox.getSelectionModel().selectFirst();
@@ -754,7 +731,7 @@ public class MapController {
         stage.close();
     }
 
-     void initModel(UserAccountModel userAccountModel) {
+    void initModel(UserAccountModel userAccountModel) {
 
         this.model = userAccountModel;
 
