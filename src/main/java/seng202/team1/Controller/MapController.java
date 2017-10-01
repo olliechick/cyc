@@ -281,10 +281,10 @@ public class MapController {
         Point.Float point;
         for (int i = 0; i < (points.size() - 1); i++) {
             point = points.get(i);
-            latLng += "lat: " + Double.toString(point.getY()) + ", lng: " + Double.toString(point.getX()) + ",";
+            latLng += "{lat: " + Double.toString(point.getY()) + ", lng: " + Double.toString(point.getX()) + "},";
         }
         point = points.get((points.size() - 1));
-        latLng += "lat: " + Double.toString(point.getY() )+ ", lng: " + Double.toString(point.getX()) + "))";
+        latLng += "{lat: " + Double.toString(point.getY() )+ ", lng: " + Double.toString(point.getX()) + "}";
         return latLng;
     }
 
