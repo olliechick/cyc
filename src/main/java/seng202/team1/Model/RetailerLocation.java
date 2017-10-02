@@ -39,11 +39,10 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
      * @param primaryFunction    primary function of retailer
      * @param secondaryFunction  secondary function of retailer
      * @param coords             co-ordinates of retailer in the form (longitude, latitude)
-     * @param isUserDefinedPoint true if the retailer is user-defined
      */
     public RetailerLocation(String name, String addressLine1, String addressLine2,
                             String city, String state, int zipcode, String blockLot, String primaryFunction,
-                            String secondaryFunction, Point.Float coords, boolean isUserDefinedPoint) {
+                            String secondaryFunction, Point.Float coords) {
         this.name = name;
 
         if (primaryFunction.equalsIgnoreCase("")) {
@@ -63,7 +62,6 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
         this.zipcode = zipcode;
         this.blockLot = blockLot;
         this.coords = coords;
-        this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
     /**
@@ -78,13 +76,11 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
      * @param blockLot           block-lot of retailer
      * @param primaryFunction    primary function of retailer
      * @param secondaryFunction  secondary function of retailer
-     * @param isUserDefinedPoint true if the retailer is user-defined
      */
     public RetailerLocation(String name, String addressLine1, String addressLine2, String city, String state,
-                            int zipcode, String blockLot, String primaryFunction, String secondaryFunction,
-                            boolean isUserDefinedPoint) {
+                            int zipcode, String blockLot, String primaryFunction, String secondaryFunction) {
         this(name, addressLine1, addressLine2, city, state, zipcode, blockLot,
-                primaryFunction, secondaryFunction, null, isUserDefinedPoint);
+                primaryFunction, secondaryFunction, null);
     }
 
     public String getName() {

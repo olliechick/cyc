@@ -248,7 +248,7 @@ public class CSVLoader {
                 Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(10)), Float.parseFloat(record.get(9)));
 
                 trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,// startStationId, endStationId,
-                        endPoint, bikeId, gender, birthYear, false));
+                        endPoint, bikeId, gender, birthYear));
 
                 isValidCsv = true;
             } catch (Exception e) {
@@ -368,7 +368,7 @@ public class CSVLoader {
                 String ssid = record.get(14);
 
                 wifiSpots.add(new WifiPoint(objectId, coords, name, location, locationType, hood,
-                        borough, city, zipcode, cost, provider, remarks, ssid, sourceId, datetimeActivated, false));
+                        borough, city, zipcode, cost, provider, remarks, ssid, sourceId, datetimeActivated));
 
                 isValidCsv = true;
             } catch (Exception e) {
@@ -498,7 +498,7 @@ public class CSVLoader {
 
                 retailers.add(new RetailerLocation(name, addressLine1, addressLine2, city,
                         state, zipcode, blockLot, primaryFunction,
-                        secondaryFunction, coords, false));
+                        secondaryFunction, coords));
 
                 isValidCsv = true;
             } catch (Exception e) {

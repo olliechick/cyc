@@ -225,7 +225,7 @@ public class AddWifiDialogController {
             }
 
 
-            wifiPoint = new WifiPoint(objectId, coords, placeName, street, locationType, hood, boro, city, zip, cost, provider, remarks, ssid, sourceId, dateTimeActivated, true);
+            wifiPoint = new WifiPoint(objectId, coords, placeName, street, locationType, hood, boro, city, zip, cost, provider, remarks, ssid, sourceId, dateTimeActivated);
             stage.close();
         }
     }
