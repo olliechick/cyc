@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Exports a list of DataPoints to a CSV file.
@@ -29,7 +28,6 @@ public class CSVExporter {
             + "Longitude,,,Location Type,Remarks,City,SSID,Source ID,Activated,,Borough,,Neighbourhood,,"
             + "ZIP code";
 
-
     private final static String datetimeFormat = "M/d/yyyy HH:mm:ss";
 
     /**
@@ -39,7 +37,7 @@ public class CSVExporter {
      * @param lines    A list of lines to save to the file
      * @throws IOException If an IO Exception occurs
      */
-    public static void exportCSV(String filename, List<String> lines) throws IOException {
+    public static void exportCSV(String filename, ArrayList<String> lines) throws IOException {
         Path file = Paths.get(filename);
         Files.write(file, lines, Charset.forName("UTF-8"));
     }
@@ -90,6 +88,11 @@ public class CSVExporter {
         }
         exportCSV(filename, lines);
     }
+
+
+    public static void exportWifiHotspots(String filename, String username){}
+
+    public static void exportRetailers(String filename, String username){}
 
 
     public static void main(String[] args) {
