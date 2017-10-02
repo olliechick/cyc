@@ -126,12 +126,14 @@
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 12,
           center: nycLatLng,
-          disableDefaultUI: true
+          disableDefaultUI: true,
+          fullscreenControl: false,
+          mapTypeControl: false
+
         });
 
         //Stop annoying infowindows
         fixInfoWindow();
-
 
         //Directions service is used to request bike route directions from Google
         var directionsService = new google.maps.DirectionsService();
@@ -178,6 +180,9 @@
         // WIFI and retailer clusters
         var wifiMarkerCluster;
         var retailerMarkerCluster;
+
+
+
 
       // Adds a marker to the map.
       function addMarkerUser(location, map) {

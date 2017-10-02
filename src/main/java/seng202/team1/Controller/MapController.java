@@ -16,6 +16,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
+import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
+import org.codefx.libfx.control.webview.WebViews;
 import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.Google.BikeDirections;
@@ -149,6 +151,11 @@ public class MapController {
         resultsLabel.setText("");
 
     }
+    WebViewHyperlinkListener eventPrintingListener = event -> {
+        String eventString = WebViews.hyperlinkEventToString(event);
+        System.out.println("Denied: " + eventString);
+        return true;
+    };
 
     @FXML
     private void initialize() {
@@ -173,6 +180,7 @@ public class MapController {
         webView.getEngine().loadContent("");
         webEngine.load(getClass().getResource("/html/map.html").toString());
 
+
         // Check the map has been loaded before attempting to add markers to it.
         webEngine.getLoadWorker().stateProperty().addListener(
                 new ChangeListener<Worker.State>() {
@@ -184,6 +192,7 @@ public class MapController {
                 });
 
     }
+
 
     private void loadData() {
 
@@ -199,6 +208,8 @@ public class MapController {
         setFilters();       // sets the filters based on wifi and retailer points loaded
         loadAllBikeTrips(); // currently only dynamic, requested routes are shown
         win.setMember("app", clickListner);
+        WebViews.addHyperlinkListener(webView, eventPrintingListener);
+
 
     }
 
