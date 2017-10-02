@@ -15,9 +15,6 @@ import java.awt.*;
 public class TOSController {
 
     @FXML
-    private Button backButton;
-
-    @FXML
     private TextFlow textFlowBox;
 
 public void initialize() {

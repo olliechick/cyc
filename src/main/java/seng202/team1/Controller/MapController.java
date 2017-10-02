@@ -21,12 +21,14 @@ import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.Google.BikeDirections;
 import seng202.team1.UserAccountModel;
 
-import java.awt.*;
+import java.awt.geom.Point2D;
+
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import java.awt.*;
+
 
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
@@ -77,6 +79,8 @@ public class MapController {
     private int retailerToWIFISearchDistance = 200;
     private boolean drawRouteUsingPolyLines = false;
 
+    public ArrayList<BikeTrip> tripsNearPoint = null;
+    public int currentTripCounter = 0;
 
     @FXML
     private UserAccountModel model;
@@ -116,6 +120,23 @@ public class MapController {
     private Button switchViewButton;
     @FXML
     private Button AddCustomWIFIButton;
+    @FXML
+    private Button searchForRouteButton;
+    @FXML
+    private TextField startingLatTextField;
+    @FXML
+    private TextField startingLongTextField;
+    @FXML
+    private TextField endingLatTextField;
+    @FXML
+    private TextField endingLongTextField;
+    @FXML
+    private Label resultsLabel;
+    @FXML
+    private Button nextButton;
+    @FXML
+    private Button previousButton;
+
 
 
 
@@ -127,6 +148,7 @@ public class MapController {
     void initModel(UserAccountModel model, Stage stage) {
         this.model = model;
         this.stage = stage;
+        resultsLabel.setText("");
 
     }
 
@@ -314,6 +336,7 @@ public class MapController {
         Point.Double coordinates = userClicks.get(userClicks.size() - 1);
         System.out.print(coordinates);
         ArrayList<BikeTrip> suggested = DataAnalyser.searchBikeTrips(coordinates.getX(), coordinates.getY(),
+        20000,  bikeTrips,true);
                 20000, bikeTrips);
         BikeTrip first = suggested.get(0);
         webView.getEngine().executeScript("document.calcRoute({lat: " + first.getStartLatitude() + ", lng:  " +
@@ -365,9 +388,114 @@ public class MapController {
         return latLng;
     }
 
-    public void drawRoute(ArrayList<Point.Float> points) {
+
+    private String latLngRoute(ArrayList<Point.Float> points) {
+        String latLng = "";
+        Point.Float point;
+        for (int i = 0; i < (points.size() - 1); i++) {
+            point = points.get(i);
+            latLng += "{lat: " + Double.toString(point.getY()) + ", lng: " + Double.toString(point.getX()) + "},";
+        }
+        point = points.get((points.size() - 1));
+        latLng += "{lat: " + Double.toString(point.getY() )+ ", lng: " + Double.toString(point.getX()) + "}";
+        return latLng;
+    }
+
+    private void drawRoute(ArrayList<Point.Float> points) {
         String scriptStr = "document.drawRoute(" + latLngArray(points) + ")";
         webView.getEngine().executeScript(scriptStr);
+    }
+
+    private void generateRoute(ArrayList<Point.Float> points) {
+        System.out.println("Generating Route");
+        String scriptStr = "document.calcRoute(" + latLngRoute(points) + ")";
+        webView.getEngine().executeScript(scriptStr);
+    }
+
+    public void findResults() {
+        tripsNearPoint = null; // reset the list
+        currentTripCounter = 0; // reset the counter
+        System.out.println("Search Button Pressed");
+        Double startingLat = 0.00;
+        Double startingLong = 0.00;
+        try {
+            startingLat = Double.parseDouble(startingLatTextField.getText());
+            startingLong = Double.parseDouble(startingLongTextField.getText());
+        } catch (NumberFormatException e) {
+            System.out.println("Bad Starting Lat or Long"); // We want these to pass to allow different search types
+        }
+        Double endingLat = 0.00;
+        Double endingLong = 0.00;
+        try {
+            endingLat = Double.parseDouble(endingLatTextField.getText());
+            endingLong = Double.parseDouble(endingLongTextField.getText());
+        } catch (NumberFormatException e) {
+            System.out.println("Bad Ending Lat or Long");// We want these to pass to allow different search types
+        }
+        double delta = 100;
+
+
+        ArrayList<BikeTrip> results = new ArrayList<>();
+
+        if (endingLat.equals(0.00)|| endingLong.equals(0.00) && startingLat != 0.00 && startingLong != 0.00) {
+            results = DataAnalyser.searchBikeTrips(startingLat,startingLong,delta,bikeTrips,true);
+        }
+        if  (endingLat != (0.00) && endingLong != (0.00) && (startingLat.equals(0.00) || startingLong.equals(0.00))){
+            results = DataAnalyser.searchBikeTrips(endingLat,endingLong,delta,bikeTrips,false);
+        }
+        if (endingLat != 0.00 && endingLong != 0 && startingLat != 0.00 && startingLong != 0){
+            results = DataAnalyser.searchBikeTrips(startingLat,startingLong,delta,bikeTrips,true);
+            results =  DataAnalyser.searchBikeTrips(endingLat,endingLong,delta,results,false); // takes the list of trips that start at one point and then finds those that end at another point
+
+        }
+        System.out.println("Results Found");
+        if(results.size() == 0){
+            resultsLabel.setText("No results were found");
+            results = null;
+        } else {
+            resultsLabel.setText(results.get(0).nicerDescription());
+            ArrayList<Point.Float> route1 = new ArrayList<>();
+            route1.add(results.get(0).getStartPoint());
+            route1.add(results.get(0).getEndPoint());
+            generateRoute(route1);
+        }
+        tripsNearPoint = results;
+    }
+
+    @FXML
+    private void nextTrip(){
+        currentTripCounter++;
+        if (tripsNearPoint != null && currentTripCounter < tripsNearPoint.size()) {
+            resultsLabel.setText(tripsNearPoint.get(currentTripCounter).nicerDescription());
+            ArrayList<Point.Float> route1 = new ArrayList<>();
+            route1.add(tripsNearPoint.get(currentTripCounter).getStartPoint());
+            route1.add(tripsNearPoint.get(currentTripCounter).getEndPoint());
+            generateRoute(route1);
+        } else if ( tripsNearPoint == null){
+            resultsLabel.setText("No points have been found or you have not yet searched please try again");
+        } else if (currentTripCounter >= tripsNearPoint.size()){
+            resultsLabel.setText("You have reached the end of the list");
+            currentTripCounter = tripsNearPoint.size(); // stops someone running the value very high
+        }
+
+    }
+
+    @FXML
+    private void previousTrip() {
+        currentTripCounter--;
+        if (tripsNearPoint != null && currentTripCounter >= 0){
+            resultsLabel.setText(tripsNearPoint.get(currentTripCounter).nicerDescription());
+            ArrayList<Point.Float> route1 = new ArrayList<>();
+            route1.add(tripsNearPoint.get(currentTripCounter).getStartPoint());
+            route1.add(tripsNearPoint.get(currentTripCounter).getEndPoint());
+            generateRoute(route1);
+        } else if ( tripsNearPoint  == null) {
+            resultsLabel.setText("No points have been found or you have not yet searched please try again");
+        } else if (currentTripCounter < 0){
+            resultsLabel.setText("You have reached the start of the list");
+            currentTripCounter = 0; // stops someone running the value very low
+        }
+
     }
 
 
