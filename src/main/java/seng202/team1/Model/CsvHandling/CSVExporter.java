@@ -14,7 +14,8 @@ import java.util.List;
 /**
  * Exports a list of DataPoints to a CSV file.
  * These CSV files are able to be (edited and) re-imported into the app.
- * Note that some columns will be blank - these are
+ * Note that some columns will be blank - these are so that it retains backwards-compatibility
+ * with the CSV files that are originally imported.
  *
  * @author Ollie Chick
  */
@@ -22,7 +23,14 @@ public class CSVExporter {
 
     private final static String bikeTripsHeader = "Trip duration,Start time,Stop time,,,Start point latitude,"
             + "Start point longitude,,,End point latitude,End point longitude,Bike ID,,Birth year,Gender";
-    public final static String datetimeFormat = "M/d/yyyy HH:mm:ss";
+    private final static String retailersHeader = "Name,Address (line 1),Address (line 2),City,State,"
+            + "ZIP code,Block-Lot,Primary function,Secondary function,Latitude,Longitude";
+    private final static String wifisHeader = "Object ID,,,Cost,Provider,Name,Location,Latitude,"
+            + "Longitude,,,Location Type,Remarks,City,SSID,Source ID,Activated,,Borough,,Neighbourhood,,"
+            + "ZIP code";
+
+
+    private final static String datetimeFormat = "M/d/yyyy HH:mm:ss";
 
     /**
      * Exports a list of Strings as lines into the file (whose name is given by filename).
