@@ -306,7 +306,6 @@ public class BikeTableController extends TableController {
                 } else {
                     dataPoints.add(addBikeDialog.getBikeTrip());
                     model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
-                    SerializerImplementation.serializeUser(model);
                 }
             }
 

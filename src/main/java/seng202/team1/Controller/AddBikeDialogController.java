@@ -227,7 +227,7 @@ public class AddBikeDialogController {
             int birthYear = model.getBirthday().getYear();
             System.out.println(gender+" " +birthYear);
 
-            bikeTrip = new BikeTrip(startDateTime, stopDateTime, startPoint, endPoint, bikeID, gender, birthYear, false);
+            bikeTrip = new BikeTrip(startDateTime, stopDateTime, startPoint, endPoint, bikeID, gender, birthYear);
             stage.close();
         }
     }

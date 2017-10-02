@@ -350,7 +350,6 @@ public class WifiTableController extends TableController {
                 } else {
                     dataPoints.add(newWifiPoint);
                     model.addCustomWifiLocation(newWifiPoint);
-                    SerializerImplementation.serializeUser(model);
                 }
             }
         } catch (IOException e) {

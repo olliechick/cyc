@@ -108,7 +108,7 @@ public class AddRetailerDialogController {
 
             retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city,
                                                     state, zipcode, blockLot, primaryFunction,
-                                                    secondaryFunction, coords, true);
+                                                    secondaryFunction, coords);
             stage.close();
         }
     }

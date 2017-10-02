@@ -8,17 +8,8 @@ package seng202.team1.Model;
  */
 public class DataPoint {
 
-    protected boolean isUserDefinedPoint;
     private boolean visible = true;
     private int id = -1;
-
-    public boolean isUserDefinedPoint() {
-        return isUserDefinedPoint;
-    }
-
-    public void setUserDefinedPoint(boolean userDefinedPoint) {
-        isUserDefinedPoint = userDefinedPoint;
-    }
 
     public int getId() {
         return id;
