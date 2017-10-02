@@ -56,7 +56,7 @@ public class CSVExporterTest {
         boolean isUserDefinedPoint = false;
 
         BikeTrip bikeTrip = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
-                bikeID, gender, birthYear, tripDistance, isUserDefinedPoint);
+                bikeID, gender, birthYear, tripDistance);
 
         String username = "testUser";
 
