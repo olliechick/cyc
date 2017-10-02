@@ -315,30 +315,57 @@ public class CSVLoader {
         for (CSVRecord record : wifiData) {
             // Process all the attributes - from most to least likely to fail
             try {
+                // Datetime activated
                 LocalDateTime datetimeActivated = LocalDateTime.parse(record.get(16), DateTimeFormatter.ofPattern("M/d/yyyy hh:mm:ss a Z"));
                 if (datetimeActivated.isBefore(EARLIEST_POSSIBLE_DATE)) {
                     // dates earlier than this means that this data is not available
                     datetimeActivated = null;
                 }
 
+                // ZIP code
                 int zipcode = Integer.parseInt(record.get(22));
-                int objectId = Integer.parseInt(record.get(0));
+
+                // Object ID
+                String objectIdString = record.get(0);
+                int objectId;
+                if (objectIdString.isEmpty()) {
+                    objectId = -1;
+                } else {
+                    objectId = Integer.parseInt(record.get(0));
+                }
+
+                // Co-ordinates
                 Point.Float coords = new Point.Float(Float.parseFloat(record.get(8)), Float.parseFloat(record.get(7)));
 
+                // Strings that could be null
                 String name = record.get(5);
+                if (name.isEmpty()) {
+                    name = null;
+                }
                 String location = record.get(6);
                 if (location.isEmpty()) {
                     location = null;
                 }
                 String locationType = record.get(11);
+                if (locationType.isEmpty()) {
+                    locationType = null;
+                }
+                String remarks = record.get(12);
+                if (remarks.isEmpty()) {
+                    remarks = null;
+                }
+                String sourceId = record.get(15);
+                if (sourceId.isEmpty()) {
+                    sourceId = null;
+                }
+
+                // Strings that can't be null
                 String hood = record.get(20);
                 String borough = record.get(18);
                 String city = record.get(13);
                 String cost = record.get(3);
                 String provider = record.get(4);
-                String remarks = record.get(12);
                 String ssid = record.get(14);
-                String sourceId = record.get(15);
 
                 wifiSpots.add(new WifiPoint(objectId, coords, name, location, locationType, hood,
                         borough, city, zipcode, cost, provider, remarks, ssid, sourceId, datetimeActivated, false));
@@ -444,18 +471,29 @@ public class CSVLoader {
 
                 // Get secondary function
                 String secondaryFunction = record.get(8);
-                if (secondaryFunction.length() > 2) {
+                if (secondaryFunction.length() > 2 && secondaryFunction.substring(1, 2).equals("-")) {
                     // Strip off the first bit. E.g. "F-Italian" -> "Italian"
                     secondaryFunction = secondaryFunction.substring(2);
                 }
 
-                // Other stuff
-                String name = record.get(0);
+                // Strings that could be null
                 String addressLine1 = record.get(1);
+                if (addressLine1.isEmpty()) {
+                    addressLine1 = null;
+                }
                 String addressLine2 = record.get(2);
+                if (addressLine2.isEmpty()) {
+                    addressLine2 = null;
+                }
+                String blockLot = record.get(6);
+                if (blockLot.isEmpty()) {
+                    blockLot = null;
+                }
+
+                // Strings that can't be null
+                String name = record.get(0);
                 String city = record.get(3);
                 String state = record.get(4);
-                String blockLot = record.get(6);
                 String primaryFunction = record.get(7);
 
                 retailers.add(new RetailerLocation(name, addressLine1, addressLine2, city,

@@ -31,7 +31,6 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
     private char gender; //u for unknown, m for male, f for female
     private int birthYear;
     private Double tripDistance; //in metres
-    private boolean isUserDefinedPoint;
 
 
     /**
