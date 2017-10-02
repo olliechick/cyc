@@ -443,7 +443,13 @@ public class WifiTableController extends TableController {
             System.out.println("Searching For Points");
             results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints);
             System.out.println(results.size());
-        }else {
+        }else if (endLat != 0.00 && endLong != 0.00) {
+            System.out.println("Searching For Points - search in range delta");
+            delta = DataAnalyser.calculateDistance(startLat,startLong,endLat,endLong);
+            results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints); // Goes from the start point to the end Point
+            results = DataAnalyser.searchWifiPoints(endLat,endLong,delta,results ); // Takes the list of points from the start point and then
+                                                                                    // Runs through them from the endpoint finding points in range
+        } else {
             System.out.println("Searching For Points - custom delta");
             delta = DataAnalyser.calculateDistance(startLat,startLong,endLat,endLong);
             results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints);
