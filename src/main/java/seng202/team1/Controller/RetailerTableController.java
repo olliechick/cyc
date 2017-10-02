@@ -362,7 +362,6 @@ public class RetailerTableController extends TableController {
                 } else {
                     dataPoints.add(retailerLocation);
                     model.addCustomRetailerLocation(retailerLocation);
-                    SerializerImplementation.serializeUser(model);
                 }
             }
         } catch (IOException e) {
