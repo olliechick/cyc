@@ -118,8 +118,6 @@ public class MapController {
     private Button AddCustomWIFIButton;
 
 
-
-
     @FXML
     private WebEngine webEngine;
 
@@ -146,13 +144,24 @@ public class MapController {
                         }
                     }
                 });
-
-
-
-
-
     }
 
+    @FXML
+    private void resetMap() {
+        webView.getEngine().loadContent("");
+        webEngine.load(getClass().getResource("/html/map.html").toString());
+
+        // Check the map has been loaded before attempting to add markers to it.
+        webEngine.getLoadWorker().stateProperty().addListener(
+                new ChangeListener<Worker.State>() {
+                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
+                        if (newState == Worker.State.SUCCEEDED) {
+                            reloadData();
+                        }
+                    }
+                });
+
+    }
 
     private void loadData() {
 
@@ -213,7 +222,7 @@ public class MapController {
                     }
                     ArrayList<WIFIPointDistance> sortedPointDistances = sortedWIFIPointsByMinimumDistanceToRoute(pointDistances, dir.getPoints());
                     for (int i = 0; i < sortedPointDistances.size(); i++) {
-                        String scriptStr = "document.circleAndNumberWIFI(" + sortedPointDistances.get(i).getIndexMap() + ", 'WIFISELECTED.png', '" + Integer.toString(i+1) +"')";
+                        String scriptStr = "document.circleAndNumberWIFI(" + sortedPointDistances.get(i).getIndexMap() + ", 'WIFISELECTED.png', '" + Integer.toString(i + 1) + "')";
                         webView.getEngine().executeScript(scriptStr);
                     }
                 } else if (showOnlyNearestWIFIToRoute) {
@@ -234,7 +243,7 @@ public class MapController {
                     }
                     ArrayList<RetailerPointDistance> sortedPointDistances = sortedRetailerPointsByMinimumDistanceToRoute(pointDistances, dir.getPoints());
                     for (int i = 0; i < sortedPointDistances.size(); i++) {
-                        String scriptStr = "document.circleAndNumberRetailer(" + sortedPointDistances.get(i).getIndexMap() + ", 'DEPARTMENTSTORESELECTED.png', '" + Integer.toString(i+1) +"')";
+                        String scriptStr = "document.circleAndNumberRetailer(" + sortedPointDistances.get(i).getIndexMap() + ", 'DEPARTMENTSTORESELECTED.png', '" + Integer.toString(i + 1) + "')";
                         webView.getEngine().executeScript(scriptStr);
                     }
                 } else if (showOnlyNearestRetailerToRoute) {
@@ -266,9 +275,9 @@ public class MapController {
                 Point2D.Float waypoint = new Point2D.Float(lng.floatValue(), lat.floatValue());
                 ArrayList<Point2D.Float> waypoints = new ArrayList<>();
                 waypoints.add(waypoint);
-                ArrayList<WIFIPointDistance> sortedPointDistances = sortedWIFIPointsByMinimumDistanceToRoute(pointDistances, waypoints );
+                ArrayList<WIFIPointDistance> sortedPointDistances = sortedWIFIPointsByMinimumDistanceToRoute(pointDistances, waypoints);
                 for (int i = 0; i < sortedPointDistances.size(); i++) {
-                    String scriptStr = "document.circleAndNumberWIFI(" + sortedPointDistances.get(i).getIndexMap() + ", 'WIFISELECTED.png', '" + Integer.toString(i+1) +"')";
+                    String scriptStr = "document.circleAndNumberWIFI(" + sortedPointDistances.get(i).getIndexMap() + ", 'WIFISELECTED.png', '" + Integer.toString(i + 1) + "')";
                     webView.getEngine().executeScript(scriptStr);
                 }
             } else if (showOnlyNearestWIFIToRetailer) {
@@ -280,20 +289,6 @@ public class MapController {
 
         }
     }
-
-    public void testPrint(String route) {
-        //Document doc = webEngine.getDocument();
-        // Element el = doc.getElementById("map");
-        // String route = el.getAttribute("currentRoute");
-        System.out.print(route);
-        System.out.println("");
-
-    }
-
-
-
-
-
 
 
 
@@ -807,22 +802,7 @@ public class MapController {
 
     }
 
-    @FXML
-    private void resetMap() {
-        webView.getEngine().loadContent("");
-        webEngine.load(getClass().getResource("/html/map.html").toString());
 
-        // Check the map has been loaded before attempting to add markers to it.
-        webEngine.getLoadWorker().stateProperty().addListener(
-                new ChangeListener<Worker.State>() {
-                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
-                        if (newState == Worker.State.SUCCEEDED) {
-                            reloadData();
-                        }
-                    }
-                });
-
-    }
 
     @FXML
     public void close() {
@@ -843,8 +823,7 @@ public class MapController {
             AboutController aboutController = showAbout.getController();
             aboutController.setStage(stage, root);
             stage.show();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
