@@ -32,7 +32,6 @@ public class WifiPointTest {
     String ssid;
     String sourceId;
     LocalDateTime datetimeActivated;
-    boolean isUserDefinedPoint;
 
     WifiPoint wifiPoint;
 
@@ -53,10 +52,9 @@ public class WifiPointTest {
         ssid = "LinkNYC Free Wi-Fi";
         sourceId = "LINK-00869";
         datetimeActivated = LocalDateTime.of(2017, Month.JANUARY, 18, 0, 0, 0);
-        isUserDefinedPoint = false;
 
         wifiPoint = new WifiPoint(objectId, coords, name, location, locationType, hood, borough, city, zipcode,
-                cost, provider, remarks, ssid, sourceId, datetimeActivated, isUserDefinedPoint);
+                cost, provider, remarks, ssid, sourceId, datetimeActivated);
 
 
     }
@@ -96,10 +94,9 @@ public class WifiPointTest {
         ssid = "LinkNYC Free Wi-Fi";
         sourceId = "LINK-00869";
         datetimeActivated = LocalDateTime.of(2017, Month.JANUARY, 18, 0, 0, 0);
-        isUserDefinedPoint = false;
 
         WifiPoint wifiPoint1 = new WifiPoint(objectId, coords, name, location, locationType, hood, borough, city, zipcode,
-                cost, provider, remarks, ssid, sourceId, datetimeActivated, isUserDefinedPoint);
+                cost, provider, remarks, ssid, sourceId, datetimeActivated);
         boolean isSame = wifiPoint.equals(wifiPoint1);
         assertEquals(true, isSame);
     }
@@ -121,10 +118,9 @@ public class WifiPointTest {
         ssid = "LinkNYC Free Wi-Fi";
         sourceId = "LINK-00869";
         datetimeActivated = LocalDateTime.of(2017, Month.JANUARY, 18, 0, 0, 0);
-        isUserDefinedPoint = false;
 
         WifiPoint wifiPoint1 = new WifiPoint(objectId, coords, name, location, locationType, hood, borough, city, zipcode,
-                cost, provider, remarks, ssid, sourceId, datetimeActivated, isUserDefinedPoint);
+                cost, provider, remarks, ssid, sourceId, datetimeActivated);
         boolean isSame = wifiPoint.equals(wifiPoint1);
         assertEquals(false, isSame);
     }
@@ -145,10 +141,9 @@ public class WifiPointTest {
         ssid = "LinkNYC Free Wi-Fi";
         sourceId = "LINK-00869";
         datetimeActivated = LocalDateTime.of(2017, Month.JANUARY, 18, 0, 0, 0);
-        isUserDefinedPoint = false;
 
         WifiPoint wifiPoint1 = new WifiPoint(objectId, coords, name, location, locationType, hood, borough, city, zipcode,
-                cost, provider, remarks, ssid, sourceId, datetimeActivated, isUserDefinedPoint);
+                cost, provider, remarks, ssid, sourceId, datetimeActivated);
         boolean isSame = wifiPoint.equals(wifiPoint1);
         assertEquals(true, isSame);
     }
@@ -182,10 +177,9 @@ public class WifiPointTest {
         ssid = "LinkNYC Free Wi-Fi";
         sourceId = "LINK-00869";
         datetimeActivated = LocalDateTime.of(2017, Month.JANUARY, 18, 0, 0, 0);
-        isUserDefinedPoint = false;
 
         WifiPoint wifiPoint1 = new WifiPoint(objectId, coords, name, location, locationType, hood, borough, city, zipcode,
-                cost, provider, remarks, ssid, sourceId, datetimeActivated, isUserDefinedPoint);
+                cost, provider, remarks, ssid, sourceId, datetimeActivated);
         int hash1 = wifiPoint.hashCode();
         int hash2 = wifiPoint1.hashCode();
         assertEquals(hash1,hash2);
@@ -208,10 +202,9 @@ public class WifiPointTest {
         ssid = "LinkNYC Free Wi-Fi";
         sourceId = "LINK-00869";
         datetimeActivated = LocalDateTime.of(2017, Month.JANUARY, 18, 0, 0, 0);
-        isUserDefinedPoint = false;
 
         WifiPoint wifiPoint1 = new WifiPoint(objectId, coords, name, location, locationType, hood, borough, city, zipcode,
-                cost, provider, remarks, ssid, sourceId, datetimeActivated, isUserDefinedPoint);
+                cost, provider, remarks, ssid, sourceId, datetimeActivated);
         int hash1 = wifiPoint.hashCode();
         int hash2 = wifiPoint1.hashCode();
         assertNotEquals(hash1,hash2);
@@ -235,10 +228,9 @@ public class WifiPointTest {
         ssid = "LinkNYC Free Wi-Fi";
         sourceId = "LINK-00869";
         datetimeActivated = LocalDateTime.of(2017, Month.JANUARY, 18, 0, 0, 0);
-        isUserDefinedPoint = false;
 
         WifiPoint wifiPoint1 = new WifiPoint(objectId, coords, name, location, locationType, hood, borough, city, zipcode,
-                cost, provider, remarks, ssid, sourceId, datetimeActivated, isUserDefinedPoint);
+                cost, provider, remarks, ssid, sourceId, datetimeActivated);
         int hash1 = wifiPoint.hashCode();
         int hash2 = wifiPoint1.hashCode();
         assertEquals(hash1,hash2);
