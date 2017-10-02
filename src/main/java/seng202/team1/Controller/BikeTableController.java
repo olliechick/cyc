@@ -169,6 +169,7 @@ public class BikeTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
                 } else {
                     selectedBikeTrip.setAllProperties(newBikeTrip);
+                    table.refresh();
                 }
             }
 
