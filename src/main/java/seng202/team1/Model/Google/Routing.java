@@ -26,7 +26,7 @@ public final class Routing {
         ArrayList<BikeTrip> results = new ArrayList<>();
         int delta = 100; // allows us to increment the search radius
         while (results.size() < 9 && delta < 1001) {
-            ArrayList<BikeTrip> holder = DataAnalyser.searchBikeTrips(ourPoint.getY(), ourPoint.getX(), delta, triplist);
+            ArrayList<BikeTrip> holder = DataAnalyser.searchBikeTrips(ourPoint.getY(), ourPoint.getX(), delta, triplist,true);
             for (BikeTrip t : holder) {
                 if (!results.contains(t)) {
                     results.add(t);

@@ -47,7 +47,7 @@ public class DataAnalyserTest {
     @Test
     public void TestSearchBikeTripsMatching() throws Exception { //Needs better data to be checked with #TODO
         ArrayList<BikeTrip> trips = CSVLoader.populateBikeTrips(RES_DIR + "bikeTripTestData.csv");
-        ArrayList<BikeTrip> results = DataAnalyser.searchBikeTrips(40.732, -73.9925, 600, trips); // should be in the middle of the test data
+        ArrayList<BikeTrip> results = DataAnalyser.searchBikeTrips(40.732, -73.9925, 600, trips, true); // should be in the middle of the test data
         assertEquals(2, results.size());
     }
 

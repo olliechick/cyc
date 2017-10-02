@@ -111,6 +111,7 @@ public class RetailerTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
                 } else {
                     selectedRetailerLocation.setAllProperties(newRetailerLocation);
+                    table.refresh();
                 }
             }
         } catch (IOException e) {

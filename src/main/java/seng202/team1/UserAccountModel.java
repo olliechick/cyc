@@ -1,5 +1,6 @@
 package seng202.team1;
 
+import seng202.team1.Controller.AlertGenerator;
 import seng202.team1.Model.*;
 
 import java.io.File;
@@ -95,17 +96,32 @@ public class UserAccountModel implements java.io.Serializable {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.salt = PasswordManager.getNextSalt();
-        this.password = PasswordManager.hash(password, salt);
-    }
 
     public byte[] getSalt() {
         return this.salt;
     }
 
-
-
+    /**
+     * Allows the Users password to be changed
+     * @param currentPassword The users current password
+     * @param newPassword The desired new Password
+     * @param confirmPassword The confirmation of the old password
+     * @return True if Changed false if not
+     */
+    public boolean changePassword(String currentPassword, String newPassword, String confirmPassword){
+        if (PasswordManager.isExpectedPassword(currentPassword, salt, password)) {
+            if (newPassword.equals(confirmPassword)) {
+                salt = PasswordManager.getNextSalt();
+                password = PasswordManager.hash(newPassword, salt);
+                return true;
+            } else {
+                AlertGenerator.createAlert("New passwords do not match");
+            }
+        } else {
+            AlertGenerator.createAlert("The current password is incorrect");
+        }
+        return false;
+    }
 
 //from dummy Model
 
