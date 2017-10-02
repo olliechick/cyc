@@ -1,5 +1,8 @@
 package seng202.team1.Model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -128,6 +131,37 @@ public final class DataAnalyser {
         }
         return results;
     }
+
+
+
+    /**
+     * Takes a latitude, longitude and distance delta and iterates through a list of wifi points
+     * Returns all points within the specified distance from the lat and long
+     *
+     * @param searchLat  Latitude to start the search at
+     * @param searchLong Longitude to start the search at
+     * @param delta      radius to search in
+     * @param hotspots   ArrayList of WiFi points to search through
+     * @return a list of wifi points close the point
+     */
+    public static ObservableList<WifiPoint> searchWifiPoints(double searchLat, double searchLong,
+                                                             double delta, ObservableList<WifiPoint> hotspots) {
+        ArrayList<WifiPoint> results = new ArrayList<>();
+        for (WifiPoint hotspot : hotspots) {
+            // Unfortunately an 0(n) with the current data set.
+            // Perhaps we need to sort based on Lat and long to decrease time complexity
+            double spotLong = hotspot.getLongitude();
+            double spotLat = hotspot.getLatitude();
+            if (calculateDistance(searchLat, searchLong, spotLat, spotLong) < delta) {
+                results.add(hotspot);
+            }
+        }
+        ObservableList<WifiPoint> resultsObserved = FXCollections.observableArrayList(results);
+
+        return resultsObserved;
+    }
+
+
     public static ArrayList<WIFIPointDistance> sortedWIFIPointsByMinimumDistanceToRoute(ArrayList<WIFIPointDistance> points, ArrayList<Point2D.Float> waypoints) {
         WIFIPointDistance current;
         Double currentDistance;
