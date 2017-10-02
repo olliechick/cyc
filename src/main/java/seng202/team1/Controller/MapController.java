@@ -337,7 +337,6 @@ public class MapController {
         System.out.print(coordinates);
         ArrayList<BikeTrip> suggested = DataAnalyser.searchBikeTrips(coordinates.getX(), coordinates.getY(),
         20000,  bikeTrips,true);
-                20000, bikeTrips);
         BikeTrip first = suggested.get(0);
         webView.getEngine().executeScript("document.calcRoute({lat: " + first.getStartLatitude() + ", lng:  " +
                 first.getStartLongitude() + "}, {lat: " + first.getEndLatitude() + ", lng:  " + first.getEndLongitude() + "})");

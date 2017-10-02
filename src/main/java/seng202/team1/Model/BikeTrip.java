@@ -432,7 +432,7 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
      * @return A nicer description of the trip for the map
      */
     public String nicerDescription(){
-        return "This trip takes about  " + getDuration() + "and goes to (" +getEndLatitude() + ","+getEndLongitude() + "), a distance of " + String.format("%.0f",tripDistance) + "m away";
+        return "This trip takes about  " + getDuration() + " and goes to (" +getEndLatitude() + ","+getEndLongitude() + "), a distance of " + String.format("%.0f",tripDistance) + "m away";
     }
 
 
