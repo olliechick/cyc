@@ -115,8 +115,6 @@ public class MapController {
     @FXML
     private TextField endingLongTextField;
     @FXML
-    private TextField distanceFromPointTextField;
-    @FXML
     private Label resultsLabel;
     @FXML
     private Button nextButton;
@@ -300,7 +298,7 @@ public class MapController {
     }
 
     public void findResults() {
-        tripsNearPoint = null; // resest the list
+        tripsNearPoint = null; // reset the list
         currentTripCounter = 0; // reset the counter
         System.out.println("Search Button Pressed");
         Double startingLat = 0.00;
@@ -319,12 +317,8 @@ public class MapController {
         } catch (NumberFormatException e) {
             System.out.println("Bad Ending Lat or Long");// We want these to pass to allow different search types
         }
-        double delta = 10;
-        try {
-            delta = Double.parseDouble(distanceFromPointTextField.getText());
-        } catch (NumberFormatException e) {
-            System.out.println("Using default Delta");
-        }
+        double delta = 100;
+
 
         ArrayList<BikeTrip> results = new ArrayList<>();
 
@@ -344,7 +338,7 @@ public class MapController {
             resultsLabel.setText("No results were found");
             results = null;
         } else {
-            resultsLabel.setText(results.get(0).getDescription());
+            resultsLabel.setText(results.get(0).nicerDescription());
             ArrayList<Point.Float> route1 = new ArrayList<>();
             route1.add(results.get(0).getStartPoint());
             route1.add(results.get(0).getEndPoint());
@@ -357,7 +351,7 @@ public class MapController {
     private void nextTrip(){
         currentTripCounter++;
         if (tripsNearPoint != null && currentTripCounter < tripsNearPoint.size()) {
-            resultsLabel.setText(tripsNearPoint.get(currentTripCounter).getDescription());
+            resultsLabel.setText(tripsNearPoint.get(currentTripCounter).nicerDescription());
             ArrayList<Point.Float> route1 = new ArrayList<>();
             route1.add(tripsNearPoint.get(currentTripCounter).getStartPoint());
             route1.add(tripsNearPoint.get(currentTripCounter).getEndPoint());
@@ -375,7 +369,7 @@ public class MapController {
     private void previousTrip() {
         currentTripCounter--;
         if (tripsNearPoint != null && currentTripCounter >= 0){
-            resultsLabel.setText(tripsNearPoint.get(currentTripCounter).getDescription());
+            resultsLabel.setText(tripsNearPoint.get(currentTripCounter).nicerDescription());
             ArrayList<Point.Float> route1 = new ArrayList<>();
             route1.add(tripsNearPoint.get(currentTripCounter).getStartPoint());
             route1.add(tripsNearPoint.get(currentTripCounter).getEndPoint());
