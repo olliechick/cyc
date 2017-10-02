@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -24,6 +25,9 @@ public class LandingController {
 
     private UserAccountModel model;
     private Stage stage;
+
+    @FXML
+    private Button changePasswordButton;
 
     /**
      * Enables this controller to use the model.
@@ -159,6 +163,19 @@ public class LandingController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    public void startPasswordChange() throws IOException {
+        FXMLLoader passwordLoader = new FXMLLoader(getClass().getResource("/fxml/changePassword.fxml"));
+        Parent passwordView = passwordLoader.load();
+        ChangePasswordController changePasswordController = passwordLoader.getController();
+
+        Stage stage1 = new Stage();
+        changePasswordController.initModel(model,stage1);
+        stage1.setScene(new Scene(passwordView));
+        stage1.initModality(Modality.APPLICATION_MODAL);
+        stage1.showAndWait();
     }
 
     /**
