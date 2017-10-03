@@ -143,7 +143,7 @@ public class UserAccountModel implements java.io.Serializable {
         ArrayList<RetailerLocation> result = new ArrayList<>();
         try {
             DatabaseManager.open();
-            result = DatabaseManager.getRetailers();
+            result = DatabaseManager.getRetailers(userName);
             System.out.println(String.format("%d custom retailers retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
@@ -156,7 +156,7 @@ public class UserAccountModel implements java.io.Serializable {
         ArrayList<WifiPoint> result = new ArrayList<>();
         try {
             DatabaseManager.open();
-            result = DatabaseManager.getWifiPoints();
+            result = DatabaseManager.getWifiPoints(userName);
             System.out.println(String.format("%d custom wifi points retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {

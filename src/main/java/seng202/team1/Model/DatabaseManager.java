@@ -294,7 +294,6 @@ public class DatabaseManager {
 
         statement.execute();
 
-        System.out.println("Bike trip added to database.");
     }
 
     public static void addBikeTrips(ArrayList<BikeTrip> trips, String username) {
@@ -412,12 +411,13 @@ public class DatabaseManager {
         return result;
     }
 
-    public static ArrayList<RetailerLocation> getRetailers() {
-        String statement = "SELECT * FROM retailer";
+    public static ArrayList<RetailerLocation> getRetailers(String username) {
+        String statement = "SELECT * FROM retailer WHERE username=?";
         PreparedStatement preparedStatement;
         ArrayList<RetailerLocation> result = new ArrayList<>();
         try {
             preparedStatement = getConnection().prepareStatement(statement);
+            preparedStatement.setString(1, username);
 
             ResultSet rs = preparedStatement.executeQuery();
 
@@ -448,12 +448,13 @@ public class DatabaseManager {
     }
 
 
-    public static ArrayList<WifiPoint> getWifiPoints() {
-        String statement = "SELECT * FROM wifi";
+    public static ArrayList<WifiPoint> getWifiPoints(String username) {
+        String statement = "SELECT * FROM wifi WHERE username=?";
         PreparedStatement preparedStatement;
         ArrayList<WifiPoint> result = new ArrayList<>();
         try {
             preparedStatement = getConnection().prepareStatement(statement);
+            preparedStatement.setString(1, username);
 
             ResultSet rs = preparedStatement.executeQuery();
 

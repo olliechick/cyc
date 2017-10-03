@@ -110,23 +110,22 @@ public class DatabaseManagerTest {
     @Test
     public void addRetailerPoint() {
         try {
-            DatabaseManager.addRecord(retailer, null);
+            DatabaseManager.addRecord(retailer, model.getUserName());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        assertEquals(retailer, DatabaseManager.getRetailers().get(0));
+        assertEquals(retailer, DatabaseManager.getRetailers(model.getUserName()).get(0));
     }
 
     @Test
     public void addWifiPoint() {
         try {
-            DatabaseManager.addRecord(wifi, null);
+            DatabaseManager.addRecord(wifi, model.getUserName());
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        System.out.println(DatabaseManager.getWifiPoints().get(0));
-        assertEquals(wifi, DatabaseManager.getWifiPoints().get(0));
+        assertEquals(wifi, DatabaseManager.getWifiPoints(model.getUserName()).get(0));
     }
 
     @Test
