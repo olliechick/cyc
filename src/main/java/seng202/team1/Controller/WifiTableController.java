@@ -438,7 +438,7 @@ public class WifiTableController extends TableController {
             System.out.println("Bad end lat and long using default distance");
         }
         ObservableList results;
-        if (startLat != 0.00 && startLong != 0.00 && (endLat.equals(0.00) || endLong.equals(0.00))) {
+        if (endLat.equals(0.00) || endLong.equals(0.00)) {
             System.out.println("Searching For Points");
             results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints);
             System.out.println(results.size());

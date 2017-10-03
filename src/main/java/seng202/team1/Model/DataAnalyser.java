@@ -287,6 +287,50 @@ public final class DataAnalyser {
     }
 
     /**
+     * Takes an Observable list of retailer locations and searches for all retailers within the specified distance
+     *
+     * @param searchLat Latitude to start searching from
+     * @param searchLong longitude to start searching from
+     * @param delta Distance to search within
+     * @param retailers List of retailers to search through
+     * @return The list of retailers within the distance from the point
+     */
+    public static ArrayList<RetailerLocation> searchRetailerLocations(Double searchLat, Double searchLong, Double delta, ObservableList<RetailerLocation> retailers){
+        ArrayList<RetailerLocation> results = new ArrayList<>();
+        for (Object shop : retailers){
+
+            Double shopLat = ((RetailerLocation) shop).getCoords().getY();
+            Double shopLong = ((RetailerLocation) shop).getCoords().getX();
+            if (calculateDistance(searchLat,searchLong,shopLat,shopLong)  <= delta){
+                results.add((RetailerLocation) shop);
+            }
+        }
+        return results;
+    }
+
+    /**
+     * Takes an ArrayList of retailer locations and searches for all retailers within the specified distance
+     *
+     * @param searchLat Latitude to start searching from
+     * @param searchLong longitude to start searching from
+     * @param delta Distance to search within
+     * @param retailers List of retailers to search through
+     * @return The list of retailers within the distance from the point
+     */
+    public static ArrayList<RetailerLocation> searchRetailerLocations(Double searchLat, Double searchLong, Double delta,ArrayList<RetailerLocation> retailers){
+        ArrayList<RetailerLocation> results = new ArrayList<>();
+        for (RetailerLocation shop : retailers){
+
+            Double shopLat = shop.getCoords().getY();
+            Double shopLong = shop.getCoords().getX();
+            if (calculateDistance(searchLat,searchLong,shopLat,shopLong)  <= delta){
+                results.add(shop);
+            }
+        }
+        return results;
+    }
+
+    /**
      * Takes a Biketrip and returns the closest WifiPoint, within 1000m, to the start of the bike trip.
      * Returns null if no WifiPoint is found
      *
