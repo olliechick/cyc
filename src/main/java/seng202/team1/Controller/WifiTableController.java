@@ -1,7 +1,9 @@
 package seng202.team1.Controller;
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -12,13 +14,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.GenerateFields;
 import seng202.team1.Model.WifiPoint;
 import seng202.team1.UserAccountModel;
@@ -50,12 +50,36 @@ public class WifiTableController extends TableController {
     @FXML
     private TableView<WifiPoint> table;
 
+
     @FXML
     private Label nameLabel;
+
+    @FXML
+    private TextField startLatitudeTextField;
+
+    @FXML
+    private TextField startLongitudeTextField;
+
+    @FXML
+    private TextField endLatitudeTextField;
+
+    @FXML
+    private  TextField endLongitudeTextField;
+
+    @FXML
+    private Button searchButton;
+
+    @FXML
+    private Button clearSearchFilters;
+
+    @FXML
+    private Label warningLabel;
+
 
     private UserAccountModel model;
     private ObservableList<WifiPoint> dataPoints;
     private FilteredList<WifiPoint> filteredData;
+    private ObservableList<WifiPoint> originalData;
 
     private final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "/csv/NYC_Free_Public_WiFi_03292017.csv";
 
@@ -286,6 +310,7 @@ public class WifiTableController extends TableController {
         String filename = getCsvFilename();
         if (filename != null) {
             dataPoints.clear();
+            originalData.clear();
             importWifiCsv(filename, true);
         }
     }
@@ -316,6 +341,7 @@ public class WifiTableController extends TableController {
     private void setTableViewWifi(ArrayList<WifiPoint> data) {
 
         dataPoints = FXCollections.observableArrayList(data);
+        originalData = FXCollections.observableArrayList(data);
 
         TableColumn<WifiPoint, String> nameCol = new TableColumn<>("Name");
         TableColumn<WifiPoint, String> locationCol = new TableColumn<>("Location");
@@ -367,6 +393,7 @@ public class WifiTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
                 } else {
                     dataPoints.add(newWifiPoint);
+                    originalData.addAll(newWifiPoint);
                     model.addCustomWifiLocation(newWifiPoint);
                 }
             }
@@ -382,6 +409,7 @@ public class WifiTableController extends TableController {
         ArrayList<WifiPoint> customWifi = model.getCustomWifiPoints();
 
         dataPoints.addAll(customWifi);
+        originalData.addAll(customWifi);
     }
 
     /**
@@ -393,6 +421,7 @@ public class WifiTableController extends TableController {
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
         importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME, false);
+        warningLabel.setText("");
     }
 
     /**
@@ -404,4 +433,62 @@ public class WifiTableController extends TableController {
         filterBoroughComboBox.getSelectionModel().selectFirst();
     }
 
-}
+    @FXML
+    public void searchWifi() {
+
+        Double startLat;
+        Double startLong;
+        Double endLat = 0.00; ///To test if they have good Doubles
+        Double endLong = 0.00;
+        double delta = 1000;
+        try {
+            startLat = Double.parseDouble(startLatitudeTextField.getText());
+            startLong = Double.parseDouble(startLongitudeTextField.getText());
+        } catch (NumberFormatException e) {
+            System.out.println("Bad Starting Lat and Long");
+            warningLabel.setText("Starting latitude and Longitude must be provided as Decimal Co-Ordinants");
+            return;
+        }
+        try {
+            endLat = Double.parseDouble(endLatitudeTextField.getText());
+            endLong = Double.parseDouble(endLongitudeTextField.getText());
+        } catch (NumberFormatException e) {
+            System.out.println("Bad end lat and long using default distance");
+        }
+        ObservableList results;
+        if (endLat.equals(0.00) || endLong.equals(0.00)) {
+            System.out.println("Searching For Points");
+            results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints);
+            System.out.println(results.size());
+        }else if (endLat != 0.00 && endLong != 0.00) {
+            System.out.println("Searching For Points - search in range delta");
+            delta = DataAnalyser.calculateDistance(startLat,startLong,endLat,endLong);
+            results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints); // Goes from the start point to the end Point
+            results = DataAnalyser.searchWifiPoints(endLat,endLong,delta,results ); // Takes the list of points from the start point and then
+                                                                                    // Runs through them from the endpoint finding points in range
+        } else {
+            System.out.println("Searching For Points - custom delta");
+            delta = DataAnalyser.calculateDistance(startLat,startLong,endLat,endLong);
+            results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints);
+        }
+
+        dataPoints.clear();
+        for (Object result : results) {
+            dataPoints.add((WifiPoint) result);
+        }
+        }
+
+        @FXML
+        public void clearSearchFilters () {
+            startLatitudeTextField.setText("");
+            startLongitudeTextField.setText("");
+            endLatitudeTextField.setText("");
+            endLongitudeTextField.setText("");
+            warningLabel.setText("");
+            for(Object data : originalData){
+                dataPoints.add((WifiPoint) data);
+            }
+
+        }
+
+    }

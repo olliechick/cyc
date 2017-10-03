@@ -14,8 +14,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.GenerateFields;
 import seng202.team1.Model.RetailerLocation;
 import seng202.team1.UserAccountModel;
@@ -50,9 +52,31 @@ public class RetailerTableController extends TableController {
     @FXML
     private TableView<RetailerLocation> table;
 
+    @FXML
+    private TextField startLatTextField;
+
+    @FXML
+    private TextField startLongTextField;
+
+    @FXML
+    private TextField endLatTextField;
+
+    @FXML
+    private TextField endLongTextField;
+
+    @FXML
+    private Button clearSearchesButton;
+
+    @FXML
+    private Button searchButton;
+
+    @FXML
+    private Label warningLabel;
+
     private UserAccountModel model;
     private ObservableList<RetailerLocation> dataPoints;
     private FilteredList<RetailerLocation> filteredData;
+    private ObservableList<RetailerLocation> originalData;
 
     private final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "/csv/Lower_Manhattan_Retailers.csv";
 
@@ -128,6 +152,7 @@ public class RetailerTableController extends TableController {
     private void deleteRetailer(RetailerLocation selectedItem) {
         //TODO add a removedRetailers list to userAccountModel and add to there, then remove all those on load.
         dataPoints.remove(selectedItem);
+        originalData.remove(selectedItem);
     }
 
     /**
@@ -293,6 +318,7 @@ public class RetailerTableController extends TableController {
         String filename = getCsvFilename();
         if (filename != null) {
             dataPoints.clear();
+            originalData.clear();
             importRetailerCsv(filename, true);
         }
     }
@@ -323,6 +349,7 @@ public class RetailerTableController extends TableController {
     private void setTableViewRetailer(ArrayList<RetailerLocation> data) {
 
         dataPoints = FXCollections.observableArrayList(data);
+        originalData = FXCollections.observableArrayList(data);
 
         // Create the columns
         TableColumn<RetailerLocation, String> nameCol = new TableColumn<>("Name");
@@ -379,6 +406,7 @@ public class RetailerTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
                 } else {
                     dataPoints.add(retailerLocation);
+                    originalData.add(retailerLocation);
                     model.addCustomRetailerLocation(retailerLocation);
                 }
             }
@@ -394,6 +422,7 @@ public class RetailerTableController extends TableController {
         ArrayList<RetailerLocation> customRetailerLocations = model.getCustomRetailerLocations();
 
         dataPoints.addAll(customRetailerLocations);
+        originalData.addAll(customRetailerLocations);
     }
 
     /**
@@ -405,6 +434,7 @@ public class RetailerTableController extends TableController {
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
         importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME, false);
+        warningLabel.setText("");
     }
 
     /**
@@ -415,5 +445,64 @@ public class RetailerTableController extends TableController {
         filterZipComboBox.getSelectionModel().selectFirst();
         streetSearchField.clear();
     }
+
+    /**
+     * Clears the searches for the search view and resets the data back to list at the start of searching
+     */
+    public void clearSearches() {
+        startLatTextField.setText("");
+        startLongTextField.setText("");
+        endLatTextField.setText("");
+        endLongTextField.setText("");
+        for (Object data : originalData){
+            dataPoints.add((RetailerLocation) data);
+        }
+    }
+
+    /**
+     * Searches the retailers by a given Lat or Long, or by a range provided.
+     */
+    public void searchRetailersbyLatLong() {
+        Double startLat, startLong;
+        Double endLat = 0.00;
+        Double endLong = 0.00;
+        Double delta = 100.0;
+        warningLabel.setTextFill(Color.BLACK);
+        warningLabel.setText("");
+        try {
+            startLat = Double.parseDouble(startLatTextField.getText());
+            startLong = Double.parseDouble(startLongTextField.getText());
+        } catch (NumberFormatException e){
+            warningLabel.setText("Starting Latitude and Longitude must be Co-ordinates in Decimal Form");
+            warningLabel.setTextFill(Color.RED);
+            return;
+        }
+        try {
+            endLat = Double.parseDouble(endLatTextField.getText());
+            endLong = Double.parseDouble(endLongTextField.getText());
+        } catch (NumberFormatException e){
+            warningLabel.setText("Invaild End Latitude or Longitude, Using start points only");
+            endLat = 0.00;
+            endLong = 0.00;
+        }
+        ArrayList<RetailerLocation> results;
+        if (endLat.equals(0.00) || endLong.equals(0.00)) {
+            results = DataAnalyser.searchRetailerLocations(startLat,startLong,delta,dataPoints);
+            System.out.println("Searched on start");
+        } else if(endLat != 0.00 && endLong != 0.00){
+            delta = DataAnalyser.calculateDistance(startLat,startLong,endLat,endLong);
+            results = DataAnalyser.searchRetailerLocations(startLat,startLong,delta,dataPoints);
+            results = DataAnalyser.searchRetailerLocations(endLat,endLong,delta,results);
+            System.out.println("Searched based on start and end");
+        } else {
+            warningLabel.setText("Invaild End Latitude or Longitude, Using start points only");
+            results = DataAnalyser.searchRetailerLocations(startLat,startLong,delta,dataPoints);
+            System.out.println("Searched on start bad start and end");
+        }
+        System.out.println("Found: " + results.size() + " results");
+        dataPoints.clear();
+        dataPoints.addAll(results);
+    }
+
 
 }
