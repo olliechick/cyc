@@ -18,6 +18,59 @@ public class DatabaseManager {
     private static File localDatabaseFile;
 
 
+    /**
+     * Opens the database connection, creating it if it does not exist. Does not register JDBC driver.
+     * @throws SQLException could not get driver connection, or change autocommit parameter.
+     */
+    public static void open() throws SQLException{
+
+        String filename = "sqlite.db";
+        localDatabaseFile = new File(Directory.DATABASES.directory() + filename);
+
+        boolean databaseExists = localDatabaseFile.exists();
+        String url = "jdbc:sqlite:" + localDatabaseFile.getAbsolutePath();
+
+        connection = DriverManager.getConnection(url);
+        connection.setAutoCommit(false);
+        if (databaseExists) {
+            System.out.println("Database connected.");
+        } else {
+            createDatabaseTables();
+            System.out.println("Database established and connected.");
+        }
+
+    }
+
+
+    /**
+     * Opens the database connection, creating it if it does not exist.
+     *
+     * @param initialize registers the JDBC driver, for initial loading on some machines.
+     * @throws SQLException could not register driver, or could not open database.
+     */
+    public static void open(boolean initialize) throws SQLException{
+        if (initialize) {
+            DriverManager.registerDriver(new org.sqlite.JDBC());
+        }
+        open();
+    }
+
+
+    /**
+     * Closes the database connection. Called after a set of actions are performed
+     * so the database is freed for use elsewhere without conflict.
+     * @throws SQLException Could not commit transactions, or close the connection to the database.
+     */
+    public static void close() throws SQLException{
+        if (isDatabaseConnected()) {
+            connection.commit();
+            connection.close();
+        }
+    }
+
+    /**
+     * Creates all database tables.
+     */
     private static void createDatabaseTables() {
         // TODO: Create required tables for database
         String createTripsTable = "CREATE TABLE trip\n" +
@@ -144,15 +197,7 @@ public class DatabaseManager {
      * @author Ridge Nairn
      */
     public static boolean isDatabaseConnected() {
-        return getConnection() != null;
-    }
-
-
-    /**
-     * @return the connection to the database
-     */
-    public static Connection getConnection() {
-        return connection;
+        return connection != null;
     }
 
 
@@ -196,7 +241,7 @@ public class DatabaseManager {
                     "VALUES (" + new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
             RetailerLocation retailer = (RetailerLocation) point;
 
-            preparedStatement = getConnection().prepareStatement(statement);
+            preparedStatement = connection.prepareStatement(statement);
 
             preparedStatement.setString(1, retailer.getName());
             preparedStatement.setString(2, retailer.getAddressLine1());
@@ -222,7 +267,7 @@ public class DatabaseManager {
                     "VALUES (" + new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
             WifiPoint wifiPoint = (WifiPoint) point;
 
-            preparedStatement = getConnection().prepareStatement(statement);
+            preparedStatement = connection.prepareStatement(statement);
 
             preparedStatement.setInt(1, wifiPoint.getObjectId());
             preparedStatement.setFloat(2, wifiPoint.getLatitude());
@@ -273,7 +318,7 @@ public class DatabaseManager {
                 new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
 
 
-        PreparedStatement statement = getConnection().prepareStatement(insert);
+        PreparedStatement statement = connection.prepareStatement(insert);
 
         statement.setLong(1, trip.getTripDuration());
         statement.setString(2, trip.getStartTime().toString());
@@ -296,6 +341,12 @@ public class DatabaseManager {
 
     }
 
+
+    /**
+     * Adds a list of trips to the database.
+     * @param trips ArrayList of trips to be added.
+     * @param username Username the trips are to be associated with.
+     */
     public static void addBikeTrips(ArrayList<BikeTrip> trips, String username) {
         for (BikeTrip trip: trips) {
             try {
@@ -306,74 +357,18 @@ public class DatabaseManager {
         }
     }
 
-    /**
-     * Opens the database connection, creating it if it does not exist. Does not register JDBC driver.
-     * @throws SQLException could not get driver connection, or change autocommit parameter.
-     */
-    public static void open() throws SQLException{
-
-        String filename = "sqlite.db";
-        localDatabaseFile = new File(Directory.DATABASES.directory() + filename);
-
-        boolean databaseExists = localDatabaseFile.exists();
-        String url = "jdbc:sqlite:" + localDatabaseFile.getAbsolutePath();
-
-        connection = DriverManager.getConnection(url);
-        connection.setAutoCommit(false);
-        if (databaseExists) {
-            System.out.println("Database connected.");
-        } else {
-            createDatabaseTables();
-            System.out.println("Database established and connected.");
-        }
-
-    }
 
     /**
-     * Opens the database connection, creating it if it does not exist.
-     *
-     * @param initialize registers the JDBC driver, for initial loading on some machines.
-     * @throws SQLException could not register driver, or could not open database.
+     * Gets all bike trips associated with a user.
+     * @param username the username of the user.
+     * @return all of the bike trips associated to this user.
      */
-    public static void open(boolean initialize) throws SQLException{
-        if (initialize) {
-            DriverManager.registerDriver(new org.sqlite.JDBC());
-        }
-        open();
-    }
-
-    /**
-     * Closes the database connection. Called after a set of actions are performed
-     * so the database is freed for use elsewhere without conflict.
-     * @throws SQLException Could not commit transactions, or close the connection to the database.
-     */
-    public static void close() throws SQLException{
-        if (isDatabaseConnected()) {
-            getConnection().commit();
-            getConnection().close();
-        }
-    }
-
-
-
-    /**
-     * Checks to see if a record point is currently stored in the database.
-     * NOT YET IMPLEMENTED.
-     *
-     * @param point A point to be checked if it exists in the database.
-     * @author Ridge Nairn
-     */
-    public static boolean recordExists(DataPoint point) {
-        return false; // TODO: Implement
-    }
-
-
-    public static ArrayList<BikeTrip> getUserTrips(String username) {
+    public static ArrayList<BikeTrip> getBikeTrips(String username) {
         String statement = "SELECT * FROM trip WHERE username=?";
         PreparedStatement preparedStatement;
         ArrayList<BikeTrip> result = new ArrayList<>();
         try {
-            preparedStatement = getConnection().prepareStatement(statement);
+            preparedStatement = connection.prepareStatement(statement);
             preparedStatement.setString(1, username);
 
             ResultSet rs = preparedStatement.executeQuery();
@@ -411,12 +406,18 @@ public class DatabaseManager {
         return result;
     }
 
+
+    /**
+     * Gets all retailers associated with a user.
+     * @param username the username of the user
+     * @return all of the retailer points associated to this user.
+     */
     public static ArrayList<RetailerLocation> getRetailers(String username) {
         String statement = "SELECT * FROM retailer WHERE username=?";
         PreparedStatement preparedStatement;
         ArrayList<RetailerLocation> result = new ArrayList<>();
         try {
-            preparedStatement = getConnection().prepareStatement(statement);
+            preparedStatement = connection.prepareStatement(statement);
             preparedStatement.setString(1, username);
 
             ResultSet rs = preparedStatement.executeQuery();
@@ -448,12 +449,17 @@ public class DatabaseManager {
     }
 
 
+    /**
+     * Gets all of the wifi points associated with a user.
+     * @param username the username of the user.
+     * @return all of WiFi points associated to this user.
+     */
     public static ArrayList<WifiPoint> getWifiPoints(String username) {
         String statement = "SELECT * FROM wifi WHERE username=?";
         PreparedStatement preparedStatement;
         ArrayList<WifiPoint> result = new ArrayList<>();
         try {
-            preparedStatement = getConnection().prepareStatement(statement);
+            preparedStatement = connection.prepareStatement(statement);
             preparedStatement.setString(1, username);
 
             ResultSet rs = preparedStatement.executeQuery();
@@ -493,38 +499,31 @@ public class DatabaseManager {
 
 
     /**
-     * Returns the number of BikeTrip records stored in the database.
-     *
-     * @author Ridge Nairn
-     */
-    public static int getNumberOfBikeTrips() {
-        return getNumberOfRowsFromType(BikeTrip.class);
-    }
-
-
-    /**
-     * Returns the number of records of a certain type stored in the database.
+     * Returns the number of records of a certain type stored in the database,
+     * that are associated with a user.
      *
      * @param c Class of which the count is to be queried.
+     * @param username Username of the user.
      * @return number of records to type c in database
      * @author Ridge Nairn
      */
-    public static int getNumberOfRowsFromType(Class c) {
+    public static int getNumberOfRowsFromType(Class c, String username) {
         String statement = "";
         if (c == BikeTrip.class) {
-            statement = "SELECT COUNT(*) FROM trip";
+            statement = "SELECT COUNT(*) FROM trip WHERE username=?";
 
         } else if (c == RetailerLocation.class) {
-            statement = "SELECT COUNT(*) FROM retailer";
+            statement = "SELECT COUNT(*) FROM retailer WHERE username=?";
 
         } else if (c == WifiPoint.class) {
-            statement = "SELECT COUNT(*) FROM wifi";
+            statement = "SELECT COUNT(*) FROM wifi WHERE username=?";
 
         }
         PreparedStatement preparedStatement;
         int n = -1;
         try {
-            preparedStatement = getConnection().prepareStatement(statement);
+            preparedStatement = connection.prepareStatement(statement);
+            preparedStatement.setString(1, username);
             ResultSet rs = preparedStatement.executeQuery();
             n = rs.getInt(1);
         } catch (SQLException e) {

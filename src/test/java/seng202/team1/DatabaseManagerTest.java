@@ -136,7 +136,7 @@ public class DatabaseManagerTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        assertEquals(trip, DatabaseManager.getUserTrips(model.getUserName()).get(0));
+        assertEquals(trip, DatabaseManager.getBikeTrips(model.getUserName()).get(0));
     }
 
 
@@ -149,7 +149,7 @@ public class DatabaseManagerTest {
                 e.printStackTrace();
             }
         }
-        assertEquals(100, DatabaseManager.getNumberOfBikeTrips());
+        assertEquals(100, DatabaseManager.getNumberOfRowsFromType(BikeTrip.class, model.getUserName()));
     }
 
     @Test
@@ -160,7 +160,7 @@ public class DatabaseManagerTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        assertEquals(1, DatabaseManager.getUserTrips(model.getUserName()).size());
+        assertEquals(1, DatabaseManager.getBikeTrips(model.getUserName()).size());
     }
 
 }

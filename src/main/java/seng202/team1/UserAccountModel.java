@@ -130,7 +130,7 @@ public class UserAccountModel implements java.io.Serializable {
         ArrayList<BikeTrip> result = new ArrayList<>();
         try {
             DatabaseManager.open();
-            result = DatabaseManager.getUserTrips(userName);
+            result = DatabaseManager.getBikeTrips(userName);
             System.out.println(String.format("%d custom trips retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
