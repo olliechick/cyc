@@ -33,6 +33,7 @@
       <Button mnemonicParsing="false" onAction="#openWifiTable" text="Open WiFi Table" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
       <Button mnemonicParsing="false" onAction="#openMap" text="Open Map View" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
       <Button mnemonicParsing="false" onAction="#logout" text="Logout" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-      <Button fx:id="changePasswordButton" mnemonicParsing="false" onAction="#startPasswordChange" text="Change Password" GridPane.rowIndex="2" />
+      <Button fx:id="changePasswordButton" mnemonicParsing="false" onAction="#startPasswordChange" text="Change Password" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+      <Button mnemonicParsing="false" onAction="#openListViewer" text="Open list test" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
    </children>
 </GridPane>
