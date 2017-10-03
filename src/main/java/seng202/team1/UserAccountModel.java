@@ -18,6 +18,7 @@ import java.util.ArrayList;
  *
  * @author Josh Burt
  * @author Ollie Chick
+ * @author Ridge Nairn
  */
 public class UserAccountModel implements java.io.Serializable {
 
@@ -178,21 +179,17 @@ public class UserAccountModel implements java.io.Serializable {
     }
 
     public void addCustomRetailerLocation(RetailerLocation retailerLocation) {
-        try {
-            //TODO: Have this thrown further up
-            DatabaseManager.open();
-            DatabaseManager.addRecord(retailerLocation, userName);
-            DatabaseManager.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        addPoint(retailerLocation);
     }
 
     public void addCustomWifiLocation(WifiPoint wifiPoint) {
+        addPoint(wifiPoint);
+    }
+
+    private void addPoint(DataPoint point) {
         try {
-            //TODO: Have this thrown further up
             DatabaseManager.open();
-            DatabaseManager.addRecord(wifiPoint, userName);
+            DatabaseManager.addRecord(point, userName);
             DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();
