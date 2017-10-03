@@ -1,6 +1,8 @@
 package seng202.team1.Model.CsvHandling;
 
 import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.WifiPoint;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -9,6 +11,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import static seng202.team1.Model.DatabaseManager.getRetailers;
+import static seng202.team1.Model.DatabaseManager.getUserTrips;
+import static seng202.team1.Model.DatabaseManager.getWifiPoints;
 
 /**
  * Exports a list of DataPoints to a CSV file.
@@ -24,7 +30,7 @@ public class CSVExporter {
             + "Start point longitude,,,End point latitude,End point longitude,Bike ID,,Birth year,Gender";
     private final static String retailersHeader = "Name,Address (line 1),Address (line 2),City,State,"
             + "ZIP code,Block-Lot,Primary function,Secondary function,Latitude,Longitude";
-    private final static String wifisHeader = "Object ID,,,Cost,Provider,Name,Location,Latitude,"
+    private final static String wifiPointsHeader = "Object ID,,,Cost,Provider,Name,Location,Latitude,"
             + "Longitude,,,Location Type,Remarks,City,SSID,Source ID,Activated,,Borough,,Neighbourhood,,"
             + "ZIP code";
 
@@ -52,14 +58,10 @@ public class CSVExporter {
      * @throws IOException If an IO Exception occurs
      */
     public static void exportBikeTrips(String filename, String username) throws IOException {
-        ArrayList<BikeTrip> bikeTrips = new ArrayList<>();
-        //bikeTrips = getUserTrips(username);
-        try {
-            bikeTrips = CSVLoader.populateBikeTrips();
-        } catch (CsvParserException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        // Import the users's bike trips from the database
+        ArrayList<BikeTrip> bikeTrips = getUserTrips(username);
 
+        // Create an ArrayList of Strings, where each String is a bike trip line in the CSV
         ArrayList<String> lines = new ArrayList<String>();
         lines.add(bikeTripsHeader);
         for (BikeTrip bikeTrip : bikeTrips) {
@@ -86,13 +88,77 @@ public class CSVExporter {
             }
             lines.add(line);
         }
+
+        // Export the CSV into the file
         exportCSV(filename, lines);
     }
 
 
-    public static void exportWifiHotspots(String filename, String username){}
+    public static void exportWifiHotspots(String filename, String username) throws IOException {
+        // Import the users's wifis from the database
+        ArrayList<WifiPoint> wifiPoints = getWifiPoints(/*username*/);
 
-    public static void exportRetailers(String filename, String username){}
+        // Create an ArrayList of Strings, where each String is a bike trip line in the CSV
+        ArrayList<String> lines = new ArrayList<String>();
+        lines.add(wifiPointsHeader);
+        for (WifiPoint wifiPoint : wifiPoints) {
+            String line;
+            line = wifiPoint.getObjectId() + ",";
+            line += ",,"; //skip the_geom and boro
+            line += wifiPoint.getCost() + ",";
+            line += wifiPoint.getProvider() + ",";
+            line += wifiPoint.getName() + ",";
+            line += wifiPoint.getLocation() + ",";
+            line += wifiPoint.getLatitude() + ",";
+            line += wifiPoint.getLongitude() + ",";
+            line += ",,"; //skip x and y
+            line += wifiPoint.getLocationType() + ",";
+            line += wifiPoint.getRemarks() + ",";
+            line += wifiPoint.getCity() + ",";
+            line += wifiPoint.getSsid() + ",";
+            line += wifiPoint.getSourceId() + ",";
+            line += wifiPoint.getDatetimeActivated() + ",";
+            line += ",,"; //skip borocode
+            line += wifiPoint.getBorough() + ",";
+            line += ",,"; //skip ntacode
+            line += wifiPoint.getHood() + ",";
+            line += ",,"; //skip coundist
+            line += wifiPoint.getZipcode() + ",";
+            lines.add(line);
+        }
+
+        // Export the CSV into the file
+        exportCSV(filename, lines);
+    }
+
+
+    public static void exportRetailers(String filename, String username) throws IOException {
+        // Import the users's retailers from the database
+        ArrayList<RetailerLocation> retailers = getRetailers(/*username*/);
+
+        // Create an ArrayList of Strings, where each String is a bike trip line in the CSV
+        ArrayList<String> lines = new ArrayList<String>();
+        lines.add(retailersHeader);
+        for (RetailerLocation retailer : retailers) {
+            String line;
+            line = retailer.getName() + ",";
+            line += retailer.getAddressLine1() + ",";
+            line += retailer.getAddressLine2() + ",";
+            line += retailer.getCity() + ",";
+            line += retailer.getState() + ",";
+            line += retailer.getZipcode() + ",";
+            line += retailer.getBlockLot() + ",";
+            line += retailer.getPrimaryFunction() + ",";
+            line += retailer.getSecondaryFunction() + ",";
+            line += retailer.getLatitude() + ",";
+            line += retailer.getLongitude() + ",";
+            line += retailer.getLongitude() + ",";
+            lines.add(line);
+        }
+
+        // Export the CSV into the file
+        exportCSV(filename, lines);
+    }
 
 
     public static void main(String[] args) {
