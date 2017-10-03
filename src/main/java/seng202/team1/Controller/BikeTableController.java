@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -20,6 +21,7 @@ import javafx.stage.Stage;
 import seng202.team1.Model.BikeTrip;
 import seng202.team1.Model.ContextualLength;
 import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
@@ -56,9 +58,31 @@ public class BikeTableController extends TableController {
     @FXML
     private Label nameLabel;
 
+    @FXML
+    private Button clearSearchesButton;
+
+    @FXML
+    private Button searchButton;
+
+    @FXML
+    private Label warningLabel;
+
+    @FXML
+    private TextField startLatTextField;
+
+    @FXML
+    private TextField startLongTextField;
+
+    @FXML
+    private TextField endLatTextField;
+
+    @FXML
+    private TextField endLongTextField;
+
     private UserAccountModel model;
     private ObservableList<BikeTrip> dataPoints;
     private FilteredList<BikeTrip> filteredData;
+    private ObservableList<BikeTrip> originalData;
 
     private final static String DEFAULT_BIKE_TRIPS_FILENAME = "/csv/biketrip.csv";
 
@@ -280,6 +304,7 @@ public class BikeTableController extends TableController {
         String filename = getCsvFilename();
         if (filename != null) {
             dataPoints.clear();
+            originalData.clear();
             importBikeCsv(filename, true);
         }
     }
@@ -305,6 +330,7 @@ public class BikeTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
                 } else {
                     dataPoints.add(addBikeDialog.getBikeTrip());
+                    originalData.add(addBikeDialog.getBikeTrip());
                     model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
                 }
             }
@@ -321,6 +347,7 @@ public class BikeTableController extends TableController {
     private void setTableViewBike(ArrayList<BikeTrip> data) {
 
         dataPoints = FXCollections.observableArrayList(data);
+        originalData = FXCollections.observableArrayList(data);
 
         TableColumn<BikeTrip, Integer> bikeIdCol = new TableColumn<>("Bike ID");
         TableColumn<BikeTrip, Character> genderCol = new TableColumn<>("Gender");
@@ -368,6 +395,7 @@ public class BikeTableController extends TableController {
 
         this.model = userAccountModel;
         importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME, false);
+        warningLabel.setText("");
     }
 
     /**
@@ -376,6 +404,7 @@ public class BikeTableController extends TableController {
     private void populateCustomBikeTrips() {
         ArrayList<BikeTrip> customTrips = model.getCustomBikeTrips();
         dataPoints.addAll(customTrips);
+        originalData.addAll(customTrips);
     }
 
     /**
@@ -386,6 +415,60 @@ public class BikeTableController extends TableController {
         filterEndComboBox.getSelectionModel().selectFirst();
         filterGenderComboBox.getSelectionModel().selectFirst();
         bikeSearchField.clear();
+    }
+
+    public void clearSearches(){
+        startLatTextField.setText("");
+        startLongTextField.setText("");
+        endLatTextField.setText("");
+        endLongTextField.setText("");
+        dataPoints.clear();
+        dataPoints.addAll(originalData);
+    }
+
+    public void searchBikeTrips() {
+        Double startLat = 0.00;
+        Double startLong = 0.00;
+        Double endLat = 0.00;
+        Double endLong = 0.00;
+        Double delta = 100.0;
+        boolean startPointsGood = false;
+        boolean endPointsGood = false;
+
+        try {
+            startLat = Double.parseDouble(startLatTextField.getText());
+            startLong = Double.parseDouble(startLongTextField.getText());
+            startPointsGood = true;
+
+        } catch (NumberFormatException e){
+            System.out.println("Bad Start lat or Long");
+        }
+        try {
+            endLat = Double.parseDouble(endLatTextField.getText());
+            endLong = Double.parseDouble(endLongTextField.getText());
+            endPointsGood = true;
+        } catch (NumberFormatException e){
+            System.out.println("Bad End Lat Long");
+        }
+        ArrayList<BikeTrip> results = new ArrayList<>();
+        ArrayList<BikeTrip> searcher = new ArrayList<>();
+        for (Object trip : dataPoints){
+            searcher.add((BikeTrip) trip); // remove this block if it gets slow
+        }
+        if (startPointsGood && endPointsGood){
+            results = DataAnalyser.searchBikeTrips(startLat,startLong,delta,searcher,true);
+            results = DataAnalyser.searchBikeTrips(endLat,endLong,delta,results,false);
+        } else if(startPointsGood){
+            results = DataAnalyser.searchBikeTrips(startLat,startLong,delta,searcher,true);
+        } else if(endPointsGood){
+            results = DataAnalyser.searchBikeTrips(endLat,endLong,delta,searcher,false);
+        } else{
+            warningLabel.setText("Valid Search Points must be entered in either the start Point, End Point or Both.");
+            return;
+        }
+        dataPoints.clear();
+        dataPoints.addAll(results);
+
     }
 
 }
