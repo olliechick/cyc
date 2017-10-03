@@ -206,11 +206,11 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
         String address = ""; //address to return
 
         // Check if the address has a line 2
-        if (!addressLine2.isEmpty()) {
+        if (addressLine2 != null && !addressLine2.isEmpty()) {
             //There is a preline
             address += addressLine2 + ", ";
         }
-        if (!addressLine1.isEmpty()) {
+        if (addressLine1 != null && !addressLine1.isEmpty()) {
             //There is a main line
             address += addressLine1 + ", ";
         }
