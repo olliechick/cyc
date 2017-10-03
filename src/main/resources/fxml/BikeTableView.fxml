@@ -24,11 +24,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <Menu mnemonicParsing="false" text="Import CSV">
-                    <items>
-                      <MenuItem mnemonicParsing="false" onAction="#importBike" text="Bike" />
-                    </items>
-                  </Menu>
+                <MenuItem mnemonicParsing="false" onAction="#importBike" text="Import CSV" />
+                  <MenuItem fx:id="exportBikeMenuItem" mnemonicParsing="false" onAction="#exportBike" text="Export CSV" />
               <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
             </items>
           </Menu>
@@ -39,7 +36,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" onAction="#openAbout" />
+              <MenuItem mnemonicParsing="false" onAction="#openAbout" text="About" />
             </items>
           </Menu>
         </menus>
