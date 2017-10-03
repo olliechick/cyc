@@ -98,9 +98,11 @@ public class CSVExporter {
     }
 
 
-    public static void exportWifiHotspots(String filename, String username) throws IOException {
+    public static void exportWifiHotspots(String filename, String username) throws IOException, SQLException {
         // Import the users's wifis from the database
+        DatabaseManager.open();
         ArrayList<WifiPoint> wifiPoints = getWifiPoints(/*username*/);
+        DatabaseManager.close();
 
         // Create an ArrayList of Strings, where each String is a bike trip line in the CSV
         ArrayList<String> lines = new ArrayList<String>();
@@ -136,9 +138,11 @@ public class CSVExporter {
     }
 
 
-    public static void exportRetailers(String filename, String username) throws IOException {
+    public static void exportRetailers(String filename, String username) throws IOException, SQLException {
         // Import the users's retailers from the database
+        DatabaseManager.open();
         ArrayList<RetailerLocation> retailers = getRetailers(/*username*/);
+        DatabaseManager.close();
 
         // Create an ArrayList of Strings, where each String is a bike trip line in the CSV
         ArrayList<String> lines = new ArrayList<String>();

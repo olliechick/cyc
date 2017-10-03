@@ -20,13 +20,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.GenerateFields;
-import seng202.team1.Model.SerializerImplementation;
-import seng202.team1.UserAccountModel;
 import seng202.team1.Model.WifiPoint;
+import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static seng202.team1.Model.CsvHandling.CSVExporter.exportWifiHotspots;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
 
 /**
@@ -286,6 +287,23 @@ public class WifiTableController extends TableController {
         if (filename != null) {
             dataPoints.clear();
             importWifiCsv(filename, true);
+        }
+    }
+
+    /**
+     * Get the path for a csv to export to, export to it if given.
+     */
+    public void exportWifi() {
+
+        String filename = getCsvFilenameSave();
+        if (filename != null) {
+            try {
+                exportWifiHotspots(filename, model.getUserName());
+            } catch (IOException e) {
+                AlertGenerator.createAlert("Couldn't export file.");
+            } catch (SQLException e) {
+                AlertGenerator.createAlert("Couldn't get WiFi hotspots.");
+            }
         }
     }
 
