@@ -184,6 +184,7 @@ public class LandingController {
             FXMLLoader listViewLoader = new FXMLLoader(getClass().getResource("/fxml/ListViewer.fxml"));
             Parent listView = listViewLoader.load();
             ListViewerController listViewController = listViewLoader.getController();
+            listViewController.setUser(model);
 
             Stage stage1 = new Stage();
             stage1.setScene(new Scene(listView));
