@@ -98,6 +98,28 @@ public abstract class TableController {
     }
 
     /**
+     * Opens a FileChooser popup, allowing the user to choose where to save a file.
+     * Only allows for saving of .csv files
+     *
+     * @return String the absolute path to the designated csv file, null if cancelled.
+     */
+    String getCsvFilenameSave() {
+
+        String filename = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save CSV file");
+
+        File file = fileChooser.showSaveDialog(stage);
+        if (file != null) {
+            filename = file.getAbsolutePath();
+        }
+
+        return filename;
+
+    }
+
+    /**
      * set the loading animation to visible and start it spinning indefinitely.
      */
     void startLoadingAni() {
