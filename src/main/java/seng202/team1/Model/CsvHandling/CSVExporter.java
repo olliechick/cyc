@@ -1,6 +1,7 @@
 package seng202.team1.Model.CsvHandling;
 
 import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.DatabaseManager;
 import seng202.team1.Model.RetailerLocation;
 import seng202.team1.Model.WifiPoint;
 
@@ -9,6 +10,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -57,9 +59,11 @@ public class CSVExporter {
      * @param username Username of the user whose bike trips will be exported
      * @throws IOException If an IO Exception occurs
      */
-    public static void exportBikeTrips(String filename, String username) throws IOException {
+    public static void exportBikeTrips(String filename, String username) throws IOException, SQLException {
         // Import the users's bike trips from the database
+        DatabaseManager.open();
         ArrayList<BikeTrip> bikeTrips = getUserTrips(username);
+        DatabaseManager.close();
 
         // Create an ArrayList of Strings, where each String is a bike trip line in the CSV
         ArrayList<String> lines = new ArrayList<String>();
@@ -158,14 +162,5 @@ public class CSVExporter {
 
         // Export the CSV into the file
         exportCSV(filename, lines);
-    }
-
-
-    public static void main(String[] args) {
-        try {
-            exportBikeTrips("myBikeTrips.csv", "a");
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
     }
 }

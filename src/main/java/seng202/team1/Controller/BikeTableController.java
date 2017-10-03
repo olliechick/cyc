@@ -26,8 +26,10 @@ import seng202.team1.UserAccountModel;
 
 import java.awt.Point;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static seng202.team1.Model.CsvHandling.CSVExporter.exportBikeTrips;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 
 
@@ -292,7 +294,13 @@ public class BikeTableController extends TableController {
 
         String filename = getCsvFilenameSave();
         if (filename != null) {
-            AlertGenerator.createAlert("Test", "This would export your CSV");
+            try {
+                exportBikeTrips(filename, model.getUserName());
+            } catch (IOException e) {
+                AlertGenerator.createAlert("Couldn't export file.");
+            } catch (SQLException e) {
+                AlertGenerator.createAlert("Couldn't get bike trips.");
+            }
         }
     }
 
@@ -343,18 +351,18 @@ public class BikeTableController extends TableController {
         TableColumn<BikeTrip, Point.Float> endLocCol = new TableColumn<>("End Location");
         TableColumn<BikeTrip, Point.Float> endLatitudeCol = new TableColumn<>("Latitude");
         TableColumn<BikeTrip, Point.Float> endLongitudeCol = new TableColumn<>("Longitude");
-        TableColumn<BikeTrip, ContextualLength> distCol= new TableColumn<>("Distance (m)");
+        TableColumn<BikeTrip, ContextualLength> distCol = new TableColumn<>("Distance (m)");
         table.getColumns().clear();
 
         // Attempts to access public properties of name "Property", falls back to get<property>() methods if no property available
-        bikeIdCol.setCellValueFactory( new PropertyValueFactory<>("bikeId"));
-        genderCol.setCellValueFactory( new PropertyValueFactory<>("genderDescription"));
-        durationCol.setCellValueFactory( new PropertyValueFactory<>("duration"));
-        startLatitudeCol.setCellValueFactory( new PropertyValueFactory<>("startLatitude"));
-        startLongitudeCol.setCellValueFactory( new PropertyValueFactory<>("startLongitude"));
-        endLatitudeCol.setCellValueFactory( new PropertyValueFactory<>("endLatitude"));
-        endLongitudeCol.setCellValueFactory( new PropertyValueFactory<>("endLongitude"));
-        distCol.setCellValueFactory( new PropertyValueFactory<>("distance"));
+        bikeIdCol.setCellValueFactory(new PropertyValueFactory<>("bikeId"));
+        genderCol.setCellValueFactory(new PropertyValueFactory<>("genderDescription"));
+        durationCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
+        startLatitudeCol.setCellValueFactory(new PropertyValueFactory<>("startLatitude"));
+        startLongitudeCol.setCellValueFactory(new PropertyValueFactory<>("startLongitude"));
+        endLatitudeCol.setCellValueFactory(new PropertyValueFactory<>("endLatitude"));
+        endLongitudeCol.setCellValueFactory(new PropertyValueFactory<>("endLongitude"));
+        distCol.setCellValueFactory(new PropertyValueFactory<>("distance"));
 
         startLocCol.getColumns().addAll(startLatitudeCol, startLongitudeCol);
         endLocCol.getColumns().addAll(endLatitudeCol, endLongitudeCol);

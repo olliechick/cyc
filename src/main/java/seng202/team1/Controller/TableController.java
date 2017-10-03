@@ -113,6 +113,7 @@ public abstract class TableController {
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
             filename = file.getAbsolutePath();
+            System.out.println(filename.substring(filename.length() - 4));//  ".csv");
         }
 
         return filename;
