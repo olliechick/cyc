@@ -2,6 +2,7 @@ package seng202.team1;
 
 import seng202.team1.Controller.AlertGenerator;
 import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.BikeTripList;
 import seng202.team1.Model.DataPoint;
 import seng202.team1.Model.DatabaseManager;
 import seng202.team1.Model.PasswordManager;
