@@ -299,6 +299,12 @@
 
     }
 
+      document.showRetailerInFocus = function showRetailerInFocus(index, icon)
+      {
+          retailerMarkerArray[index].setVisible(true);
+          retailerMarkerArray[index].setIcon(icon);
+      }
+
 
     document.circleWIFI = function circleWIFI(index, icon, iconRevert)
     {

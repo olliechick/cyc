@@ -39,13 +39,14 @@ public abstract class TableController {
     protected ContextMenu cm = new ContextMenu();
     protected MenuItem editMenuItem = new MenuItem("Edit");
     protected MenuItem deleteMenuItem = new MenuItem("Delete");
+    protected MenuItem showOnMap = new MenuItem("Show on Map");
 
     /**
      * Run automatically when the fxml is loaded by an FXMLLoader
      */
     public void initialize() {
 
-        cm.getItems().addAll(editMenuItem, deleteMenuItem);
+        cm.getItems().addAll(editMenuItem, showOnMap, deleteMenuItem);
 
 
         table.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {

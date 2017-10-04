@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
@@ -99,6 +100,15 @@ public class RetailerTableController extends TableController {
                 cm.hide();
                 if (table.getSelectionModel().getSelectedItem() != null) {
                     editRetailer(table.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
+        super.showOnMap.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                cm.hide();
+                if(table.getSelectionModel().getSelectedItem() != null){
+                    showRetailerOnMap(table.getSelectionModel().getSelectedItem());
                 }
             }
         });
@@ -487,5 +497,26 @@ public class RetailerTableController extends TableController {
         dataPoints.addAll(results);
     }
 
+    public void showRetailerOnMap(RetailerLocation selectedShop){
+
+        FXMLLoader showMapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+        Parent root = null;
+        try {
+            root = showMapLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MapController map = showMapLoader.getController();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        map.initModel(model, stage);
+        stage.show();
+
+        map.showGivenShop(selectedShop);
+
+
+
+    }
 
 }
