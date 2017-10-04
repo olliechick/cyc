@@ -1,14 +1,11 @@
 package seng202.team1.Controller;
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import seng202.team1.Model.BikeTrip;
 import seng202.team1.Model.BikeTripList;
 import seng202.team1.UserAccountModel;
 
@@ -30,25 +27,10 @@ public class ListViewerController {
     @FXML
     private ListView<String> wifiListView;
 
-    private ArrayList<String> testBikes = new ArrayList<>();
-    private ArrayList<String> testRetailers = new ArrayList<>();
-    private ArrayList<String> testWifis = new ArrayList<>();
 
     private UserAccountModel user;
 
     public void initialize() {
-        testBikes.add("test bike 1");
-        testBikes.add("test bike 2");
-        testRetailers.add("R1");
-        testRetailers.add("R2");
-        testWifis.add("W1");
-        testWifis.add("W2");
-
-        //bikeListView.getItems().addAll(testBikes);
-
-        retailerListView.getItems().addAll(testRetailers);
-        wifiListView.getItems().addAll(testWifis);
-        bikeListView.setEditable(true);
 
         bikeListView.setCellFactory(param -> new ListCell<BikeTripList>() {
             @Override
@@ -91,15 +73,15 @@ public class ListViewerController {
 
     public void setUser(UserAccountModel user) {
         this.user = user;
-        bikeListView.getItems().addAll(user.getBikeLists());
+        bikeListView.getItems().addAll(user.getBikeTripLists());
     }
 
 
     @FXML
     void chooseBikeList() {
-        String selectedItem = bikeListView.getSelectionModel().getSelectedItem().getBikeTrips().toString();
+        BikeTripList selectedItem = bikeListView.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
-            System.out.println(selectedItem);
+            System.out.println(selectedItem.getBikeTrips().toString());
         }
     }
 

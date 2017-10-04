@@ -2,8 +2,9 @@ package seng202.team1;
 
 import seng202.team1.Controller.AlertGenerator;
 import seng202.team1.Model.*;
+import seng202.team1.Model.CsvHandling.CSVLoader;
+import seng202.team1.Model.CsvHandling.CsvParserException;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ public class UserAccountModel implements java.io.Serializable {
     private String userName;
     private byte[] password;
     private byte[] salt;
+    ArrayList<BikeTripList> bikeTripLists = new ArrayList<>();
 
     /**
      * Constructor with account type set to "User".
@@ -54,6 +56,15 @@ public class UserAccountModel implements java.io.Serializable {
         this.salt = PasswordManager.getNextSalt();
         this.password = PasswordManager.hash(password, salt);
         this.gender = 'u';
+    }
+
+    private void createDefaultLists() {
+        try {
+            BikeTripList defaultTrips = new BikeTripList("Default", CSVLoader.populateBikeTrips());
+            bikeTripLists.add(defaultTrips);
+        } catch (CsvParserException | IOException e) {
+            AlertGenerator.createAlert("Default bike trips could not be created!");
+        }
     }
 
     public char getGender() {
@@ -203,14 +214,14 @@ public class UserAccountModel implements java.io.Serializable {
         }
     }
 
-    public ArrayList<BikeTripList> getBikeLists() {
+    public ArrayList<BikeTripList> getBikeTripLists() {
         BikeTripList list1 = new BikeTripList("bike list 1", getCustomBikeTrips());
         BikeTripList list2 = new BikeTripList("Bike list 2", getCustomBikeTrips());
-        ArrayList<BikeTripList> lists = new ArrayList<>();
+        ArrayList<BikeTripList> bikeTripLists = new ArrayList<>();
 
-        lists.add(list1);
-        lists.add(list2);
-        return lists;
+//        bikeTripLists.add(list1);
+//        bikeTripLists.add(list2);
+        return bikeTripLists;
     }
 
     public static void createUser(UserAccountModel user) {
