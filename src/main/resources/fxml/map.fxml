@@ -189,7 +189,7 @@
       <WebView fx:id="webView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
    <left>
-      <GridPane prefHeight="696.0" prefWidth="189.0" BorderPane.alignment="CENTER">
+      <GridPane prefHeight="696.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
         </columnConstraints>
@@ -201,14 +201,27 @@
           <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-             <TableView />
-            <TableView prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+             <TableView prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="0" fx:id="bikeTripTable">
+                 <columns>
+                     <TableColumn prefWidth="75.0" text="Name" />
+                     <TableColumn prefWidth="75.0" text="Distance" />
+                 </columns>
+             </TableView>
+            <TableView prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" fx:id="retailerDistanceTable">
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                  <TableColumn prefWidth="75.0" text="Distance" />
+                <TableColumn prefWidth="75.0" text="Name" />
+
               </columns>
             </TableView>
-            <GridPane GridPane.rowIndex="2">
+             <TableView prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" fx:id="wifiDistanceTable">
+                 <columns>
+                     <TableColumn prefWidth="75.0" text="Distance" />
+                     <TableColumn prefWidth="75.0" text="SSID" />
+
+                 </columns>
+             </TableView>
+            <GridPane GridPane.rowIndex="3">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
