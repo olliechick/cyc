@@ -18,6 +18,7 @@ import java.util.ArrayList;
  *
  * @author Josh Burt
  * @author Ollie Chick
+ * @author Ridge Nairn
  */
 public class UserAccountModel implements java.io.Serializable {
 
@@ -134,7 +135,7 @@ public class UserAccountModel implements java.io.Serializable {
         ArrayList<BikeTrip> result = new ArrayList<>();
         try {
             DatabaseManager.open();
-            result = DatabaseManager.getUserTrips(userName);
+            result = DatabaseManager.getBikeTrips(userName);
             System.out.println(String.format("%d custom trips retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
@@ -147,7 +148,7 @@ public class UserAccountModel implements java.io.Serializable {
         ArrayList<RetailerLocation> result = new ArrayList<>();
         try {
             DatabaseManager.open();
-            result = DatabaseManager.getRetailers();
+            result = DatabaseManager.getRetailers(userName);
             System.out.println(String.format("%d custom retailers retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
@@ -160,7 +161,7 @@ public class UserAccountModel implements java.io.Serializable {
         ArrayList<WifiPoint> result = new ArrayList<>();
         try {
             DatabaseManager.open();
-            result = DatabaseManager.getWifiPoints();
+            result = DatabaseManager.getWifiPoints(userName);
             System.out.println(String.format("%d custom wifi points retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
@@ -182,21 +183,17 @@ public class UserAccountModel implements java.io.Serializable {
     }
 
     public void addCustomRetailerLocation(RetailerLocation retailerLocation) {
-        try {
-            //TODO: Have this thrown further up
-            DatabaseManager.open();
-            DatabaseManager.addRecord(retailerLocation, userName);
-            DatabaseManager.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        addPoint(retailerLocation);
     }
 
     public void addCustomWifiLocation(WifiPoint wifiPoint) {
+        addPoint(wifiPoint);
+    }
+
+    private void addPoint(DataPoint point) {
         try {
-            //TODO: Have this thrown further up
             DatabaseManager.open();
-            DatabaseManager.addRecord(wifiPoint, userName);
+            DatabaseManager.addRecord(point, userName);
             DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();

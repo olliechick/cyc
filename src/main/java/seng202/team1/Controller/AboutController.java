@@ -15,6 +15,7 @@ import java.io.IOException;
 
 /**
  * Controller for About dialog
+ * @author Ridge Nairn
  */
 public class AboutController {
 
