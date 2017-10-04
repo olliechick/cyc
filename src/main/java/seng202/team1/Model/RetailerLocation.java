@@ -15,7 +15,7 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeEcmaScript;
 public class RetailerLocation extends DataPoint implements java.io.Serializable {
 
     private String name;
-    private String addressLine1;
+    private String addressLine1 = "";
     private String addressLine2;
     private String city;
     private String state;
@@ -55,7 +55,9 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
         } else {
             this.secondaryFunction = secondaryFunction;
         }
-        this.addressLine1 = addressLine1;
+        if (addressLine1 != null) {
+            this.addressLine1 = addressLine1;
+        }
         this.addressLine2 = addressLine2;
         this.city = city;
         this.state = state;

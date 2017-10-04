@@ -13,6 +13,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -43,11 +45,6 @@ import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
  */
 public class BikeTableController extends TableController {
 
-    @FXML
-    private ComboBox<String> filterStartComboBox;
-
-    @FXML
-    private ComboBox<String> filterEndComboBox;
 
     @FXML
     private TextField bikeSearchField;
@@ -161,6 +158,16 @@ public class BikeTableController extends TableController {
             }
         });
 
+        super.showOnMap.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                cm.hide();
+                if (table.getSelectionModel().getSelectedItem() != null){
+                    showTripOnMap(table.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
+
         super.deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -170,6 +177,8 @@ public class BikeTableController extends TableController {
                 }
             }
         });
+
+
     }
 
     /**
@@ -216,6 +225,30 @@ public class BikeTableController extends TableController {
     }
 
     /**
+     * Takes a given bike trip from a context menu and then adds it too the map.
+     * @param selectedBikeTrip passed by onclick listener
+     */
+    private void showTripOnMap(BikeTrip selectedBikeTrip) {
+        FXMLLoader showMapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+        Parent root = null;
+        try {
+            root = showMapLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MapController map = showMapLoader.getController();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        map.initModel(model, stage);
+        stage.show();
+
+        map.showGivenTrip(selectedBikeTrip);
+
+
+    }
+
+    /**
      * Sets the filter ComboBox options.
      */
     private void setFilters() {
@@ -223,15 +256,6 @@ public class BikeTableController extends TableController {
         filterGenderComboBox.getItems().clear();
         filterGenderComboBox.getItems().addAll("All", "male", "female", "unknown");
         filterGenderComboBox.getSelectionModel().selectFirst();
-
-        filterStartComboBox.getItems().clear();
-        filterStartComboBox.getItems().addAll("Not yet implemented");
-        filterStartComboBox.getSelectionModel().selectFirst();
-
-        filterEndComboBox.getItems().clear();
-        filterEndComboBox.getItems().addAll("Not yet implemented");
-        filterEndComboBox.getSelectionModel().selectFirst();
-
     }
 
     /**
@@ -431,20 +455,17 @@ public class BikeTableController extends TableController {
      * Clear all input in the filters
      */
     public void clearFilters() {
-        filterStartComboBox.getSelectionModel().selectFirst();
-        filterEndComboBox.getSelectionModel().selectFirst();
         filterGenderComboBox.getSelectionModel().selectFirst();
         bikeSearchField.clear();
-    }
-
-    public void clearSearches(){
         startLatTextField.setText("");
         startLongTextField.setText("");
         endLatTextField.setText("");
         endLongTextField.setText("");
         dataPoints.clear();
         dataPoints.addAll(originalData);
+
     }
+
 
     public void searchBikeTrips() {
         Double startLat = 0.00;

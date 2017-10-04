@@ -956,5 +956,44 @@ public class MapController {
 
     }
 
+    /**
+     * Shows a biketrip passed in by the table view on the map
+     * @param selectedTrip
+     */
+    public void showGivenTrip(BikeTrip selectedTrip){
+        ArrayList<Point.Float> routePoints = new ArrayList<>();
+        routePoints.add(selectedTrip.getStartPoint());
+        routePoints.add(selectedTrip.getEndPoint());
+        // Check the map has been loaded before attempting to add a route to it.
+        webEngine.getLoadWorker().stateProperty().addListener(
+                new ChangeListener<Worker.State>() {
+                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
+                        if (newState == Worker.State.SUCCEEDED) {
+                            generateRoute(routePoints);
+                        }
+                    }
+                });
+
+    }
+
+
+    /**
+     * Takes a RetailerLocation passed in by the table view and shows it on the map.
+     *
+     * @param selectedShop Retailer to show
+     */
+    public void showGivenShop(RetailerLocation selectedShop){
+        webEngine.getLoadWorker().stateProperty().addListener(
+                new ChangeListener<Worker.State>() {
+                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
+                        if (newState == Worker.State.SUCCEEDED) {
+                            int indexOfRetailer = retailerPoints.indexOf(selectedShop);
+                            String scriptStr1 = "document.circleRetailer(" + indexOfRetailer + ", 'DEPARTMENTSTORESELECTED.png', 'departmentstore.png')";
+                            webView.getEngine().executeScript(scriptStr1);
+                        }
+                    }
+                });
+    }
+
 }
 
