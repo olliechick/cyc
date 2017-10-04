@@ -14,8 +14,8 @@ import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import static seng202.team1.Model.DatabaseManager.getBikeTrips;
 import static seng202.team1.Model.DatabaseManager.getRetailers;
-import static seng202.team1.Model.DatabaseManager.getUserTrips;
 import static seng202.team1.Model.DatabaseManager.getWifiPoints;
 
 /**
@@ -62,8 +62,8 @@ public class CSVExporter {
     public static void exportBikeTrips(String filename, String username) throws IOException, SQLException {
         // Import the users's bike trips from the database
         DatabaseManager.open();
-        ArrayList<BikeTrip> bikeTrips = getUserTrips(username);
-        DatabaseManager.close();
+        ArrayList<BikeTrip> bikeTrips = getBikeTrips(username);
+        //DatabaseManager.close();
 
         // Create an ArrayList of Strings, where each String is a bike trip line in the CSV
         ArrayList<String> lines = new ArrayList<String>();
@@ -101,7 +101,7 @@ public class CSVExporter {
     public static void exportWifiHotspots(String filename, String username) throws IOException, SQLException {
         // Import the users's wifis from the database
         DatabaseManager.open();
-        ArrayList<WifiPoint> wifiPoints = getWifiPoints(/*username*/);
+        ArrayList<WifiPoint> wifiPoints = getWifiPoints(username);
         DatabaseManager.close();
 
         // Create an ArrayList of Strings, where each String is a bike trip line in the CSV
@@ -141,7 +141,7 @@ public class CSVExporter {
     public static void exportRetailers(String filename, String username) throws IOException, SQLException {
         // Import the users's retailers from the database
         DatabaseManager.open();
-        ArrayList<RetailerLocation> retailers = getRetailers(/*username*/);
+        ArrayList<RetailerLocation> retailers = getRetailers(username);
         DatabaseManager.close();
 
         // Create an ArrayList of Strings, where each String is a bike trip line in the CSV

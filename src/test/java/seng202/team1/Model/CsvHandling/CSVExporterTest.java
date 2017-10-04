@@ -8,6 +8,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import seng202.team1.Model.BikeTrip;
 import seng202.team1.Model.DatabaseManager;
+import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.WifiPoint;
 
 import java.awt.Point;
 import java.io.File;
@@ -20,6 +22,8 @@ import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 import static seng202.team1.Model.CsvHandling.CSVExporter.exportBikeTrips;
 import static seng202.team1.Model.CsvHandling.CSVExporter.exportCSV;
+import static seng202.team1.Model.CsvHandling.CSVExporter.exportRetailers;
+import static seng202.team1.Model.CsvHandling.CSVExporter.exportWifiHotspots;
 
 /**
  * @author Ollie Chick
@@ -142,11 +146,6 @@ public class CSVExporterTest {
         assertEquals(1, bikeTrips.size()); //check there is only one
     }
 
-    /*
-
-    THESE TESTS ARE RELIANT ON DatabaseManager.addWifiPoint() AND .addRetailer() TO WORK
-    *
-
     @Test
     public void testExportWifiHotspots() throws Exception {
 
@@ -171,7 +170,7 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addWifiPoint(wifiPoint, username);
+            DatabaseManager.addRecord(wifiPoint, username);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -211,7 +210,7 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addWifiPoint(wifiPoint, username);
+            DatabaseManager.addRecord(wifiPoint, username);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -245,7 +244,7 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addRetailer(retailer, username);
+            DatabaseManager.addRecord(retailer, username);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -263,7 +262,7 @@ public class CSVExporterTest {
     @Test
     public void testExportRetailersWithNull() throws Exception {
         String name = "Pearl Bodywork";
-        String addressLine1 = null
+        String addressLine1 = null;
         String addressLine2 = null;
         String city = "New York";
         String state = "NY";
@@ -278,7 +277,7 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addRetailer(retailer, username);
+            DatabaseManager.addRecord(retailer, username);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -294,17 +293,15 @@ public class CSVExporterTest {
     }
 
 
-*/
-
     @After
     public void tearDown() throws Exception {
         // Close and delete database
-        try {
+        /*try {
             DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        DatabaseManager.deleteDatabase();
+        DatabaseManager.deleteDatabase();*/
     }
 
 
