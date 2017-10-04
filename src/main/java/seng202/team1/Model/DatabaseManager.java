@@ -1,9 +1,13 @@
 package seng202.team1.Model;
 
 
-import java.awt.*;
+import java.awt.Point;
 import java.io.File;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -20,9 +24,10 @@ public class DatabaseManager {
 
     /**
      * Opens the database connection, creating it if it does not exist. Does not register JDBC driver.
+     *
      * @throws SQLException could not get driver connection, or change autocommit parameter.
      */
-    public static void open() throws SQLException{
+    public static void open() throws SQLException {
 
         String filename = "sqlite.db";
         localDatabaseFile = new File(Directory.DATABASES.directory() + filename);
@@ -48,7 +53,7 @@ public class DatabaseManager {
      * @param initialize registers the JDBC driver, for initial loading on some machines.
      * @throws SQLException could not register driver, or could not open database.
      */
-    public static void open(boolean initialize) throws SQLException{
+    public static void open(boolean initialize) throws SQLException {
         if (initialize) {
             DriverManager.registerDriver(new org.sqlite.JDBC());
         }
@@ -59,9 +64,10 @@ public class DatabaseManager {
     /**
      * Closes the database connection. Called after a set of actions are performed
      * so the database is freed for use elsewhere without conflict.
+     *
      * @throws SQLException Could not commit transactions, or close the connection to the database.
      */
-    public static void close() throws SQLException{
+    public static void close() throws SQLException {
         if (isDatabaseConnected()) {
             connection.commit();
             connection.close();
@@ -223,24 +229,24 @@ public class DatabaseManager {
     /**
      * Adds a single record to the database.
      * The type of the record is identified and is stored in its respective table.
+     * Note that it assumes the database is already open - it doesn't open it.
      *
      * @param point A point to be added to the database.
      * @throws SQLException when record cannot be added.
      * @author Ridge Nairn
      */
-    public static void addRecord(DataPoint point, String username) throws SQLException {
+    private static void addRecordExistingConnection(DataPoint point, String username) throws SQLException {
         PreparedStatement preparedStatement;
         String statement;
         int numOfQs; //number of question marks to put in the statement
-
 
         if (point instanceof RetailerLocation) {
             numOfQs = 12;
             statement = "INSERT INTO retailer (name, addressLine1, addressLine2, city, state, zipcode, blockLot, " +
                     "primaryFunction, secondaryFunction, latitude, longitude, username) " +
                     "VALUES (" + new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
-            RetailerLocation retailer = (RetailerLocation) point;
 
+            RetailerLocation retailer = (RetailerLocation) point;
             preparedStatement = connection.prepareStatement(statement);
 
             preparedStatement.setString(1, retailer.getName());
@@ -248,13 +254,11 @@ public class DatabaseManager {
             preparedStatement.setString(3, retailer.getAddressLine2());
             preparedStatement.setString(4, retailer.getCity());
             preparedStatement.setString(5, retailer.getState());
-
             preparedStatement.setString(6, Integer.toString(retailer.getZipcode()));
             preparedStatement.setString(7, retailer.getBlockLot());
             preparedStatement.setString(8, retailer.getPrimaryFunction());
             preparedStatement.setString(9, retailer.getSecondaryFunction());
             preparedStatement.setFloat(10, retailer.getLatitude());
-
             preparedStatement.setFloat(11, retailer.getLongitude());
             preparedStatement.setString(12, username);
 
@@ -265,8 +269,8 @@ public class DatabaseManager {
             statement = "INSERT INTO wifi (objectID, latitude, longitude, placeName, location, locationType, " +
                     "hood, borough, city, zipcode, cost, provider, remarks, SSID, sourceId, datetimeactivated, username) " +
                     "VALUES (" + new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
-            WifiPoint wifiPoint = (WifiPoint) point;
 
+            WifiPoint wifiPoint = (WifiPoint) point;
             preparedStatement = connection.prepareStatement(statement);
 
             preparedStatement.setInt(1, wifiPoint.getObjectId());
@@ -274,24 +278,49 @@ public class DatabaseManager {
             preparedStatement.setFloat(3, wifiPoint.getLongitude());
             preparedStatement.setString(4, wifiPoint.getPlaceName());
             preparedStatement.setString(5, wifiPoint.getLocation());
-
             preparedStatement.setString(6, wifiPoint.getLocationType());
             preparedStatement.setString(7, wifiPoint.getHood());
             preparedStatement.setString(8, wifiPoint.getBorough());
             preparedStatement.setString(9, wifiPoint.getCity());
             preparedStatement.setString(10, Integer.toString(wifiPoint.getZipcode()));
-
             preparedStatement.setString(11, wifiPoint.getCost());
             preparedStatement.setString(12, wifiPoint.getProvider());
             preparedStatement.setString(13, wifiPoint.getRemarks());
             preparedStatement.setString(14, wifiPoint.getSsid());
             preparedStatement.setString(15, wifiPoint.getSourceId());
-
             preparedStatement.setString(16, wifiPoint.getDatetimeActivated().toString());
             preparedStatement.setString(17, username);
 
             preparedStatement.execute();
 
+        } else if (point instanceof BikeTrip) {
+            numOfQs = 15; //number of question marks to put in the statement
+
+            statement = "INSERT INTO trip (duration, startTime, stopTime, startLatitude, " +
+                    "startLongitude, endLatitude, endLongitude, startStationId, endStationId, " +
+                    "bikeID, gender, birthYear, tripDistance, isUserDefined, username) VALUES (" +
+                    new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
+
+            BikeTrip trip = (BikeTrip) point;
+            preparedStatement = connection.prepareStatement(statement);
+
+            preparedStatement.setLong(1, trip.getTripDuration());
+            preparedStatement.setString(2, trip.getStartTime().toString());
+            preparedStatement.setString(3, trip.getStopTime().toString());
+            preparedStatement.setFloat(4, trip.getStartLatitude());
+            preparedStatement.setFloat(5, trip.getStartLongitude());
+            preparedStatement.setFloat(6, trip.getEndLatitude());
+            preparedStatement.setFloat(7, trip.getEndLongitude());
+            preparedStatement.setInt(8, trip.getBikeId());
+            //preparedStatement.setInt(9, trip.getStartStationId());
+            //preparedStatement.setInt(10, trip.getEndStationId());
+            preparedStatement.setString(11, Character.toString(trip.getGender()));
+            preparedStatement.setInt(12, trip.getBirthYear());
+            preparedStatement.setDouble(13, trip.getTripDistance());
+            //preparedStatement.setBoolean(14, trip.isUserDefinedPoint());
+            preparedStatement.setString(15, username);
+
+            preparedStatement.execute();
 
         } else {
             System.out.println("Unexpected type.");
@@ -300,66 +329,43 @@ public class DatabaseManager {
 
 
     /**
-     * Adds a single bike trip record to the database.
+     * Adds one record to the database.
+     * This opens and closes the database, so should not be called in a loop (use addRecords() for this).
      *
-     * @param trip An instance of BikeTrip to be added to the trip database table.
-     * @param username The username of the account the trip is tied to.
-     * @throws SQLException when the row could not be inserted
-     * @author Ridge Nairn
-     * @author Ollie Chick
+     * @param point    The point to be added to the database
+     * @param username The username of the user whose point is being added
+     * @throws SQLException
      */
-    public static void addBikeTrip(BikeTrip trip, String username) throws SQLException {
-        int numOfQs = 15; //number of question marks to put in the statement
-
-        String insert = "INSERT INTO trip (duration, startTime, stopTime, startLatitude, " +
-                "startLongitude, endLatitude, endLongitude, startStationId, endStationId, " +
-                "bikeID, gender, birthYear, tripDistance, isUserDefined, username) VALUES (" +
-
-                new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
-
-
-        PreparedStatement statement = connection.prepareStatement(insert);
-
-        statement.setLong(1, trip.getTripDuration());
-        statement.setString(2, trip.getStartTime().toString());
-        statement.setString(3, trip.getStopTime().toString());
-        statement.setFloat(4, trip.getStartLatitude());
-        statement.setFloat(5, trip.getStartLongitude());
-        statement.setFloat(6, trip.getEndLatitude());
-        statement.setFloat(7, trip.getEndLongitude());
-        statement.setInt(8, trip.getBikeId());
-        //statement.setInt(9, trip.getStartStationId());
-        //statement.setInt(10, trip.getEndStationId());
-        statement.setString(11, Character.toString(trip.getGender()));
-        statement.setInt(12, trip.getBirthYear());
-        statement.setDouble(13, trip.getTripDistance());
-        //statement.setBoolean(14, trip.isUserDefinedPoint());
-        statement.setString(15, username);
-
-
-        statement.execute();
-
+    public static void addRecord(DataPoint point, String username) throws SQLException {
+        DatabaseManager.open();
+        addRecordExistingConnection(point, username);
+        DatabaseManager.close();
     }
 
 
     /**
      * Adds a list of trips to the database.
-     * @param trips ArrayList of trips to be added.
-     * @param username Username the trips are to be associated with.
+     *
+     * @param points   ArrayList of points to be added.
+     * @param username Username the points are to be associated with.
+     * @throws SQLException
      */
-    public static void addBikeTrips(ArrayList<BikeTrip> trips, String username) {
-        for (BikeTrip trip: trips) {
+    public static void addRecords(ArrayList<? extends DataPoint> points, String username) throws SQLException{
+        DatabaseManager.open();
+        for (DataPoint point : points) {
             try {
-                addBikeTrip(trip, username);
+                addRecordExistingConnection(point, username);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
+        DatabaseManager.close();
     }
 
 
     /**
      * Gets all bike trips associated with a user.
+     *
      * @param username the username of the user.
      * @return all of the bike trips associated to this user.
      */
@@ -409,6 +415,7 @@ public class DatabaseManager {
 
     /**
      * Gets all retailers associated with a user.
+     *
      * @param username the username of the user
      * @return all of the retailer points associated to this user.
      */
@@ -451,6 +458,7 @@ public class DatabaseManager {
 
     /**
      * Gets all of the wifi points associated with a user.
+     *
      * @param username the username of the user.
      * @return all of WiFi points associated to this user.
      */
@@ -502,7 +510,7 @@ public class DatabaseManager {
      * Returns the number of records of a certain type stored in the database,
      * that are associated with a user.
      *
-     * @param c Class of which the count is to be queried.
+     * @param c        Class of which the count is to be queried.
      * @param username Username of the user.
      * @return number of records to type c in database
      * @author Ridge Nairn

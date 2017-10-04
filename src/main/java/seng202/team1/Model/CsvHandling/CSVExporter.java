@@ -63,7 +63,7 @@ public class CSVExporter {
         // Import the users's bike trips from the database
         DatabaseManager.open();
         ArrayList<BikeTrip> bikeTrips = getBikeTrips(username);
-        //DatabaseManager.close();
+        DatabaseManager.close();
 
         // Create an ArrayList of Strings, where each String is a bike trip line in the CSV
         ArrayList<String> lines = new ArrayList<String>();

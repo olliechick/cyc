@@ -3,7 +3,6 @@ package seng202.team1.Model.CsvHandling;
 import org.apache.commons.csv.CSVRecord;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import seng202.team1.Model.BikeTrip;
@@ -42,7 +41,7 @@ public class CSVExporterTest {
         file.mkdirs();
     }
 
-
+/*
     @Before
     public void setUp() throws Exception {
         // Set up database to store data points in
@@ -53,7 +52,7 @@ public class CSVExporterTest {
         }
 
     }
-
+*/
 
     @Test
     public void testExportCSV() throws Exception {
@@ -97,7 +96,7 @@ public class CSVExporterTest {
 
         // Save bike trip to the database
         try {
-            DatabaseManager.addBikeTrip(bikeTrip, username);
+            DatabaseManager.addRecord(bikeTrip, username);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -131,7 +130,7 @@ public class CSVExporterTest {
 
         // Save bike trip to the database
         try {
-            DatabaseManager.addBikeTrip(bikeTrip, username);
+            DatabaseManager.addRecord(bikeTrip, username);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -294,14 +293,14 @@ public class CSVExporterTest {
 
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws Exception {/*
         // Close and delete database
-        /*try {
+        try {
             DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        DatabaseManager.deleteDatabase();*/
+        }*/
+        DatabaseManager.deleteDatabase();
     }
 
 
