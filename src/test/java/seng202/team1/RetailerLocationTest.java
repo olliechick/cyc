@@ -21,7 +21,6 @@ public class RetailerLocationTest extends TestCase {
     String primaryFunction;
     String secondaryFunction;
     Point.Float coords;
-    boolean isUserDefinedPoint;
 
     RetailerLocation retailerLocation;
 
@@ -39,7 +38,7 @@ public class RetailerLocationTest extends TestCase {
         secondaryFunction = "Spa";
         coords = new Point.Float((float) -74.011071, (float) 40.703417);
         retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city, state,
-                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords);
     }
 
     @Test
@@ -52,7 +51,7 @@ public class RetailerLocationTest extends TestCase {
     public void testGetAddressNoAddressLine2() {
         addressLine2 = "";
         RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2,
-                city, state, zipcode, blockLot, primaryFunction, secondaryFunction, isUserDefinedPoint);
+                city, state, zipcode, blockLot, primaryFunction, secondaryFunction);
         String expectedAddress = "60 Pearl Street, New York, NY 10004";
         assertEquals(expectedAddress, retailerLocation1.getAddress());
     }
@@ -60,7 +59,7 @@ public class RetailerLocationTest extends TestCase {
     @Test
     public void testCoordlessConstructor() {
         RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2,
-                city, state, zipcode, blockLot, primaryFunction, secondaryFunction, isUserDefinedPoint);
+                city, state, zipcode, blockLot, primaryFunction, secondaryFunction);
         assertEquals(null, retailerLocation1.getCoords());
     }
 
@@ -86,7 +85,7 @@ public class RetailerLocationTest extends TestCase {
         secondaryFunction = "Spa";
         coords = new Point.Float((float) -74.011071, (float) 40.703417);
         RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2, city, state,
-                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords);
         boolean isSame = retailerLocation.equals(retailerLocation1);
         assertEquals(true, isSame);
     }
@@ -104,7 +103,7 @@ public class RetailerLocationTest extends TestCase {
         secondaryFunction = "Spa";
         coords = new Point.Float((float) -74.011071, (float) 40.703417);
         RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2, city, state,
-                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords);
         boolean isSame = retailerLocation.equals(retailerLocation1);
         assertEquals(true, isSame);
     }
@@ -122,7 +121,7 @@ public class RetailerLocationTest extends TestCase {
         secondaryFunction = "Spa";
         coords = new Point.Float((float) -74.011171, (float) 40.703417);
         RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2, city, state,
-                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords);
         boolean isSame = retailerLocation.equals(retailerLocation1);
         assertEquals(false, isSame);
     }
@@ -150,7 +149,7 @@ public class RetailerLocationTest extends TestCase {
         secondaryFunction = "Spa";
         coords = new Point.Float((float) -74.011071, (float) 40.703417);
         RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2, city, state,
-                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords);
         int hash1 = retailerLocation.hashCode();
         int hash2 = retailerLocation1.hashCode();
         assertEquals(hash1,hash2);
@@ -169,7 +168,7 @@ public class RetailerLocationTest extends TestCase {
         secondaryFunction = "Spa";
         coords = new Point.Float((float) -74.011071, (float) 40.703417);
         RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2, city, state,
-                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords);
         int hash1 = retailerLocation.hashCode();
         int hash2 = retailerLocation1.hashCode();
         assertEquals(hash1,hash2);
@@ -188,7 +187,7 @@ public class RetailerLocationTest extends TestCase {
         secondaryFunction = "Spa";
         coords = new Point.Float((float) -74.011071, (float) 40.723417);
         RetailerLocation retailerLocation1 = new RetailerLocation(name, addressLine1, addressLine2, city, state,
-                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords);
         int hash1 = retailerLocation.hashCode();
         int hash2 = retailerLocation1.hashCode();
         assertNotEquals(hash1,hash2);

@@ -69,11 +69,11 @@ public class DatabaseManagerTest {
         model = new UserAccountModel(gender, birthdate, "TestAccount", "bad_password");
 
         retailer = new RetailerLocation(name, addressLine1, addressLine2, city, state,
-                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords);
         trip = new BikeTrip(startTime, stopTime, startPoint, endPoint, bikeID,
-                gender, birthYear, isUserDefinedPoint);
+                gender, birthYear);
         wifi = new WifiPoint(objectID, wificoords, placeName, location, locationType, hood,
-                borough, city, zipcode, cost, provider, remarks, ssid, sourceID, startTime, isUserDefinedPoint);
+                borough, city, zipcode, cost, provider, remarks, ssid, sourceID, startTime);
     }
 
     @Before

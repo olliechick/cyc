@@ -39,7 +39,7 @@ public class InputValidatorTest {
         boolean isUserDefinedPoint = false;
 
         BikeTrip trip = new BikeTrip(duration, startTime, stopTime, startPoint,
-                endPoint, bikeID, gender, birthYear, isUserDefinedPoint);
+                endPoint, bikeID, gender, birthYear);
         assertEquals(false, InputValidator.isDuplicateBikeTrip(trip, trips));
     }
 
@@ -71,7 +71,7 @@ public class InputValidatorTest {
         boolean isUserDefinedPoint = false;
 
         WifiPoint hotspot = new WifiPoint(objectId, coords, name, location, locationType, hood, borough, city, zipcode,
-                cost, provider, remarks, ssid, sourceId, datetimeActivated, isUserDefinedPoint);
+                cost, provider, remarks, ssid, sourceId, datetimeActivated);
         assertEquals(false, InputValidator.isDuplicateWifiPoint(hotspot,hotspots));
     }
 
@@ -98,7 +98,7 @@ public class InputValidatorTest {
         boolean isUserDefinedPoint = true;
         Point.Float coords = new Point.Float((float) -74.011071, (float) 40.723417);
         RetailerLocation shop = new RetailerLocation(name, addressLine1, addressLine2, city, state,
-                zipcode, blockLot, primaryFunction, secondaryFunction, coords, isUserDefinedPoint);
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords);
         assertEquals(false, InputValidator.isDuplicateRetailer(shop, retailers));
     }
 

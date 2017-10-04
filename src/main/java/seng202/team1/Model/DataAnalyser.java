@@ -1,5 +1,8 @@
 package seng202.team1.Model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -128,6 +131,37 @@ public final class DataAnalyser {
         }
         return results;
     }
+
+
+
+    /**
+     * Takes a latitude, longitude and distance delta and iterates through a list of wifi points
+     * Returns all points within the specified distance from the lat and long
+     *
+     * @param searchLat  Latitude to start the search at
+     * @param searchLong Longitude to start the search at
+     * @param delta      radius to search in
+     * @param hotspots   ArrayList of WiFi points to search through
+     * @return a list of wifi points close the point
+     */
+    public static ObservableList<WifiPoint> searchWifiPoints(double searchLat, double searchLong,
+                                                             double delta, ObservableList<WifiPoint> hotspots) {
+        ArrayList<WifiPoint> results = new ArrayList<>();
+        for (WifiPoint hotspot : hotspots) {
+            // Unfortunately an 0(n) with the current data set.
+            // Perhaps we need to sort based on Lat and long to decrease time complexity
+            double spotLong = hotspot.getLongitude();
+            double spotLat = hotspot.getLatitude();
+            if (calculateDistance(searchLat, searchLong, spotLat, spotLong) < delta) {
+                results.add(hotspot);
+            }
+        }
+        ObservableList<WifiPoint> resultsObserved = FXCollections.observableArrayList(results);
+
+        return resultsObserved;
+    }
+
+
     public static ArrayList<WIFIPointDistance> sortedWIFIPointsByMinimumDistanceToRoute(ArrayList<WIFIPointDistance> points, ArrayList<Point2D.Float> waypoints) {
         WIFIPointDistance current;
         Double currentDistance;
@@ -249,6 +283,50 @@ public final class DataAnalyser {
             }
         }
 
+        return results;
+    }
+
+    /**
+     * Takes an Observable list of retailer locations and searches for all retailers within the specified distance
+     *
+     * @param searchLat Latitude to start searching from
+     * @param searchLong longitude to start searching from
+     * @param delta Distance to search within
+     * @param retailers List of retailers to search through
+     * @return The list of retailers within the distance from the point
+     */
+    public static ArrayList<RetailerLocation> searchRetailerLocations(Double searchLat, Double searchLong, Double delta, ObservableList<RetailerLocation> retailers){
+        ArrayList<RetailerLocation> results = new ArrayList<>();
+        for (Object shop : retailers){
+
+            Double shopLat = ((RetailerLocation) shop).getCoords().getY();
+            Double shopLong = ((RetailerLocation) shop).getCoords().getX();
+            if (calculateDistance(searchLat,searchLong,shopLat,shopLong)  <= delta){
+                results.add((RetailerLocation) shop);
+            }
+        }
+        return results;
+    }
+
+    /**
+     * Takes an ArrayList of retailer locations and searches for all retailers within the specified distance
+     *
+     * @param searchLat Latitude to start searching from
+     * @param searchLong longitude to start searching from
+     * @param delta Distance to search within
+     * @param retailers List of retailers to search through
+     * @return The list of retailers within the distance from the point
+     */
+    public static ArrayList<RetailerLocation> searchRetailerLocations(Double searchLat, Double searchLong, Double delta,ArrayList<RetailerLocation> retailers){
+        ArrayList<RetailerLocation> results = new ArrayList<>();
+        for (RetailerLocation shop : retailers){
+
+            Double shopLat = shop.getCoords().getY();
+            Double shopLong = shop.getCoords().getX();
+            if (calculateDistance(searchLat,searchLong,shopLat,shopLong)  <= delta){
+                results.add(shop);
+            }
+        }
         return results;
     }
 

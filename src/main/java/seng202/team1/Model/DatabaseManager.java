@@ -333,7 +333,7 @@ public class DatabaseManager {
         statement.setString(11, Character.toString(trip.getGender()));
         statement.setInt(12, trip.getBirthYear());
         statement.setDouble(13, trip.getTripDistance());
-        statement.setBoolean(14, trip.isUserDefinedPoint());
+        //statement.setBoolean(14, trip.isUserDefinedPoint());
         statement.setString(15, username);
 
 
@@ -396,7 +396,7 @@ public class DatabaseManager {
                 Point.Float stopPoint = new Point.Float(endLongitude, endLatitude);
 
                 BikeTrip trip = new BikeTrip(duration, startTime, stopTime, startPoint, stopPoint,
-                        bikeID, gender, birthYear, tripDistance, isUserDefined);
+                        bikeID, gender, birthYear, tripDistance);
 
                 result.add(trip);
             }
@@ -438,7 +438,7 @@ public class DatabaseManager {
 
                 Point.Float location = new Point.Float(longitude, latitude);
 
-                RetailerLocation retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city, state, zipcode, blocklot, primaryFunction, secondaryFunction, location, isUserDefined);
+                RetailerLocation retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city, state, zipcode, blocklot, primaryFunction, secondaryFunction, location);
 
                 result.add(retailerLocation);
             }
@@ -481,13 +481,13 @@ public class DatabaseManager {
                 String ssid = rs.getString("SSID");
                 String sourceID = rs.getString("sourceId");
                 String dateTimeActivated = rs.getString("dateTimeActivated");
-                Boolean isUserDefined = rs.getBoolean("isUserDefined");
+                //Boolean isUserDefined = rs.getBoolean("isUserDefined");
 
                 Point.Float coords = new Point.Float(longitude, latitude);
                 LocalDateTime dateTime = LocalDateTime.parse(dateTimeActivated);
 
                 WifiPoint wifiPoint = new WifiPoint(objectID, coords, placeName, location, locationType, hood,
-                        borough, city, zipcode, cost, provider, remarks, ssid, sourceID, dateTime, isUserDefined);
+                        borough, city, zipcode, cost, provider, remarks, ssid, sourceID, dateTime);
 
                 result.add(wifiPoint);
             }

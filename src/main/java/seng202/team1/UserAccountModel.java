@@ -111,12 +111,16 @@ public class UserAccountModel implements java.io.Serializable {
      */
     public boolean changePassword(String currentPassword, String newPassword, String confirmPassword){
         if (PasswordManager.isExpectedPassword(currentPassword, salt, password)) {
+            if (!PasswordManager.isExpectedPassword(newPassword, salt, password)){
             if (newPassword.equals(confirmPassword)) {
                 salt = PasswordManager.getNextSalt();
                 password = PasswordManager.hash(newPassword, salt);
                 return true;
             } else {
                 AlertGenerator.createAlert("New passwords do not match");
+            }
+        } else {
+                AlertGenerator.createAlert("Your new password cannot be the same as your old password");
             }
         } else {
             AlertGenerator.createAlert("The current password is incorrect");

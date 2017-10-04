@@ -52,11 +52,10 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
      * @param ssid               SSID of WiFi - this is the "name" of the WiFi a user sees on their device
      * @param sourceId           Source ID of WiFi
      * @param datetimeActivated  date and time the WiFi was activated
-     * @param isUserDefinedPoint true if the WiFi point is user-defined
      */
     public WifiPoint(int objectId, Point.Float coords, String placeName, String location, String locationType, String hood,
                      String borough, String city, int zipcode, String cost, String provider, String remarks, String ssid,
-                     String sourceId, LocalDateTime datetimeActivated, boolean isUserDefinedPoint) {
+                     String sourceId, LocalDateTime datetimeActivated) {
         this.objectId = objectId;
         this.coords = coords;
         this.placeName = placeName;
@@ -73,7 +72,6 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
         this.ssid = ssid;
         this.sourceId = sourceId;
         this.datetimeActivated = datetimeActivated;
-        this.isUserDefinedPoint = isUserDefinedPoint;
     }
 
     public int getObjectId() {
@@ -226,9 +224,6 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
      */
     public String getName() {
         String name = ssid;
-        if (isUserDefinedPoint) {
-            name += " (user-defined)";
-        }
         return name;
     }
 
@@ -305,7 +300,6 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
         this.ssid = wifiPoint.getSsid();
         this.sourceId = wifiPoint.getSourceId();
         this.datetimeActivated = wifiPoint.getDatetimeActivated();
-        this.isUserDefinedPoint = true;
     }
 
     @Override
@@ -348,7 +342,6 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
                 ", sourceId='" + sourceId + '\'' +
                 ", datetimeActivated=" + datetimeActivated +
                 ", distanceFrom=" + distanceFrom +
-                ", isUserDefinedPoint=" + isUserDefinedPoint +
                 '}';
     }
 
