@@ -84,13 +84,10 @@ public class DatabaseManager {
                 "    startLongitude FLOAT,\n" +
                 "    endLatitude FLOAT,\n" +
                 "    endLongitude FLOAT,\n" +
-                "    startStationId INTEGER,\n" +
-                "    endStationId INTEGER,\n" +
                 "    bikeID INTEGER,\n" +
                 "    gender VARCHAR(1),\n" +
                 "    birthYear INTEGER,\n" +
-                "    tripDistance DOUBLE,\n" +
-                "    isUserDefined BOOLEAN\n" +
+                "    tripDistance DOUBLE\n" +
                 ");";
 
         String createRetailerTable = "CREATE TABLE retailer\n" +
@@ -107,8 +104,7 @@ public class DatabaseManager {
                 "    primaryFunction TEXT,\n" +
                 "    secondaryFunction TEXT,\n" +
                 "    latitude FLOAT,\n" +
-                "    longitude FLOAT,\n" +
-                "    isUserDefined BOOLEAN\n" +
+                "    longitude FLOAT\n" +
                 ");";
 
         String createWifiTable = "CREATE TABLE wifi\n" +
@@ -130,8 +126,7 @@ public class DatabaseManager {
                 "    remarks TEXT,\n" +
                 "    SSID TEXT,\n" +
                 "    sourceId TEXT,\n" +
-                "    dateTimeActivated TEXT,\n" +
-                "    isUserDefined BOOLEAN\n" +
+                "    dateTimeActivated TEXT\n" +
                 ");";
 
         try {
@@ -309,14 +304,13 @@ public class DatabaseManager {
      * @author Ollie Chick
      */
     public static void addBikeTrip(BikeTrip trip, String username) throws SQLException {
-        int numOfQs = 15; //number of question marks to put in the statement
+        int numOfQs = 12; //number of question marks to put in the statement
 
         String insert = "INSERT INTO trip (duration, startTime, stopTime, startLatitude, " +
-                "startLongitude, endLatitude, endLongitude, startStationId, endStationId, " +
-                "bikeID, gender, birthYear, tripDistance, isUserDefined, username) VALUES (" +
+                "startLongitude, endLatitude, endLongitude, bikeID, gender, birthYear, " +
+                "tripDistance, username) VALUES (" +
 
                 new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
-
 
         PreparedStatement statement = connection.prepareStatement(insert);
 
@@ -328,14 +322,10 @@ public class DatabaseManager {
         statement.setFloat(6, trip.getEndLatitude());
         statement.setFloat(7, trip.getEndLongitude());
         statement.setInt(8, trip.getBikeId());
-        //statement.setInt(9, trip.getStartStationId());
-        //statement.setInt(10, trip.getEndStationId());
-        statement.setString(11, Character.toString(trip.getGender()));
-        statement.setInt(12, trip.getBirthYear());
-        statement.setDouble(13, trip.getTripDistance());
-        //statement.setBoolean(14, trip.isUserDefinedPoint());
-        statement.setString(15, username);
-
+        statement.setString(9, Character.toString(trip.getGender()));
+        statement.setInt(10, trip.getBirthYear());
+        statement.setDouble(11, trip.getTripDistance());
+        statement.setString(12, username);
 
         statement.execute();
 
@@ -381,13 +371,10 @@ public class DatabaseManager {
                 Float startLongitude = rs.getFloat("startLongitude");
                 Float endLatitude = rs.getFloat("endLatitude");
                 Float endLongitude = rs.getFloat("endLongitude");
-                int startStationId = rs.getInt("startStationId");
-                int endStationId = rs.getInt("endStationId");
                 int bikeID = rs.getInt("bikeID");
                 char gender = rs.getString("gender").toCharArray()[0];
                 int birthYear = rs.getInt("birthYear");
                 double tripDistance = rs.getDouble("tripDistance");
-                boolean isUserDefined = rs.getBoolean("isUserDefined");
 
                 LocalDateTime startTime = LocalDateTime.parse(startTimeString);
                 LocalDateTime stopTime = LocalDateTime.parse(stopTimeString);
@@ -434,7 +421,6 @@ public class DatabaseManager {
                 String secondaryFunction = rs.getString("secondaryFunction");
                 Float latitude = rs.getFloat("latitude");
                 Float longitude = rs.getFloat("longitude");
-                Boolean isUserDefined = rs.getBoolean("isUserDefined");
 
                 Point.Float location = new Point.Float(longitude, latitude);
 
@@ -481,7 +467,6 @@ public class DatabaseManager {
                 String ssid = rs.getString("SSID");
                 String sourceID = rs.getString("sourceId");
                 String dateTimeActivated = rs.getString("dateTimeActivated");
-                //Boolean isUserDefined = rs.getBoolean("isUserDefined");
 
                 Point.Float coords = new Point.Float(longitude, latitude);
                 LocalDateTime dateTime = LocalDateTime.parse(dateTimeActivated);

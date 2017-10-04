@@ -36,7 +36,7 @@ public class DatabaseManagerTest {
         LocalDateTime stopTime = LocalDateTime.of(2015, Month.DECEMBER, 30, 23, 50, 10);
         Point.Float startPoint = new Point.Float((float) 172.581153, (float) -43.522610);
         Point.Float endPoint = new Point.Float((float) 172.572739, (float) -43.520740);
-        int bikeID = 1;
+        int bikeID = 1324;
         char gender = 'f';
         int birthYear = 2000;
         boolean isUserDefinedPoint = false;
@@ -136,6 +136,7 @@ public class DatabaseManagerTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println(trip.getBikeId());
         assertEquals(trip, DatabaseManager.getBikeTrips(model.getUserName()).get(0));
     }
 
