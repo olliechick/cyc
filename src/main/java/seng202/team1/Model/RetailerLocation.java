@@ -180,6 +180,9 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     }
 
     public float getLongitude() {
+        if (coords == null) {
+            return -1;
+        }
         return coords.x;
     }
 
@@ -188,6 +191,9 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     }
 
     public float getLatitude() {
+        if (coords == null) {
+            return -1;
+        }
         return coords.y;
     }
 

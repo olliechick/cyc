@@ -56,7 +56,7 @@
       </TableView>
    </center>
    <bottom>
-      <TabPane fx:id="clearSearchesButton">
+      <TabPane fx:id="clearSearchesButton" tabClosingPolicy="UNAVAILABLE">
          <tabs>
             <Tab text="Filtering">
                <content>
@@ -109,8 +109,8 @@
                         <TextField fx:id="endLongitudeTextField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                         <Label text="Start Latitude" GridPane.rowIndex="1" />
                         <Label text="Start Longitude" GridPane.rowIndex="2" />
-                        <Label text="End Latitude" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Label text="End Longitude" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label text="End Latitude" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                        <Label text="End Longitude" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                         <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchWifi" text="Search" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                         <Label fx:id="warningLabel" text="Label" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" />
                      </children>

@@ -90,13 +90,10 @@ public class DatabaseManager {
                 "    startLongitude FLOAT,\n" +
                 "    endLatitude FLOAT,\n" +
                 "    endLongitude FLOAT,\n" +
-                "    startStationId INTEGER,\n" +
-                "    endStationId INTEGER,\n" +
                 "    bikeID INTEGER,\n" +
                 "    gender VARCHAR(1),\n" +
                 "    birthYear INTEGER,\n" +
-                "    tripDistance DOUBLE,\n" +
-                "    isUserDefined BOOLEAN\n" +
+                "    tripDistance DOUBLE\n" +
                 ");";
 
         String createRetailerTable = "CREATE TABLE retailer\n" +
@@ -113,8 +110,7 @@ public class DatabaseManager {
                 "    primaryFunction TEXT,\n" +
                 "    secondaryFunction TEXT,\n" +
                 "    latitude FLOAT,\n" +
-                "    longitude FLOAT,\n" +
-                "    isUserDefined BOOLEAN\n" +
+                "    longitude FLOAT\n" +
                 ");";
 
         String createWifiTable = "CREATE TABLE wifi\n" +
@@ -136,8 +132,7 @@ public class DatabaseManager {
                 "    remarks TEXT,\n" +
                 "    SSID TEXT,\n" +
                 "    sourceId TEXT,\n" +
-                "    dateTimeActivated TEXT,\n" +
-                "    isUserDefined BOOLEAN\n" +
+                "    dateTimeActivated TEXT\n" +
                 ");";
 
         try {
@@ -387,13 +382,10 @@ public class DatabaseManager {
                 Float startLongitude = rs.getFloat("startLongitude");
                 Float endLatitude = rs.getFloat("endLatitude");
                 Float endLongitude = rs.getFloat("endLongitude");
-                int startStationId = rs.getInt("startStationId");
-                int endStationId = rs.getInt("endStationId");
                 int bikeID = rs.getInt("bikeID");
                 char gender = rs.getString("gender").toCharArray()[0];
                 int birthYear = rs.getInt("birthYear");
                 double tripDistance = rs.getDouble("tripDistance");
-                boolean isUserDefined = rs.getBoolean("isUserDefined");
 
                 LocalDateTime startTime = LocalDateTime.parse(startTimeString);
                 LocalDateTime stopTime = LocalDateTime.parse(stopTimeString);
@@ -441,7 +433,6 @@ public class DatabaseManager {
                 String secondaryFunction = rs.getString("secondaryFunction");
                 Float latitude = rs.getFloat("latitude");
                 Float longitude = rs.getFloat("longitude");
-                Boolean isUserDefined = rs.getBoolean("isUserDefined");
 
                 Point.Float location = new Point.Float(longitude, latitude);
 
@@ -489,7 +480,6 @@ public class DatabaseManager {
                 String ssid = rs.getString("SSID");
                 String sourceID = rs.getString("sourceId");
                 String dateTimeActivated = rs.getString("dateTimeActivated");
-                //Boolean isUserDefined = rs.getBoolean("isUserDefined");
 
                 Point.Float coords = new Point.Float(longitude, latitude);
                 LocalDateTime dateTime = LocalDateTime.parse(dateTimeActivated);
