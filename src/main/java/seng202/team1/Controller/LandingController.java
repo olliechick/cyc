@@ -178,6 +178,24 @@ public class LandingController {
         stage1.showAndWait();
     }
 
+    public void openListViewer() {
+        try {
+            // Changes to the table GUI
+            FXMLLoader listViewLoader = new FXMLLoader(getClass().getResource("/fxml/ListViewer.fxml"));
+            Parent listView = listViewLoader.load();
+            ListViewerController listViewController = listViewLoader.getController();
+            listViewController.setUser(model);
+
+            Stage stage1 = new Stage();
+            stage1.setScene(new Scene(listView));
+            stage1.setTitle("Lists");
+            stage1.show();
+
+        } catch (IOException e) {
+            e.printStackTrace(); //File not found
+        }
+    }
+
     /**
      * Gets the username of the currently logged in user.
      * @author Ridge Nairn

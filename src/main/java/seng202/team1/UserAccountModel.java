@@ -200,6 +200,16 @@ public class UserAccountModel implements java.io.Serializable {
         }
     }
 
+    public ArrayList<BikeTripList> getBikeLists() {
+        BikeTripList list1 = new BikeTripList("bike list 1", getCustomBikeTrips());
+        BikeTripList list2 = new BikeTripList("Bike list 2", getCustomBikeTrips());
+        ArrayList<BikeTripList> lists = new ArrayList<>();
+
+        lists.add(list1);
+        lists.add(list2);
+        return lists;
+    }
+
     public static void createUser(UserAccountModel user) {
         SerializerImplementation.serializeUser(user);
     }
