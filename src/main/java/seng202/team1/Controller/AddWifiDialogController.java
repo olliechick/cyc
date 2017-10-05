@@ -209,7 +209,7 @@ public class AddWifiDialogController {
     @FXML
     void addWifi() {
         if (checkFields()) {
-            Point.Float coords = new Point.Float(latitude, longitude);
+            Point.Float coords = new Point.Float(longitude, latitude);
             String boro = boroComboBox.getValue();
             String cost = costComboBox.getValue();
             String remarks;

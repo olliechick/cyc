@@ -26,6 +26,7 @@ import java.awt.geom.Point2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 
@@ -497,8 +498,10 @@ public class MapController {
     private void loadAllBikeTrips() {
         try {
             bikeTrips = populateBikeTrips();
+            bikeTrips.addAll(model.getCustomBikeTrips());
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load bike trips.");
+            e.printStackTrace();
         }
     }
 
@@ -507,18 +510,12 @@ public class MapController {
     private void loadAllWifi() {
         try {
             wifiPoints = populateWifiHotspots();
+            wifiPoints.addAll(model.getCustomWifiPoints());
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load WiFi points.");
+            e.printStackTrace();
         }
-        WifiPoint point;
-        for (int i = 0; i < wifiPoints.size(); i++) {
-            point = wifiPoints.get(i);
-            point.setId(i);
-            point.setVisible(true);
-            addWifi(point.getLatitude(), point.getLongitude(), point.toInfoString());
-
-        }
-        webView.getEngine().executeScript("document.wifiCluster()");
+        reloadAllWifi();
     }
 
 
@@ -538,17 +535,12 @@ public class MapController {
     private void loadAllRetailers() {
         try {
             retailerPoints = populateRetailers();
+            retailerPoints.addAll(model.getCustomRetailerLocations());
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load retailers.");
+            e.printStackTrace();
         }
-        RetailerLocation point;
-        for (int i = 0; i < retailerPoints.size(); i++) {
-            point = retailerPoints.get(i);
-            point.setId(i);
-            point.setVisible(true);
-            addRetailer(point.getLatitude(), point.getLongitude(), point.toInfoString());
-        }
-        webView.getEngine().executeScript("document.retailerCluster()");
+        reloadAllRetailers();
 
     }
 
