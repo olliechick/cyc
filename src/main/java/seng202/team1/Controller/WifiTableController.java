@@ -14,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
@@ -105,6 +106,16 @@ public class WifiTableController extends TableController {
             }
         });
 
+        super.showOnMap.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                cm.hide();
+                if (table.getSelectionModel().getSelectedItem() != null) {
+                    showHotspostOnmap(table.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
+
         super.deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -114,6 +125,29 @@ public class WifiTableController extends TableController {
                 }
             }
         });
+    }
+
+
+    /**
+     *Takes a seleted wifi point and shows it in the map view.
+     * @param selectedHotspot point to show.
+     */
+    public void showHotspostOnmap(WifiPoint selectedHotspot){
+        FXMLLoader showMapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+        Parent root = null;
+        try {
+            root = showMapLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MapController map = showMapLoader.getController();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        map.initModel(model, stage);
+        stage.show();
+
+        map.showGivenWifi(selectedHotspot);
     }
 
     /**

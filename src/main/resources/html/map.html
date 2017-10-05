@@ -309,10 +309,7 @@
     document.circleWIFI = function circleWIFI(index, icon, iconRevert)
     {
         wifiMarkerArray[index].setVisible(true);
-        wifiMarkerArray[index].setIcon(icon);
-        setTimeout(function () {
-        wifiMarkerArray[index].setIcon(iconRevert);
-        }, 100000);
+        wifiMarkerArray[index].setIcon(icon)
 
     }
 

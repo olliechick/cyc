@@ -156,6 +156,7 @@ public class LoginController {
 
         Stage tosStage = new Stage();
         tosStage.setScene(new Scene(tosView));
+        tosController.initialize(tosStage);
         tosStage.show();
     }
 

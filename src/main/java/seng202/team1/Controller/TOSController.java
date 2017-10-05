@@ -1,10 +1,13 @@
 package seng202.team1.Controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 
-import java.awt.*;
+
 
 /**
  * Logic for the TOS page GUI
@@ -16,8 +19,14 @@ public class TOSController {
 
     @FXML
     private TextFlow textFlowBox;
+    @FXML
+    private Button okButton;
+    @FXML
+    private Stage stage;
 
-public void initialize() {
+public void initialize(Stage stage) {
+    this.stage = stage;
+
     //Its a tad large just a creative commons share alike licence
     Text terms = new Text("Licence\n" +
             "THE WORK (AS DEFINED BELOW) IS PROVIDED UNDER THE TERMS OF THIS CREATIVE COMMONS PUBLIC LICENCE (\"CCPL\" OR \"LICENCE\"). THE WORK IS PROTECTED BY COPYRIGHT AND/OR OTHER APPLICABLE LAW. ANY USE OF THE WORK OTHER THAN AS AUTHORISED UNDER THIS LICENCE OR COPYRIGHT LAW IS PROHIBITED. BY EXERCISING ANY RIGHTS TO THE WORK PROVIDED HERE, YOU ACCEPT AND AGREE TO BE BOUND BY THE TERMS OF THIS LICENCE. THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEPTANCE OF SUCH TERMS AND CONDITIONS.\n" +
@@ -119,7 +128,8 @@ public void initialize() {
     textFlowBox.getChildren().addAll(terms);
 }
 
-public void backButtonPush(){
+public void okButtonClicked(){
+    stage.close();
 
 }
 }

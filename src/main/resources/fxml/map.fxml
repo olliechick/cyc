@@ -28,7 +28,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.web.WebView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
@@ -55,16 +55,16 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="About" onAction="#openAbout" />
+                        <MenuItem mnemonicParsing="false" onAction="#openAbout" text="About" />
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
     </top>
     <bottom>
-      <TabPane BorderPane.alignment="CENTER">
+      <TabPane fx:id="typeSelectorTabPane" BorderPane.alignment="CENTER">
          <tabs>
-            <Tab closable="false" text="Retailers">
+            <Tab fx:id="retailersTab" closable="false" text="Retailers">
                <content>
                    <GridPane hgap="5.0" vgap="2.0" BorderPane.alignment="CENTER">
                        <columnConstraints>
@@ -104,7 +104,7 @@
                    </GridPane>
                </content>
             </Tab>
-            <Tab closable="false" text="WiFi">
+            <Tab fx:id="wifiTab" closable="false" text="WiFi">
                <content>
                    <GridPane hgap="5.0" vgap="2.0" BorderPane.alignment="CENTER">
                        <columnConstraints>
@@ -135,7 +135,7 @@
                    </GridPane>
                </content>
             </Tab>
-            <Tab closable="false" text="Routes">
+            <Tab fx:id="routesTab" closable="false" text="Routes">
                <content>
                   <GridPane hgap="5.0" vgap="2.0">
                      <columnConstraints>
