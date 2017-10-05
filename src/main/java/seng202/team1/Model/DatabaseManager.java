@@ -283,7 +283,11 @@ public class DatabaseManager {
             preparedStatement.setString(13, wifiPoint.getRemarks());
             preparedStatement.setString(14, wifiPoint.getSsid());
             preparedStatement.setString(15, wifiPoint.getSourceId());
-            preparedStatement.setString(16, wifiPoint.getDatetimeActivated().toString());
+            if (wifiPoint.getDatetimeActivated() == null) {
+                preparedStatement.setString(16, null);
+            } else {
+                preparedStatement.setString(16, wifiPoint.getDatetimeActivated().toString());
+            }
             preparedStatement.setString(17, username);
 
             preparedStatement.execute();
@@ -479,7 +483,12 @@ public class DatabaseManager {
                 String dateTimeActivated = rs.getString("dateTimeActivated");
 
                 Point.Float coords = new Point.Float(longitude, latitude);
-                LocalDateTime dateTime = LocalDateTime.parse(dateTimeActivated);
+                LocalDateTime dateTime;
+                if (dateTimeActivated == null) {
+                    dateTime = null;
+                } else {
+                    dateTime = LocalDateTime.parse(dateTimeActivated);
+                }
 
                 WifiPoint wifiPoint = new WifiPoint(objectID, coords, placeName, location, locationType, hood,
                         borough, city, zipcode, cost, provider, remarks, ssid, sourceID, dateTime);
