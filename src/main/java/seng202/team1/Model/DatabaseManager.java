@@ -289,11 +289,11 @@ public class DatabaseManager {
             preparedStatement.execute();
 
         } else if (point instanceof BikeTrip) {
-            numOfQs = 15; //number of question marks to put in the statement
+            numOfQs = 12; //number of question marks to put in the statement
 
             statement = "INSERT INTO trip (duration, startTime, stopTime, startLatitude, " +
-                    "startLongitude, endLatitude, endLongitude, startStationId, endStationId, " +
-                    "bikeID, gender, birthYear, tripDistance, isUserDefined, username) VALUES (" +
+                    "startLongitude, endLatitude, endLongitude, " +
+                    "bikeID, gender, birthYear, tripDistance, username) VALUES (" +
                     new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
 
             BikeTrip trip = (BikeTrip) point;
@@ -307,13 +307,10 @@ public class DatabaseManager {
             preparedStatement.setFloat(6, trip.getEndLatitude());
             preparedStatement.setFloat(7, trip.getEndLongitude());
             preparedStatement.setInt(8, trip.getBikeId());
-            //preparedStatement.setInt(9, trip.getStartStationId());
-            //preparedStatement.setInt(10, trip.getEndStationId());
-            preparedStatement.setString(11, Character.toString(trip.getGender()));
-            preparedStatement.setInt(12, trip.getBirthYear());
-            preparedStatement.setDouble(13, trip.getTripDistance());
-            //preparedStatement.setBoolean(14, trip.isUserDefinedPoint());
-            preparedStatement.setString(15, username);
+            preparedStatement.setString(9, Character.toString(trip.getGender()));
+            preparedStatement.setInt(10, trip.getBirthYear());
+            preparedStatement.setDouble(11, trip.getTripDistance());
+            preparedStatement.setString(12, username);
 
             preparedStatement.execute();
 
