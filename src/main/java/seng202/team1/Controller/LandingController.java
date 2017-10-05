@@ -135,6 +135,7 @@ public class LandingController {
             Stage stage1 = new Stage();
             mapController.initModel(model, stage1);
             stage1.setScene(new Scene(mapView));
+            stage1.getScene().getStylesheets().add("/css/loginStyle.css");
             stage1.initModality(Modality.APPLICATION_MODAL);
             stage1.showAndWait();
         } catch (IOException e) {

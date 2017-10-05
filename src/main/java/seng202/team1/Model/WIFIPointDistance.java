@@ -23,6 +23,7 @@ public class WIFIPointDistance {
         this.otherPoint = otherPoint;
         this.distance = distance;
         this.indexMap = indexMap;
+
     }
     public WIFIPointDistance(WifiPoint thisPoint, int indexMap) {
         this.thisPoint = thisPoint;
@@ -58,7 +59,14 @@ public class WIFIPointDistance {
         this.distance = distance;
     }
 
+    public String getCost() {return thisPoint.getCost();}
+
+    public String getProvider() {return thisPoint.getProvider();}
+
     public String getSSID() {return thisPoint.getSsid();}
+
+
+
     /**
      * @return trip distance to decimal places
      */

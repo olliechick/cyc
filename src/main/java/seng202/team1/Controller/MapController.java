@@ -27,15 +27,11 @@ import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.Google.BikeDirections;
 import seng202.team1.UserAccountModel;
-
 import java.awt.geom.Point2D;
-
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
-
-
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
@@ -60,6 +56,7 @@ public class MapController {
     public ArrayList<String> uniqueProviders = null;
     public ArrayList<BikeTrip> tripsNearPoint = null;
     public int currentTripCounter = 0;
+
     ArrayList<RetailerLocation> retailerPoints = null;
     ArrayList<WifiPoint> wifiPoints = null;
     ArrayList<BikeTrip> bikeTrips = null;
@@ -83,10 +80,10 @@ public class MapController {
     private boolean showOnlyNearestWIFIToRoute = false;
     private boolean showWIFINearRetailer = true;
     private boolean showOnlyNearestWIFIToRetailer = false;
-    private int wifiSearchDistance = 100;
-    private int retailerSearchDistance = 50;
+    private int wifiSearchDistance = 1000;
+    private int retailerSearchDistance = 500;
     private int retailerToWIFISearchDistance = 200;
-    private boolean drawRouteUsingPolyLines = true;
+    private boolean drawRouteUsingPolyLines = false;
     @FXML
     private UserAccountModel model;
     @FXML
@@ -184,6 +181,7 @@ public class MapController {
     private void resetMap() {
         webView.getEngine().loadContent("");
         webEngine.load(getClass().getResource("/html/map.html").toString());
+        webView.setContextMenuEnabled(false);
 
 
         // Check the map has been loaded before attempting to add markers to it.
@@ -428,15 +426,7 @@ public class MapController {
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load WiFi points.");
         }
-        WifiPoint point;
-        for (int i = 0; i < wifiPoints.size(); i++) {
-            point = wifiPoints.get(i);
-            point.setId(i);
-            point.setVisible(true);
-            addWifi(point.getLatitude(), point.getLongitude(), point.toInfoString());
-
-        }
-        webView.getEngine().executeScript("document.wifiCluster()");
+        reloadAllWifi();
     }
 
     private void reloadAllWifi() {
@@ -457,14 +447,7 @@ public class MapController {
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load retailers.");
         }
-        RetailerLocation point;
-        for (int i = 0; i < retailerPoints.size(); i++) {
-            point = retailerPoints.get(i);
-            point.setId(i);
-            point.setVisible(true);
-            addRetailer(point.getLatitude(), point.getLongitude(), point.toInfoString());
-        }
-        webView.getEngine().executeScript("document.retailerCluster()");
+        reloadAllRetailers();
 
     }
 
@@ -877,22 +860,25 @@ public class MapController {
         }
 
         public void directions(String route) {
+
             try {
                 BikeDirections dir = new BikeDirections(route, true);
                 if (showWIFINearRoute) {
                     ArrayList<Integer> indexes = searchWifiPointsOnRoute(dir.getPoints(), wifiPoints, wifiSearchDistance);
                     ArrayList<WIFIPointDistance> pointDistances = new ArrayList<>();
+                    resetWIFIIcons("WIFI2.png");
+                    System.out.println("test");
                     for (int i = 0; i < indexes.size(); i++) {
-                        String scriptStr = "document.circleWIFI(" + indexes.get(i) + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                        String scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", 'WIFISELECTED.png')";
                         webView.getEngine().executeScript(scriptStr);
                         WIFIPointDistance pointDistance = new WIFIPointDistance(wifiPoints.get(indexes.get(i)), indexes.get(i));
                         pointDistances.add(pointDistance);
                     }
                     ArrayList<WIFIPointDistance> sortedPointDistances = sortedWIFIPointsByMinimumDistanceToRoute(pointDistances, dir.getPoints());
-                    for (int i = 0; i < sortedPointDistances.size(); i++) {
+                    /*for (int i = 0; i < sortedPointDistances.size(); i++) {
                         String scriptStr = "document.circleAndNumberWIFI(" + sortedPointDistances.get(i).getIndexMap() + ", 'WIFISELECTED.png', '" + Integer.toString(i + 1) + "')";
                         webView.getEngine().executeScript(scriptStr);
-                    }
+                    }*/
                     setTableViewWIFI(sortedPointDistances);
                 } else if (showOnlyNearestWIFIToRoute) {
                     WifiPoint wifiPoint = findClosestWifiToRoute(dir.getPoints(), wifiPoints);
@@ -904,17 +890,18 @@ public class MapController {
                 if (showRetailersNearRoute) {
                     ArrayList<Integer> indexes = searchRetailerLocationsOnRoute(dir.getPoints(), retailerPoints, retailerSearchDistance);
                     ArrayList<RetailerPointDistance> pointDistances = new ArrayList<>();
+                    resetRetailerIcons("departmentstore.png");
                     for (int i = 0; i < indexes.size(); i++) {
-                        String scriptStr = "document.circleRetailer(" + indexes.get(i) + ", 'DEPARTMENTSTORESELECTED.png', 'departmentstore.png')";
+                        String scriptStr = "document.changeRetailerIcon(" + indexes.get(i) + ", 'DEPARTMENTSTORESELECTED.png')";
                         webView.getEngine().executeScript(scriptStr);
                         RetailerPointDistance pointDistance = new RetailerPointDistance(retailerPoints.get(indexes.get(i)), indexes.get(i));
                         pointDistances.add(pointDistance);
                     }
                     ArrayList<RetailerPointDistance> sortedPointDistances = sortedRetailerPointsByMinimumDistanceToRoute(pointDistances, dir.getPoints());
-                    for (int i = 0; i < sortedPointDistances.size(); i++) {
+                    /*for (int i = 0; i < sortedPointDistances.size(); i++) {
                         String scriptStr = "document.circleAndNumberRetailer(" + sortedPointDistances.get(i).getIndexMap() + ", 'DEPARTMENTSTORESELECTED.png', '" + Integer.toString(i + 1) + "')";
                         webView.getEngine().executeScript(scriptStr);
-                    }
+                    }*/
                     setTableViewRetailer(sortedPointDistances);
                 } else if (showOnlyNearestRetailerToRoute) {
                     int indexOfRetailer = findClosestRetailerToBikeTrip(dir.getPoints(), retailerPoints);
@@ -974,11 +961,15 @@ public class MapController {
         // Create the columns
         TableColumn<RetailerPointDistance, String> nameCol = new TableColumn<>("Name");
         TableColumn<RetailerPointDistance, String> distanceCol = new TableColumn<>("Distance");
+        TableColumn<RetailerPointDistance, String> primaryFunctionCol = new TableColumn<>("Primary Function");
+        TableColumn<RetailerPointDistance, String> secondaryFunctionCol = new TableColumn<>("Secondary Function");
 
 
         //Set the IDs of the columns, not used yet TODO remove if never use
         nameCol.setId("name");
         distanceCol.setId("distance");
+        primaryFunctionCol.setId("primaryfunction");
+
 
 
         //Clear the default columns, or any columns in the table.
@@ -988,6 +979,8 @@ public class MapController {
 
         distanceCol.setCellValueFactory(new PropertyValueFactory<>("TripDistanceTwoD"));
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        primaryFunctionCol.setCellValueFactory(new PropertyValueFactory<>("primaryFunction"));
+
 
         // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
         //filteredData = new FilteredList<>(dataPoints, p -> true);
@@ -997,9 +990,18 @@ public class MapController {
 
         // Add the sorted and filtered data to the table.
         retailerDistanceTable.setItems(sortedData);
-        retailerDistanceTable.getColumns().addAll(distanceCol, nameCol);
+        retailerDistanceTable.getColumns().addAll(distanceCol, nameCol, primaryFunctionCol);
     }
 
+    private void resetWIFIIcons(String icon){
+        String scriptStr = "document.resetWIFIIcon('" + icon +"')";
+        webView.getEngine().executeScript(scriptStr);
+    }
+
+    private void resetRetailerIcons(String icon){
+        String scriptStr = "document.resetRetailerIcon('" + icon +"')";
+        webView.getEngine().executeScript(scriptStr);
+    }
 
     /**
      * Creates the columns of the table.
@@ -1012,13 +1014,18 @@ public class MapController {
         observableWIFIDistances = FXCollections.observableArrayList(data);
 
         // Create the columns
+
         TableColumn<WIFIPointDistance, String> ssidCol = new TableColumn<>("SSID");
         TableColumn<WIFIPointDistance, String> distanceCol = new TableColumn<>("Distance");
+        TableColumn<WIFIPointDistance, String> providerCol = new TableColumn<>("Provider");
+        TableColumn<WIFIPointDistance, String> costCol = new TableColumn<>("Cost");
 
 
         //Set the IDs of the columns, not used yet TODO remove if never use
         ssidCol.setId("ssid");
         distanceCol.setId("distance");
+        ssidCol.setId("cost");
+        distanceCol.setId("provider");
 
 
         //Clear the default columns, or any columns in the table.
@@ -1028,6 +1035,8 @@ public class MapController {
 
         distanceCol.setCellValueFactory(new PropertyValueFactory<>("TripDistanceTwoD"));
         ssidCol.setCellValueFactory(new PropertyValueFactory<>("SSID"));
+        providerCol.setCellValueFactory(new PropertyValueFactory<>("provider"));
+        costCol.setCellValueFactory(new PropertyValueFactory<>("cost"));
 
         // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
         //filteredData = new FilteredList<>(dataPoints, p -> true);
@@ -1037,7 +1046,7 @@ public class MapController {
 
         // Add the sorted and filtered data to the table.
         wifiDistanceTable.setItems(sortedData);
-        wifiDistanceTable.getColumns().addAll(distanceCol,ssidCol);
+        wifiDistanceTable.getColumns().addAll(distanceCol,ssidCol, costCol, providerCol);
 
     }
 

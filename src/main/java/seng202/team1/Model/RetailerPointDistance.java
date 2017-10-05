@@ -11,6 +11,7 @@ public class RetailerPointDistance {
     private Integer indexMap;
     public String name;
     public String secondaryFunction;
+    public String primaryFunction;
 
     public Integer getIndexMap() {
         return indexMap;
@@ -28,6 +29,10 @@ public class RetailerPointDistance {
         this.name = name;
     }
 
+    public String getPrimaryFunction() {
+        return primaryFunction;
+    }
+
     public String getSecondaryFunction() {
         return secondaryFunction;
     }
@@ -43,6 +48,7 @@ public class RetailerPointDistance {
         this.indexMap = indexMap;
         this.name = thisPoint.getName();
         this.secondaryFunction = thisPoint.getSecondaryFunction();
+        this.primaryFunction = thisPoint.getPrimaryFunction();
 
     }
     public RetailerPointDistance(RetailerLocation thisPoint, int indexMap) {
@@ -52,6 +58,7 @@ public class RetailerPointDistance {
         this.indexMap = indexMap;
         this.name = thisPoint.getName();
         this.secondaryFunction = thisPoint.getSecondaryFunction();
+        this.primaryFunction = thisPoint.getPrimaryFunction();
     }
 
     public RetailerLocation getThisPoint() {
