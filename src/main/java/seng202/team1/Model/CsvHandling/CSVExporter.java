@@ -110,25 +110,32 @@ public class CSVExporter {
         for (WifiPoint wifiPoint : wifiPoints) {
             String line;
             line = wifiPoint.getObjectId() + ",";
-            line += ",,"; //skip the_geom and boro
-            line += wifiPoint.getCost() + ",";
-            line += wifiPoint.getProvider() + ",";
-            line += wifiPoint.getName() + ",";
-            line += wifiPoint.getLocation() + ",";
+            line += ",,\""; //skip the_geom and boro
+            line += wifiPoint.getCost() + "\",\"";
+            line += wifiPoint.getProvider() + "\",\"";
+            line += wifiPoint.getName() + "\",\"";
+            line += wifiPoint.getLocation() + "\",";
             line += wifiPoint.getLatitude() + ",";
             line += wifiPoint.getLongitude() + ",";
-            line += ",,"; //skip x and y
-            line += wifiPoint.getLocationType() + ",";
-            line += wifiPoint.getRemarks() + ",";
-            line += wifiPoint.getCity() + ",";
-            line += wifiPoint.getSsid() + ",";
-            line += wifiPoint.getSourceId() + ",";
-            line += wifiPoint.getDatetimeActivated() + ",";
-            line += ",,"; //skip borocode
-            line += wifiPoint.getBorough() + ",";
-            line += ",,"; //skip ntacode
-            line += wifiPoint.getHood() + ",";
-            line += ",,"; //skip coundist
+            line += ",,\""; //skip x and y
+            line += wifiPoint.getLocationType() + "\",\"";
+            line += wifiPoint.getRemarks() + "\",\"";
+            line += wifiPoint.getCity() + "\",\"";
+            line += wifiPoint.getSsid() + "\",\"";
+            line += wifiPoint.getSourceId() + "\",";
+            if (wifiPoint.getDatetimeActivated() == null) {
+                // no data for datetime activated, set to default
+                line += "11/30/1899 12:00:00 AM +0000,";
+            } else {
+                // The datetime has to be formatted as in the source CSV. This includes offset seconds which aren't
+                // supported by this, so they are added manually as +0000
+                line += wifiPoint.getDatetimeActivated().format(DateTimeFormatter.ofPattern("M/d/yyyy hh:mm:ss a ")) + "+0000,";
+            }
+            line += ",\""; //skip borocode
+            line += wifiPoint.getBorough() + "\",";
+            line += ",\""; //skip ntacode
+            line += wifiPoint.getHood() + "\",";
+            line += ","; //skip coundist
             line += wifiPoint.getZipcode() + ",";
             lines.add(line);
         }
@@ -149,17 +156,16 @@ public class CSVExporter {
         lines.add(retailersHeader);
         for (RetailerLocation retailer : retailers) {
             String line;
-            line = retailer.getName() + ",";
-            line += retailer.getAddressLine1() + ",";
-            line += retailer.getAddressLine2() + ",";
-            line += retailer.getCity() + ",";
-            line += retailer.getState() + ",";
-            line += retailer.getZipcode() + ",";
-            line += retailer.getBlockLot() + ",";
-            line += retailer.getPrimaryFunction() + ",";
-            line += retailer.getSecondaryFunction() + ",";
+            line = "\""  + retailer.getName() + "\",\"";
+            line += retailer.getAddressLine1() + "\",\"";
+            line += retailer.getAddressLine2() + "\",\"";
+            line += retailer.getCity() + "\",\"";
+            line += retailer.getState() + "\",";
+            line += retailer.getZipcode() + ",\"";
+            line += retailer.getBlockLot() + "\",\"";
+            line += retailer.getPrimaryFunction() + "\",\"";
+            line += retailer.getSecondaryFunction() + "\",";
             line += retailer.getLatitude() + ",";
-            line += retailer.getLongitude() + ",";
             line += retailer.getLongitude() + ",";
             lines.add(line);
         }
