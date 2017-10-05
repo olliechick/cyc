@@ -1,14 +1,12 @@
 package seng202.team1.Controller;
 
-import javafx.event.ActionEvent;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import seng202.team1.Model.BikeTrip;
 import seng202.team1.Model.BikeTripList;
 import seng202.team1.UserAccountModel;
 
