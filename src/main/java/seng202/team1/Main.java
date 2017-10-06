@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import seng202.team1.Controller.AlertGenerator;
+import seng202.team1.Controller.LoginController;
 import seng202.team1.Model.DatabaseManager;
 import seng202.team1.Model.Directory;
 
@@ -39,9 +40,11 @@ public class Main extends Application {
         try {
             FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             Parent root = loginLoader.load();
+            LoginController loginController  = loginLoader.getController();
 
             Scene scene = new Scene(root);
             scene.getStylesheets().add("/css/loginStyle.css");
+            loginController.initLogin(root);
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {

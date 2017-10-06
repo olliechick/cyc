@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.WifiTableController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.WifiTableController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -102,7 +102,6 @@
                         <Label fx:id="nameLabel1" text="Name placeholder" visible="false" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                         <Label fx:id="loadLabel1" text="Loading:" visible="false" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                         <ProgressIndicator fx:id="progressSpinner1" progress="0.0" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                        <Button fx:id="clearSearchFilters" mnemonicParsing="false" onAction="#clearSearchFilters" text="Clear Filters" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <TextField fx:id="startLatitudeTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextField fx:id="startLongitudeTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <TextField fx:id="endLatitudeTextField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
@@ -113,6 +112,7 @@
                         <Label text="End Longitude" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                         <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchWifi" text="Search" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                         <Label fx:id="warningLabel" text="Label" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" />
+                        <Button fx:id="clearSearchFilters" mnemonicParsing="false" onAction="#clearSearchFilters" text="Clear Filters" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                      </children>
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="238.0" minWidth="10.0" prefWidth="168.0" />
