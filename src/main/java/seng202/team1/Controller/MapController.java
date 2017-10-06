@@ -21,6 +21,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import netscape.javascript.JSObject;
 import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
 import org.codefx.libfx.control.webview.WebViews;
@@ -61,6 +62,8 @@ public class MapController {
     public ArrayList<String> uniqueProviders = null;
     public ArrayList<BikeTrip> tripsNearPoint = null;
     public int currentTripCounter = 0;
+
+    private WindowManager windowManager = new WindowManager();
 
     ArrayList<RetailerLocation> retailerPoints = null;
     ArrayList<WifiPoint> wifiPoints = null;
@@ -924,7 +927,7 @@ public class MapController {
             ListViewerController listViewController = listViewLoader.getController();
             listViewController.setUser(model);
 
-            Stage stage1 = new Stage();
+            Stage stage1 = windowManager.createTrackedStage();
             stage1.setScene(new Scene(listView));
             stage1.setTitle("Lists");
             stage1.show();
@@ -936,17 +939,26 @@ public class MapController {
 
     public void logout() {
         System.out.println("Logout");
-        model = null;
-        try {
-            FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-            Parent loginView = loginLoader.load();
+        boolean confirmLogout = true;
 
-            Scene loginScene = new Scene(loginView);
-            loginScene.getStylesheets().add("/css/loginStyle.css");
-            stage.setScene(loginScene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!windowManager.getStagesOpen().isEmpty()) {
+            confirmLogout = AlertGenerator.createChoiceDialog("Close", "You still have tables open.",
+                    "\nYour data might not be saved.\n\nAre you sure you want to logout?");
+        }
+
+        if (confirmLogout) {
+            model = null;
+            try {
+                FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+                Parent loginView = loginLoader.load();
+
+                Scene loginScene = new Scene(loginView);
+                loginScene.getStylesheets().add("/css/loginStyle.css");
+                stage.setScene(loginScene);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
