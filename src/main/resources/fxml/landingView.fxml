@@ -28,12 +28,12 @@
          <font>
             <Font size="26.0" />
          </font></Label>
-      <Button fx:id="openRetailerButton" mnemonicParsing="false" onAction="#openRetailerTable" text="Open Retailer Table" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-      <Button mnemonicParsing="false" onAction="#openBikeTable" text="Open Bike Trip Table" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-      <Button mnemonicParsing="false" onAction="#openWifiTable" text="Open WiFi Table" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+      <Button fx:id="openRetailerButton" mnemonicParsing="false" onAction="#openRetailerTable" text="Open Retailer Table" visible="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+      <Button mnemonicParsing="false" onAction="#openBikeTable" text="Open Bike Trip Table" visible="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+      <Button mnemonicParsing="false" onAction="#openWifiTable" text="Open WiFi Table" visible="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
       <Button mnemonicParsing="false" onAction="#openMap" text="Open Map View" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
       <Button mnemonicParsing="false" onAction="#logout" text="Logout" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
       <Button fx:id="changePasswordButton" mnemonicParsing="false" onAction="#startPasswordChange" text="Change Password" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-      <Button mnemonicParsing="false" onAction="#openListViewer" text="Open list test" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+      <Button mnemonicParsing="false" onAction="#openListViewer" text="Choose a list" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
    </children>
 </GridPane>

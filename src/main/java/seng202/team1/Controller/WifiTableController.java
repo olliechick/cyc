@@ -138,6 +138,7 @@ public class WifiTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
                 } else {
                     selectedWifiPoint.setAllProperties(newWifiPoint);
+                    SerializerImplementation.serializeUser(model);
                     table.refresh();
                 }
             }
