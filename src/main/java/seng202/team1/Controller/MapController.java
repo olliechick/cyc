@@ -777,7 +777,6 @@ public class MapController {
                     model.addCustomWifiLocation(newWifiPoint);
                     updateWIFI();
                     webView.getEngine().executeScript("document.wifiCluster()");
-                    SerializerImplementation.serializeUser(model);
                 }
             }
         } catch (IOException e) {
@@ -810,7 +809,6 @@ public class MapController {
                     addRetailer(retailerLocation.getLatitude(), retailerLocation.getLongitude(), retailerLocation.toInfoString());
                     model.addCustomRetailerLocation(retailerLocation);
                     updateRetailers();
-                    SerializerImplementation.serializeUser(model);
                 }
             }
         } catch (IOException e) {
@@ -836,7 +834,6 @@ public class MapController {
                 } else {
                     bikeTrips.add(addBikeDialog.getBikeTrip());
                     model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
-                    SerializerImplementation.serializeUser(model);
                 }
             }
 
