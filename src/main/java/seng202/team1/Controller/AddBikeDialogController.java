@@ -385,12 +385,14 @@ public class AddBikeDialogController {
             startPoint = new Point.Float(startLong, startLat);
             endPoint = new Point.Float(endLong, endLat);
             if (startDateTime.isBefore(stopDateTime)) {
+                // Start is before end (blue sky)
                 startDateLabel.setTextFill(Color.BLACK);
                 stopDateLabel.setTextFill(Color.BLACK);
                 startTimeLabel.setTextFill(Color.BLACK);
                 stopTimeLabel.setTextFill(Color.BLACK);
                 addBikeTripLabel.setText("Add a custom bike trip"); //default text
-            } else {
+            } else if (startDateTime.isEqual(stopDateTime)) {
+                // Start is at the same time as end (bike trip took less than a second? erroneous
                 startDateLabel.setTextFill(Color.RED);
                 stopDateLabel.setTextFill(Color.RED);
                 startTimeLabel.setTextFill(Color.RED);
@@ -398,7 +400,19 @@ public class AddBikeDialogController {
                 valid = false;
                 // Adjust the title label - ideally this would be a popup (like the one commented
                 // out below) - but this pops up in the wrong place.
-                addBikeTripLabel.setText("Trips must start before they can finish");
+                addBikeTripLabel.setText("You can't have a 0-time bike trip.");
+                // AlertGenerator.createAlert("You can't have a 0-time bike trip.");
+            } else {
+                // Start is after end (definitely erroneous)
+                startDateLabel.setTextFill(Color.RED);
+                stopDateLabel.setTextFill(Color.RED);
+                startTimeLabel.setTextFill(Color.RED);
+                stopTimeLabel.setTextFill(Color.RED);
+                valid = false;
+                // Adjust the title label - ideally this would be a popup (like the one commented
+                // out below) - but this pops up in the wrong place.
+                addBikeTripLabel.setText("Trips must start before they can finish.");
+                // AlertGenerator.createAlert("Slow down McFly", "Trips must start before they can finish.");
             }
         }
 
