@@ -7,10 +7,12 @@ import seng202.team1.Model.DataPoint;
 import seng202.team1.Model.DatabaseManager;
 import seng202.team1.Model.PasswordManager;
 import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.RetailerLocationList;
 import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.Model.WifiPoint;
 import seng202.team1.Model.CsvHandling.CSVLoader;
-import seng202.team1.Model.CsvHandling.CsvParserExc
+import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.WifiPointList;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
  * @author Josh Burt
  * @author Ollie Chick
  * @author Ridge Nairn
+ * @author Josh Bernasconi
  */
 public class UserAccountModel implements java.io.Serializable {
 
@@ -70,6 +73,12 @@ public class UserAccountModel implements java.io.Serializable {
         createDefaultLists();
     }
 
+    //TODO test this
+
+    /**
+     * Create the default lists of points for a user, so that they start with something to
+     * display in a table.
+     */
     private void createDefaultLists() {
         try {
             BikeTripList defaultTrips = new BikeTripList("Default", CSVLoader.populateBikeTrips());

@@ -517,6 +517,11 @@ public class RetailerTableController extends TableController {
         dataPoints.addAll(results);
     }
 
+    /**
+     * Set up the table to use the given list of points instead of a csv.
+     *
+     * @param points the list of RetailerLocations to display in the table.
+     */
     public void setupWithList(ArrayList<RetailerLocation> points) {
         setFilters(points);
 

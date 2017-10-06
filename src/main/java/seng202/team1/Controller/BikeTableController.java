@@ -25,6 +25,7 @@ import seng202.team1.Model.BikeTrip;
 import seng202.team1.Model.ContextualLength;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
+import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.awt.Point;
@@ -513,6 +514,11 @@ public class BikeTableController extends TableController {
 
     }
 
+    /**
+     * Set up the table to use the given list of points instead of a csv.
+     *
+     * @param points the list of BikeTrips to display in the table.
+     */
     public void setupWithList(ArrayList<BikeTrip> points) {
         setFilters();
 

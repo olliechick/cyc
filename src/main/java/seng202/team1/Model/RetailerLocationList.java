@@ -3,7 +3,11 @@ package seng202.team1.Model;
 import java.util.ArrayList;
 
 /**
- * Created by jbe113 on 5/10/17.
+ * Created on 5/10/17.
+ *
+ * Data structure for containing a list of points and a name
+ *
+ * @author Josh Bernasconi
  */
 public class RetailerLocationList implements java.io.Serializable {
 
