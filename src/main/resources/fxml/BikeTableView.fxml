@@ -24,11 +24,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <Menu mnemonicParsing="false" text="Import CSV">
-                    <items>
-                      <MenuItem mnemonicParsing="false" onAction="#importBike" text="Bike" />
-                    </items>
-                  </Menu>
+                <MenuItem mnemonicParsing="false" onAction="#importBike" text="Import CSV" />
+                  <MenuItem fx:id="exportBikeMenuItem" mnemonicParsing="false" onAction="#exportBike" text="Export CSV" />
               <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
             </items>
           </Menu>
@@ -112,7 +109,7 @@
                           </rowConstraints>
                            <children>
                               <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchBikeTrips" text="Search" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                              <Button fx:id="clearSearchesButton" mnemonicParsing="false" onAction="#clearSearches" text="Clear Searches" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                              <Button fx:id="clearSearchesButton" mnemonicParsing="false" onAction="#clearFilters" text="Clear Searches" GridPane.columnIndex="4" GridPane.rowIndex="3" />
                               <Label text="Search for Bike trips">
                                  <GridPane.margin>
                                     <Insets left="10.0" />

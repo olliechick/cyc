@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
@@ -20,13 +21,13 @@ import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.GenerateFields;
 import seng202.team1.Model.RetailerLocation;
-import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
-import java.security.PublicKey;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static seng202.team1.Model.CsvHandling.CSVExporter.exportRetailers;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 
 /**
@@ -99,6 +100,15 @@ public class RetailerTableController extends TableController {
                 cm.hide();
                 if (table.getSelectionModel().getSelectedItem() != null) {
                     editRetailer(table.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
+        super.showOnMap.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                cm.hide();
+                if(table.getSelectionModel().getSelectedItem() != null){
+                    showRetailerOnMap(table.getSelectionModel().getSelectedItem());
                 }
             }
         });
@@ -324,6 +334,23 @@ public class RetailerTableController extends TableController {
     }
 
     /**
+     * Get the path for a csv to export to, export to it if given.
+     */
+    public void exportRetailer() {
+
+        String filename = getCsvFilenameSave();
+        if (filename != null) {
+            try {
+                exportRetailers(filename, model.getUserName());
+            } catch (IOException e) {
+                AlertGenerator.createAlert("Couldn't export file.");
+            } catch (SQLException e) {
+                AlertGenerator.createAlert("Couldn't get retailers.");
+            }
+        }
+    }
+
+    /**
      * Creates the columns of the table.
      * Sets their value factories so that the data is displayed correctly.
      * Sets up the lists of data for filtering TODO move out
@@ -487,5 +514,26 @@ public class RetailerTableController extends TableController {
         dataPoints.addAll(results);
     }
 
+    public void showRetailerOnMap(RetailerLocation selectedShop){
+
+        FXMLLoader showMapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+        Parent root = null;
+        try {
+            root = showMapLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MapController map = showMapLoader.getController();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        map.initModel(model, stage);
+        stage.show();
+
+        map.showGivenShop(selectedShop);
+
+
+
+    }
 
 }

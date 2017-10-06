@@ -39,13 +39,14 @@ public abstract class TableController {
     protected ContextMenu cm = new ContextMenu();
     protected MenuItem editMenuItem = new MenuItem("Edit");
     protected MenuItem deleteMenuItem = new MenuItem("Delete");
+    protected MenuItem showOnMap = new MenuItem("Show on Map");
 
     /**
      * Run automatically when the fxml is loaded by an FXMLLoader
      */
     public void initialize() {
 
-        cm.getItems().addAll(editMenuItem, deleteMenuItem);
+        cm.getItems().addAll(editMenuItem, showOnMap, deleteMenuItem);
 
 
         table.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -91,6 +92,29 @@ public abstract class TableController {
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             filename = file.getAbsolutePath();
+        }
+
+        return filename;
+
+    }
+
+    /**
+     * Opens a FileChooser popup, allowing the user to choose where to save a file.
+     * Only allows for saving of .csv files
+     *
+     * @return String the absolute path to the designated csv file, null if cancelled.
+     */
+    String getCsvFilenameSave() {
+
+        String filename = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save CSV file");
+
+        File file = fileChooser.showSaveDialog(stage);
+        if (file != null) {
+            filename = file.getAbsolutePath();
+            System.out.println(filename.substring(filename.length() - 4));//  ".csv");
         }
 
         return filename;
