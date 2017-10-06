@@ -72,7 +72,7 @@
             <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TabPane>
+            <TabPane fx:id="typeSelectorTabPane">
                <tabs>
                   <Tab closable="false" text="Retailers">
                      <content>
