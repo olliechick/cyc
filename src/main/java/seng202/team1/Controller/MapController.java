@@ -1,18 +1,21 @@
 package seng202.team1.Controller;
 
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 import seng202.team1.Model.*;
@@ -927,7 +930,7 @@ public class MapController {
 
     @FXML
     public void close() {
-        stage.close();
+        Platform.exit();
     }
 
     void initModel(UserAccountModel userAccountModel) {
@@ -1012,6 +1015,53 @@ public class MapController {
                         }
                     }
                 });
+    }
+
+    public void openListViewer() {
+        try {
+            // Changes to the table GUI
+            FXMLLoader listViewLoader = new FXMLLoader(getClass().getResource("/fxml/ListViewer.fxml"));
+            Parent listView = listViewLoader.load();
+            ListViewerController listViewController = listViewLoader.getController();
+            listViewController.setUser(model);
+
+            Stage stage1 = new Stage();
+            stage1.setScene(new Scene(listView));
+            stage1.setTitle("Lists");
+            stage1.show();
+
+        } catch (IOException e) {
+            e.printStackTrace(); //File not found
+        }
+    }
+
+    public void logout() {
+        System.out.println("Logout");
+        model = null;
+        try {
+            FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+            Parent loginView = loginLoader.load();
+
+            Scene loginScene = new Scene(loginView);
+            loginScene.getStylesheets().add("/css/loginStyle.css");
+            stage.setScene(loginScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void startPasswordChange() throws IOException {
+        FXMLLoader passwordLoader = new FXMLLoader(getClass().getResource("/fxml/changePassword.fxml"));
+        Parent passwordView = passwordLoader.load();
+        ChangePasswordController changePasswordController = passwordLoader.getController();
+
+        Stage stage1 = new Stage();
+        changePasswordController.initModel(model,stage1);
+        stage1.setScene(new Scene(passwordView));
+        stage1.initModality(Modality.APPLICATION_MODAL);
+        stage1.showAndWait();
     }
 }
 
