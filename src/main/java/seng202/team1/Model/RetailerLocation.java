@@ -300,7 +300,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     }
 
     public String toInfoString() {
-        return escapeEcmaScript(getDescription());
+        return escapeEcmaScript(getName() + "\n" + getDescription());
 
 
     }
