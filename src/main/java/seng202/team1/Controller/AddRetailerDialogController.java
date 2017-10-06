@@ -88,16 +88,16 @@ public class AddRetailerDialogController {
 
     private String name;
     private String addressLine1;
-    private String addressLine2 = "";
+    private String addressLine2 = null;
     private int zipcode;
     private String primaryFunction;
-    private String secondaryFunction = "Unknown";
-    private float latitude = 0;
-    private float longitude = 0;
+    private String secondaryFunction = "Other";
+    private float latitude;
+    private float longitude;
     private Point2D.Float coords = new Point2D.Float();
     private String city = "New York";
     private String state = "NY";
-    private String blockLot = "Unknown";
+    private String blockLot = null;
 
 
     @FXML
@@ -107,16 +107,18 @@ public class AddRetailerDialogController {
             coords.setLocation(longitude, latitude);
 
             retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city,
-                                                    state, zipcode, blockLot, primaryFunction,
-                                                    secondaryFunction, coords);
+                    state, zipcode, blockLot, primaryFunction,
+                    secondaryFunction, coords);
             stage.close();
         }
     }
+
 
     @FXML
     void cancel() {
         stage.close();
     }
+
 
     /**
      * Set up the dialog.
@@ -155,6 +157,7 @@ public class AddRetailerDialogController {
         });
 
     }
+
 
     public void setDialog(Stage stage1, Parent root, RetailerLocation retailerLocation) {
         setDialog(stage1, root);
@@ -262,6 +265,7 @@ public class AddRetailerDialogController {
 
         return valid;
     }
+
 
     public RetailerLocation getRetailerLocation() {
         return retailerLocation;
