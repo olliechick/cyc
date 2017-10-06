@@ -1,9 +1,7 @@
 package seng202.team1.Controller;
 
-import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -14,19 +12,27 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.GenerateFields;
 import seng202.team1.Model.SerializerImplementation;
-import seng202.team1.UserAccountModel;
 import seng202.team1.Model.WifiPoint;
+import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
+import static seng202.team1.Model.CsvHandling.CSVExporter.exportWifiHotspots;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
 
 /**
@@ -104,6 +110,16 @@ public class WifiTableController extends TableController {
             }
         });
 
+        super.showOnMap.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                cm.hide();
+                if (table.getSelectionModel().getSelectedItem() != null) {
+                    showHotspostOnmap(table.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
+
         super.deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -113,6 +129,29 @@ public class WifiTableController extends TableController {
                 }
             }
         });
+    }
+
+
+    /**
+     *Takes a seleted wifi point and shows it in the map view.
+     * @param selectedHotspot point to show.
+     */
+    public void showHotspostOnmap(WifiPoint selectedHotspot){
+        FXMLLoader showMapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+        Parent root = null;
+        try {
+            root = showMapLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MapController map = showMapLoader.getController();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        map.initModel(model, stage);
+        stage.show();
+
+        map.showGivenWifi(selectedHotspot);
     }
 
     /**
@@ -138,6 +177,7 @@ public class WifiTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
                 } else {
                     selectedWifiPoint.setAllProperties(newWifiPoint);
+                    SerializerImplementation.serializeUser(model);
                     table.refresh();
                 }
             }
@@ -315,6 +355,23 @@ public class WifiTableController extends TableController {
     }
 
     /**
+     * Get the path for a csv to export to, export to it if given.
+     */
+    public void exportWifi() {
+
+        String filename = getCsvFilenameSave();
+        if (filename != null) {
+            try {
+                exportWifiHotspots(filename, model.getUserName());
+            } catch (IOException e) {
+                AlertGenerator.createAlert("Couldn't export file.");
+            } catch (SQLException e) {
+                AlertGenerator.createAlert("Couldn't get WiFi hotspots.");
+            }
+        }
+    }
+
+    /**
      * Creates the columns of the table.
      * Sets their value factories so that the data is displayed correctly.
      * Sets up the lists of data for filtering TODO move out
@@ -402,8 +459,23 @@ public class WifiTableController extends TableController {
      */
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
-        importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME, false);
+        //importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME, false);
         warningLabel.setText("");
+    }
+
+    /**
+     * Set up the table to use the given list of points instead of a csv.
+     *
+     * @param points the list of WifiPoints to display in the table.
+     */
+    public void setupWithList(ArrayList<WifiPoint> points) {
+        setFilters(points);
+
+        setTableViewWifi(points);
+        stopLoadingAni();
+        setPredicate();
+        populateCustomWifiPoints();
+        clearFilters();
     }
 
     /**

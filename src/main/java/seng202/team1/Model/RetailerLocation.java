@@ -15,7 +15,7 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeEcmaScript;
 public class RetailerLocation extends DataPoint implements java.io.Serializable {
 
     private String name;
-    private String addressLine1;
+    private String addressLine1 = "";
     private String addressLine2;
     private String city;
     private String state;
@@ -55,7 +55,9 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
         } else {
             this.secondaryFunction = secondaryFunction;
         }
-        this.addressLine1 = addressLine1;
+        if (addressLine1 != null) {
+            this.addressLine1 = addressLine1;
+        }
         this.addressLine2 = addressLine2;
         this.city = city;
         this.state = state;
@@ -180,6 +182,9 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     }
 
     public float getLongitude() {
+        if (coords == null) {
+            return -1;
+        }
         return coords.x;
     }
 
@@ -188,6 +193,9 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     }
 
     public float getLatitude() {
+        if (coords == null) {
+            return -1;
+        }
         return coords.y;
     }
 
@@ -206,11 +214,11 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
         String address = ""; //address to return
 
         // Check if the address has a line 2
-        if (!addressLine2.isEmpty()) {
+        if (addressLine2 != null && !addressLine2.isEmpty()) {
             //There is a preline
             address += addressLine2 + ", ";
         }
-        if (!addressLine1.isEmpty()) {
+        if (addressLine1 != null && !addressLine1.isEmpty()) {
             //There is a main line
             address += addressLine1 + ", ";
         }
@@ -292,7 +300,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     }
 
     public String toInfoString() {
-        return escapeEcmaScript(getDescription());
+        return escapeEcmaScript(getName() + "\n" + getDescription());
 
 
     }

@@ -11,7 +11,6 @@ import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
@@ -31,8 +30,8 @@ import seng202.team1.UserAccountModel;
 import java.awt.geom.Point2D;
 
 import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 
@@ -40,7 +39,6 @@ import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
 import static seng202.team1.Model.DataAnalyser.*;
-import static seng202.team1.Model.CsvHandling.CSVLoader.*;
 import static seng202.team1.Model.GenerateFields.generateSecondaryFunctionsList;
 import static seng202.team1.Model.GenerateFields.generateWifiProviders;
 
@@ -148,6 +146,15 @@ public class MapController {
 
     @FXML
     private TableView<WIFIPointDistance> wifiDistanceTable;
+    @FXML
+    private TabPane typeSelectorTabPane;
+    @FXML
+    private Tab routeTab;
+    @FXML
+    private Tab wifiTab;
+    @FXML
+    private Tab retailersTab;
+
 
     @FXML
     private WebEngine webEngine;
@@ -155,6 +162,7 @@ public class MapController {
     public static ArrayList<Point.Double> getUserClicks() {
         return userClicks;
     }
+    //private SingleSelectionModel<Tab> typeViewSelectionModel = typeSelectorTabPane.getSelectionModel();
 
     void initModel(UserAccountModel model, Stage stage) {
         this.model = model;
@@ -418,8 +426,10 @@ public class MapController {
     private void loadAllBikeTrips() {
         try {
             bikeTrips = populateBikeTrips();
+            bikeTrips.addAll(model.getCustomBikeTrips());
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load bike trips.");
+            e.printStackTrace();
         }
     }
 
@@ -427,18 +437,12 @@ public class MapController {
     private void loadAllWifi() {
         try {
             wifiPoints = populateWifiHotspots();
+            wifiPoints.addAll(model.getCustomWifiPoints());
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load WiFi points.");
+            e.printStackTrace();
         }
-        WifiPoint point;
-        for (int i = 0; i < wifiPoints.size(); i++) {
-            point = wifiPoints.get(i);
-            point.setId(i);
-            point.setVisible(true);
-            addWifi(point.getLatitude(), point.getLongitude(), point.toInfoString());
-
-        }
-        webView.getEngine().executeScript("document.wifiCluster()");
+        reloadAllWifi();
     }
 
     private void reloadAllWifi() {
@@ -456,17 +460,12 @@ public class MapController {
     private void loadAllRetailers() {
         try {
             retailerPoints = populateRetailers();
+            retailerPoints.addAll(model.getCustomRetailerLocations());
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load retailers.");
+            e.printStackTrace();
         }
-        RetailerLocation point;
-        for (int i = 0; i < retailerPoints.size(); i++) {
-            point = retailerPoints.get(i);
-            point.setId(i);
-            point.setVisible(true);
-            addRetailer(point.getLatitude(), point.getLongitude(), point.toInfoString());
-        }
-        webView.getEngine().executeScript("document.retailerCluster()");
+        reloadAllRetailers();
 
     }
 
@@ -698,7 +697,6 @@ public class MapController {
                     model.addCustomWifiLocation(newWifiPoint);
                     updateWIFI();
                     webView.getEngine().executeScript("document.wifiCluster()");
-                    SerializerImplementation.serializeUser(model);
                 }
             }
         } catch (IOException e) {
@@ -731,7 +729,6 @@ public class MapController {
                     addRetailer(retailerLocation.getLatitude(), retailerLocation.getLongitude(), retailerLocation.toInfoString());
                     model.addCustomRetailerLocation(retailerLocation);
                     updateRetailers();
-                    SerializerImplementation.serializeUser(model);
                 }
             }
         } catch (IOException e) {
@@ -757,7 +754,6 @@ public class MapController {
                 } else {
                     bikeTrips.add(addBikeDialog.getBikeTrip());
                     model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
-                    SerializerImplementation.serializeUser(model);
                 }
             }
 
@@ -867,17 +863,81 @@ public class MapController {
 
     }
 
+
     /**
-     * JavaScript interface object. Can be used to pass
+     * Shows a biketrip passed in by the table view on the map
+     * @param selectedTrip
      */
+    public void showGivenTrip(BikeTrip selectedTrip){
+        ArrayList<Point.Float> routePoints = new ArrayList<>();
+        routePoints.add(selectedTrip.getStartPoint());
+        routePoints.add(selectedTrip.getEndPoint());
 
-    public class JavaApp {
-        public void alert(Double lat, Double lng) {
-            Point.Double clickPoint = new Point.Double();
-            clickPoint.setLocation(lat, lng);
-            userClicks.add(clickPoint);
-        }
+        // Check the map has been loaded before attempting to add a route to it.
+        webEngine.getLoadWorker().stateProperty().addListener(
+                new ChangeListener<Worker.State>() {
+                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
+                        if (newState == Worker.State.SUCCEEDED) {
+                            generateRoute(routePoints);
+                            startingLatTextField.setText(Float.toString(selectedTrip.getStartLatitude()));
+                            startingLongTextField.setText(Float.toString(selectedTrip.getStartLongitude()));
+                            endingLatTextField.setText(Float.toString(selectedTrip.getEndLatitude()));
+                            endingLongTextField.setText(Float.toString(selectedTrip.getEndLongitude()));
+                            resultsLabel.setText(selectedTrip.nicerDescription());
+                            typeSelectorTabPane.getSelectionModel().select(2);
 
+                        }
+
+
+                    }
+                });
+
+    }
+
+
+    /**
+     * Takes a RetailerLocation passed in by the table view and shows it on the map.
+     *
+     * @param selectedShop Retailer to show
+     */
+    public void showGivenShop(RetailerLocation selectedShop){
+        webEngine.getLoadWorker().stateProperty().addListener(
+                new ChangeListener<Worker.State>() {
+                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
+                        if (newState == Worker.State.SUCCEEDED) {
+                            int indexOfRetailer = retailerPoints.indexOf(selectedShop);
+                            String scriptStr1 = "document.circleRetailer(" + indexOfRetailer + ", 'DEPARTMENTSTORESELECTED.png', 'departmentstore.png')";
+                            webView.getEngine().executeScript(scriptStr1);
+                        }
+                    }
+                });
+    }
+
+    public void showGivenWifi(WifiPoint hotspot){
+        webEngine.getLoadWorker().stateProperty().addListener(
+                new ChangeListener<Worker.State>() {
+                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
+                        if (newState == Worker.State.SUCCEEDED) {
+                            int indexOfRetailer = wifiPoints.indexOf(hotspot);
+                            String scriptStr1 = "document.circleWIFI(" + indexOfRetailer + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                            webView.getEngine().executeScript(scriptStr1);
+                            typeSelectorTabPane.getSelectionModel().select(1);
+
+                        }
+                    }
+                });
+    }
+}
+/**
+ * JavaScript interface object. Can be used to pass
+ */
+
+public class JavaApp {
+    public void alert(Double lat, Double lng) {
+        Point.Double clickPoint = new Point.Double();
+        clickPoint.setLocation(lat, lng);
+        userClicks.add(clickPoint);
+    }
         public void directions(String route) {
             try {
                 BikeDirections dir = new BikeDirections(route, true);

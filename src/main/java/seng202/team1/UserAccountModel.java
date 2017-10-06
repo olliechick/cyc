@@ -1,9 +1,19 @@
 package seng202.team1;
 
 import seng202.team1.Controller.AlertGenerator;
-import seng202.team1.Model.*;
+import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.BikeTripList;
+import seng202.team1.Model.DataPoint;
+import seng202.team1.Model.DatabaseManager;
+import seng202.team1.Model.PasswordManager;
+import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.RetailerLocationList;
+import seng202.team1.Model.SerializerImplementation;
+import seng202.team1.Model.WifiPoint;
+import seng202.team1.Model.CsvHandling.CSVLoader;
+import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.WifiPointList;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -18,6 +28,8 @@ import java.util.ArrayList;
  *
  * @author Josh Burt
  * @author Ollie Chick
+ * @author Ridge Nairn
+ * @author Josh Bernasconi
  */
 public class UserAccountModel implements java.io.Serializable {
 
@@ -27,6 +39,9 @@ public class UserAccountModel implements java.io.Serializable {
     private String userName;
     private byte[] password;
     private byte[] salt;
+    private ArrayList<BikeTripList> bikeTripLists = new ArrayList<>();
+    private ArrayList<RetailerLocationList> retailerLocationLists = new ArrayList<>();
+    private ArrayList<WifiPointList> wifiPointLists = new ArrayList<>();
 
     /**
      * Constructor with account type set to "User".
@@ -40,6 +55,7 @@ public class UserAccountModel implements java.io.Serializable {
         this.userName = userName;
         this.salt = PasswordManager.getNextSalt();
         this.password = PasswordManager.hash(password, salt);
+        createDefaultLists();
     }
 
     /**
@@ -54,6 +70,26 @@ public class UserAccountModel implements java.io.Serializable {
         this.salt = PasswordManager.getNextSalt();
         this.password = PasswordManager.hash(password, salt);
         this.gender = 'u';
+        createDefaultLists();
+    }
+
+    //TODO test this
+
+    /**
+     * Create the default lists of points for a user, so that they start with something to
+     * display in a table.
+     */
+    private void createDefaultLists() {
+        try {
+            BikeTripList defaultTrips = new BikeTripList("Default", CSVLoader.populateBikeTrips());
+            bikeTripLists.add(defaultTrips);
+            RetailerLocationList defaultRetailers = new RetailerLocationList("Default", CSVLoader.populateRetailers());
+            retailerLocationLists.add(defaultRetailers);
+            WifiPointList defaultWifis = new WifiPointList("Default", CSVLoader.populateWifiHotspots());
+            wifiPointLists.add(defaultWifis);
+        } catch (CsvParserException | IOException e) {
+            AlertGenerator.createAlert("Some of the default lists could not be created!");
+        }
     }
 
     public char getGender() {
@@ -134,7 +170,7 @@ public class UserAccountModel implements java.io.Serializable {
         ArrayList<BikeTrip> result = new ArrayList<>();
         try {
             DatabaseManager.open();
-            result = DatabaseManager.getUserTrips(userName);
+            result = DatabaseManager.getBikeTrips(userName);
             System.out.println(String.format("%d custom trips retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
@@ -147,7 +183,7 @@ public class UserAccountModel implements java.io.Serializable {
         ArrayList<RetailerLocation> result = new ArrayList<>();
         try {
             DatabaseManager.open();
-            result = DatabaseManager.getRetailers();
+            result = DatabaseManager.getRetailers(userName);
             System.out.println(String.format("%d custom retailers retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
@@ -160,7 +196,7 @@ public class UserAccountModel implements java.io.Serializable {
         ArrayList<WifiPoint> result = new ArrayList<>();
         try {
             DatabaseManager.open();
-            result = DatabaseManager.getWifiPoints();
+            result = DatabaseManager.getWifiPoints(userName);
             System.out.println(String.format("%d custom wifi points retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
@@ -171,36 +207,38 @@ public class UserAccountModel implements java.io.Serializable {
     }
 
     public void addCustomBikeTrip(BikeTrip bikeTrip) {
-        try {
-            //TODO: Have this thrown further up
-            DatabaseManager.open();
-            DatabaseManager.addBikeTrip(bikeTrip, userName);
-            DatabaseManager.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        addPoint(bikeTrip);
     }
 
     public void addCustomRetailerLocation(RetailerLocation retailerLocation) {
+        addPoint(retailerLocation);
+    }
+
+    public void addCustomWifiLocation(WifiPoint wifiPoint) {
+        addPoint(wifiPoint);
+    }
+
+    private void addPoint(DataPoint point) {
         try {
             //TODO: Have this thrown further up
             DatabaseManager.open();
-            DatabaseManager.addRecord(retailerLocation, userName);
+            DatabaseManager.addRecord(point, userName);
             DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void addCustomWifiLocation(WifiPoint wifiPoint) {
-        try {
-            //TODO: Have this thrown further up
-            DatabaseManager.open();
-            DatabaseManager.addRecord(wifiPoint, userName);
-            DatabaseManager.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public ArrayList<BikeTripList> getBikeTripLists() {
+        return bikeTripLists;
+    }
+
+    public ArrayList<RetailerLocationList> getRetailerLocationLists() {
+        return retailerLocationLists;
+    }
+
+    public ArrayList<WifiPointList> getWifiPointLists() {
+        return wifiPointLists;
     }
 
     public static void createUser(UserAccountModel user) {

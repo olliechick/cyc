@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
@@ -25,8 +26,10 @@ import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
 import java.security.PublicKey;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static seng202.team1.Model.CsvHandling.CSVExporter.exportRetailers;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 
 /**
@@ -102,6 +105,15 @@ public class RetailerTableController extends TableController {
                 }
             }
         });
+        super.showOnMap.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                cm.hide();
+                if(table.getSelectionModel().getSelectedItem() != null){
+                    showRetailerOnMap(table.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
         super.deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -136,6 +148,7 @@ public class RetailerTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
                 } else {
                     selectedRetailerLocation.setAllProperties(newRetailerLocation);
+                    SerializerImplementation.serializeUser(model);
                     table.refresh();
                 }
             }
@@ -324,6 +337,23 @@ public class RetailerTableController extends TableController {
     }
 
     /**
+     * Get the path for a csv to export to, export to it if given.
+     */
+    public void exportRetailer() {
+
+        String filename = getCsvFilenameSave();
+        if (filename != null) {
+            try {
+                exportRetailers(filename, model.getUserName());
+            } catch (IOException e) {
+                AlertGenerator.createAlert("Couldn't export file.");
+            } catch (SQLException e) {
+                AlertGenerator.createAlert("Couldn't get retailers.");
+            }
+        }
+    }
+
+    /**
      * Creates the columns of the table.
      * Sets their value factories so that the data is displayed correctly.
      * Sets up the lists of data for filtering TODO move out
@@ -416,7 +446,7 @@ public class RetailerTableController extends TableController {
      */
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
-        importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME, false);
+        //importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME, false);
         warningLabel.setText("");
     }
 
@@ -487,5 +517,40 @@ public class RetailerTableController extends TableController {
         dataPoints.addAll(results);
     }
 
+    /**
+     * Set up the table to use the given list of points instead of a csv.
+     *
+     * @param points the list of RetailerLocations to display in the table.
+     */
+    public void setupWithList(ArrayList<RetailerLocation> points) {
+        setFilters(points);
+
+        setTableViewRetailer(points);
+        stopLoadingAni();
+        setPredicate();
+        clearFilters();
+    }
+
+    public void showRetailerOnMap(RetailerLocation selectedShop){
+
+        FXMLLoader showMapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+        Parent root = null;
+        try {
+            root = showMapLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MapController map = showMapLoader.getController();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        map.initModel(model, stage);
+        stage.show();
+
+        map.showGivenShop(selectedShop);
+
+
+
+    }
 
 }

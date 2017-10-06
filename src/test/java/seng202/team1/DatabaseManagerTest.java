@@ -1,22 +1,27 @@
 package seng202.team1;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import seng202.team1.Model.BikeTrip;
 import seng202.team1.Model.DatabaseManager;
 import seng202.team1.Model.RetailerLocation;
 import seng202.team1.Model.WifiPoint;
 
-import java.awt.*;
+import java.awt.Point;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 /**
  * Unit tests for DatabaseManager class.
+ *
  * @author Ridge Nairn
  */
 
@@ -32,11 +37,11 @@ public class DatabaseManagerTest {
     public static void Initialise() {
         Main.createDirectories();
 
-        LocalDateTime startTime =  LocalDateTime.of(2015, Month.DECEMBER, 30, 23, 50, 0);
+        LocalDateTime startTime = LocalDateTime.of(2015, Month.DECEMBER, 30, 23, 50, 0);
         LocalDateTime stopTime = LocalDateTime.of(2015, Month.DECEMBER, 30, 23, 50, 10);
         Point.Float startPoint = new Point.Float((float) 172.581153, (float) -43.522610);
         Point.Float endPoint = new Point.Float((float) 172.572739, (float) -43.520740);
-        int bikeID = 1;
+        int bikeID = 1324;
         char gender = 'f';
         int birthYear = 2000;
         boolean isUserDefinedPoint = false;
@@ -76,29 +81,32 @@ public class DatabaseManagerTest {
                 borough, city, zipcode, cost, provider, remarks, ssid, sourceID, startTime);
     }
 
-    @Before
-    public void SetUp() {
-        try {
-            DatabaseManager.open();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    /*
+        @Before
+        public void SetUp() {
+            try {
+                DatabaseManager.open();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
         }
-
-    }
-
+    /*/
     @After
-    public void TearDown() {
+    public void TearDown() {/*
         try {
             DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
         DatabaseManager.deleteDatabase();
     }
 
     @Test
-    public void createNewDatabase() {
+    public void createNewDatabase() throws Exception {
+        DatabaseManager.open();
         Assert.assertTrue(DatabaseManager.isDatabaseConnected());
+        DatabaseManager.close();
     }
 
     @Test
@@ -108,60 +116,74 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void addRetailerPoint() {
+    public void addRetailerPoint() throws Exception {
         try {
-            DatabaseManager.addRecord(retailer, null);
+            DatabaseManager.addRecord(retailer, model.getUserName());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        assertEquals(retailer, DatabaseManager.getRetailers().get(0));
+        DatabaseManager.open();
+        assertEquals(retailer, DatabaseManager.getRetailers(model.getUserName()).get(0));
+        DatabaseManager.close();
     }
 
     @Test
-    public void addWifiPoint() {
+    public void addWifiPoint() throws Exception {
         try {
-            DatabaseManager.addRecord(wifi, null);
+            DatabaseManager.addRecord(wifi, model.getUserName());
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        System.out.println(DatabaseManager.getWifiPoints().get(0));
-        assertEquals(wifi, DatabaseManager.getWifiPoints().get(0));
+        DatabaseManager.open();
+        assertEquals(wifi, DatabaseManager.getWifiPoints(model.getUserName()).get(0));
+        DatabaseManager.close();
     }
 
     @Test
-    public void addBikeTrip() {
+    public void addBikeTrip() throws Exception {
 
         try {
-            DatabaseManager.addBikeTrip(trip, model.getUserName());
+            DatabaseManager.addRecord(trip, model.getUserName());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        assertEquals(trip, DatabaseManager.getUserTrips(model.getUserName()).get(0));
+        System.out.println(trip.getBikeId());
+        DatabaseManager.open();
+        assertEquals(trip, DatabaseManager.getBikeTrips(model.getUserName()).get(0));
+        DatabaseManager.close();
     }
 
 
     @Test
-    public void getNumberOfBikeTrips() {
+    public void getNumberOfBikeTrips() throws Exception {
+        ArrayList<BikeTrip> trips = new ArrayList<>();
+
+        // Add the same trip 100 times
         for (int i = 0; i < 100; i++) {
-            try {
-                DatabaseManager.addBikeTrip(trip, model.getUserName());
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            trips.add(trip);
         }
-        assertEquals(100, DatabaseManager.getNumberOfBikeTrips());
-    }
-
-    @Test
-    public void getOnlyUserTrips() {
         try {
-            DatabaseManager.addBikeTrip(trip, model.getUserName());
-            DatabaseManager.addBikeTrip(trip, "notMyUser");
+            DatabaseManager.addRecords(trips, model.getUserName());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        assertEquals(1, DatabaseManager.getUserTrips(model.getUserName()).size());
+        DatabaseManager.open();
+        assertEquals(100, DatabaseManager.getNumberOfRowsFromType(BikeTrip.class, model.getUserName()));
+        DatabaseManager.close();
+    }
+
+    @Test
+    public void getOnlyUserTrips() throws Exception {
+        try {
+            DatabaseManager.addRecord(trip, model.getUserName());
+            DatabaseManager.addRecord(trip, "notMyUser");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        DatabaseManager.open();
+        assertEquals(1, DatabaseManager.getBikeTrips(model.getUserName()).size());
+        DatabaseManager.close();
     }
 
 }

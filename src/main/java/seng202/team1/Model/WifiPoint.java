@@ -223,8 +223,7 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
      * for them to connect to). If the point is user defined, this will be appended by " (user-defined)".
      */
     public String getName() {
-        String name = ssid;
-        return name;
+        return ssid;
     }
 
 
@@ -346,7 +345,7 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
     }
 
     public String toInfoString() {
-        return escapeEcmaScript(getDescription());
+        return escapeEcmaScript(getName() + "\n" + getDescription());
 
     }
 }
