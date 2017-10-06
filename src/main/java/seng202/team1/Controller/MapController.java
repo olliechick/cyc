@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 
+import static seng202.team1.Controller.MapController.userClicks;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
@@ -927,12 +928,12 @@ public class MapController {
                     }
                 });
     }
-}
+
 /**
  * JavaScript interface object. Can be used to pass
  */
 
-public class JavaApp {
+    public class JavaApp {
     public void alert(Double lat, Double lng) {
         Point.Double clickPoint = new Point.Double();
         clickPoint.setLocation(lat, lng);
