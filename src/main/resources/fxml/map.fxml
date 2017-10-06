@@ -34,25 +34,23 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <Menu mnemonicParsing="false" text="Import CSV">
-                            <items>
-                                <MenuItem mnemonicParsing="false" onAction="#initialize" text="Reset Map" />
-                            </items>
-                        </Menu>
+                        <Menu mnemonicParsing="false" text="Import CSV" />
                         <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#addCustomBikeTrip" text="Add Bike Trip" />
-                    </items>
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#addCustomWIFI" text="Add WIFI" />
-                    </items>
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#addCustomRetailer" text="Add Retailer" />
+                  <MenuItem mnemonicParsing="false" onAction="#addCustomRetailer" text="Add Retailer Location" />
+                  <MenuItem mnemonicParsing="false" onAction="#addCustomWIFI" text="Add Wifi Point" />
                     </items>
                 </Menu>
+            <Menu mnemonicParsing="false" text="View">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Open a list" />
+                          <MenuItem mnemonicParsing="false" onAction="#initialize" text="Reset Map" />
+              </items>
+            </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#openAbout" text="About" />
