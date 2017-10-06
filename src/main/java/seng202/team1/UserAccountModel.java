@@ -9,6 +9,8 @@ import seng202.team1.Model.PasswordManager;
 import seng202.team1.Model.RetailerLocation;
 import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.Model.WifiPoint;
+import seng202.team1.Model.CsvHandling.CSVLoader;
+import seng202.team1.Model.CsvHandling.CsvParserExc
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -34,6 +36,9 @@ public class UserAccountModel implements java.io.Serializable {
     private String userName;
     private byte[] password;
     private byte[] salt;
+    private ArrayList<BikeTripList> bikeTripLists = new ArrayList<>();
+    private ArrayList<RetailerLocationList> retailerLocationLists = new ArrayList<>();
+    private ArrayList<WifiPointList> wifiPointLists = new ArrayList<>();
 
     /**
      * Constructor with account type set to "User".
@@ -47,6 +52,7 @@ public class UserAccountModel implements java.io.Serializable {
         this.userName = userName;
         this.salt = PasswordManager.getNextSalt();
         this.password = PasswordManager.hash(password, salt);
+        createDefaultLists();
     }
 
     /**
@@ -61,6 +67,20 @@ public class UserAccountModel implements java.io.Serializable {
         this.salt = PasswordManager.getNextSalt();
         this.password = PasswordManager.hash(password, salt);
         this.gender = 'u';
+        createDefaultLists();
+    }
+
+    private void createDefaultLists() {
+        try {
+            BikeTripList defaultTrips = new BikeTripList("Default", CSVLoader.populateBikeTrips());
+            bikeTripLists.add(defaultTrips);
+            RetailerLocationList defaultRetailers = new RetailerLocationList("Default", CSVLoader.populateRetailers());
+            retailerLocationLists.add(defaultRetailers);
+            WifiPointList defaultWifis = new WifiPointList("Default", CSVLoader.populateWifiHotspots());
+            wifiPointLists.add(defaultWifis);
+        } catch (CsvParserException | IOException e) {
+            AlertGenerator.createAlert("Some of the default lists could not be created!");
+        }
     }
 
     public char getGender() {
@@ -200,14 +220,16 @@ public class UserAccountModel implements java.io.Serializable {
         }
     }
 
-    public ArrayList<BikeTripList> getBikeLists() {
-        BikeTripList list1 = new BikeTripList("bike list 1", getCustomBikeTrips());
-        BikeTripList list2 = new BikeTripList("Bike list 2", getCustomBikeTrips());
-        ArrayList<BikeTripList> lists = new ArrayList<>();
+    public ArrayList<BikeTripList> getBikeTripLists() {
+        return bikeTripLists;
+    }
 
-        lists.add(list1);
-        lists.add(list2);
-        return lists;
+    public ArrayList<RetailerLocationList> getRetailerLocationLists() {
+        return retailerLocationLists;
+    }
+
+    public ArrayList<WifiPointList> getWifiPointLists() {
+        return wifiPointLists;
     }
 
     public static void createUser(UserAccountModel user) {

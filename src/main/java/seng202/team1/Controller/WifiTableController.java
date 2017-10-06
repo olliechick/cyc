@@ -176,6 +176,7 @@ public class WifiTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
                 } else {
                     selectedWifiPoint.setAllProperties(newWifiPoint);
+                    SerializerImplementation.serializeUser(model);
                     table.refresh();
                 }
             }
@@ -457,8 +458,18 @@ public class WifiTableController extends TableController {
      */
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
-        importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME, false);
+        //importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME, false);
         warningLabel.setText("");
+    }
+
+    public void setupWithList(ArrayList<WifiPoint> points) {
+        setFilters(points);
+
+        setTableViewWifi(points);
+        stopLoadingAni();
+        setPredicate();
+        populateCustomWifiPoints();
+        clearFilters();
     }
 
     /**
