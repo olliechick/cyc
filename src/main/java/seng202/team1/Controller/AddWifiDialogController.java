@@ -105,15 +105,15 @@ public class AddWifiDialogController {
     private String ssid;
     private Float latitude;
     private Float longitude;
-    private String street;
+    private String location;
     private int zip;
     private String hood;
     private String provider;
     private int objectId = -1;
-    private String placeName = "Unknown";
-    private String locationType = "Unknown";
+    private String placeName = null;
+    private String locationType = null;
     private String city = "New York";
-    private String sourceId = "Unknown";
+    private String sourceId = null;
     private LocalDateTime dateTimeActivated;
 
     private WifiPoint wifiPoint;
@@ -162,6 +162,14 @@ public class AddWifiDialogController {
 
     }
 
+
+    /**
+     * Sets up the dialog with details from the given WifiPoint.
+     *
+     * @param stage1    The stage the dialog is displayed in.
+     * @param root      The root node of the scene.
+     * @param wifiPoint The WifiPoint whose details are displayed.
+     */
     void setDialog(Stage stage1, Parent root, WifiPoint wifiPoint) {
         setDialog(stage1, root);
 
@@ -199,8 +207,9 @@ public class AddWifiDialogController {
         }
 
         addButton.setText("Save");
-        stage.setTitle("Edit Wifi Point");
+        stage.setTitle("Edit WiFi hotspot");
     }
+
 
     /**
      * If all fields are valid, creates a new WifiPoint and makes it available through
@@ -214,21 +223,25 @@ public class AddWifiDialogController {
             String cost = costComboBox.getValue();
             String remarks;
 
+            // Check if the Remarks field is empty - if so, set it to null.
             if (remarksField.getText().isEmpty()) {
-                remarks = "";
+                remarks = null;
             } else {
                 remarks = remarksField.getText();
             }
 
+            // If there isn't a datetime, set it to the current time and date
             if (dateTimeActivated == null) {
                 dateTimeActivated = LocalDateTime.now();
             }
 
-
-            wifiPoint = new WifiPoint(objectId, coords, placeName, street, locationType, hood, boro, city, zip, cost, provider, remarks, ssid, sourceId, dateTimeActivated);
+            // Create WiFi Point and close the stage
+            wifiPoint = new WifiPoint(objectId, coords, placeName, location, locationType, hood, boro,
+                    city, zip, cost, provider, remarks, ssid, sourceId, dateTimeActivated);
             stage.close();
         }
     }
+
 
     /**
      * Check all the required fields have been filled with data in the correct format.
@@ -240,6 +253,9 @@ public class AddWifiDialogController {
 
         try {
             latitude = Float.parseFloat(latField.getText());
+            if (latitude < -90 || latitude > 90) {
+                throw new NumberFormatException("Latitude must be between -90 and 90.");
+            }
             latLabel.setTextFill(Color.BLACK);
         } catch (NumberFormatException e) {
             latLabel.setTextFill(Color.RED);
@@ -249,6 +265,9 @@ public class AddWifiDialogController {
 
         try {
             longitude = Float.parseFloat(longField.getText());
+            if (longitude < -180 || longitude > 180) {
+                throw new NumberFormatException("Longitude must be between -180 and 180.");
+            }
             longLabel.setTextFill(Color.BLACK);
         } catch (NumberFormatException e) {
             longLabel.setTextFill(Color.RED);
@@ -268,7 +287,7 @@ public class AddWifiDialogController {
             streetLabel.setTextFill(Color.RED);
             valid = false;
         } else {
-            street = streetField.getText();
+            location = streetField.getText();
             streetLabel.setTextFill(Color.BLACK);
         }
 
@@ -299,9 +318,11 @@ public class AddWifiDialogController {
         return valid;
     }
 
+
     public WifiPoint getWifiPoint() {
         return wifiPoint;
     }
+
 
     @FXML
     void cancel() {
