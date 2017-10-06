@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.GenerateFields;
+import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.Model.WifiPoint;
 import seng202.team1.UserAccountModel;
 
@@ -176,6 +177,7 @@ public class WifiTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
                 } else {
                     selectedWifiPoint.setAllProperties(newWifiPoint);
+                    SerializerImplementation.serializeUser(model);
                     table.refresh();
                 }
             }
@@ -457,8 +459,23 @@ public class WifiTableController extends TableController {
      */
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
-        importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME, false);
+        //importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME, false);
         warningLabel.setText("");
+    }
+
+    /**
+     * Set up the table to use the given list of points instead of a csv.
+     *
+     * @param points the list of WifiPoints to display in the table.
+     */
+    public void setupWithList(ArrayList<WifiPoint> points) {
+        setFilters(points);
+
+        setTableViewWifi(points);
+        stopLoadingAni();
+        setPredicate();
+        populateCustomWifiPoints();
+        clearFilters();
     }
 
     /**

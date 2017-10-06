@@ -21,9 +21,11 @@ import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.GenerateFields;
 import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
+import java.security.PublicKey;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -146,6 +148,7 @@ public class RetailerTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
                 } else {
                     selectedRetailerLocation.setAllProperties(newRetailerLocation);
+                    SerializerImplementation.serializeUser(model);
                     table.refresh();
                 }
             }
@@ -443,7 +446,7 @@ public class RetailerTableController extends TableController {
      */
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
-        importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME, false);
+        //importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME, false);
         warningLabel.setText("");
     }
 
@@ -512,6 +515,20 @@ public class RetailerTableController extends TableController {
         System.out.println("Found: " + results.size() + " results");
         dataPoints.clear();
         dataPoints.addAll(results);
+    }
+
+    /**
+     * Set up the table to use the given list of points instead of a csv.
+     *
+     * @param points the list of RetailerLocations to display in the table.
+     */
+    public void setupWithList(ArrayList<RetailerLocation> points) {
+        setFilters(points);
+
+        setTableViewRetailer(points);
+        stopLoadingAni();
+        setPredicate();
+        clearFilters();
     }
 
     public void showRetailerOnMap(RetailerLocation selectedShop){

@@ -25,6 +25,7 @@ import seng202.team1.Model.BikeTrip;
 import seng202.team1.Model.ContextualLength;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
+import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.awt.Point;
@@ -204,6 +205,7 @@ public class BikeTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
                 } else {
                     selectedBikeTrip.setAllProperties(newBikeTrip);
+                    SerializerImplementation.serializeUser(model);
                     table.refresh();
                 }
             }
@@ -213,14 +215,15 @@ public class BikeTableController extends TableController {
         }
     }
 
+    //TODO fix this v
     /**
      * Delete the currently selected bike trip from the list of trips
      *
      * @param selectedBikeTrip The currently selected bike trip.
      */
     private void deleteBikeTrip(BikeTrip selectedBikeTrip) {
-        //TODO add a removedBiketrips list to userAccountModel and add to there, then remove all those on load.
         dataPoints.remove(selectedBikeTrip);
+        originalData.remove(selectedBikeTrip);
     }
 
     /**
@@ -437,7 +440,7 @@ public class BikeTableController extends TableController {
     void initModel(UserAccountModel userAccountModel) {
 
         this.model = userAccountModel;
-        importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME, false);
+        //importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME, false);
         warningLabel.setText("");
     }
 
@@ -509,6 +512,21 @@ public class BikeTableController extends TableController {
         dataPoints.clear();
         dataPoints.addAll(results);
 
+    }
+
+    /**
+     * Set up the table to use the given list of points instead of a csv.
+     *
+     * @param points the list of BikeTrips to display in the table.
+     */
+    public void setupWithList(ArrayList<BikeTrip> points) {
+        setFilters();
+
+        setTableViewBike(points);
+        stopLoadingAni();
+        setPredicate();
+        populateCustomBikeTrips();
+        clearFilters();
     }
 
 }
