@@ -28,7 +28,9 @@ public class UserAccountModel implements java.io.Serializable {
     private String userName;
     private byte[] password;
     private byte[] salt;
-    ArrayList<BikeTripList> bikeTripLists = new ArrayList<>();
+    private ArrayList<BikeTripList> bikeTripLists = new ArrayList<>();
+    private ArrayList<RetailerLocationList> retailerLocationLists = new ArrayList<>();
+    private ArrayList<WifiPointList> wifiPointLists = new ArrayList<>();
 
     /**
      * Constructor with account type set to "User".
@@ -42,6 +44,7 @@ public class UserAccountModel implements java.io.Serializable {
         this.userName = userName;
         this.salt = PasswordManager.getNextSalt();
         this.password = PasswordManager.hash(password, salt);
+        createDefaultLists();
     }
 
     /**
@@ -56,14 +59,19 @@ public class UserAccountModel implements java.io.Serializable {
         this.salt = PasswordManager.getNextSalt();
         this.password = PasswordManager.hash(password, salt);
         this.gender = 'u';
+        createDefaultLists();
     }
 
     private void createDefaultLists() {
         try {
             BikeTripList defaultTrips = new BikeTripList("Default", CSVLoader.populateBikeTrips());
             bikeTripLists.add(defaultTrips);
+            RetailerLocationList defaultRetailers = new RetailerLocationList("Default", CSVLoader.populateRetailers());
+            retailerLocationLists.add(defaultRetailers);
+            WifiPointList defaultWifis = new WifiPointList("Default", CSVLoader.populateWifiHotspots());
+            wifiPointLists.add(defaultWifis);
         } catch (CsvParserException | IOException e) {
-            AlertGenerator.createAlert("Default bike trips could not be created!");
+            AlertGenerator.createAlert("Some of the default lists could not be created!");
         }
     }
 
@@ -215,13 +223,15 @@ public class UserAccountModel implements java.io.Serializable {
     }
 
     public ArrayList<BikeTripList> getBikeTripLists() {
-        BikeTripList list1 = new BikeTripList("bike list 1", getCustomBikeTrips());
-        BikeTripList list2 = new BikeTripList("Bike list 2", getCustomBikeTrips());
-        ArrayList<BikeTripList> bikeTripLists = new ArrayList<>();
-
-//        bikeTripLists.add(list1);
-//        bikeTripLists.add(list2);
         return bikeTripLists;
+    }
+
+    public ArrayList<RetailerLocationList> getRetailerLocationLists() {
+        return retailerLocationLists;
+    }
+
+    public ArrayList<WifiPointList> getWifiPointLists() {
+        return wifiPointLists;
     }
 
     public static void createUser(UserAccountModel user) {

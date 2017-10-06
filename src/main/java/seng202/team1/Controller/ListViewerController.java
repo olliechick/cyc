@@ -2,13 +2,20 @@ package seng202.team1.Controller;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import seng202.team1.Model.BikeTripList;
+import seng202.team1.Model.RetailerLocationList;
+import seng202.team1.Model.WifiPointList;
 import seng202.team1.UserAccountModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -22,10 +29,10 @@ public class ListViewerController {
     private ListView<BikeTripList> bikeListView;
 
     @FXML
-    private ListView<String> retailerListView;
+    private ListView<RetailerLocationList> retailerListView;
 
     @FXML
-    private ListView<String> wifiListView;
+    private ListView<WifiPointList> wifiListView;
 
 
     private UserAccountModel user;
@@ -41,6 +48,32 @@ public class ListViewerController {
                     setText(null);
                 } else {
                     setText(bikeTripList.getListName());
+                }
+            }
+        });
+
+        retailerListView.setCellFactory(param -> new ListCell<RetailerLocationList>() {
+            @Override
+            protected void updateItem(RetailerLocationList retailerLocationList, boolean empty) {
+                super.updateItem(retailerLocationList, empty);
+
+                if (empty || retailerLocationList == null || retailerLocationList.getListName() == null) {
+                    setText(null);
+                } else {
+                    setText(retailerLocationList.getListName());
+                }
+            }
+        });
+
+        wifiListView.setCellFactory(param -> new ListCell<WifiPointList>() {
+            @Override
+            protected void updateItem(WifiPointList wifiPointList, boolean empty) {
+                super.updateItem(wifiPointList, empty);
+
+                if (empty || wifiPointList == null || wifiPointList.getListName() == null) {
+                    setText(null);
+                } else {
+                    setText(wifiPointList.getListName());
                 }
             }
         });
@@ -74,6 +107,8 @@ public class ListViewerController {
     public void setUser(UserAccountModel user) {
         this.user = user;
         bikeListView.getItems().addAll(user.getBikeTripLists());
+        retailerListView.getItems().addAll(user.getRetailerLocationLists());
+        wifiListView.getItems().addAll(user.getWifiPointLists());
     }
 
 
@@ -81,25 +116,46 @@ public class ListViewerController {
     void chooseBikeList() {
         BikeTripList selectedItem = bikeListView.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
-            System.out.println(selectedItem.getBikeTrips().toString());
+            System.out.println(selectedItem.getBikeTrips().size() + " trips in list");
         }
     }
 
     @FXML
     void chooseRetailerList() {
-        String selectedItem = retailerListView.getSelectionModel().getSelectedItem();
+        RetailerLocationList selectedItem = retailerListView.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
-            System.out.println(selectedItem);
+            System.out.println(selectedItem.getRetailerLocations().size() + " retailers in list");
         }
 
     }
 
     @FXML
     void chooseWifiList() {
-        String selectedItem = wifiListView.getSelectionModel().getSelectedItem();
+        WifiPointList selectedItem = wifiListView.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
-            System.out.println(selectedItem);
+            System.out.println(selectedItem.getWifiPoints().size() + " wifis in list");
+            try {
+                FXMLLoader wifiTableLoder = new FXMLLoader(getClass().getResource("/fxml/WifiTableView.fxml"));
+                Parent wifiTableView = wifiTableLoder.load();
+                WifiTableController wifiTableController = wifiTableLoder.getController();
+
+                wifiTableController.initModel(user);
+                wifiTableController.setupWithList(selectedItem.getWifiPoints());
+                wifiTableController.setName();
+                wifiTableController.initContextMenu();
+
+                Stage stage1 = new Stage();
+                wifiTableController.setStage(stage1);
+                stage1.setScene(new Scene(wifiTableView));
+                stage1.setTitle("Wifi");
+                stage1.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
+
+
     }
 
 
