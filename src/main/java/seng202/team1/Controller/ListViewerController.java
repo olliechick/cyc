@@ -18,6 +18,7 @@ import seng202.team1.UserAccountModel;
 import java.io.IOException;
 import java.util.ArrayList;
 
+//TODO change to user database lists once implemented.
 /**
  * Created on 3/10/17.
  *
@@ -34,9 +35,10 @@ public class ListViewerController {
     @FXML
     private ListView<WifiPointList> wifiListView;
 
-
     private UserAccountModel user;
     private Stage stage;
+
+    private static final double windowHeaderSizeAdjust = 10;
 
     public void initialize() {
 
@@ -117,87 +119,152 @@ public class ListViewerController {
         wifiListView.getItems().addAll(user.getWifiPointLists());
     }
 
-
+    /**
+     * Opens a new bike table when the user selects a list of bike trips from the list of options.
+     */
     @FXML
     void chooseBikeList() {
-        BikeTripList selectedItem = bikeListView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            System.out.println(selectedItem.getBikeTrips().size() + " trips in list");
+        BikeTripList selectedBikeList = bikeListView.getSelectionModel().getSelectedItem();
+        if (selectedBikeList != null) {
+            System.out.println(selectedBikeList.getBikeTrips().size() + " trips in list");
 
-            try {
-                FXMLLoader bikeTableLoder = new FXMLLoader(getClass().getResource("/fxml/BikeTableView.fxml"));
-                Parent bikeTableView = bikeTableLoder.load();
-                BikeTableController bikeTableController = bikeTableLoder.getController();
-
-                bikeTableController.initModel(user);
-                bikeTableController.setupWithList(selectedItem.getBikeTrips());
-                bikeTableController.setName();
-                bikeTableController.initContextMenu();
-
-                bikeTableController.setStage(stage);
-                stage.setScene(new Scene(bikeTableView));
-                stage.setTitle("Bike Trips");
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            switchToBikeTable(selectedBikeList);
         }
     }
 
+    /**
+     * Opens a new retailer table when the user selects a list of retailers from the list of options.
+     */
     @FXML
     void chooseRetailerList() {
-        RetailerLocationList selectedItem = retailerListView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            System.out.println(selectedItem.getRetailerLocations().size() + " retailers in list");
+        RetailerLocationList selectedRetailerList = retailerListView.getSelectionModel().getSelectedItem();
+        if (selectedRetailerList != null) {
+            System.out.println(selectedRetailerList.getRetailerLocations().size() + " retailers in list");
 
-            try {
-                FXMLLoader retailerTableLoder = new FXMLLoader(getClass().getResource("/fxml/RetailerTableView.fxml"));
-                Parent retailerTableView = retailerTableLoder.load();
-                RetailerTableController retailerTableController = retailerTableLoder.getController();
-
-                retailerTableController.initModel(user);
-                retailerTableController.setupWithList(selectedItem.getRetailerLocations());
-                retailerTableController.setName();
-                retailerTableController.initContextMenu();
-
-                retailerTableController.setStage(stage);
-                stage.setScene(new Scene(retailerTableView));
-                stage.setTitle("Retailers");
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            switchToRetailerTable(selectedRetailerList);
         }
 
     }
 
+    /**
+     * Opens a new wifi table when the user selects a list of wifi points from the list of options.
+     */
     @FXML
     void chooseWifiList() {
-        WifiPointList selectedItem = wifiListView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            System.out.println(selectedItem.getWifiPoints().size() + " wifis in list");
-            try {
-                FXMLLoader wifiTableLoder = new FXMLLoader(getClass().getResource("/fxml/WifiTableView.fxml"));
-                Parent wifiTableView = wifiTableLoder.load();
-                WifiTableController wifiTableController = wifiTableLoder.getController();
+        WifiPointList selectedWifiList = wifiListView.getSelectionModel().getSelectedItem();
+        if (selectedWifiList != null) {
+            System.out.println(selectedWifiList.getWifiPoints().size() + " wifis in list");
 
-                wifiTableController.initModel(user);
-                wifiTableController.setupWithList(selectedItem.getWifiPoints());
-                wifiTableController.setName();
-                wifiTableController.initContextMenu();
-
-                wifiTableController.setStage(stage);
-                stage.setScene(new Scene(wifiTableView));
-                stage.setTitle("Wifi");
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            switchToWifiTable(selectedWifiList);
 
         }
 
 
     }
 
+    /**
+     * Creates a new list of bike trips and opens a table with that list loaded.
+     */
+    @FXML
+    void createNewBikeList() {
+        String listName = AlertGenerator.createAddListDialog();
+        System.out.println("New Bike List named: " + listName);
+        if (listName != null) {
+            BikeTripList bikeTripList = new BikeTripList(listName, new ArrayList<>());
+            user.addBikeTripList(bikeTripList);
+            switchToBikeTable(bikeTripList);
+        }
+    }
 
+    /**
+     * Creates a new list of retailers and opens a table with that list loaded.
+     */
+    @FXML
+    void createNewRetailerList() {
+        String listName = AlertGenerator.createAddListDialog();
+        System.out.println("New Retailer List named: " + listName);
+        if (listName != null) {
+            RetailerLocationList retailerLocationList = new RetailerLocationList(listName, new ArrayList<>());
+            switchToRetailerTable(retailerLocationList);
+        }
+    }
+
+    /**
+     * Creates a new list of wifi and opens a table with that list loaded.
+     */
+    @FXML
+    void createNewWifiList()  {
+        String listName = AlertGenerator.createAddListDialog();
+        System.out.println("New Wifi List named: " + listName);
+        if (listName != null) {
+            WifiPointList wifiPointList = new WifiPointList(listName, new ArrayList<>());
+            switchToWifiTable(wifiPointList);
+        }
+    }
+
+    private void switchToBikeTable(BikeTripList bikeTripList) {
+        try {
+            FXMLLoader bikeTableLoder = new FXMLLoader(getClass().getResource("/fxml/BikeTableView.fxml"));
+            Parent bikeTableView = bikeTableLoder.load();
+            BikeTableController bikeTableController = bikeTableLoder.getController();
+
+            bikeTableController.initModel(user);
+            bikeTableController.setupWithList(bikeTripList.getListName(), bikeTripList.getBikeTrips());
+            bikeTableController.setName();
+            bikeTableController.initContextMenu();
+
+            bikeTableController.setStage(stage);
+            stage.setScene(new Scene(bikeTableView));
+            stage.setTitle("Bike Trips");
+            stage.setWidth(bikeTableView.getScene().getWidth());
+            stage.setHeight(bikeTableView.getScene().getHeight() + windowHeaderSizeAdjust);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void switchToRetailerTable(RetailerLocationList retailerLocationList) {
+        try {
+            FXMLLoader retailerTableLoder = new FXMLLoader(getClass().getResource("/fxml/RetailerTableView.fxml"));
+            Parent retailerTableView = retailerTableLoder.load();
+            RetailerTableController retailerTableController = retailerTableLoder.getController();
+
+            retailerTableController.initModel(user);
+            retailerTableController.setupWithList(retailerLocationList.getListName(), retailerLocationList.getRetailerLocations());
+            retailerTableController.setName();
+            retailerTableController.initContextMenu();
+
+            retailerTableController.setStage(stage);
+            stage.setScene(new Scene(retailerTableView));
+            stage.setTitle("Retailers");
+            stage.setWidth(retailerTableView.getScene().getWidth());
+            stage.setHeight(retailerTableView.getScene().getHeight() + windowHeaderSizeAdjust);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void switchToWifiTable(WifiPointList wifiPointList) {
+        try {
+            FXMLLoader wifiTableLoder = new FXMLLoader(getClass().getResource("/fxml/WifiTableView.fxml"));
+            Parent wifiTableView = wifiTableLoder.load();
+            WifiTableController wifiTableController = wifiTableLoder.getController();
+
+            wifiTableController.initModel(user);
+            wifiTableController.setupWithList(wifiPointList.getListName(), wifiPointList.getWifiPoints());
+            wifiTableController.setName();
+            wifiTableController.initContextMenu();
+
+            wifiTableController.setStage(stage);
+            stage.setScene(new Scene(wifiTableView));
+            stage.setTitle("Wifi");
+            stage.setWidth(wifiTableView.getScene().getWidth());
+            stage.setHeight(wifiTableView.getScene().getHeight() + windowHeaderSizeAdjust);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

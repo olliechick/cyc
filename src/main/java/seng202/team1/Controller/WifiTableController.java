@@ -85,6 +85,7 @@ public class WifiTableController extends TableController {
     private ObservableList<WifiPoint> dataPoints;
     private FilteredList<WifiPoint> filteredData;
     private ObservableList<WifiPoint> originalData;
+    private String currentListName;
 
     private final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "/csv/NYC_Free_Public_WiFi_03292017.csv";
 
@@ -92,7 +93,7 @@ public class WifiTableController extends TableController {
      * Displays the currently logged in user's name at the bottom of the table.
      */
     void setName() {
-        nameLabel.setText("Logged in as: " + model.getUserName());
+        nameLabel.setText("Logged in as: " + model.getUserName() + ", List: " + currentListName);
         nameLabel.setVisible(true);
     }
 
@@ -466,11 +467,12 @@ public class WifiTableController extends TableController {
     /**
      * Set up the table to use the given list of points instead of a csv.
      *
-     * @param points the list of WifiPoints to display in the table.
+     * @param listName  The name of the list loaded.
+     * @param points    The list of WifiPoints to display in the table.
      */
-    public void setupWithList(ArrayList<WifiPoint> points) {
+    public void setupWithList(String listName, ArrayList<WifiPoint> points) {
         setFilters(points);
-
+        currentListName = listName;
         setTableViewWifi(points);
         stopLoadingAni();
         setPredicate();
@@ -532,17 +534,17 @@ public class WifiTableController extends TableController {
         }
         }
 
-        @FXML
-        public void clearSearchFilters () {
-            startLatitudeTextField.setText("");
-            startLongitudeTextField.setText("");
-            endLatitudeTextField.setText("");
-            endLongitudeTextField.setText("");
-            warningLabel.setText("");
-            for(Object data : originalData){
-                dataPoints.add((WifiPoint) data);
-            }
-
+    @FXML
+    public void clearSearchFilters () {
+        startLatitudeTextField.setText("");
+        startLongitudeTextField.setText("");
+        endLatitudeTextField.setText("");
+        endLongitudeTextField.setText("");
+        warningLabel.setText("");
+        for(Object data : originalData){
+            dataPoints.add((WifiPoint) data);
         }
+
+    }
 
     }

@@ -84,6 +84,8 @@ public class BikeTableController extends TableController {
     private FilteredList<BikeTrip> filteredData;
     private ObservableList<BikeTrip> originalData;
 
+    private String currentListName;
+
     private final static String DEFAULT_BIKE_TRIPS_FILENAME = "/csv/biketrip.csv";
 
     /**
@@ -140,7 +142,7 @@ public class BikeTableController extends TableController {
      * Display the currently logged in users name at the bottom of the table
      */
     void setName() {
-        nameLabel.setText("Logged in as: " + model.getUserName());
+        nameLabel.setText("Logged in as: " + model.getUserName() + ", List: " + currentListName);
         nameLabel.setVisible(true);
     }
 
@@ -517,11 +519,12 @@ public class BikeTableController extends TableController {
     /**
      * Set up the table to use the given list of points instead of a csv.
      *
+     * @param listName The name of the list loaded.
      * @param points the list of BikeTrips to display in the table.
      */
-    public void setupWithList(ArrayList<BikeTrip> points) {
+    public void setupWithList(String listName, ArrayList<BikeTrip> points) {
         setFilters();
-
+        currentListName = listName;
         setTableViewBike(points);
         stopLoadingAni();
         setPredicate();

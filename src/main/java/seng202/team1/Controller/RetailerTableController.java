@@ -85,13 +85,15 @@ public class RetailerTableController extends TableController {
     private FilteredList<RetailerLocation> filteredData;
     private ObservableList<RetailerLocation> originalData;
 
+    private String currentListName;
+
     private final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "/csv/Lower_Manhattan_Retailers.csv";
 
     /**
      * Display the user name at the bottom of the table
      */
     void setName() {
-        nameLabel.setText("Logged in as: " + model.getUserName());
+        nameLabel.setText("Logged in as: " + model.getUserName() + ", List: " + currentListName);
         nameLabel.setVisible(true);
     }
 
@@ -524,11 +526,12 @@ public class RetailerTableController extends TableController {
     /**
      * Set up the table to use the given list of points instead of a csv.
      *
+     * @param listName The name of the list loaded.
      * @param points the list of RetailerLocations to display in the table.
      */
-    public void setupWithList(ArrayList<RetailerLocation> points) {
+    public void setupWithList(String listName, ArrayList<RetailerLocation> points) {
         setFilters(points);
-
+        currentListName = listName;
         setTableViewRetailer(points);
         stopLoadingAni();
         setPredicate();

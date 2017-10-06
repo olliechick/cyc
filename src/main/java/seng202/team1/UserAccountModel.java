@@ -163,8 +163,6 @@ public class UserAccountModel implements java.io.Serializable {
         return false;
     }
 
-//from dummy Model
-
 
     public ArrayList<BikeTrip> getCustomBikeTrips() {
         ArrayList<BikeTrip> result = new ArrayList<>();
@@ -225,6 +223,12 @@ public class UserAccountModel implements java.io.Serializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    //TODO change to use database list when implemented.
+    public void addBikeTripList(BikeTripList bikeTripList) {
+        bikeTripLists.add(bikeTripList);
+        SerializerImplementation.serializeUser(this);
     }
 
     public ArrayList<BikeTripList> getBikeTripLists() {
