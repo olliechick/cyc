@@ -108,7 +108,7 @@ public class LoginController {
     /**
      * Changes the scene to display the map to user accounts.
      */
-    /*private void launchMap() {
+    private void launchMap() {
 
         try {
             // Changes to the map GUI
@@ -126,7 +126,7 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace(); //File not found
         }
-    }*/
+    }
 
     /**
      * Changes the scene to display the landing screen for analyst/admin users.
@@ -199,8 +199,8 @@ public class LoginController {
         if (PasswordManager.isExpectedPassword(password, user.getSalt(), user.getPassword())) {
             model = user;
             // They got the password right
-
-            launchLandingScreen();
+            launchMap();
+            //launchLandingScreen();
 
         } else {
             // Wrong password
@@ -264,7 +264,8 @@ public class LoginController {
         seng202.team1.UserAccountModel newUser = new seng202.team1.UserAccountModel(gender, birthday, username, password);
         model = newUser;
         //Launch main view
-        launchLandingScreen();
+        //launchLandingScreen();
+        launchMap();
 
 
         seng202.team1.UserAccountModel.createUser(newUser);
