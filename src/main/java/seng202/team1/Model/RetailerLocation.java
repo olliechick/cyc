@@ -239,8 +239,12 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     public String getDescription() {
 
         String description = "Address: " + getAddress();
-        description += "\nBlock-Lot: " + blockLot;
-        description += "\nCo-ordinates: (" + getLatitude() + ", " + getLongitude() + ")";
+        if (blockLot != null) {
+            description += "\nBlock-Lot: " + blockLot;
+        }
+        if (coords != null) {
+            description += "\nCo-ordinates: (" + getLatitude() + ", " + getLongitude() + ")";
+        }
         description += "\nFunction: " + primaryFunction + " (" + secondaryFunction + ")";
 
         return description;
@@ -265,7 +269,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
+        if ( obj == null || getClass() != obj.getClass()) {
             return false;
         }
         if (this == obj) {
