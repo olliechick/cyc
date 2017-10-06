@@ -222,7 +222,7 @@ public class UserAccountModel implements java.io.Serializable {
         try {
             //TODO: Have this thrown further up
             DatabaseManager.open();
-            DatabaseManager.addRecord(point, userName);
+            DatabaseManager.addRecord(point, userName, "My List of Trips");
             DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -96,7 +96,7 @@ public class CSVExporterTest {
 
         // Save bike trip to the database
         try {
-            DatabaseManager.addRecord(bikeTrip, username);
+            DatabaseManager.addRecord(bikeTrip, username, "csvTestExportBikeTrips");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -130,7 +130,7 @@ public class CSVExporterTest {
 
         // Save bike trip to the database
         try {
-            DatabaseManager.addRecord(bikeTrip, username);
+            DatabaseManager.addRecord(bikeTrip, username, "csvTestExportBikeTripsWithNulls");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -169,7 +169,7 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addRecord(wifiPoint, username);
+            DatabaseManager.addRecord(wifiPoint, username, "csvTestExportWifiHotspots");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -209,7 +209,7 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addRecord(wifiPoint, username);
+            DatabaseManager.addRecord(wifiPoint, username, "csvTestExportWifiHotspotsWithNulls");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -243,7 +243,7 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addRecord(retailer, username);
+            DatabaseManager.addRecord(retailer, username, "csvTestExportRetailers");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -276,7 +276,7 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addRecord(retailer, username);
+            DatabaseManager.addRecord(retailer, username, "csvTestExportRetailersWithNulls");
         } catch (SQLException e) {
             e.printStackTrace();
         }

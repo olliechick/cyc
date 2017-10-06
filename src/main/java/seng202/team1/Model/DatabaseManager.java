@@ -1,6 +1,7 @@
 package seng202.team1.Model;
 
 
+import javax.xml.transform.Result;
 import java.awt.Point;
 import java.io.File;
 import java.sql.Connection;
@@ -79,11 +80,10 @@ public class DatabaseManager {
      * Creates all database tables.
      */
     private static void createDatabaseTables() {
-        // TODO: Create required tables for database
         String createTripsTable = "CREATE TABLE trip\n" +
                 "(\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
-                "    username TEXT,\n" +
+                "    listid REFERENCES list,\n" +
                 "    duration BIGINT,\n" +
                 "    startTime TEXT,\n" +
                 "    stopTime TEXT,\n" +
@@ -100,7 +100,7 @@ public class DatabaseManager {
         String createRetailerTable = "CREATE TABLE retailer\n" +
                 "(\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
-                "    username TEXT,\n" +
+                "    listid INTEGER REFERENCES list,\n" +
                 "    name TEXT NOT NULL,\n" +
                 "    addressLine1 TEXT,\n" +
                 "    addressLine2 TEXT,\n" +
@@ -117,7 +117,7 @@ public class DatabaseManager {
         String createWifiTable = "CREATE TABLE wifi\n" +
                 "(\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
-                "    username TEXT,\n" +
+                "    listid INTEGER REFERENCES list,\n" +
                 "    objectID INTEGER,\n" +
                 "    latitude FLOAT,\n" +
                 "    longitude FLOAT,\n" +
@@ -136,14 +136,22 @@ public class DatabaseManager {
                 "    dateTimeActivated TEXT\n" +
                 ");";
 
+
+        String createListTable = "CREATE TABLE list\n" +
+                "(\n" +
+                "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
+                "    username TEXT NOT NULL,\n" +
+                "    listName TEXT\n" +
+                ");";
+
         try {
             // Check if tables already exist
             String tableQuery = "SELECT name FROM sqlite_master WHERE type='table'";
             PreparedStatement preparedStatement = connection.prepareStatement(tableQuery);
             ResultSet rs = preparedStatement.executeQuery();
 
-            boolean tripTableExists, retailerTableExists, wifiTableExists;
-            tripTableExists = retailerTableExists = wifiTableExists = false;
+            boolean tripTableExists, retailerTableExists, wifiTableExists, listTableExists;
+            tripTableExists = retailerTableExists = wifiTableExists = listTableExists = false;
             while (rs.next()) {
                 String table = rs.getString("name");
 
@@ -156,6 +164,9 @@ public class DatabaseManager {
                         break;
                     case "wifi":
                         wifiTableExists = true;
+                        break;
+                    case "list":
+                        listTableExists = true;
                         break;
                 }
             }
@@ -183,7 +194,13 @@ public class DatabaseManager {
                 PreparedStatement s3 = connection.prepareStatement(createRetailerTable);
                 s3.execute();
                 System.out.println("Retailer table created.");
-
+            }
+            if (listTableExists) {
+                System.out.println("List table already exists.");
+            } else {
+                PreparedStatement s5 = connection.prepareStatement(createListTable);
+                s5.execute();
+                System.out.println("List table created.");
             }
 
         } catch (SQLException e) {
@@ -231,32 +248,38 @@ public class DatabaseManager {
      * @throws SQLException when record cannot be added.
      * @author Ridge Nairn
      */
-    private static void addRecordExistingConnection(DataPoint point, String username) throws SQLException {
+    private static void addRecordExistingConnection(DataPoint point, String username, String listName) throws SQLException {
         PreparedStatement preparedStatement;
         String statement;
         int numOfQs; //number of question marks to put in the statement
 
         if (point instanceof RetailerLocation) {
-            numOfQs = 12;
-            statement = "INSERT INTO retailer (name, addressLine1, addressLine2, city, state, zipcode, blockLot, " +
-                    "primaryFunction, secondaryFunction, latitude, longitude, username) " +
-                    "VALUES (" + new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
+            numOfQs = 11;
+        /*    statement = "INSERT INTO retailer (userid, listid, name, addressLine1, addressLine2, city, state, " +
+                    "zipcode, blockLot, primaryFunction, secondaryFunction, latitude, longitude) " +
+                    "(SELECT listid, userid " +
+                    "FROM list INNER JOIN user ON list.userid=user.userid " +
+                    "WHERE user.username=? AND list.listName=?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"; */
+            statement = "INSERT INTO retailer (listid, name, addressLine1, addressLine2, city, state, " +
+                    "zipcode, blockLot, primaryFunction, secondaryFunction, latitude, longitude) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    //new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?";
 
             RetailerLocation retailer = (RetailerLocation) point;
             preparedStatement = connection.prepareStatement(statement);
 
-            preparedStatement.setString(1, retailer.getName());
-            preparedStatement.setString(2, retailer.getAddressLine1());
-            preparedStatement.setString(3, retailer.getAddressLine2());
-            preparedStatement.setString(4, retailer.getCity());
-            preparedStatement.setString(5, retailer.getState());
-            preparedStatement.setString(6, Integer.toString(retailer.getZipcode()));
-            preparedStatement.setString(7, retailer.getBlockLot());
-            preparedStatement.setString(8, retailer.getPrimaryFunction());
-            preparedStatement.setString(9, retailer.getSecondaryFunction());
-            preparedStatement.setFloat(10, retailer.getLatitude());
-            preparedStatement.setFloat(11, retailer.getLongitude());
-            preparedStatement.setString(12, username);
+            preparedStatement.setInt(3, getListID(username, listName));
+            preparedStatement.setString(4, retailer.getName());
+            preparedStatement.setString(5, retailer.getAddressLine1());
+            preparedStatement.setString(6, retailer.getAddressLine2());
+            preparedStatement.setString(7, retailer.getCity());
+            preparedStatement.setString(8, retailer.getState());
+            preparedStatement.setString(9, Integer.toString(retailer.getZipcode()));
+            preparedStatement.setString(10, retailer.getBlockLot());
+            preparedStatement.setString(11, retailer.getPrimaryFunction());
+            preparedStatement.setString(12, retailer.getSecondaryFunction());
+            preparedStatement.setFloat(13, retailer.getLatitude());
+            preparedStatement.setFloat(14, retailer.getLongitude());
 
             preparedStatement.execute();
 
@@ -333,9 +356,9 @@ public class DatabaseManager {
      * @param username The username of the user whose point is being added
      * @throws SQLException
      */
-    public static void addRecord(DataPoint point, String username) throws SQLException {
+    public static void addRecord(DataPoint point, String username, String listName) throws SQLException {
         DatabaseManager.open();
-        addRecordExistingConnection(point, username);
+        addRecordExistingConnection(point, username, listName);
         DatabaseManager.close();
     }
 
@@ -347,11 +370,11 @@ public class DatabaseManager {
      * @param username Username the points are to be associated with.
      * @throws SQLException
      */
-    public static void addRecords(ArrayList<? extends DataPoint> points, String username) throws SQLException{
+    public static void addRecords(ArrayList<? extends DataPoint> points, String username, String listName) throws SQLException{
         DatabaseManager.open();
         for (DataPoint point : points) {
             try {
-                addRecordExistingConnection(point, username);
+                addRecordExistingConnection(point, username, listName);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -407,6 +430,26 @@ public class DatabaseManager {
     }
 
 
+    public static int getUserID(String username) {
+        String statement = "SELECT id FROM user WHERE username=?;";
+
+        PreparedStatement preparedStatement;
+
+        try {
+            preparedStatement = connection.prepareStatement(statement);
+            preparedStatement.setString(1, username);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            return rs.getInt("id");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+
     /**
      * Gets all retailers associated with a user.
      *
@@ -414,7 +457,7 @@ public class DatabaseManager {
      * @return all of the retailer points associated to this user.
      */
     public static ArrayList<RetailerLocation> getRetailers(String username) {
-        String statement = "SELECT * FROM retailer WHERE username=?";
+        String statement = "SELECT * FROM retailer WHERE userid=?";
         PreparedStatement preparedStatement;
         ArrayList<RetailerLocation> result = new ArrayList<>();
         try {
@@ -446,6 +489,46 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static int getListID(String username, String listName) {
+        String statement = "SELECT id FROM list WHERE username=? AND listName=?";
+        PreparedStatement preparedStatement;
+
+        try {
+            preparedStatement = connection.prepareStatement(statement);
+
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, listName);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static void createNewList(String username, String listName) {
+        if (getListID(username, listName) == 0) { // List does not exist
+            String statement = "INSERT INTO list (username, listName) VALUES (?, ?);";
+            PreparedStatement preparedStatement;
+
+            try {
+                preparedStatement = connection.prepareStatement(statement);
+
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, listName);
+
+                preparedStatement.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            System.out.println("List already exists.");
+        }
     }
 
 

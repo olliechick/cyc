@@ -118,7 +118,7 @@ public class DatabaseManagerTest {
     @Test
     public void addRetailerPoint() throws Exception {
         try {
-            DatabaseManager.addRecord(retailer, model.getUserName());
+            DatabaseManager.addRecord(retailer, model.getUserName(), "myRetailers");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -130,7 +130,7 @@ public class DatabaseManagerTest {
     @Test
     public void addWifiPoint() throws Exception {
         try {
-            DatabaseManager.addRecord(wifi, model.getUserName());
+            DatabaseManager.addRecord(wifi, model.getUserName(), "myWifi");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -144,7 +144,7 @@ public class DatabaseManagerTest {
     public void addBikeTrip() throws Exception {
 
         try {
-            DatabaseManager.addRecord(trip, model.getUserName());
+            DatabaseManager.addRecord(trip, model.getUserName(), "myBikeTrips");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -164,7 +164,7 @@ public class DatabaseManagerTest {
             trips.add(trip);
         }
         try {
-            DatabaseManager.addRecords(trips, model.getUserName());
+            DatabaseManager.addRecords(trips, model.getUserName(), "lotsOfBikeTrips");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -176,8 +176,8 @@ public class DatabaseManagerTest {
     @Test
     public void getOnlyUserTrips() throws Exception {
         try {
-            DatabaseManager.addRecord(trip, model.getUserName());
-            DatabaseManager.addRecord(trip, "notMyUser");
+            DatabaseManager.addRecord(trip, model.getUserName(), "myTrips");
+            DatabaseManager.addRecord(trip, "notMyUser", "myTrips");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -185,5 +185,6 @@ public class DatabaseManagerTest {
         assertEquals(1, DatabaseManager.getBikeTrips(model.getUserName()).size());
         DatabaseManager.close();
     }
+
 
 }
