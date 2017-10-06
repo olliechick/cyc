@@ -13,7 +13,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -25,7 +30,6 @@ import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
-import java.security.PublicKey;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -416,7 +420,7 @@ public class RetailerTableController extends TableController {
             RetailerLocation retailerLocation = addRetailerDialog.getRetailerLocation();
             if (retailerLocation != null) {
                 if (dataPoints.contains(retailerLocation)) {
-                    AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
+                    AlertGenerator.createAlert("Duplicate retailer", "That retailer already exists!");
                 } else {
                     dataPoints.add(retailerLocation);
                     originalData.add(retailerLocation);
@@ -477,8 +481,8 @@ public class RetailerTableController extends TableController {
      */
     public void searchRetailersbyLatLong() {
         Double startLat, startLong;
-        Double endLat = 0.00;
-        Double endLong = 0.00;
+        Double endLat;
+        Double endLong;
         Double delta = 100.0;
         warningLabel.setTextFill(Color.BLACK);
         warningLabel.setText("");
