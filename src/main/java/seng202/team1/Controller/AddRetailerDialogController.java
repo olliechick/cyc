@@ -104,7 +104,7 @@ public class AddRetailerDialogController {
     void addRetailer() {
         if (checkFields()) {
 
-            coords.setLocation(latitude, longitude);
+            coords.setLocation(longitude, latitude);
 
             retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city,
                                                     state, zipcode, blockLot, primaryFunction,

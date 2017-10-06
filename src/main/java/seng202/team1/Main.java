@@ -42,6 +42,7 @@ public class Main extends Application {
 
             Scene scene = new Scene(root);
             scene.getStylesheets().add("/css/loginStyle.css");
+
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {

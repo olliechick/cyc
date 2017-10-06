@@ -71,6 +71,7 @@ public class DatabaseManager {
         if (isDatabaseConnected()) {
             connection.commit();
             connection.close();
+            connection = null;
         }
         System.out.println("Database disconnected.");
     }
