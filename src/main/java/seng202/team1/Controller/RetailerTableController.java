@@ -25,7 +25,6 @@ import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
-import java.security.PublicKey;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -544,7 +543,7 @@ public class RetailerTableController extends TableController {
         MapController map = showMapLoader.getController();
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
-        map.initModel(model, stage);
+        map.setUp(model, stage);
         stage.show();
 
         map.showGivenShop(selectedShop);

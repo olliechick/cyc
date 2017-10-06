@@ -36,4 +36,13 @@ public class WindowManager {
 
         return stage;
     }
+
+    public void closeAllTrackedStages() {
+        for (Stage stage : stagesOpen) {
+            stage.close();
+        }
+        stagesOpen.clear();
+    }
+
+
 }

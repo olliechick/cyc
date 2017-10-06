@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Worker;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -164,9 +165,16 @@ public class MapController {
     }
     //private SingleSelectionModel<Tab> typeViewSelectionModel = typeSelectorTabPane.getSelectionModel();
 
-    void initModel(UserAccountModel model, Stage stage) {
+    void setUp(UserAccountModel model, Stage stage) {
         this.model = model;
         this.stage = stage;
+
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                closeEventHandler(event);
+            }
+        });
         resultsLabel.setText("");
 
     }
@@ -830,10 +838,34 @@ public class MapController {
 
     @FXML
     public void close() {
-        Platform.exit();
+        Boolean close = true;
+
+        if (!windowManager.getStagesOpen().isEmpty()) {
+            close = AlertGenerator.createChoiceDialog("Close?", "You still have some windows open.",
+                                                    "\nYour data might not be saved\n\nAre you sure you want to exit?");
+        }
+
+        if (close) {
+            Platform.exit();
+        }
     }
 
-    void initModel(UserAccountModel userAccountModel) {
+    private void closeEventHandler(WindowEvent event) {
+        Boolean close = true;
+
+        if (!windowManager.getStagesOpen().isEmpty()) {
+            close = AlertGenerator.createChoiceDialog("Close?", "You still have some windows open.",
+                    "\nYour data might not be saved\n\nAre you sure you want to exit?");
+        }
+
+        if (close) {
+            Platform.exit();
+        } else {
+            event.consume();
+        }
+    }
+
+    void setUp(UserAccountModel userAccountModel) {
 
         this.model = userAccountModel;
 
@@ -925,9 +957,10 @@ public class MapController {
             FXMLLoader listViewLoader = new FXMLLoader(getClass().getResource("/fxml/ListViewer.fxml"));
             Parent listView = listViewLoader.load();
             ListViewerController listViewController = listViewLoader.getController();
-            listViewController.setUser(model);
 
             Stage stage1 = windowManager.createTrackedStage();
+            listViewController.setUp(model, stage1);
+
             stage1.setScene(new Scene(listView));
             stage1.setTitle("Lists");
             stage1.show();
@@ -949,6 +982,8 @@ public class MapController {
         if (confirmLogout) {
             model = null;
             try {
+                windowManager.closeAllTrackedStages();
+
                 FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
                 Parent loginView = loginLoader.load();
 

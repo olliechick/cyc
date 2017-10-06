@@ -148,7 +148,7 @@ public class WifiTableController extends TableController {
         MapController map = showMapLoader.getController();
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
-        map.initModel(model, stage);
+        map.setUp(model, stage);
         stage.show();
 
         map.showGivenWifi(selectedHotspot);

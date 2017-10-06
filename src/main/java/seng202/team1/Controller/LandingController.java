@@ -137,7 +137,7 @@ public class LandingController {
 
 
             Stage stage1 = new Stage();
-            mapController.initModel(model, stage1);
+            mapController.setUp(model, stage1);
             stage1.setScene(new Scene(mapView));
             stage1.initModality(Modality.APPLICATION_MODAL);
             stage1.showAndWait();
@@ -172,7 +172,7 @@ public class LandingController {
         ChangePasswordController changePasswordController = passwordLoader.getController();
 
         Stage stage1 = new Stage();
-        changePasswordController.initModel(model,stage1);
+        changePasswordController.setUp(model,stage1);
         stage1.setScene(new Scene(passwordView));
         stage1.initModality(Modality.APPLICATION_MODAL);
         stage1.showAndWait();
