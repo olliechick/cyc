@@ -242,7 +242,7 @@
             <TableView fx:id="retailerDistanceTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
               <columns>
                   <TableColumn prefWidth="100.0" text="Distance (m)" />
-                <TableColumn prefWidth="100.0" text="Name" />
+                    <TableColumn prefWidth="100.0" text="Name" />
                   <TableColumn prefWidth="100.0" text="Primary Function" />
 
 

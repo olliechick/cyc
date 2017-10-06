@@ -294,29 +294,25 @@
          maxZoom: 15});
         }
 
-    document.circleRetailer = function circleRetailer(index, icon, iconRevert)
-    {
-        //retailerMarkerArray[index].setVisible(true);
-        retailerMarkerArray[index].setIcon(icon);
-        setTimeout(function () {
-        retailerMarkerArray[index].setIcon(iconRevert);
-        }, 100000);
+        document.changeRetailerIcon = function changeRetailerIcon(index, icon) {
 
-    }
+            retailerMarkerArray[index].setVisible(true);
+            retailerMarkerArray[index].setIcon(icon);
+        }
 
 
-    document.circleWIFI = function circleWIFI(index, icon, iconRevert)
-    {
-        wifiMarkerArray[index].setVisible(true);
-        wifiMarkerArray[index].setIcon(icon);
-        setTimeout(function () {
-        wifiMarkerArray[index].setIcon(iconRevert);
-        }, 100000);
 
-    }
+        document.changeWIFIIcon = function changeWIFIicon(index, icon) {
+            wifiMarkerArray[index].setVisible(true);
+            wifiMarkerArray[index].setIcon(icon);
 
-      document.circleAndNumberWIFI = function circleAndNumberWIFI(index, icon, number)
-    {
+        }
+
+        document.resetWIFIIcon = function resetWIFIIcon(icon) {
+            for (i = 0; i < wifiMarkerArray.length; i++) {
+                wifiMarkerArray[i].setIcon(icon);
+            }
+        }
 
         document.resetRetailerIcon = function resetRetailerIcon(icon) {
             for (i = 0; i < retailerMarkerArray.length; i++) {
