@@ -2,6 +2,7 @@ package seng202.team1.Controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,7 +14,11 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -95,6 +100,15 @@ public class LoginController {
 
     private final static int MIN_PASSWORD_LENGTH = 0;
 
+    @FXML
+    private TabPane loginOrSignup;
+
+    @FXML
+    private Tab loginTab;
+
+    @FXML
+    private Tab signUpTab;
+
     private UserAccountModel model;
 
     private final ObservableList<String> genderList = FXCollections.observableArrayList("", "Male", "Female");
@@ -104,7 +118,6 @@ public class LoginController {
         genderBox.setItems(genderList);
         genderBox.getSelectionModel().selectFirst();
         birthdayEntryField.setValue(LocalDate.of(1990, 1, 1));
-
     }
 
     /**

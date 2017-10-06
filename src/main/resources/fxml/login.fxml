@@ -41,7 +41,7 @@
         </Text>
         <TabPane blendMode="MULTIPLY" nodeOrientation="LEFT_TO_RIGHT" snapToPixel="false" tabClosingPolicy="UNAVAILABLE" tabMaxWidth="Infinity" tabMinWidth="126.5" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
             <tabs>
-                <Tab text="Log in">
+                <Tab fx:id="loginTab" text="Log in">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="206.0" prefWidth="248.0">
                             <children>
@@ -67,7 +67,7 @@
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab text="Sign up">
+                <Tab fx:id="signUpTab" text="Sign up">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="246.0" prefWidth="381.0">
                             <children>
