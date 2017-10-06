@@ -117,6 +117,25 @@ public class ListViewerController {
         BikeTripList selectedItem = bikeListView.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
             System.out.println(selectedItem.getBikeTrips().size() + " trips in list");
+
+            try {
+                FXMLLoader bikeTableLoder = new FXMLLoader(getClass().getResource("/fxml/BikeTableView.fxml"));
+                Parent bikeTableView = bikeTableLoder.load();
+                BikeTableController bikeTableController = bikeTableLoder.getController();
+
+                bikeTableController.initModel(user);
+                bikeTableController.setupWithList(selectedItem.getBikeTrips());
+                bikeTableController.setName();
+                bikeTableController.initContextMenu();
+
+                Stage stage1 = new Stage();
+                bikeTableController.setStage(stage1);
+                stage1.setScene(new Scene(bikeTableView));
+                stage1.setTitle("Wifi");
+                stage1.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -125,6 +144,25 @@ public class ListViewerController {
         RetailerLocationList selectedItem = retailerListView.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
             System.out.println(selectedItem.getRetailerLocations().size() + " retailers in list");
+
+            try {
+                FXMLLoader retailerTableLoder = new FXMLLoader(getClass().getResource("/fxml/RetailerTableView.fxml"));
+                Parent retailerTableView = retailerTableLoder.load();
+                RetailerTableController retailerTableController = retailerTableLoder.getController();
+
+                retailerTableController.initModel(user);
+                retailerTableController.setupWithList(selectedItem.getRetailerLocations());
+                retailerTableController.setName();
+                retailerTableController.initContextMenu();
+
+                Stage stage1 = new Stage();
+                retailerTableController.setStage(stage1);
+                stage1.setScene(new Scene(retailerTableView));
+                stage1.setTitle("Wifi");
+                stage1.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }

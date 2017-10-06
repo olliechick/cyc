@@ -416,7 +416,7 @@ public class RetailerTableController extends TableController {
      */
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
-        importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME, false);
+        //importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME, false);
         warningLabel.setText("");
     }
 
@@ -485,6 +485,15 @@ public class RetailerTableController extends TableController {
         System.out.println("Found: " + results.size() + " results");
         dataPoints.clear();
         dataPoints.addAll(results);
+    }
+
+    public void setupWithList(ArrayList<RetailerLocation> points) {
+        setFilters(points);
+
+        setTableViewRetailer(points);
+        stopLoadingAni();
+        setPredicate();
+        clearFilters();
     }
 
 

@@ -394,7 +394,7 @@ public class BikeTableController extends TableController {
     void initModel(UserAccountModel userAccountModel) {
 
         this.model = userAccountModel;
-        importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME, false);
+        //importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME, false);
         warningLabel.setText("");
     }
 
@@ -469,6 +469,16 @@ public class BikeTableController extends TableController {
         dataPoints.clear();
         dataPoints.addAll(results);
 
+    }
+
+    public void setupWithList(ArrayList<BikeTrip> points) {
+        setFilters();
+
+        setTableViewBike(points);
+        stopLoadingAni();
+        setPredicate();
+        populateCustomBikeTrips();
+        clearFilters();
     }
 
 }
