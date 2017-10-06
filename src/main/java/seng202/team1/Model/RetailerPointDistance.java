@@ -86,7 +86,7 @@ public class RetailerPointDistance {
      * @return trip distance to decimal places
      */
     public Double getTripDistanceTwoD() {
-        return Double.parseDouble(new DecimalFormat("#.##").format(distance));
+        return Double.parseDouble(new DecimalFormat("0.").format(distance));
     }
 
     public void setDistance(Double distance) {

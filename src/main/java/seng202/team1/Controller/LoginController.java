@@ -93,6 +93,7 @@ public class LoginController {
     @FXML
     private Button viewTOS;
 
+    private final static int MIN_PASSWORD_LENGTH = 0;
 
     private UserAccountModel model;
 
@@ -183,7 +184,7 @@ public class LoginController {
         if (username.isEmpty()) {
             usernameLabel.setTextFill(Color.RED);
             passwordLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "Please enter a username.");
+            AlertGenerator.createAlert("Please enter a username.");
             return;
         }
         //model.setUserName(username);
@@ -193,7 +194,7 @@ public class LoginController {
         } catch (IOException e) {
             usernameLabel.setTextFill(Color.RED);
             passwordLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "Either Username or Password is incorrect. Please try again");
+            AlertGenerator.createAlert("Either Username or Password is incorrect. Please try again");
             return;
         }
 
@@ -208,7 +209,7 @@ public class LoginController {
             // Wrong password
             usernameLabel.setTextFill(Color.BLACK);
             passwordLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "Either Username or Password is incorrect. Please try again");
+            AlertGenerator.createAlert("Either Username or Password is incorrect. Please try again");
         }
     }
 
@@ -238,28 +239,49 @@ public class LoginController {
             gender = 'u';
         }
 
-
+        // Validity checks
         if (username.isEmpty()) {
+            // empty username
             newUsernameLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "Please enter a username.");
+            newPasswordLabel.setTextFill(Color.BLACK);
+            confirmPasswordLabel.setTextFill(Color.BLACK);
+            acceptTermsOfService.setTextFill(Color.BLACK);
+            AlertGenerator.createAlert("Please enter a username.");
+            return;
+        } else if (userAlreadyExists(username)) {
+            // duplicate username
+            newUsernameLabel.setTextFill(Color.RED);
+            newPasswordLabel.setTextFill(Color.BLACK);
+            confirmPasswordLabel.setTextFill(Color.BLACK);
+            acceptTermsOfService.setTextFill(Color.BLACK);
+            AlertGenerator.createAlert("A user with that name already exist. Please try another username.");
             return;
         } else {
+            // username is ok
             newUsernameLabel.setTextFill(Color.BLACK);
         }
-        if (!password.equals(confirmPassword)){
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            // short password
+            newPasswordLabel.setTextFill(Color.RED);
+            confirmPasswordLabel.setTextFill(Color.BLACK);
+            acceptTermsOfService.setTextFill(Color.BLACK);
+            AlertGenerator.createAlert("Password must be longer than " +
+                    MIN_PASSWORD_LENGTH + " characters.");
+            return;
+        } else if (!password.equals(confirmPassword)) {
+            // different password and confirmation password
             newPasswordLabel.setTextFill(Color.RED);
             confirmPasswordLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "Passwords do not match please try again.");
+            acceptTermsOfService.setTextFill(Color.BLACK);
+            AlertGenerator.createAlert("Passwords do not match. Please try again.");
             return;
+        } else {
+            newPasswordLabel.setTextFill(Color.BLACK);
+            confirmPasswordLabel.setTextFill(Color.BLACK);
         }
-        if(!acceptTermsOfService.isSelected()){
+        if (!acceptTermsOfService.isSelected()) {
             acceptTermsOfService.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "You must accept the terms of service to continue");
-            return;
-        }
-        if (userAlreadyExists(username)){
-            usernameLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "A user with that name already exist.\nPlease try another user name");
+            AlertGenerator.createAlert("You must accept the terms of service to continue.");
             return;
         }
 
@@ -277,11 +299,12 @@ public class LoginController {
     /**
      * Takes a username and returns true if the user already exists
      * Note will return true if user is somehow a dir.
+     *
      * @param username username entered on sign up
      * @return If it exists or not
      */
-    private static boolean userAlreadyExists(String username){
-        File tmp = new File(Directory.USERS.directory()+username+".user");
+    private static boolean userAlreadyExists(String username) {
+        File tmp = new File(Directory.USERS.directory() + username + ".user");
         return tmp.exists();
     }
 }
