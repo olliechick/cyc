@@ -5,7 +5,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
@@ -149,12 +148,6 @@ public class MapController {
     private TableView<WIFIPointDistance> wifiDistanceTable;
     @FXML
     private TabPane typeSelectorTabPane;
-    @FXML
-    private Tab routeTab;
-    @FXML
-    private Tab wifiTab;
-    @FXML
-    private Tab retailersTab;
 
 
     @FXML
