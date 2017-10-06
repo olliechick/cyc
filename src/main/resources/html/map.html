@@ -300,6 +300,12 @@
             retailerMarkerArray[index].setIcon(icon);
         }
 
+          document.changeWIFIIcon = function changeWIFIIcon(index, icon) {
+
+              wifiMarkerArray[index].setVisible(true);
+              wifiMarkerArray[index].setIcon(icon);
+          }
+
       document.showRetailerInFocus = function showRetailerInFocus(index, icon)
       {
           retailerMarkerArray[index].setVisible(true);
