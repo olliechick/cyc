@@ -16,6 +16,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team1.Model.Directory;
 import seng202.team1.Model.PasswordManager;
@@ -119,7 +120,7 @@ public class LoginController {
 
 
             Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Map can take over
-            mapController.initModel(model, stage);
+            mapController.setUp(model, stage);
             stage.setScene(new Scene(mapView));
             stage.show();
 
@@ -164,6 +165,7 @@ public class LoginController {
         Stage tosStage = new Stage();
         tosStage.setScene(new Scene(tosView));
         tosController.initialize(tosStage);
+        tosStage.initModality(Modality.APPLICATION_MODAL);
         tosStage.show();
     }
 

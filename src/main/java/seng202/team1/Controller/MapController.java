@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Worker;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,6 +22,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import netscape.javascript.JSObject;
 import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
 import org.codefx.libfx.control.webview.WebViews;
@@ -61,6 +63,8 @@ public class MapController {
     public ArrayList<String> uniqueProviders = null;
     public ArrayList<BikeTrip> tripsNearPoint = null;
     public int currentTripCounter = 0;
+
+    private WindowManager windowManager = new WindowManager();
 
     ArrayList<RetailerLocation> retailerPoints = null;
     ArrayList<WifiPoint> wifiPoints = null;
@@ -161,9 +165,16 @@ public class MapController {
     }
     //private SingleSelectionModel<Tab> typeViewSelectionModel = typeSelectorTabPane.getSelectionModel();
 
-    void initModel(UserAccountModel model, Stage stage) {
+    void setUp(UserAccountModel model, Stage stage) {
         this.model = model;
         this.stage = stage;
+
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                closeEventHandler(event);
+            }
+        });
         resultsLabel.setText("");
 
     }
@@ -827,10 +838,34 @@ public class MapController {
 
     @FXML
     public void close() {
-        Platform.exit();
+        Boolean close = true;
+
+        if (!windowManager.getStagesOpen().isEmpty()) {
+            close = AlertGenerator.createChoiceDialog("Close?", "You still have some windows open.",
+                                                    "\nYour data might not be saved\n\nAre you sure you want to exit?");
+        }
+
+        if (close) {
+            Platform.exit();
+        }
     }
 
-    void initModel(UserAccountModel userAccountModel) {
+    private void closeEventHandler(WindowEvent event) {
+        Boolean close = true;
+
+        if (!windowManager.getStagesOpen().isEmpty()) {
+            close = AlertGenerator.createChoiceDialog("Close?", "You still have some windows open.",
+                    "\nYour data might not be saved\n\nAre you sure you want to exit?");
+        }
+
+        if (close) {
+            Platform.exit();
+        } else {
+            event.consume();
+        }
+    }
+
+    void setUp(UserAccountModel userAccountModel) {
 
         this.model = userAccountModel;
 
@@ -922,9 +957,10 @@ public class MapController {
             FXMLLoader listViewLoader = new FXMLLoader(getClass().getResource("/fxml/ListViewer.fxml"));
             Parent listView = listViewLoader.load();
             ListViewerController listViewController = listViewLoader.getController();
-            listViewController.setUser(model);
 
-            Stage stage1 = new Stage();
+            Stage stage1 = windowManager.createTrackedStage();
+            listViewController.setUp(model, stage1);
+
             stage1.setScene(new Scene(listView));
             stage1.setTitle("Lists");
             stage1.show();
@@ -936,17 +972,28 @@ public class MapController {
 
     public void logout() {
         System.out.println("Logout");
-        model = null;
-        try {
-            FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-            Parent loginView = loginLoader.load();
+        boolean confirmLogout = true;
 
-            Scene loginScene = new Scene(loginView);
-            loginScene.getStylesheets().add("/css/loginStyle.css");
-            stage.setScene(loginScene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!windowManager.getStagesOpen().isEmpty()) {
+            confirmLogout = AlertGenerator.createChoiceDialog("Close", "You still have tables open.",
+                    "\nYour data might not be saved.\n\nAre you sure you want to logout?");
+        }
+
+        if (confirmLogout) {
+            model = null;
+            try {
+                windowManager.closeAllTrackedStages();
+
+                FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+                Parent loginView = loginLoader.load();
+
+                Scene loginScene = new Scene(loginView);
+                loginScene.getStylesheets().add("/css/loginStyle.css");
+                stage.setScene(loginScene);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -36,6 +36,7 @@ public class ListViewerController {
 
 
     private UserAccountModel user;
+    private Stage stage;
 
     public void initialize() {
 
@@ -104,6 +105,11 @@ public class ListViewerController {
         });
     }
 
+    public void setUp(UserAccountModel user, Stage stage) {
+        setUser(user);
+        this.stage = stage;
+    }
+
     public void setUser(UserAccountModel user) {
         this.user = user;
         bikeListView.getItems().addAll(user.getBikeTripLists());
@@ -128,11 +134,10 @@ public class ListViewerController {
                 bikeTableController.setName();
                 bikeTableController.initContextMenu();
 
-                Stage stage1 = new Stage();
-                bikeTableController.setStage(stage1);
-                stage1.setScene(new Scene(bikeTableView));
-                stage1.setTitle("Bike Trips");
-                stage1.show();
+                bikeTableController.setStage(stage);
+                stage.setScene(new Scene(bikeTableView));
+                stage.setTitle("Bike Trips");
+                stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -155,11 +160,10 @@ public class ListViewerController {
                 retailerTableController.setName();
                 retailerTableController.initContextMenu();
 
-                Stage stage1 = new Stage();
-                retailerTableController.setStage(stage1);
-                stage1.setScene(new Scene(retailerTableView));
-                stage1.setTitle("Retailers");
-                stage1.show();
+                retailerTableController.setStage(stage);
+                stage.setScene(new Scene(retailerTableView));
+                stage.setTitle("Retailers");
+                stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -182,11 +186,10 @@ public class ListViewerController {
                 wifiTableController.setName();
                 wifiTableController.initContextMenu();
 
-                Stage stage1 = new Stage();
-                wifiTableController.setStage(stage1);
-                stage1.setScene(new Scene(wifiTableView));
-                stage1.setTitle("Wifi");
-                stage1.show();
+                wifiTableController.setStage(stage);
+                stage.setScene(new Scene(wifiTableView));
+                stage.setTitle("Wifi");
+                stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
             }

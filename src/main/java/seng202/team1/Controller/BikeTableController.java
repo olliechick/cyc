@@ -242,7 +242,7 @@ public class BikeTableController extends TableController {
         MapController map = showMapLoader.getController();
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
-        map.initModel(model, stage);
+        map.setUp(model, stage);
         stage.show();
 
         map.showGivenTrip(selectedBikeTrip);
