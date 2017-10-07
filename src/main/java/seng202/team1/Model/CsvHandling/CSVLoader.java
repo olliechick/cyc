@@ -478,15 +478,31 @@ public class CSVLoader {
                 }
 
                 // Try to get coords
-                Point.Float coords = new Point.Float();
+                Float latitude;
+                Float longitude;
+                Point.Float coords;
                 try {
-                    coords.y = Float.parseFloat(record.get(9)); //latitude
-                    coords.x = Float.parseFloat(record.get(10)); //longitude
+                    latitude = Float.parseFloat(record.get(9));
+                    if (latitude < -90 || latitude > 90) {
+                        throw new NumberFormatException("Latitude must be between -90 and 90.");
+                    }
+                    longitude = Float.parseFloat(record.get(10));
+                    if (longitude < -180 || longitude > 180) {
+                        throw new NumberFormatException("Longitude must be between -180 and 180.");
+                    }
+                    coords = new Point.Float(longitude, latitude);
                 } catch (Exception e) {
                     //Now try in cols 10 and 11
                     try {
-                        coords.y = Float.parseFloat(record.get(10)); //latitude
-                        coords.x = Float.parseFloat(record.get(11)); //longitude
+                        latitude = Float.parseFloat(record.get(10));
+                        if (latitude < -90 || latitude > 90) {
+                            throw new NumberFormatException("Latitude must be between -90 and 90.");
+                        }
+                        longitude = Float.parseFloat(record.get(11));
+                        if (longitude < -180 || longitude > 180) {
+                            throw new NumberFormatException("Longitude must be between -180 and 180.");
+                        }
+                        coords = new Point.Float(longitude, latitude);
                     } catch (Exception e2) {
                         // Couldn't get the coords for whatever reason. Set them to null.
                         coords = null;
