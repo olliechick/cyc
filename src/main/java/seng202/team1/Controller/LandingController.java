@@ -137,7 +137,7 @@ public class LandingController {
 
 
             Stage stage1 = new Stage();
-            mapController.initModel(model, stage1);
+            mapController.setUp(model, stage1);
             stage1.setScene(new Scene(mapView));
             stage1.initModality(Modality.APPLICATION_MODAL);
             stage1.showAndWait();
@@ -149,7 +149,7 @@ public class LandingController {
     /**
      * Logout the current user and switch back to the login screen.
      */
-    public void logout() {
+    /*public void logout() {
         System.out.println("Logout");
         model = null;
         try {
@@ -163,22 +163,22 @@ public class LandingController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
-    @FXML
+    /*@FXML
     public void startPasswordChange() throws IOException {
         FXMLLoader passwordLoader = new FXMLLoader(getClass().getResource("/fxml/changePassword.fxml"));
         Parent passwordView = passwordLoader.load();
         ChangePasswordController changePasswordController = passwordLoader.getController();
 
         Stage stage1 = new Stage();
-        changePasswordController.initModel(model,stage1);
+        changePasswordController.setUp(model,stage1);
         stage1.setScene(new Scene(passwordView));
         stage1.initModality(Modality.APPLICATION_MODAL);
         stage1.showAndWait();
-    }
+    }*/
 
-    public void openListViewer() {
+    /*public void openListViewer() {
         try {
             // Changes to the table GUI
             FXMLLoader listViewLoader = new FXMLLoader(getClass().getResource("/fxml/ListViewer.fxml"));
@@ -194,7 +194,7 @@ public class LandingController {
         } catch (IOException e) {
             e.printStackTrace(); //File not found
         }
-    }
+    }*/
 
     /**
      * Gets the username of the currently logged in user.

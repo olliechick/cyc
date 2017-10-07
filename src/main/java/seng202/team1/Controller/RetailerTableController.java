@@ -13,7 +13,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -25,7 +30,6 @@ import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
-import java.security.PublicKey;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -81,13 +85,15 @@ public class RetailerTableController extends TableController {
     private FilteredList<RetailerLocation> filteredData;
     private ObservableList<RetailerLocation> originalData;
 
+    private String currentListName;
+
     private final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "/csv/Lower_Manhattan_Retailers.csv";
 
     /**
      * Display the user name at the bottom of the table
      */
     void setName() {
-        nameLabel.setText("Logged in as: " + model.getUserName());
+        nameLabel.setText("Logged in as: " + model.getUserName() + ", List: " + currentListName);
         nameLabel.setVisible(true);
     }
 
@@ -416,7 +422,7 @@ public class RetailerTableController extends TableController {
             RetailerLocation retailerLocation = addRetailerDialog.getRetailerLocation();
             if (retailerLocation != null) {
                 if (dataPoints.contains(retailerLocation)) {
-                    AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
+                    AlertGenerator.createAlert("Duplicate retailer", "That retailer already exists!");
                 } else {
                     dataPoints.add(retailerLocation);
                     originalData.add(retailerLocation);
@@ -477,8 +483,8 @@ public class RetailerTableController extends TableController {
      */
     public void searchRetailersbyLatLong() {
         Double startLat, startLong;
-        Double endLat = 0.00;
-        Double endLong = 0.00;
+        Double endLat;
+        Double endLong;
         Double delta = 100.0;
         warningLabel.setTextFill(Color.BLACK);
         warningLabel.setText("");
@@ -520,11 +526,12 @@ public class RetailerTableController extends TableController {
     /**
      * Set up the table to use the given list of points instead of a csv.
      *
+     * @param listName The name of the list loaded.
      * @param points the list of RetailerLocations to display in the table.
      */
-    public void setupWithList(ArrayList<RetailerLocation> points) {
+    public void setupWithList(String listName, ArrayList<RetailerLocation> points) {
         setFilters(points);
-
+        currentListName = listName;
         setTableViewRetailer(points);
         stopLoadingAni();
         setPredicate();
@@ -544,13 +551,18 @@ public class RetailerTableController extends TableController {
         MapController map = showMapLoader.getController();
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
-        map.initModel(model, stage);
+        map.setUp(model, stage);
         stage.show();
 
         map.showGivenShop(selectedShop);
+    }
 
-
-
+    public void deleteAllRetailers() {
+        boolean delete = AlertGenerator.createChoiceDialog("Delete All Points", "Delete all points", "Are you sure you want to delete all the points in this list?");
+        if (delete) {
+            dataPoints.clear();
+            //TODO delete from list when implemented
+        }
     }
 
 }

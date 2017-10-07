@@ -2,12 +2,16 @@ package seng202.team1.Model;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.text.DecimalFormat;
 
 public class RetailerPointDistance {
     private RetailerLocation thisPoint;
     private Point2D.Double otherPoint;
     private Double distance;
     private Integer indexMap;
+    public String name;
+    public String secondaryFunction;
+    public String primaryFunction;
 
     public Integer getIndexMap() {
         return indexMap;
@@ -17,17 +21,44 @@ public class RetailerPointDistance {
         this.indexMap = indexMap;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPrimaryFunction() {
+        return primaryFunction;
+    }
+
+    public String getSecondaryFunction() {
+        return secondaryFunction;
+    }
+
+    public void setSecondaryFunction(String secondaryFunction) {
+        this.secondaryFunction = secondaryFunction;
+    }
+
     public RetailerPointDistance(RetailerLocation thisPoint, Point2D.Double otherPoint, Double distance, int indexMap) {
         this.thisPoint = thisPoint;
         this.otherPoint = otherPoint;
         this.distance = distance;
         this.indexMap = indexMap;
+        this.name = thisPoint.getName();
+        this.secondaryFunction = thisPoint.getSecondaryFunction();
+        this.primaryFunction = thisPoint.getPrimaryFunction();
+
     }
     public RetailerPointDistance(RetailerLocation thisPoint, int indexMap) {
         this.thisPoint = thisPoint;
         this.otherPoint = new Point2D.Double(-1, -1);
         this.distance = Double.POSITIVE_INFINITY;
         this.indexMap = indexMap;
+        this.name = thisPoint.getName();
+        this.secondaryFunction = thisPoint.getSecondaryFunction();
+        this.primaryFunction = thisPoint.getPrimaryFunction();
     }
 
     public RetailerLocation getThisPoint() {
@@ -49,6 +80,13 @@ public class RetailerPointDistance {
 
     public Double getDistance() {
         return distance;
+    }
+
+    /**
+     * @return trip distance to decimal places
+     */
+    public Double getTripDistanceTwoD() {
+        return Double.parseDouble(new DecimalFormat("0.").format(distance));
     }
 
     public void setDistance(Double distance) {

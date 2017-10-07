@@ -10,6 +10,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import seng202.team1.Model.DataPoint;
 
 import java.io.File;
@@ -180,12 +181,12 @@ public abstract class TableController {
      * Close the stage.
      */
     public void close() {
-        stage.close();
+        stage.fireEvent( new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
     }
 
     /**
      * Initialise the context menu buttons to perform the correct actions.
-     * Must setOnAction for both editMenuItem and deleteMenuItem
+     * Must setOnAction for editMenuItem, deleteMenuItem and ShowOnMap.
      *
      */
     abstract void initContextMenu();

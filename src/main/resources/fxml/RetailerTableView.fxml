@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -15,24 +20,34 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.layout.AnchorPane?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.RetailerTableController">
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.RetailerTableController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                <MenuItem mnemonicParsing="false" onAction="#importRetailer" text="Import CSV" />
-              <MenuItem mnemonicParsing="false" onAction="#exportRetailer" text="Export CSV" />
+                <MenuItem mnemonicParsing="false" onAction="#importRetailer" text="Import CSV">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+              <MenuItem mnemonicParsing="false" onAction="#exportRetailer" text="Export CSV">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#addRetailer" text="Add Retailer" />
+              <MenuItem mnemonicParsing="false" onAction="#addRetailer" text="Add Retailer">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#deleteAllRetailers" text="Delete all retailer from current list" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -44,7 +59,7 @@
       </MenuBar>
    </top>
    <center>
-      <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="table" focusTraversable="false" BorderPane.alignment="CENTER">
         <columns>
           <TableColumn prefWidth="75.0" text="C1" />
           <TableColumn prefWidth="75.0" text="C2" />
@@ -55,104 +70,109 @@
       </TableView>
    </center>
    <bottom>
-      <TabPane tabClosingPolicy="UNAVAILABLE">
-         <tabs>
-            <Tab text="Filters">
-               <content>
-                  <GridPane hgap="5.0" vgap="2.0" BorderPane.alignment="CENTER">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="237.0" minWidth="10.0" prefWidth="128.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="415.0" minWidth="10.0" prefWidth="259.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="383.0" minWidth="10.0" prefWidth="254.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="270.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Label text="Retailer Filters:" />
-                        <Label text="Primary Function:" GridPane.columnIndex="1" />
-                        <Label text="Address:" GridPane.columnIndex="3" />
-                        <Label text="ZIP:" GridPane.columnIndex="2" />
-                        <ComboBox fx:id="filterPrimaryComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="filterZipComboBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Label fx:id="nameLabel" text="Name placeholder" visible="false" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                        <Label fx:id="loadLabel" text="Loading:" visible="false" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                        <ProgressIndicator fx:id="progressSpinner" progress="0.0" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                        <TextField fx:id="streetSearchField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <Button mnemonicParsing="false" onAction="#clearFilters" text="Clear Filters" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                     </children>
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                  </GridPane>
-               </content>
-            </Tab>
-            <Tab text="Searching">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <GridPane hgap="10.0" layoutY="-1.0" prefHeight="186.0" prefWidth="1000.0">
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <TabPane tabClosingPolicy="UNAVAILABLE">
+               <tabs>
+                  <Tab text="Filters">
+                     <content>
+                        <GridPane hgap="5.0" vgap="2.0" BorderPane.alignment="CENTER">
                           <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="224.0" minWidth="10.0" prefWidth="159.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" prefWidth="183.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="336.0" minWidth="10.0" prefWidth="145.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="439.0" minWidth="10.0" prefWidth="164.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="493.0" minWidth="10.0" prefWidth="165.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="425.0" minWidth="10.0" prefWidth="167.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="237.0" minWidth="10.0" prefWidth="128.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="415.0" minWidth="10.0" prefWidth="259.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="383.0" minWidth="10.0" prefWidth="254.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="270.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
                           </columnConstraints>
                           <rowConstraints>
-                              <RowConstraints maxHeight="48.0" minHeight="10.0" prefHeight="48.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="48.0" minHeight="10.0" prefHeight="47.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Button fx:id="clearSearchesButton" mnemonicParsing="false" onAction="#clearSearches" text="Clear Searches" GridPane.columnIndex="4" GridPane.rowIndex="2">
-                                 <GridPane.margin>
-                                    <Insets left="35.0" />
-                                 </GridPane.margin></Button>
-                              <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchRetailersbyLatLong" text="Search" GridPane.columnIndex="4" GridPane.rowIndex="1">
-                                 <GridPane.margin>
-                                    <Insets left="50.0" />
-                                 </GridPane.margin></Button>
-                              <Label text="Starting Latitude" GridPane.rowIndex="1">
-                                 <padding>
-                                    <Insets left="10.0" />
-                                 </padding></Label>
+                              <Label text="Retailer Filters:" />
+                              <Label text="Primary Function:" GridPane.columnIndex="1" />
+                              <Label text="Address:" GridPane.columnIndex="3" />
+                              <Label text="ZIP:" GridPane.columnIndex="2" />
+                              <ComboBox fx:id="filterPrimaryComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <ComboBox fx:id="filterZipComboBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <TextField fx:id="streetSearchField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <Button mnemonicParsing="false" onAction="#clearFilters" text="Clear Filters" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </GridPane>
+                     </content>
+                  </Tab>
+                  <Tab text="Searching">
+                     <content>
+                        <GridPane hgap="5.0" vgap="5.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Starting Latitude" GridPane.rowIndex="1" />
                               <Label text="Starting Longitude" GridPane.rowIndex="2">
                                  <GridPane.margin>
-                                    <Insets left="10.0" />
-                                 </GridPane.margin></Label>
-                              <Label text="Search Retailers by Latitude and Longitude" GridPane.columnSpan="2">
-                                 <padding>
-                                    <Insets left="10.0" />
-                                 </padding></Label>
+                                    <Insets />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Search Retailers by Latitude and Longitude" GridPane.columnSpan="2" />
                               <Label fx:id="warningLabel" text="Label" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" />
                               <Label text="Ending Latitude" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                               <Label text="Ending Longitude" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                               <TextField fx:id="startLatTextField" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <GridPane.margin>
-                                    <Insets left="10.0" right="10.0" />
-                                 </GridPane.margin></TextField>
+                                    <Insets />
+                                 </GridPane.margin>
+                              </TextField>
                               <TextField fx:id="startLongTextField" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                  <GridPane.margin>
-                                    <Insets left="10.0" right="10.0" />
-                                 </GridPane.margin></TextField>
-                              <TextField layoutX="210.0" layoutY="115.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                              <TextField fx:id="endLatTextField" layoutX="210.0" layoutY="68.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                              <TextField layoutX="610.0" layoutY="68.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                    <Insets />
+                                 </GridPane.margin>
+                              </TextField>
+                              <TextField fx:id="endLatTextField" layoutX="210.0" layoutY="115.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                               <TextField fx:id="endLongTextField" layoutX="610.0" layoutY="68.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchRetailersbyLatLong" text="Search" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                              <Button fx:id="clearSearchesButton" mnemonicParsing="false" onAction="#clearSearches" text="Clear Searches" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                            </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
                         </GridPane>
-                     </children>
-                  </AnchorPane>
-              </content>
-            </Tab>
-         </tabs>
-      </TabPane>
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
+            <GridPane hgap="10.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <ProgressIndicator fx:id="progressSpinner" maxHeight="25.0" maxWidth="25.0" progress="0.0" GridPane.columnIndex="2" GridPane.halignment="LEFT" />
+                  <Label fx:id="loadLabel" text="Loading:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
+                  <Label fx:id="nameLabel" text="Name placeholder">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding></Label>
+               </children>
+            </GridPane>
+         </children>
+      </VBox>
    </bottom>
 </BorderPane>

@@ -88,17 +88,16 @@ public class AddRetailerDialogController {
 
     private String name;
     private String addressLine1;
-    private String addressLine2 = "";
+    private String addressLine2 = null;
     private int zipcode;
     private String primaryFunction;
-    private String secondaryFunction = "Unknown";
-    private float latitude = 0;
-    private float longitude = 0;
+    private String secondaryFunction = "Other";
+    private float latitude;
+    private float longitude;
     private Point2D.Float coords = new Point2D.Float();
     private String city = "New York";
     private String state = "NY";
-    private String blockLot = "Unknown";
-
+    private String blockLot = null;
 
     @FXML
     void addRetailer() {
@@ -106,9 +105,22 @@ public class AddRetailerDialogController {
 
             coords.setLocation(longitude, latitude);
 
+            // Check for empty fields
+            if (address2Field.getText().isEmpty()) {
+                addressLine2 = null;
+            } else {
+                addressLine2 = address2Field.getText();
+            }
+
+            if (secondaryField.getText().isEmpty()) {
+                secondaryFunction = "Other";
+            } else {
+                secondaryFunction = secondaryField.getText();
+            }
+
+            // Create retailer and close the stage
             retailerLocation = new RetailerLocation(name, addressLine1, addressLine2, city,
-                                                    state, zipcode, blockLot, primaryFunction,
-                                                    secondaryFunction, coords);
+                    state, zipcode, blockLot, primaryFunction, secondaryFunction, coords);
             stage.close();
         }
     }
@@ -117,6 +129,7 @@ public class AddRetailerDialogController {
     void cancel() {
         stage.close();
     }
+
 
     /**
      * Set up the dialog.
@@ -156,6 +169,14 @@ public class AddRetailerDialogController {
 
     }
 
+
+    /**
+     * Sets up the dialog with details from the given RetailerLocation.
+     *
+     * @param stage1           The stage the dialog is displayed in.
+     * @param root             The root node of the scene.
+     * @param retailerLocation The RetailerLocation whose details are displayed.
+     */
     public void setDialog(Stage stage1, Parent root, RetailerLocation retailerLocation) {
         setDialog(stage1, root);
 
@@ -208,6 +229,9 @@ public class AddRetailerDialogController {
         } else {
             try {
                 latitude = Float.parseFloat(latField.getText());
+                if (latitude < -90 || latitude > 90) {
+                    throw new NumberFormatException("Latitude must be between -90 and 90.");
+                }
                 latLabel.setTextFill(Color.BLACK);
             } catch (NumberFormatException e) {
                 valid = false;
@@ -221,6 +245,9 @@ public class AddRetailerDialogController {
         } else {
             try {
                 longitude = Float.parseFloat(longField.getText());
+                if (longitude < -180 || longitude > 180) {
+                    throw new NumberFormatException("Longitude must be between -180 and 180.");
+                }
                 longLabel.setTextFill(Color.BLACK);
             } catch (NumberFormatException e) {
                 valid = false;
@@ -262,6 +289,7 @@ public class AddRetailerDialogController {
 
         return valid;
     }
+
 
     public RetailerLocation getRetailerLocation() {
         return retailerLocation;

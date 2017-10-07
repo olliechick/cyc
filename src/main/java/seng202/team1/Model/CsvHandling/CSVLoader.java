@@ -474,6 +474,8 @@ public class CSVLoader {
                 if (secondaryFunction.length() > 2 && secondaryFunction.substring(1, 2).equals("-")) {
                     // Strip off the first bit. E.g. "F-Italian" -> "Italian"
                     secondaryFunction = secondaryFunction.substring(2);
+                } else if (secondaryFunction.isEmpty()) {
+                    secondaryFunction = "Other";
                 }
 
                 // Strings that could be null

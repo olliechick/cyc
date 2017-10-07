@@ -2,6 +2,7 @@ package seng202.team1.Controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,9 +14,14 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team1.Model.Directory;
 import seng202.team1.Model.PasswordManager;
@@ -89,9 +95,17 @@ public class LoginController {
     @FXML
     private CheckBox acceptTermsOfService;
 
-    @FXML
-    private Button viewTOS;
 
+    private final static int MIN_PASSWORD_LENGTH = 0;
+
+    @FXML
+    private TabPane loginOrSignup;
+
+    @FXML
+    private Tab loginTab;
+
+    @FXML
+    private Tab signUpTab;
 
     private UserAccountModel model;
 
@@ -102,13 +116,12 @@ public class LoginController {
         genderBox.setItems(genderList);
         genderBox.getSelectionModel().selectFirst();
         birthdayEntryField.setValue(LocalDate.of(1990, 1, 1));
-
     }
 
     /**
      * Changes the scene to display the map to user accounts.
      */
-    /*private void launchMap() {
+    private void launchMap() {
 
         try {
             // Changes to the map GUI
@@ -119,14 +132,15 @@ public class LoginController {
 
 
             Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Map can take over
-            mapController.initModel(model, stage);
+            mapController.setUp(model, stage);
             stage.setScene(new Scene(mapView));
+            stage.sizeToScene();
             stage.show();
 
         } catch (Exception e) {
             e.printStackTrace(); //File not found
         }
-    }*/
+    }
 
     /**
      * Changes the scene to display the landing screen for analyst/admin users.
@@ -152,7 +166,7 @@ public class LoginController {
     }
 
     /**
-     * Changes the screen to view the TOS
+     * Opens a pop up to view the TOS
      */
     public void showTOS() throws IOException {
         System.out.println("TOS button pressed");
@@ -164,6 +178,7 @@ public class LoginController {
         Stage tosStage = new Stage();
         tosStage.setScene(new Scene(tosView));
         tosController.initialize(tosStage);
+        tosStage.initModality(Modality.APPLICATION_MODAL);
         tosStage.show();
     }
 
@@ -181,7 +196,7 @@ public class LoginController {
         if (username.isEmpty()) {
             usernameLabel.setTextFill(Color.RED);
             passwordLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "Please enter a username.");
+            AlertGenerator.createAlert("Please enter a username.");
             return;
         }
         //model.setUserName(username);
@@ -191,7 +206,7 @@ public class LoginController {
         } catch (IOException e) {
             usernameLabel.setTextFill(Color.RED);
             passwordLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "Either Username or Password is incorrect. Please try again");
+            AlertGenerator.createAlert("Either Username or Password is incorrect. Please try again");
             return;
         }
 
@@ -199,14 +214,14 @@ public class LoginController {
         if (PasswordManager.isExpectedPassword(password, user.getSalt(), user.getPassword())) {
             model = user;
             // They got the password right
-
-            launchLandingScreen();
+            launchMap();
+            //launchLandingScreen();
 
         } else {
             // Wrong password
-            usernameLabel.setTextFill(Color.BLACK);
+            usernameLabel.setTextFill(Color.RED);
             passwordLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "Either Username or Password is incorrect. Please try again");
+            AlertGenerator.createAlert("Either Username or Password is incorrect. Please try again");
         }
     }
 
@@ -236,35 +251,57 @@ public class LoginController {
             gender = 'u';
         }
 
-
+        // Validity checks
         if (username.isEmpty()) {
+            // empty username
             newUsernameLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "Please enter a username.");
+            newPasswordLabel.setTextFill(Color.BLACK);
+            confirmPasswordLabel.setTextFill(Color.BLACK);
+            acceptTermsOfService.setTextFill(Color.BLACK);
+            AlertGenerator.createAlert("Please enter a username.");
+            return;
+        } else if (userAlreadyExists(username)) {
+            // duplicate username
+            newUsernameLabel.setTextFill(Color.RED);
+            newPasswordLabel.setTextFill(Color.BLACK);
+            confirmPasswordLabel.setTextFill(Color.BLACK);
+            acceptTermsOfService.setTextFill(Color.BLACK);
+            AlertGenerator.createAlert("A user with that name already exist. Please try another username.");
             return;
         } else {
+            // username is ok
             newUsernameLabel.setTextFill(Color.BLACK);
         }
-        if (!password.equals(confirmPassword)){
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            // short password
+            newPasswordLabel.setTextFill(Color.RED);
+            confirmPasswordLabel.setTextFill(Color.BLACK);
+            acceptTermsOfService.setTextFill(Color.BLACK);
+            AlertGenerator.createAlert("Password must be longer than " +
+                    MIN_PASSWORD_LENGTH + " characters.");
+            return;
+        } else if (!password.equals(confirmPassword)) {
+            // different password and confirmation password
             newPasswordLabel.setTextFill(Color.RED);
             confirmPasswordLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "Passwords do not match please try again.");
+            acceptTermsOfService.setTextFill(Color.BLACK);
+            AlertGenerator.createAlert("Passwords do not match. Please try again.");
             return;
+        } else {
+            newPasswordLabel.setTextFill(Color.BLACK);
+            confirmPasswordLabel.setTextFill(Color.BLACK);
         }
-        if(!acceptTermsOfService.isSelected()){
+        if (!acceptTermsOfService.isSelected()) {
             acceptTermsOfService.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "You must accept the terms of service to continue");
-            return;
-        }
-        if (userAlreadyExists(username)){
-            usernameLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Error", "A user with that name already exist.\nPlease try another user name");
+            AlertGenerator.createAlert("You must accept the terms of service to continue.");
             return;
         }
 
         seng202.team1.UserAccountModel newUser = new seng202.team1.UserAccountModel(gender, birthday, username, password);
         model = newUser;
         //Launch main view
-        launchLandingScreen();
+        //launchLandingScreen();
+        launchMap();
 
 
         seng202.team1.UserAccountModel.createUser(newUser);
@@ -274,11 +311,12 @@ public class LoginController {
     /**
      * Takes a username and returns true if the user already exists
      * Note will return true if user is somehow a dir.
+     *
      * @param username username entered on sign up
      * @return If it exists or not
      */
-    private static boolean userAlreadyExists(String username){
-        File tmp = new File(Directory.USERS.directory()+username+".user");
+    private static boolean userAlreadyExists(String username) {
+        File tmp = new File(Directory.USERS.directory() + username + ".user");
         return tmp.exists();
     }
 }

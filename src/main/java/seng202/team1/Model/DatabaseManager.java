@@ -74,6 +74,7 @@ public class DatabaseManager {
             connection.close();
             connection = null;
         }
+        System.out.println("Database disconnected.");
     }
 
     /**

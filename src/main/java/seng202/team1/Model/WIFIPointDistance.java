@@ -2,6 +2,7 @@ package seng202.team1.Model;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.text.DecimalFormat;
 
 public class WIFIPointDistance {
     private WifiPoint thisPoint;
@@ -22,6 +23,7 @@ public class WIFIPointDistance {
         this.otherPoint = otherPoint;
         this.distance = distance;
         this.indexMap = indexMap;
+
     }
     public WIFIPointDistance(WifiPoint thisPoint, int indexMap) {
         this.thisPoint = thisPoint;
@@ -34,6 +36,8 @@ public class WIFIPointDistance {
 
         return thisPoint;
     }
+
+    public String getName() {return thisPoint.getName();}
 
     public void setThisPoint(WifiPoint thisPoint) {
         this.thisPoint = thisPoint;
@@ -53,6 +57,21 @@ public class WIFIPointDistance {
 
     public void setDistance(Double distance) {
         this.distance = distance;
+    }
+
+    public String getCost() {return thisPoint.getCost();}
+
+    public String getProvider() {return thisPoint.getProvider();}
+
+    public String getSSID() {return thisPoint.getSsid();}
+
+
+
+    /**
+     * @return trip distance to decimal places
+     */
+    public Double getTripDistanceTwoD() {
+        return Double.parseDouble(new DecimalFormat("0").format(distance));
     }
 
     @Override
