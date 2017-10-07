@@ -144,17 +144,20 @@ public class UserAccountModel implements java.io.Serializable {
      * @param confirmPassword The confirmation of the old password
      * @return True if Changed false if not
      */
-    public boolean changePassword(String currentPassword, String newPassword, String confirmPassword){
+    public boolean changePassword(String currentPassword, String newPassword, String confirmPassword, UserAccountModel model) {
         if (PasswordManager.isExpectedPassword(currentPassword, salt, password)) {
-            if (!PasswordManager.isExpectedPassword(newPassword, salt, password)){
-            if (newPassword.equals(confirmPassword)) {
-                salt = PasswordManager.getNextSalt();
-                password = PasswordManager.hash(newPassword, salt);
-                return true;
+            if (!PasswordManager.isExpectedPassword(newPassword, salt, password)) {
+                if (newPassword.equals(confirmPassword)) {
+                    byte[] holdingSalt = PasswordManager.getNextSalt();
+                    this.salt = holdingSalt;
+                    byte[] holdingPassword = PasswordManager.hash(newPassword, salt);
+                    this.password = holdingPassword;
+                    SerializerImplementation.serializeUser(model);
+                    return true;
+                } else {
+                    AlertGenerator.createAlert("New passwords do not match");
+                }
             } else {
-                AlertGenerator.createAlert("New passwords do not match");
-            }
-        } else {
                 AlertGenerator.createAlert("Your new password cannot be the same as your old password");
             }
         } else {

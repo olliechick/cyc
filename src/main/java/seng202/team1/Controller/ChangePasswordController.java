@@ -34,7 +34,7 @@ public class ChangePasswordController {
 
     @FXML
     void changePassword() {
-        if (model.changePassword(currentPasswordField.getText(), newPasswrodField.getText(),confirmPasswordField.getText())){
+        if (model.changePassword(currentPasswordField.getText(), newPasswrodField.getText(),confirmPasswordField.getText(),model)){
             AlertGenerator.createAlert("Success", "Your password has been changed");
             stage.close();
         }

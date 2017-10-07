@@ -220,7 +220,7 @@ public class LoginController {
 
         } else {
             // Wrong password
-            usernameLabel.setTextFill(Color.BLACK);
+            usernameLabel.setTextFill(Color.RED);
             passwordLabel.setTextFill(Color.RED);
             AlertGenerator.createAlert("Either Username or Password is incorrect. Please try again");
         }
