@@ -179,19 +179,6 @@ public class UserAccountModel implements java.io.Serializable {
         return result;
     }
 
-    public ArrayList<RetailerLocation> getCustomRetailerLocations() {
-        ArrayList<RetailerLocation> result = new ArrayList<>();
-        try {
-            DatabaseManager.open();
-            result = DatabaseManager.getRetailers(userName);
-            System.out.println(String.format("%d custom retailers retrieved.", result.size()));
-            DatabaseManager.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
     public ArrayList<WifiPoint> getCustomWifiPoints() {
         ArrayList<WifiPoint> result = new ArrayList<>();
         try {
@@ -204,6 +191,34 @@ public class UserAccountModel implements java.io.Serializable {
         }
         return result;
 
+    }
+
+
+    @Deprecated // To be replaced with method below
+    public ArrayList<RetailerLocation> getCustomRetailerLocations() {
+        ArrayList<RetailerLocation> result = new ArrayList<>();
+        try {
+            DatabaseManager.open();
+            result = DatabaseManager.getRetailers(userName); //TODO: Get current listName?
+            System.out.println(String.format("%d custom retailers retrieved.", result.size()));
+            DatabaseManager.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public ArrayList<RetailerLocation> getCustomRetailerLocations(String listName) {
+        ArrayList<RetailerLocation> result = new ArrayList<>();
+        try {
+            DatabaseManager.open();
+            result = DatabaseManager.getRetailers(userName, listName); //TODO: Get current listName?
+            System.out.println(String.format("%d custom retailers retrieved.", result.size()));
+            DatabaseManager.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public void addCustomBikeTrip(BikeTrip bikeTrip) {

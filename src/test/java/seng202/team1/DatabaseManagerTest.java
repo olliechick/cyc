@@ -123,7 +123,7 @@ public class DatabaseManagerTest {
             e.printStackTrace();
         }
         DatabaseManager.open();
-        assertEquals(retailer, DatabaseManager.getRetailers(model.getUserName()).get(0));
+        assertEquals(retailer, DatabaseManager.getRetailers(model.getUserName(), "myRetailers").get(0));
         DatabaseManager.close();
     }
 

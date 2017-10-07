@@ -268,18 +268,18 @@ public class DatabaseManager {
             RetailerLocation retailer = (RetailerLocation) point;
             preparedStatement = connection.prepareStatement(statement);
 
-            preparedStatement.setInt(3, getListID(username, listName));
-            preparedStatement.setString(4, retailer.getName());
-            preparedStatement.setString(5, retailer.getAddressLine1());
-            preparedStatement.setString(6, retailer.getAddressLine2());
-            preparedStatement.setString(7, retailer.getCity());
-            preparedStatement.setString(8, retailer.getState());
-            preparedStatement.setString(9, Integer.toString(retailer.getZipcode()));
-            preparedStatement.setString(10, retailer.getBlockLot());
-            preparedStatement.setString(11, retailer.getPrimaryFunction());
-            preparedStatement.setString(12, retailer.getSecondaryFunction());
-            preparedStatement.setFloat(13, retailer.getLatitude());
-            preparedStatement.setFloat(14, retailer.getLongitude());
+            preparedStatement.setInt(1, getListID(username, listName));
+            preparedStatement.setString(2, retailer.getName());
+            preparedStatement.setString(3, retailer.getAddressLine1());
+            preparedStatement.setString(4, retailer.getAddressLine2());
+            preparedStatement.setString(5, retailer.getCity());
+            preparedStatement.setString(6, retailer.getState());
+            preparedStatement.setString(7, Integer.toString(retailer.getZipcode()));
+            preparedStatement.setString(8, retailer.getBlockLot());
+            preparedStatement.setString(9, retailer.getPrimaryFunction());
+            preparedStatement.setString(10, retailer.getSecondaryFunction());
+            preparedStatement.setFloat(11, retailer.getLatitude());
+            preparedStatement.setFloat(12, retailer.getLongitude());
 
             preparedStatement.execute();
 
@@ -389,7 +389,7 @@ public class DatabaseManager {
      * @param username the username of the user.
      * @return all of the bike trips associated to this user.
      */
-    public static ArrayList<BikeTrip> getBikeTrips(String username) {
+    public static ArrayList<BikeTrip> getBikeTrips(String username) { //TODO: Add listid
         String statement = "SELECT * FROM trip WHERE username=?";
         PreparedStatement preparedStatement;
         ArrayList<BikeTrip> result = new ArrayList<>();
@@ -454,15 +454,16 @@ public class DatabaseManager {
      * Gets all retailers associated with a user.
      *
      * @param username the username of the user
+     * @param listName the name of the list associated to the user
      * @return all of the retailer points associated to this user.
      */
-    public static ArrayList<RetailerLocation> getRetailers(String username) {
-        String statement = "SELECT * FROM retailer WHERE userid=?";
+    public static ArrayList<RetailerLocation> getRetailers(String username, String listName) {
+        String statement = "SELECT * FROM retailer WHERE listid=?";
         PreparedStatement preparedStatement;
         ArrayList<RetailerLocation> result = new ArrayList<>();
         try {
             preparedStatement = connection.prepareStatement(statement);
-            preparedStatement.setString(1, username);
+            preparedStatement.setInt(1, getListID(username, listName));
 
             ResultSet rs = preparedStatement.executeQuery();
 
@@ -491,6 +492,14 @@ public class DatabaseManager {
         return result;
     }
 
+    /**
+     * Gets the list id from an associated username and listName.
+     * Returns an int, listID if it exists, or 0 if it does not.
+     *
+     * @param username Username to query
+     * @param listName ListName to query
+     * @return
+     */
     public static int getListID(String username, String listName) {
         String statement = "SELECT id FROM list WHERE username=? AND listName=?";
         PreparedStatement preparedStatement;
@@ -503,7 +512,9 @@ public class DatabaseManager {
 
             ResultSet rs = preparedStatement.executeQuery();
 
-            return rs.getInt(1);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
