@@ -30,6 +30,7 @@ public class WindowManager {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
+                System.out.println(event);
                 stagesOpen.remove(stage);
             }
         });
