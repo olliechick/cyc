@@ -193,7 +193,6 @@ public class DatabaseManagerTest {
     public void getOnlyUserTrips() throws Exception {
         try {
             DatabaseManager.addRecord(trip, model.getUserName(), "myTrips");
-            System.out.println("--------");
             DatabaseManager.addRecord(trip, model.getUserName(), "myTrips");
 
             DatabaseManager.addRecord(trip, "notMyUser", "myTrips"); // Wrong user
@@ -206,5 +205,18 @@ public class DatabaseManagerTest {
         DatabaseManager.close();
     }
 
+    @Test
+    public void getItemsOfSameListNameOfDifferentType() throws Exception {
+        try {
+            DatabaseManager.addRecord(trip, model.getUserName(), "testList");
+            DatabaseManager.addRecord(wifi, model.getUserName(), "testList");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        DatabaseManager.open();
+        assertEquals(1, DatabaseManager.getBikeTrips(model.getUserName(), "testList").size());
+        assertEquals(1, DatabaseManager.getWifiPoints(model.getUserName(), "testList").size());
 
+        DatabaseManager.close();
+    }
 }
