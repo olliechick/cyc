@@ -113,7 +113,7 @@ public class CSVExporter {
             line += ",,\""; //skip the_geom and boro
             line += wifiPoint.getCost() + "\",\"";
             line += wifiPoint.getProvider() + "\",\"";
-            line += wifiPoint.getName() + "\",\"";
+            line += wifiPoint.getPlaceName() + "\",\"";
             line += wifiPoint.getLocation() + "\",";
             line += wifiPoint.getLatitude() + ",";
             line += wifiPoint.getLongitude() + ",";
