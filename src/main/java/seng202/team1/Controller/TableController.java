@@ -186,7 +186,7 @@ public abstract class TableController {
 
     /**
      * Initialise the context menu buttons to perform the correct actions.
-     * Must setOnAction for both editMenuItem and deleteMenuItem
+     * Must setOnAction for editMenuItem, deleteMenuItem and ShowOnMap.
      *
      */
     abstract void initContextMenu();

@@ -60,6 +60,9 @@ public class AlertGenerator {
         alert.setHeaderText(header);
         alert.setContentText(content);
 
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
+
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             return true;

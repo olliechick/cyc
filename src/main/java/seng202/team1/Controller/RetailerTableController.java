@@ -555,9 +555,14 @@ public class RetailerTableController extends TableController {
         stage.show();
 
         map.showGivenShop(selectedShop);
+    }
 
-
-
+    public void deleteAllRetailers() {
+        boolean delete = AlertGenerator.createChoiceDialog("Delete All Points", "Delete all points", "Are you sure you want to delete all the points in this list?");
+        if (delete) {
+            dataPoints.clear();
+            //TODO delete from list when implemented
+        }
     }
 
 }

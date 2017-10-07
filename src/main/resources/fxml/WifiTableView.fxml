@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
@@ -26,14 +27,24 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#importWifi" text="Import CSV" />
-                  <MenuItem mnemonicParsing="false" onAction="#exportWifi" text="Export CSV" />
+                  <MenuItem mnemonicParsing="false" onAction="#importWifi" text="Import CSV">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#exportWifi" text="Export CSV">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
               <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#addWifi" text="Add Custom Wifi" />
+              <MenuItem mnemonicParsing="false" onAction="#addWifi" text="Add Custom Wifi">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#deleteAllWifiPoints" text="Delete all Wifi Points from current list" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -45,7 +56,7 @@
       </MenuBar>
    </top>
    <center>
-      <TableView fx:id="table" BorderPane.alignment="CENTER">
+      <TableView fx:id="table" focusTraversable="false" BorderPane.alignment="CENTER">
         <columns>
           <TableColumn prefWidth="75.0" text="C1" />
           <TableColumn prefWidth="75.0" text="C2" />

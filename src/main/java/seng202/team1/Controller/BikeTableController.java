@@ -532,4 +532,12 @@ public class BikeTableController extends TableController {
         clearFilters();
     }
 
+    public void deleteAllBikeTrips() {
+        boolean delete = AlertGenerator.createChoiceDialog("Delete All Points", "Delete all points", "Are you sure you want to delete all the points in this list?");
+        if (delete) {
+            dataPoints.clear();
+            //TODO delete from list when implemented
+        }
+    }
+
 }
