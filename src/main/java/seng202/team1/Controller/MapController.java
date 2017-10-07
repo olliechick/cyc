@@ -229,7 +229,7 @@ public class MapController {
         loadAllWifi();      // loads all the wifiPoints
         loadAllRetailers(); // loads all the retailerPoints
         setFilters();       // sets the filters based on wifi and retailer points loaded
-        loadAllBikeTrips(); // currently only dynamic, requested routes are shown
+         loadAllBikeTrips(); // currently only dynamic, requested routes are shown
         win.setMember("app", clickListner);
         WebViews.addHyperlinkListener(webView, eventPrintingListener);
 
@@ -1020,7 +1020,32 @@ public class MapController {
         clickPoint.setLocation(lat, lng);
         userClicks.add(clickPoint);
     }
-        public void directions(String route) {
+        public void addRetailer(Double lat, Double lng) {
+            Point.Double clickPoint = new Point.Double();
+            clickPoint.setLocation(lat, lng);
+            userClicks.add(clickPoint);
+            addCustomRetailer();
+        }
+    public void addWIFI(Double lat, Double lng) {
+            Point.Double clickPoint = new Point.Double();
+            clickPoint.setLocation(lat, lng);
+            userClicks.add(clickPoint);
+            addCustomWIFI();
+    }
+    public void saveRoute(Double originLat, Double originLng, Double destinationLat, Double destinationLng) {
+        Point.Double originPoint = new Point.Double();
+        Point.Double destinationPoint = new Point.Double();
+        originPoint.setLocation(originLat, originLng);
+        destinationPoint.setLocation(destinationLat, destinationLng);
+        userClicks.add(originPoint);
+        userClicks.add(destinationPoint);
+        addCustomBikeTrip();
+
+
+    }
+
+
+    public void directions(String route) {
             try {
                 BikeDirections dir = new BikeDirections(route, true);
                 if (showWIFINearRoute) {
