@@ -340,7 +340,17 @@ public class CSVLoader {
             // Process all the attributes - from most to least likely to fail
             try {
                 // Datetime activated
-                LocalDateTime datetimeActivated = LocalDateTime.parse(record.get(16), DateTimeFormatter.ofPattern("M/d/yyyy hh:mm:ss a Z"));
+                LocalDateTime datetimeActivated;
+                try {
+                    datetimeActivated = LocalDateTime.parse(record.get(16), DateTimeFormatter.ofPattern("M/d/yyyy hh:mm:ss a Z"));
+                } catch (DateTimeParseException e) {
+                    if (record.get(16).isEmpty()) {
+                        // Empty datetime
+                        datetimeActivated = null;
+                    } else {
+                        throw e;
+                    }
+                }
                 if (datetimeActivated.isBefore(EARLIEST_POSSIBLE_DATE)) {
                     // dates earlier than this means that this data is not available
                     datetimeActivated = null;
@@ -359,7 +369,15 @@ public class CSVLoader {
                 }
 
                 // Co-ordinates
-                Point.Float coords = new Point.Float(Float.parseFloat(record.get(8)), Float.parseFloat(record.get(7)));
+                Float latitude = Float.parseFloat(record.get(7));
+                if (latitude < -90 || latitude > 90) {
+                    throw new NumberFormatException("Latitude must be between -90 and 90.");
+                }
+                Float longitude = Float.parseFloat(record.get(8));
+                if (longitude < -180 || longitude > 180) {
+                    throw new NumberFormatException("Longitude must be between -180 and 180.");
+                }
+                Point.Float coords = new Point.Float(longitude, latitude);
 
                 // Strings that could be null
                 String name = record.get(5);
