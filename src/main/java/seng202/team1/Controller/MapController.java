@@ -77,11 +77,11 @@ public class MapController {
     ObservableList<RetailerPointDistance> observableRetailerDistances = null;
     JavaApp clickListner;
     JavaApp retailerListner;
-    /*WebViewHyperlinkListener eventPrintingListener = event -> {
+    WebViewHyperlinkListener eventPrintingListener = event -> {
         String eventString = WebViews.hyperlinkEventToString(event);
         System.out.println("Denied: " + eventString);
         return true;
-    };*/
+    };
     // Some control booleans
     private boolean showRetailersNearRoute = true;
     private boolean showOnlyNearestRetailerToRoute = false;
@@ -231,7 +231,7 @@ public class MapController {
         setFilters();       // sets the filters based on wifi and retailer points loaded
         loadAllBikeTrips(); // currently only dynamic, requested routes are shown
         win.setMember("app", clickListner);
-        //WebViews.addHyperlinkListener(webView, eventPrintingListener);
+        WebViews.addHyperlinkListener(webView, eventPrintingListener);
 
 
     }
