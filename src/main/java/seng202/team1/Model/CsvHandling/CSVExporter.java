@@ -28,9 +28,9 @@ import static seng202.team1.Model.DatabaseManager.getWifiPoints;
  */
 public class CSVExporter {
 
-    private final static String bikeTripsHeader = "Trip duration,Start time,Stop time,,,Start point latitude,"
+    private final static String bikeTripsHeader = "Trip duration,Start time,End time,,,Start point latitude,"
             + "Start point longitude,,,End point latitude,End point longitude,Bike ID,,Birth year,Gender";
-    private final static String retailersHeader = "Name,Address (line 1),Address (line 2),City,State,"
+    private final static String retailersHeader = "Name,Address,Address (pre-line),City,State,"
             + "ZIP code,Block-Lot,Primary function,Secondary function,Latitude,Longitude";
     private final static String wifiPointsHeader = "Object ID,,,Cost,Provider,Name,Location,Latitude,"
             + "Longitude,,,Location Type,Remarks,City,SSID,Source ID,Activated,,Borough,,Neighbourhood,,"

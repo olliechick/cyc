@@ -241,14 +241,38 @@ public class CSVLoader {
                     gender = 'u';
                 }
 
-                // Other stuff
-                //int StartStationId = Integer.parseInt(record.get(3));
-                long tripDuration = new Long(record.get(0).trim());
-                Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(6)), Float.parseFloat(record.get(5)));
-                Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(10)), Float.parseFloat(record.get(9)));
+                // Start and end point
+                Float startLat = Float.parseFloat(record.get(5));
+                if (startLat < -90 || startLat > 90) {
+                    throw new NumberFormatException("Latitude must be between -90 and 90.");
+                }
+                Float startLong = Float.parseFloat(record.get(6));
+                if (startLong < -180 || startLong > 180) {
+                    throw new NumberFormatException("Longitude must be between -180 and 180.");
+                }
+                Point.Float startPoint = new Point.Float(startLong, startLat);
 
-                trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,// startStationId, endStationId,
-                        endPoint, bikeId, gender, birthYear));
+                Float endLat = Float.parseFloat(record.get(9));
+                if (endLat < -90 || endLat > 90) {
+                    throw new NumberFormatException("Latitude must be between -90 and 90.");
+                }
+                Float endLong = Float.parseFloat(record.get(10));
+                if (endLong < -180 || endLong > 180) {
+                    throw new NumberFormatException("Longitude must be between -180 and 180.");
+                }
+                Point.Float endPoint = new Point.Float(endLong, endLat);
+
+                // Trip duration and creating the bike trip
+                String tripDurationString = record.get(0);
+                if (tripDurationString.isEmpty()) {
+                    // Unknown trip duration
+                    trips.add(new BikeTrip(startTime, stopTime, startPoint,
+                            endPoint, bikeId, gender, birthYear));
+                } else {
+                    long tripDuration = new Long(tripDurationString);
+                    trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,
+                            endPoint, bikeId, gender, birthYear));
+                }
 
                 isValidCsv = true;
             } catch (Exception e) {
@@ -469,6 +493,12 @@ public class CSVLoader {
                     }
                 }
 
+                // Get primary  function
+                String primaryFunction = record.get(7);
+                if (primaryFunction.isEmpty()) {
+                    primaryFunction = "Other";
+                }
+
                 // Get secondary function
                 String secondaryFunction = record.get(8);
                 if (secondaryFunction.length() > 2 && secondaryFunction.substring(1, 2).equals("-")) {
@@ -496,7 +526,6 @@ public class CSVLoader {
                 String name = record.get(0);
                 String city = record.get(3);
                 String state = record.get(4);
-                String primaryFunction = record.get(7);
 
                 retailers.add(new RetailerLocation(name, addressLine1, addressLine2, city,
                         state, zipcode, blockLot, primaryFunction,
