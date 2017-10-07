@@ -990,6 +990,8 @@ public class MapController {
                 Scene loginScene = new Scene(loginView);
                 loginScene.getStylesheets().add("/css/loginStyle.css");
                 stage.setScene(loginScene);
+                stage.setHeight(loginView.getScene().getHeight());
+                stage.setWidth(loginView.getScene().getWidth());
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();

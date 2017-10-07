@@ -134,6 +134,7 @@ public class LoginController {
             Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Map can take over
             mapController.setUp(model, stage);
             stage.setScene(new Scene(mapView));
+            stage.sizeToScene();
             stage.show();
 
         } catch (Exception e) {

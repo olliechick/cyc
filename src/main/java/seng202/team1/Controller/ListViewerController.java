@@ -38,8 +38,6 @@ public class ListViewerController {
     private UserAccountModel user;
     private Stage stage;
 
-    private static final double windowHeaderSizeAdjust = 30;
-
     public void initialize() {
 
         bikeListView.setCellFactory(param -> new ListCell<BikeTripList>() {
@@ -216,8 +214,7 @@ public class ListViewerController {
             bikeTableController.setStage(stage);
             stage.setScene(new Scene(bikeTableView));
             stage.setTitle("Bike Trips");
-            stage.setWidth(bikeTableView.getScene().getWidth());
-            stage.setHeight(bikeTableView.getScene().getHeight() + windowHeaderSizeAdjust);
+            stage.sizeToScene();
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -238,8 +235,7 @@ public class ListViewerController {
             retailerTableController.setStage(stage);
             stage.setScene(new Scene(retailerTableView));
             stage.setTitle("Retailers");
-            stage.setWidth(retailerTableView.getScene().getWidth());
-            stage.setHeight(retailerTableView.getScene().getHeight() + windowHeaderSizeAdjust);
+            stage.sizeToScene();
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -260,8 +256,7 @@ public class ListViewerController {
             wifiTableController.setStage(stage);
             stage.setScene(new Scene(wifiTableView));
             stage.setTitle("Wifi");
-            stage.setWidth(wifiTableView.getScene().getWidth());
-            stage.setHeight(wifiTableView.getScene().getHeight() + windowHeaderSizeAdjust);
+            stage.sizeToScene();
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
