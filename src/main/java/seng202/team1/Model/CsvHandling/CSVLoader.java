@@ -263,7 +263,7 @@ public class CSVLoader {
                 Point.Float endPoint = new Point.Float(endLong, endLat);
 
                 // Trip duration and creating the bike trip
-                String tripDurationString = record.get(0);
+                String tripDurationString = record.get(0).trim();
                 if (tripDurationString.isEmpty()) {
                     // Unknown trip duration
                     trips.add(new BikeTrip(startTime, stopTime, startPoint,
