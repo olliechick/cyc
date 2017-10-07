@@ -87,7 +87,6 @@ public class CSVExporterTest {
         char gender = 'f';
         int birthYear = 2000;
         Double tripDistance = 12.0;
-        boolean isUserDefinedPoint = false;
 
         BikeTrip bikeTrip = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
                 bikeID, gender, birthYear, tripDistance);

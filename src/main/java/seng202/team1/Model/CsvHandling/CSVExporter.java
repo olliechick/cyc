@@ -62,7 +62,7 @@ public class CSVExporter {
     public static void exportBikeTrips(String filename, String username) throws IOException, SQLException {
         // Import the users's bike trips from the database
         DatabaseManager.open();
-        ArrayList<BikeTrip> bikeTrips = getBikeTrips(username);
+        ArrayList<BikeTrip> bikeTrips = getBikeTrips(username, ""); // TODO: Support lists
         DatabaseManager.close();
 
         // Create an ArrayList of Strings, where each String is a bike trip line in the CSV
@@ -101,7 +101,7 @@ public class CSVExporter {
     public static void exportWifiHotspots(String filename, String username) throws IOException, SQLException {
         // Import the users's wifis from the database
         DatabaseManager.open();
-        ArrayList<WifiPoint> wifiPoints = getWifiPoints(username, "exportWifiHotspots");
+        ArrayList<WifiPoint> wifiPoints = getWifiPoints(username, ""); // TODO: Support lists
         DatabaseManager.close();
 
         // Create an ArrayList of Strings, where each String is a bike trip line in the CSV

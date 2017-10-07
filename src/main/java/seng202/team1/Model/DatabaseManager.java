@@ -257,11 +257,6 @@ public class DatabaseManager {
 
         if (point instanceof RetailerLocation) {
             numOfQs = 12;
-        /*    statement = "INSERT INTO retailer (userid, listid, name, addressLine1, addressLine2, city, state, " +
-                    "zipcode, blockLot, primaryFunction, secondaryFunction, latitude, longitude) " +
-                    "(SELECT listid, userid " +
-                    "FROM list INNER JOIN user ON list.userid=user.userid " +
-                    "WHERE user.username=? AND list.listName=?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"; */
             statement = "INSERT INTO retailer (listid, name, addressLine1, addressLine2, city, state, " +
                     "zipcode, blockLot, primaryFunction, secondaryFunction, latitude, longitude) " +
                     "VALUES ( " +
@@ -331,18 +326,18 @@ public class DatabaseManager {
             BikeTrip trip = (BikeTrip) point;
             preparedStatement = connection.prepareStatement(statement);
 
-            preparedStatement.setLong(1, trip.getTripDuration());
-            preparedStatement.setString(2, trip.getStartTime().toString());
-            preparedStatement.setString(3, trip.getStopTime().toString());
-            preparedStatement.setFloat(4, trip.getStartLatitude());
-            preparedStatement.setFloat(5, trip.getStartLongitude());
-            preparedStatement.setFloat(6, trip.getEndLatitude());
-            preparedStatement.setFloat(7, trip.getEndLongitude());
-            preparedStatement.setInt(8, trip.getBikeId());
-            preparedStatement.setString(9, Character.toString(trip.getGender()));
-            preparedStatement.setInt(10, trip.getBirthYear());
-            preparedStatement.setDouble(11, trip.getTripDistance());
-            preparedStatement.setString(12, username);
+            preparedStatement.setInt(1, getListID(username, listName));
+            preparedStatement.setLong(2, trip.getTripDuration());
+            preparedStatement.setString(3, trip.getStartTime().toString());
+            preparedStatement.setString(4, trip.getStopTime().toString());
+            preparedStatement.setFloat(5, trip.getStartLatitude());
+            preparedStatement.setFloat(6, trip.getStartLongitude());
+            preparedStatement.setFloat(7, trip.getEndLatitude());
+            preparedStatement.setFloat(8, trip.getEndLongitude());
+            preparedStatement.setInt(9, trip.getBikeId());
+            preparedStatement.setString(10, Character.toString(trip.getGender()));
+            preparedStatement.setInt(11, trip.getBirthYear());
+            preparedStatement.setDouble(12, trip.getTripDistance());
 
             preparedStatement.execute();
 
@@ -393,13 +388,13 @@ public class DatabaseManager {
      * @param username the username of the user.
      * @return all of the bike trips associated to this user.
      */
-    public static ArrayList<BikeTrip> getBikeTrips(String username) { //TODO: Add listid
-        String statement = "SELECT * FROM trip WHERE username=?";
+    public static ArrayList<BikeTrip> getBikeTrips(String username, String listName) {
+        String statement = "SELECT * FROM trip WHERE listid=?";
         PreparedStatement preparedStatement;
         ArrayList<BikeTrip> result = new ArrayList<>();
         try {
             preparedStatement = connection.prepareStatement(statement);
-            preparedStatement.setString(1, username);
+            preparedStatement.setInt(1, getListID(username, listName));
 
             ResultSet rs = preparedStatement.executeQuery();
 
@@ -431,26 +426,6 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         return result;
-    }
-
-
-    public static int getUserID(String username) {
-        String statement = "SELECT id FROM user WHERE username=?;";
-
-        PreparedStatement preparedStatement;
-
-        try {
-            preparedStatement = connection.prepareStatement(statement);
-            preparedStatement.setString(1, username);
-
-            ResultSet rs = preparedStatement.executeQuery();
-
-            return rs.getInt("id");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1;
     }
 
 
@@ -520,16 +495,15 @@ public class DatabaseManager {
 
             if (rs.next()) {
                 listid = rs.getInt(1);
+                System.out.println(String.format("listid for %s of user %s is %d", listName, username, listid));
+            } else {
+                createNewList(username, listName);
+                listid = getListID(username, listName);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (listid == -1) {
-            createNewList(username, listName);
-            return getListID(username, listName);
-        } else {
-            return listid;
-        }
+        return listid;
     }
 
     public static void createNewList(String username, String listName) {
@@ -544,6 +518,8 @@ public class DatabaseManager {
             preparedStatement.setString(2, listName);
 
             preparedStatement.execute();
+
+            System.out.println(String.format("List %s of user %s created", listName, username));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -635,37 +611,4 @@ public class DatabaseManager {
     }
 
 
-    /**
-     * Returns the number of records of a certain type stored in the database,
-     * that are associated with a user.
-     *
-     * @param c        Class of which the count is to be queried.
-     * @param username Username of the user.
-     * @return number of records to type c in database
-     * @author Ridge Nairn
-     */
-    public static int getNumberOfRowsFromType(Class c, String username) {
-        String statement = "";
-        if (c == BikeTrip.class) {
-            statement = "SELECT COUNT(*) FROM trip WHERE username=?";
-
-        } else if (c == RetailerLocation.class) {
-            statement = "SELECT COUNT(*) FROM retailer WHERE username=?";
-
-        } else if (c == WifiPoint.class) {
-            statement = "SELECT COUNT(*) FROM wifi WHERE username=?";
-
-        }
-        PreparedStatement preparedStatement;
-        int n = -1;
-        try {
-            preparedStatement = connection.prepareStatement(statement);
-            preparedStatement.setString(1, username);
-            ResultSet rs = preparedStatement.executeQuery();
-            n = rs.getInt(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return n;
-    }
 }

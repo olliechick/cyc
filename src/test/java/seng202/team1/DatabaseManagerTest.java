@@ -158,6 +158,24 @@ public class DatabaseManagerTest {
     }
 
     @Test
+    public void addWifiPointToSameList() throws Exception {
+        try {
+            DatabaseManager.addRecord(wifi, model.getUserName(), "NotMyWifi");
+            DatabaseManager.addRecord(wifi, model.getUserName(), "myWifi");
+            DatabaseManager.addRecord(wifi, model.getUserName(), "myWifi");
+            DatabaseManager.addRecord(wifi, model.getUserName(), "AlsoNotMyWifi");
+            DatabaseManager.addRecord(wifi, model.getUserName(), "MYWIFI"); // Different case
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        DatabaseManager.open();
+        assertEquals(2, DatabaseManager.getWifiPoints(model.getUserName(), "myWifi").size());
+        DatabaseManager.close();
+    }
+
+    @Test
     public void addBikeTrip() throws Exception {
 
         try {
@@ -167,26 +185,7 @@ public class DatabaseManagerTest {
         }
         System.out.println(trip.getBikeId());
         DatabaseManager.open();
-        assertEquals(trip, DatabaseManager.getBikeTrips(model.getUserName()).get(0));
-        DatabaseManager.close();
-    }
-
-
-    @Test
-    public void getNumberOfBikeTrips() throws Exception {
-        ArrayList<BikeTrip> trips = new ArrayList<>();
-
-        // Add the same trip 100 times
-        for (int i = 0; i < 100; i++) {
-            trips.add(trip);
-        }
-        try {
-            DatabaseManager.addRecords(trips, model.getUserName(), "lotsOfBikeTrips");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        DatabaseManager.open();
-        assertEquals(100, DatabaseManager.getNumberOfRowsFromType(BikeTrip.class, model.getUserName()));
+        assertEquals(trip, DatabaseManager.getBikeTrips(model.getUserName(), "myBikeTrips").get(0));
         DatabaseManager.close();
     }
 
@@ -194,12 +193,16 @@ public class DatabaseManagerTest {
     public void getOnlyUserTrips() throws Exception {
         try {
             DatabaseManager.addRecord(trip, model.getUserName(), "myTrips");
-            DatabaseManager.addRecord(trip, "notMyUser", "myTrips");
+            System.out.println("--------");
+            DatabaseManager.addRecord(trip, model.getUserName(), "myTrips");
+
+            DatabaseManager.addRecord(trip, "notMyUser", "myTrips"); // Wrong user
+            DatabaseManager.addRecord(trip, model.getUserName(), "NotMyTrips"); // Wrong list
         } catch (SQLException e) {
             e.printStackTrace();
         }
         DatabaseManager.open();
-        assertEquals(1, DatabaseManager.getBikeTrips(model.getUserName()).size());
+        assertEquals(2, DatabaseManager.getBikeTrips(model.getUserName(), "myTrips").size());
         DatabaseManager.close();
     }
 
