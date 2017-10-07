@@ -40,6 +40,31 @@ body{
 #map_container{
 	height:100%;
 }
+#right-panel {
+    font-family: 'Roboto','sans-serif';
+    line-height: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#right-panel select, #right-panel input {
+    font-size: 11px;
+}
+
+#right-panel select {
+    width: 100%;
+}
+
+#right-panel  {
+    font-size: 11px;
+}
+#right-panel {
+    height: 100%;
+    float: right;
+    width: 180px;
+    overflow: auto;
+    display: none;
+}
 </style>
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
@@ -99,7 +124,7 @@ function initialise(){
 	directionsRendererOptions.preserveViewport=false;
 	var directionsRenderer=new google.maps.DirectionsRenderer(directionsRendererOptions);
 	var directionsService=new google.maps.DirectionsService();
-	
+    directionsRenderer.setPanel(document.getElementById('right-panel'));
 	var contextMenuOptions={};
 	contextMenuOptions.classNames={menu:'context_menu', menuSeparator:'context_menu_separator'};
 
@@ -174,7 +199,7 @@ function initialise(){
                 break;
 			case 'clear_directions_click':
 				directionsRenderer.setMap(null);
-
+                document.getElementById('right-panel').style.display='none';
 				//	set CSS styles to defaults
 				document.getElementById('clearDirectionsItem').style.display='';
 				document.getElementById('directionsDestinationItem').style.display='';
@@ -186,7 +211,7 @@ function initialise(){
 				directionsRequest.destination=destinationMarker.getPosition();
 				directionsRequest.origin=originMarker.getPosition();
 				directionsRequest.travelMode=google.maps.TravelMode.BICYCLING;
-				
+                directionsRequest.unitSystem= google.maps.UnitSystem.METRIC;
 				directionsService.route(directionsRequest, function(result, status){
 					if(status===google.maps.DirectionsStatus.OK){
 						//	hide the origin and destination markers as the DirectionsRenderer will render Markers itself
@@ -196,6 +221,7 @@ function initialise(){
 						directionsRenderer.setMap(map);
                         var myJSON = JSON.stringify(result);
                         app.directions(myJSON);
+                        document.getElementById('right-panel').style.display='block';
 
                         //	hide all but the 'Clear directions' menu item
 						document.getElementById('clearDirectionsItem').style.display='block';
@@ -229,8 +255,11 @@ function initialise(){
 		if(originMarker.getMap() && destinationMarker.getMap() && document.getElementById('getDirectionsItem').style.display===''){
 			//	display the 'Get directions' menu item if it is not visible and both directions origin and destination have been selected
 			document.getElementById('getDirectionsItem').style.display='block';
+
 		}
 	});
+
+
 
 
     // Labels, labelIndex and markerArray to track user clicks on map
@@ -472,6 +501,8 @@ function initialise(){
 </script>
 </head>
 <body onload="initialise()">
+<div id="right-panel"></div>
 	<div id="map_container"></div>
+
 </body>
 </html>

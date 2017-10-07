@@ -18,6 +18,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.web.WebView?>
 
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Accordion?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
@@ -219,7 +221,13 @@
       </GridPane>
    </left>
    <bottom>
-      <GridPane fx:id="bottomPane" prefHeight="163.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+
+       <Accordion BorderPane.alignment="CENTER">
+       <panes>
+       <TitledPane animated="false" text="WIFI and retailer distances">
+       <content>
+
+       <GridPane  prefHeight="163.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -248,5 +256,11 @@
             </TableView>
          </children>
       </GridPane>
+
+       </content>
+       </TitledPane>
+       </panes>
+       </Accordion>
+
    </bottom>
 </BorderPane>
