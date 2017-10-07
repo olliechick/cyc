@@ -28,9 +28,9 @@ import static seng202.team1.Model.DatabaseManager.getWifiPoints;
  */
 public class CSVExporter {
 
-    private final static String bikeTripsHeader = "Trip duration,Start time,Stop time,,,Start point latitude,"
+    private final static String bikeTripsHeader = "Trip duration,Start time,End time,,,Start point latitude,"
             + "Start point longitude,,,End point latitude,End point longitude,Bike ID,,Birth year,Gender";
-    private final static String retailersHeader = "Name,Address (line 1),Address (line 2),City,State,"
+    private final static String retailersHeader = "Name,Address,Address (pre-line),City,State,"
             + "ZIP code,Block-Lot,Primary function,Secondary function,Latitude,Longitude";
     private final static String wifiPointsHeader = "Object ID,,,Cost,Provider,Name,Location,Latitude,"
             + "Longitude,,,Location Type,Remarks,City,SSID,Source ID,Activated,,Borough,,Neighbourhood,,"
@@ -57,14 +57,26 @@ public class CSVExporter {
      *
      * @param filename The name of the file to save
      * @param username Username of the user whose bike trips will be exported
-     * @throws IOException If an IO Exception occurs
+     * @throws IOException  If an IO Exception occurs
+     * @throws SQLException If there is an error with the database
      */
     public static void exportBikeTrips(String filename, String username) throws IOException, SQLException {
         // Import the users's bike trips from the database
         DatabaseManager.open();
         ArrayList<BikeTrip> bikeTrips = getBikeTrips(username, ""); // TODO: Support lists
         DatabaseManager.close();
+        exportBikeTrips(filename, bikeTrips);
+    }
 
+
+    /**
+     * Saves a list of bike trips to the file whose name is given by filename.
+     *
+     * @param filename  The name of the file to save
+     * @param bikeTrips The list of BikeTrips to save
+     * @throws IOException If an IO Exception occurs
+     */
+    public static void exportBikeTrips(String filename, ArrayList<BikeTrip> bikeTrips) throws IOException {
         // Create an ArrayList of Strings, where each String is a bike trip line in the CSV
         ArrayList<String> lines = new ArrayList<String>();
         lines.add(bikeTripsHeader);
@@ -80,7 +92,7 @@ public class CSVExporter {
             line += bikeTrip.getEndLatitude() + ",";
             line += bikeTrip.getEndLongitude() + ",";
             line += bikeTrip.getBikeId() + ",";
-            line += ","; //skip usertype (Customer/Subscriber)
+            line += ","; //skip user type (Customer/Subscriber)
             line += bikeTrip.getBirthYear() + ",";
             char gender = bikeTrip.getGender();
             if (gender == 'm') {
@@ -98,12 +110,32 @@ public class CSVExporter {
     }
 
 
+    /**
+     * Gets the wifi points from the database associated with the user denoted by username
+     * and saves them to the file whose name is given by filename.
+     *
+     * @param filename The name of the file to save
+     * @param username Username of the user whose wifi points will be exported
+     * @throws IOException  If an IO Exception occurs
+     * @throws SQLException If there is an error with the database
+     */
     public static void exportWifiHotspots(String filename, String username) throws IOException, SQLException {
         // Import the users's wifis from the database
         DatabaseManager.open();
         ArrayList<WifiPoint> wifiPoints = getWifiPoints(username, ""); // TODO: Support lists
         DatabaseManager.close();
+        exportWifiHotspots(filename, wifiPoints);
+    }
 
+
+    /**
+     * Saves a list of wifi points to the file whose name is given by filename.
+     *
+     * @param filename   The name of the file to save
+     * @param wifiPoints The list of WifiPoints to save
+     * @throws IOException If an IO Exception occurs
+     */
+    public static void exportWifiHotspots(String filename, ArrayList<WifiPoint> wifiPoints) throws IOException {
         // Create an ArrayList of Strings, where each String is a bike trip line in the CSV
         ArrayList<String> lines = new ArrayList<String>();
         lines.add(wifiPointsHeader);
@@ -113,7 +145,7 @@ public class CSVExporter {
             line += ",,\""; //skip the_geom and boro
             line += wifiPoint.getCost() + "\",\"";
             line += wifiPoint.getProvider() + "\",\"";
-            line += wifiPoint.getName() + "\",\"";
+            line += wifiPoint.getPlaceName() + "\",\"";
             line += wifiPoint.getLocation() + "\",";
             line += wifiPoint.getLatitude() + ",";
             line += wifiPoint.getLongitude() + ",";
@@ -145,18 +177,38 @@ public class CSVExporter {
     }
 
 
+    /**
+     * Gets the retailer locations from the database associated with the user denoted by username
+     * and saves them to the file whose name is given by filename.
+     *
+     * @param filename The name of the file to save
+     * @param username Username of the user whose wifi points will be exported
+     * @throws IOException  If an IO Exception occurs
+     * @throws SQLException If there is an error with the database
+     */
     public static void exportRetailers(String filename, String username) throws IOException, SQLException {
         // Import the users's retailers from the database
         DatabaseManager.open();
         ArrayList<RetailerLocation> retailers = getRetailers(username, "");
         DatabaseManager.close();
+        exportRetailers(filename, retailers);
+    }
 
+
+    /**
+     * Saves a list of retailer locations to the file whose name is given by filename.
+     *
+     * @param filename  The name of the file to save
+     * @param retailers The list of RetailerLocations to save
+     * @throws IOException If an IO Exception occurs
+     */
+    public static void exportRetailers(String filename, ArrayList<RetailerLocation> retailers) throws IOException {
         // Create an ArrayList of Strings, where each String is a bike trip line in the CSV
         ArrayList<String> lines = new ArrayList<String>();
         lines.add(retailersHeader);
         for (RetailerLocation retailer : retailers) {
             String line;
-            line = "\""  + retailer.getName() + "\",\"";
+            line = "\"" + retailer.getName() + "\",\"";
             line += retailer.getAddressLine1() + "\",\"";
             line += retailer.getAddressLine2() + "\",\"";
             line += retailer.getCity() + "\",\"";

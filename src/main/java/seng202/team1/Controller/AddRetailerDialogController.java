@@ -26,6 +26,7 @@ import static seng202.team1.Controller.MapController.getUserClicks;
  * Created by jbe113 on 20/09/17.
  *
  * @author Josh Bernasconi
+ * @author Cameron Auld
  */
 public class AddRetailerDialogController {
 
@@ -149,8 +150,8 @@ public class AddRetailerDialogController {
         if (!userClicks.isEmpty()) {
             // User has clicked
             Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
-            latField.setText(Double.toString(lastPoint.getX()));
-            longField.setText(Double.toString(lastPoint.getY()));
+            latField.setText(String.format ("%.6f", lastPoint.getX()));
+            longField.setText(String.format ("%.6f", lastPoint.getY()));
         }
 
         root.setOnKeyPressed(new EventHandler<KeyEvent>() {

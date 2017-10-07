@@ -241,14 +241,38 @@ public class CSVLoader {
                     gender = 'u';
                 }
 
-                // Other stuff
-                //int StartStationId = Integer.parseInt(record.get(3));
-                long tripDuration = new Long(record.get(0).trim());
-                Point.Float startPoint = new Point.Float(Float.parseFloat(record.get(6)), Float.parseFloat(record.get(5)));
-                Point.Float endPoint = new Point.Float(Float.parseFloat(record.get(10)), Float.parseFloat(record.get(9)));
+                // Start and end point
+                Float startLat = Float.parseFloat(record.get(5));
+                if (startLat < -90 || startLat > 90) {
+                    throw new NumberFormatException("Latitude must be between -90 and 90.");
+                }
+                Float startLong = Float.parseFloat(record.get(6));
+                if (startLong < -180 || startLong > 180) {
+                    throw new NumberFormatException("Longitude must be between -180 and 180.");
+                }
+                Point.Float startPoint = new Point.Float(startLong, startLat);
 
-                trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,// startStationId, endStationId,
-                        endPoint, bikeId, gender, birthYear));
+                Float endLat = Float.parseFloat(record.get(9));
+                if (endLat < -90 || endLat > 90) {
+                    throw new NumberFormatException("Latitude must be between -90 and 90.");
+                }
+                Float endLong = Float.parseFloat(record.get(10));
+                if (endLong < -180 || endLong > 180) {
+                    throw new NumberFormatException("Longitude must be between -180 and 180.");
+                }
+                Point.Float endPoint = new Point.Float(endLong, endLat);
+
+                // Trip duration and creating the bike trip
+                String tripDurationString = record.get(0).trim();
+                if (tripDurationString.isEmpty()) {
+                    // Unknown trip duration
+                    trips.add(new BikeTrip(startTime, stopTime, startPoint,
+                            endPoint, bikeId, gender, birthYear));
+                } else {
+                    long tripDuration = new Long(tripDurationString);
+                    trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,
+                            endPoint, bikeId, gender, birthYear));
+                }
 
                 isValidCsv = true;
             } catch (Exception e) {
@@ -316,7 +340,17 @@ public class CSVLoader {
             // Process all the attributes - from most to least likely to fail
             try {
                 // Datetime activated
-                LocalDateTime datetimeActivated = LocalDateTime.parse(record.get(16), DateTimeFormatter.ofPattern("M/d/yyyy hh:mm:ss a Z"));
+                LocalDateTime datetimeActivated;
+                try {
+                    datetimeActivated = LocalDateTime.parse(record.get(16), DateTimeFormatter.ofPattern("M/d/yyyy hh:mm:ss a Z"));
+                } catch (DateTimeParseException e) {
+                    if (record.get(16).isEmpty()) {
+                        // Empty datetime
+                        datetimeActivated = null;
+                    } else {
+                        throw e;
+                    }
+                }
                 if (datetimeActivated.isBefore(EARLIEST_POSSIBLE_DATE)) {
                     // dates earlier than this means that this data is not available
                     datetimeActivated = null;
@@ -335,7 +369,15 @@ public class CSVLoader {
                 }
 
                 // Co-ordinates
-                Point.Float coords = new Point.Float(Float.parseFloat(record.get(8)), Float.parseFloat(record.get(7)));
+                Float latitude = Float.parseFloat(record.get(7));
+                if (latitude < -90 || latitude > 90) {
+                    throw new NumberFormatException("Latitude must be between -90 and 90.");
+                }
+                Float longitude = Float.parseFloat(record.get(8));
+                if (longitude < -180 || longitude > 180) {
+                    throw new NumberFormatException("Longitude must be between -180 and 180.");
+                }
+                Point.Float coords = new Point.Float(longitude, latitude);
 
                 // Strings that could be null
                 String name = record.get(5);
@@ -454,19 +496,41 @@ public class CSVLoader {
                 }
 
                 // Try to get coords
-                Point.Float coords = new Point.Float();
+                Float latitude;
+                Float longitude;
+                Point.Float coords;
                 try {
-                    coords.y = Float.parseFloat(record.get(9)); //latitude
-                    coords.x = Float.parseFloat(record.get(10)); //longitude
+                    latitude = Float.parseFloat(record.get(9));
+                    if (latitude < -90 || latitude > 90) {
+                        throw new NumberFormatException("Latitude must be between -90 and 90.");
+                    }
+                    longitude = Float.parseFloat(record.get(10));
+                    if (longitude < -180 || longitude > 180) {
+                        throw new NumberFormatException("Longitude must be between -180 and 180.");
+                    }
+                    coords = new Point.Float(longitude, latitude);
                 } catch (Exception e) {
                     //Now try in cols 10 and 11
                     try {
-                        coords.y = Float.parseFloat(record.get(10)); //latitude
-                        coords.x = Float.parseFloat(record.get(11)); //longitude
+                        latitude = Float.parseFloat(record.get(10));
+                        if (latitude < -90 || latitude > 90) {
+                            throw new NumberFormatException("Latitude must be between -90 and 90.");
+                        }
+                        longitude = Float.parseFloat(record.get(11));
+                        if (longitude < -180 || longitude > 180) {
+                            throw new NumberFormatException("Longitude must be between -180 and 180.");
+                        }
+                        coords = new Point.Float(longitude, latitude);
                     } catch (Exception e2) {
                         // Couldn't get the coords for whatever reason. Set them to null.
                         coords = null;
                     }
+                }
+
+                // Get primary  function
+                String primaryFunction = record.get(7);
+                if (primaryFunction.isEmpty()) {
+                    primaryFunction = "Other";
                 }
 
                 // Get secondary function
@@ -496,7 +560,6 @@ public class CSVLoader {
                 String name = record.get(0);
                 String city = record.get(3);
                 String state = record.get(4);
-                String primaryFunction = record.get(7);
 
                 retailers.add(new RetailerLocation(name, addressLine1, addressLine2, city,
                         state, zipcode, blockLot, primaryFunction,

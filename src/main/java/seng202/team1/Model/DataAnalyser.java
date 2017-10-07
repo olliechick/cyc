@@ -11,6 +11,7 @@ import java.util.*;
  * Static class that handles all of the data analysis required.
  *
  * @author Josh Burt
+ * @author Cameron Auld
  */
 public final class DataAnalyser {
 
@@ -161,7 +162,13 @@ public final class DataAnalyser {
         return resultsObserved;
     }
 
-
+    /**
+     * Takes an Arraylist of WIFIPointDistances and an Arraylist of points(a route) and returns an ArrayList of WIFIPointDistances
+     * sorted by each points minimum distance to the route.
+     * @param points
+     * @param waypoints
+     * @return
+     */
     public static ArrayList<WIFIPointDistance> sortedWIFIPointsByMinimumDistanceToRoute(ArrayList<WIFIPointDistance> points, ArrayList<Point2D.Float> waypoints) {
         WIFIPointDistance current;
         Double currentDistance;
@@ -183,7 +190,13 @@ public final class DataAnalyser {
         points.sort(Comparator.comparing(WIFIPointDistance::getDistance));
         return points;
     }
-
+    /**
+     * Takes an Arraylist of RetailerPointDistances and an Arraylist of points(a route) and returns an ArrayList of RetailerPointDistances
+     * sorted by each points minimum distance to the route.
+     * @param points
+     * @param waypoints
+     * @return
+     */
     public static ArrayList<RetailerPointDistance> sortedRetailerPointsByMinimumDistanceToRoute(ArrayList<RetailerPointDistance> points, ArrayList<Point2D.Float> waypoints) {
         RetailerPointDistance current;
         Double currentDistance;
@@ -206,7 +219,13 @@ public final class DataAnalyser {
         return points;
     }
 
-
+    /**
+     *
+     * @param waypoints
+     * @param locations
+     * @param delta
+     * @return
+     */
     public static ArrayList<Integer> searchRetailerLocationsOnRoute(ArrayList<Point2D.Float> waypoints, ArrayList<RetailerLocation> locations, double delta){
 
         Set<Integer> uniqueIndexes = new HashSet<>(locations.size());
@@ -218,17 +237,22 @@ public final class DataAnalyser {
             searchLat = waypoint.getY();
             searchLong = waypoint.getX();
             indexesCurrent = searchRetailerLocations(searchLat, searchLong, delta, locations, true);
-            //System.out.println(indexesCurrent);
             uniqueIndexes.addAll(indexesCurrent);
-            //System.out.println(uniqueIndexes);
+
         }
         indexes.addAll(uniqueIndexes);
-        //System.out.print(indexes);
+
         return indexes;
     }
 
 
-
+    /**
+     *
+     * @param waypoints
+     * @param hotspots
+     * @param delta
+     * @return
+     */
     public static ArrayList<Integer> searchWifiPointsOnRoute(ArrayList<Point2D.Float> waypoints, ArrayList<WifiPoint> hotspots, double delta){
         Set<Integer> uniqueIndexes = new HashSet<>(hotspots.size());
         ArrayList<Integer> indexes = new ArrayList<>();
@@ -239,16 +263,24 @@ public final class DataAnalyser {
             searchLat = waypoint.getY();
             searchLong = waypoint.getX();
             indexesCurrent = searchWifiPoints(searchLat, searchLong, delta, hotspots, true);
-            //System.out.println(indexesCurrent);
+
             uniqueIndexes.addAll(indexesCurrent);
-            //System.out.println(uniqueIndexes);
+
         }
         indexes.addAll(uniqueIndexes);
-        //System.out.print(indexes);
+
         return indexes;
     }
 
-
+    /**
+     *
+     * @param searchLat
+     * @param searchLong
+     * @param delta
+     * @param hotspots
+     * @param returnIndex
+     * @return
+     */
     public static ArrayList<Integer> searchWifiPoints(double searchLat, double searchLong,
                                                         double delta, ArrayList<WifiPoint> hotspots, boolean returnIndex) {
         ArrayList<Integer> results = new ArrayList<>();
@@ -267,7 +299,15 @@ public final class DataAnalyser {
             return results;
         }
 
-
+    /**
+     *
+     * @param searchLat
+     * @param searchLong
+     * @param delta
+     * @param retailers
+     * @param returnIndex
+     * @return
+     */
     public static ArrayList<Integer> searchRetailerLocations(double searchLat, double searchLong,
                                                       double delta, ArrayList<RetailerLocation> retailers, boolean returnIndex) {
         ArrayList<Integer> results = new ArrayList<>();
@@ -596,7 +636,13 @@ public final class DataAnalyser {
         return index;
     }
 
-// TODO
+    /**
+     *
+     * @param hotspots
+     * @param latitude
+     * @param longitude
+     * @return
+     */
     public static int findClosestWifiPointToRetailer(ArrayList<WifiPoint> hotspots, Float latitude, Float longitude) {
         int index = -1;
         double distance = 1000000000;

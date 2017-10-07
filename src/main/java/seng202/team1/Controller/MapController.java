@@ -57,6 +57,14 @@ import static seng202.team1.Model.GenerateFields.generateWifiProviders;
  */
 public class MapController {
 
+    private final static String WIFI_ICON_FILENAME = "icons/wifi.png";
+    private final static String WIFI_ICON_SELECTED_FILENAME = "icons/wifiSelected.png";
+    private final static String RETAILER_ICON_FILENAME = "icons/retailer.png";
+    private final static String RETAILER_ICON_SELECTED_FILENAME = "icons/retailerSelected.png";
+
+    private final static String RETAILER_CLUSTER_ICON_FILENAME = "icons/retailerCluster";
+    private final static String WIFI_CLUSTER_ICON_FILENAME = "icons/wifiCluster";
+
     static ArrayList<Point.Double> userClicks = new ArrayList<>();
     public ArrayList<String> uniqueSecondaryFunctions = null;
     public ArrayList<String> uniquePrimaryFunctions = null;
@@ -70,13 +78,13 @@ public class MapController {
     ArrayList<WifiPoint> wifiPoints = null;
     ArrayList<BikeTrip> bikeTrips = null;
 
-    ArrayList<WIFIPointDistance> wifiDistances = null;
+
     ObservableList<WIFIPointDistance> observableWIFIDistances = null;
 
-    ArrayList<RetailerPointDistance> retailerDistances = null;
+
     ObservableList<RetailerPointDistance> observableRetailerDistances = null;
-    JavaApp clickListner;
-    JavaApp retailerListner;
+    JavascriptBridge clickListner;
+    JavascriptBridge retailerListner;
     WebViewHyperlinkListener eventPrintingListener = event -> {
         String eventString = WebViews.hyperlinkEventToString(event);
         System.out.println("Denied: " + eventString);
@@ -219,8 +227,8 @@ public class MapController {
 
     private void loadData() {
 
-        clickListner = new JavaApp();
-        retailerListner = new JavaApp();
+        clickListner = new JavascriptBridge();
+        retailerListner = new JavascriptBridge();
         // Add a Java callback object to a WebEngine document can be used to
         //the coordinates of user clicks to the map.
         JSObject win = (JSObject) webEngine.executeScript("window");
@@ -238,8 +246,8 @@ public class MapController {
 
     private void reloadData() {
         removeAllFilters();
-        clickListner = new JavaApp();
-        retailerListner = new JavaApp();
+        clickListner = new JavascriptBridge();
+        retailerListner = new JavascriptBridge();
         // Add a Java callback object to a WebEngine document can be used to
         //the coordinates of user clicks to the map.
         JSObject win = (JSObject) webEngine.executeScript("window");
@@ -265,17 +273,6 @@ public class MapController {
 
     }
 
-    @FXML
-    private void suggestRouteFromPoint() {
-        Point.Double coordinates = userClicks.get(userClicks.size() - 1);
-        System.out.print(coordinates);
-        ArrayList<BikeTrip> suggested = DataAnalyser.searchBikeTrips(coordinates.getX(), coordinates.getY(),
-                20000, bikeTrips, true);
-        BikeTrip first = suggested.get(0);
-        webView.getEngine().executeScript("document.calcRoute({lat: " + first.getStartLatitude() + ", lng:  " +
-                first.getStartLongitude() + "}, {lat: " + first.getEndLatitude() + ", lng:  " + first.getEndLongitude() + "})");
-
-    }
 
     @FXML
     private void switchView() {
@@ -299,13 +296,13 @@ public class MapController {
     }
 
     private void addWifi(float lat, float lng, String title) {
-        String scriptStr = "document.addWIFIMarker({lat: " + lat + ", lng:  " + lng + "}, 'WIFI2.png', " + "'" + title + "')";
+        String scriptStr = "document.addWIFIMarker({lat: " + lat + ", lng:  " + lng + "}, '" + WIFI_ICON_FILENAME + "', " + "'" + title + "')";
         webView.getEngine().executeScript(scriptStr);
 
     }
 
     private void addRetailer(float lat, float lng, String title) {
-        String scriptStr = "document.addRetailerMarker({lat: " + lat + ", lng:  " + lng + "}, 'departmentstore.png', " + "'" + title + "')";
+        String scriptStr = "document.addRetailerMarker({lat: " + lat + ", lng:  " + lng + "}, '" + RETAILER_ICON_FILENAME + "', " + "'" + title + "')";
         webView.getEngine().executeScript(scriptStr);
     }
 
@@ -364,7 +361,7 @@ public class MapController {
         } catch (NumberFormatException e) {
             System.out.println("Bad Ending Lat or Long");// We want these to pass to allow different search types
         }
-        double delta = 100;
+        double delta = 2000;
 
 
         ArrayList<BikeTrip> results = new ArrayList<>();
@@ -462,7 +459,7 @@ public class MapController {
             addWifi(point.getLatitude(), point.getLongitude(), point.toInfoString());
 
         }
-        webView.getEngine().executeScript("document.wifiCluster()");
+        webView.getEngine().executeScript("document.wifiCluster('" + WIFI_CLUSTER_ICON_FILENAME + "')");
     }
 
     private void loadAllRetailers() {
@@ -485,7 +482,7 @@ public class MapController {
             point.setVisible(true);
             addRetailer(point.getLatitude(), point.getLongitude(), point.toInfoString());
         }
-        webView.getEngine().executeScript("document.retailerCluster()");
+        webView.getEngine().executeScript("document.retailerCluster('" + RETAILER_CLUSTER_ICON_FILENAME + "')");
 
     }
 
@@ -842,7 +839,7 @@ public class MapController {
 
         if (!windowManager.getStagesOpen().isEmpty()) {
             close = AlertGenerator.createChoiceDialog("Close?", "You still have some windows open.",
-                                                    "\nYour data might not be saved\n\nAre you sure you want to exit?");
+                    "\nYour data might not be saved\n\nAre you sure you want to exit?");
         }
 
         if (close) {
@@ -888,9 +885,10 @@ public class MapController {
 
     /**
      * Shows a biketrip passed in by the table view on the map
+     *
      * @param selectedTrip
      */
-    public void showGivenTrip(BikeTrip selectedTrip){
+    public void showGivenTrip(BikeTrip selectedTrip) {
         ArrayList<Point.Float> routePoints = new ArrayList<>();
         routePoints.add(selectedTrip.getStartPoint());
         routePoints.add(selectedTrip.getEndPoint());
@@ -922,26 +920,26 @@ public class MapController {
      *
      * @param selectedShop Retailer to show
      */
-    public void showGivenShop(RetailerLocation selectedShop){
+    public void showGivenShop(RetailerLocation selectedShop) {
         webEngine.getLoadWorker().stateProperty().addListener(
                 new ChangeListener<Worker.State>() {
                     public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
                         if (newState == Worker.State.SUCCEEDED) {
                             int indexOfRetailer = retailerPoints.indexOf(selectedShop);
-                            String scriptStr1 = "document.circleRetailer(" + indexOfRetailer + ", 'DEPARTMENTSTORESELECTED.png', 'departmentstore.png')";
+                            String scriptStr1 = "document.circleRetailer(" + indexOfRetailer + ", '" + RETAILER_ICON_SELECTED_FILENAME + "')";
                             webView.getEngine().executeScript(scriptStr1);
                         }
                     }
                 });
     }
 
-    public void showGivenWifi(WifiPoint hotspot){
+    public void showGivenWifi(WifiPoint hotspot) {
         webEngine.getLoadWorker().stateProperty().addListener(
                 new ChangeListener<Worker.State>() {
                     public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
                         if (newState == Worker.State.SUCCEEDED) {
                             int indexOfRetailer = wifiPoints.indexOf(hotspot);
-                            String scriptStr1 = "document.circleWIFI(" + indexOfRetailer + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                            String scriptStr1 = "document.circleWIFI(" + indexOfRetailer + ", '" + WIFI_ICON_SELECTED_FILENAME + "')";
                             webView.getEngine().executeScript(scriptStr1);
                             typeSelectorTabPane.getSelectionModel().select(1);
 
@@ -1006,31 +1004,77 @@ public class MapController {
         ChangePasswordController changePasswordController = passwordLoader.getController();
 
         Stage stage1 = new Stage();
-        changePasswordController.initModel(model,stage1);
+        changePasswordController.initModel(model, stage1);
         stage1.setScene(new Scene(passwordView));
         stage1.initModality(Modality.APPLICATION_MODAL);
         stage1.showAndWait();
     }
 
-/**
- * JavaScript interface object. Can be used to pass
- */
+    /**
+     * JavaScript interface object. Can be used to pass
+     */
 
-    public class JavaApp {
-    public void alert(Double lat, Double lng) {
-        Point.Double clickPoint = new Point.Double();
-        clickPoint.setLocation(lat, lng);
-        userClicks.add(clickPoint);
-    }
+    public class JavascriptBridge {
+        public void alert(Double lat, Double lng) {
+            Point.Double clickPoint = new Point.Double();
+            clickPoint.setLocation(lat, lng);
+            userClicks.add(clickPoint);
+        }
+
+        public void origin(Double lat, Double lng) {
+            startingLatTextField.setText(String.format ("%.6f", lat));
+            startingLongTextField.setText(String.format ("%.6f", lng));
+        }
+
+        public void destination(Double lat, Double lng) {
+            endingLatTextField.setText(String.format ("%.6f", lat));
+            endingLongTextField.setText(String.format ("%.6f", lng));
+        }
+
+        public void addRetailer(Double lat, Double lng) {
+            Point.Double clickPoint = new Point.Double();
+            clickPoint.setLocation(lat, lng);
+            userClicks.add(clickPoint);
+            addCustomRetailer();
+        }
+
+        public void addWIFI(Double lat, Double lng) {
+            Point.Double clickPoint = new Point.Double();
+            clickPoint.setLocation(lat, lng);
+            userClicks.add(clickPoint);
+            addCustomWIFI();
+        }
+
+        public void saveRoute(Double originLat, Double originLng, Double destinationLat, Double destinationLng) {
+            Point.Double originPoint = new Point.Double();
+            Point.Double destinationPoint = new Point.Double();
+            originPoint.setLocation(originLat, originLng);
+            destinationPoint.setLocation(destinationLat, destinationLng);
+            userClicks.add(originPoint);
+            userClicks.add(destinationPoint);
+            addCustomBikeTrip();
+        }
+
+        public void clearRoute() {
+            resetRetailerIcons(RETAILER_ICON_FILENAME);
+            resetWIFIIcons(WIFI_ICON_FILENAME);
+            observableWIFIDistances.clear();
+            observableRetailerDistances.clear();
+            wifiDistanceTable.refresh();
+            retailerDistanceTable.refresh();
+
+        }
+
+
         public void directions(String route) {
             try {
                 BikeDirections dir = new BikeDirections(route, true);
                 if (showWIFINearRoute) {
                     ArrayList<Integer> indexes = searchWifiPointsOnRoute(dir.getPoints(), wifiPoints, wifiSearchDistance);
                     ArrayList<WIFIPointDistance> pointDistances = new ArrayList<>();
-                    resetWIFIIcons("WIFI2.png");
+                    resetWIFIIcons(WIFI_ICON_FILENAME);
                     for (int i = 0; i < indexes.size(); i++) {
-                        String scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", 'WIFISELECTED.png')";
+                        String scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", '" + WIFI_ICON_SELECTED_FILENAME + "')";
                         webView.getEngine().executeScript(scriptStr);
                         WIFIPointDistance pointDistance = new WIFIPointDistance(wifiPoints.get(indexes.get(i)), indexes.get(i));
                         pointDistances.add(pointDistance);
@@ -1040,15 +1084,16 @@ public class MapController {
                 } else if (showOnlyNearestWIFIToRoute) {
                     WifiPoint wifiPoint = findClosestWifiToRoute(dir.getPoints(), wifiPoints);
                     int indexOfWifi = wifiPoints.indexOf(wifiPoint);
-                    String scriptStr = "document.changeWIFIIcon(" + indexOfWifi + ", 'WIFISELECTED.png')";
+                    String scriptStr = "document.changeWIFIIcon(" + indexOfWifi + ", '" + WIFI_ICON_SELECTED_FILENAME + "')";
                     webView.getEngine().executeScript(scriptStr);
                 }
 
                 if (showRetailersNearRoute) {
                     ArrayList<Integer> indexes = searchRetailerLocationsOnRoute(dir.getPoints(), retailerPoints, retailerSearchDistance);
                     ArrayList<RetailerPointDistance> pointDistances = new ArrayList<>();
+                    resetRetailerIcons(RETAILER_ICON_FILENAME);
                     for (int i = 0; i < indexes.size(); i++) {
-                        String scriptStr = "document.changeRetailerIcon(" + indexes.get(i) + ", 'DEPARTMENTSTORESELECTED.png')";
+                        String scriptStr = "document.changeRetailerIcon(" + indexes.get(i) + ", '" + RETAILER_ICON_SELECTED_FILENAME + "')";
                         webView.getEngine().executeScript(scriptStr);
                         RetailerPointDistance pointDistance = new RetailerPointDistance(retailerPoints.get(indexes.get(i)), indexes.get(i));
                         pointDistances.add(pointDistance);
@@ -1057,7 +1102,7 @@ public class MapController {
                     setTableViewRetailer(sortedPointDistances);
                 } else if (showOnlyNearestRetailerToRoute) {
                     int indexOfRetailer = findClosestRetailerToBikeTrip(dir.getPoints(), retailerPoints);
-                    String scriptStr1 = "document.changeRetailerIcon(" + indexOfRetailer + ", 'DEPARTMENTSTORESELECTED.png')";
+                    String scriptStr1 = "document.changeRetailerIcon(" + indexOfRetailer + ", '" + RETAILER_ICON_SELECTED_FILENAME + "')";
                     webView.getEngine().executeScript(scriptStr1);
                 }
                 if (drawRouteUsingPolyLines) {
@@ -1075,9 +1120,9 @@ public class MapController {
             if (showWIFINearRetailer) {
                 ArrayList<WIFIPointDistance> pointDistances = new ArrayList<>();
                 ArrayList<Integer> indexes = searchWifiPoints(lat, lng, retailerToWIFISearchDistance, wifiPoints, true);
-                resetWIFIIcons("WIFI2.png");
+                resetWIFIIcons(WIFI_ICON_FILENAME);
                 for (int i = 0; i < indexes.size(); i++) {
-                    String scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", 'WIFISELECTED.png')";
+                    String scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", '" + WIFI_ICON_SELECTED_FILENAME + "')";
                     webView.getEngine().executeScript(scriptStr);
                     WIFIPointDistance pointDistance = new WIFIPointDistance(wifiPoints.get(indexes.get(i)), indexes.get(i));
                     pointDistances.add(pointDistance);
@@ -1089,8 +1134,8 @@ public class MapController {
                 setTableViewWIFI(sortedPointDistances);
             } else if (showOnlyNearestWIFIToRetailer) {
                 int indexOfWifi = findClosestWifiPointToRetailer(wifiPoints, lat.floatValue(), lng.floatValue());
-                System.out.println(indexOfWifi);
-                String scriptStr = "document.circleWIFI(" + indexOfWifi + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                resetWIFIIcons(WIFI_ICON_FILENAME);
+                String scriptStr = "document.changeWIFIIcon(" + indexOfWifi + ", '" + WIFI_ICON_SELECTED_FILENAME + "')";
                 webView.getEngine().executeScript(scriptStr);
             }
 
@@ -1112,7 +1157,6 @@ public class MapController {
         TableColumn<RetailerPointDistance, String> nameCol = new TableColumn<>("Name");
         TableColumn<RetailerPointDistance, String> distanceCol = new TableColumn<>("Distance");
         TableColumn<RetailerPointDistance, String> primaryFunctionCol = new TableColumn<>("Primary Function");
-
 
 
         //Set the IDs of the columns, not used yet TODO remove if never use
@@ -1141,13 +1185,13 @@ public class MapController {
         retailerDistanceTable.getColumns().addAll(distanceCol, nameCol, primaryFunctionCol);
     }
 
-    private void resetWIFIIcons(String icon){
-        String scriptStr = "document.resetWIFIIcon('" + icon +"')";
+    private void resetWIFIIcons(String icon) {
+        String scriptStr = "document.resetWIFIIcon('" + icon + "')";
         webView.getEngine().executeScript(scriptStr);
     }
 
-    private void resetRetailerIcons(String icon){
-        String scriptStr = "document.resetRetailerIcon('" + icon +"')";
+    private void resetRetailerIcons(String icon) {
+        String scriptStr = "document.resetRetailerIcon('" + icon + "')";
         webView.getEngine().executeScript(scriptStr);
     }
 
@@ -1193,7 +1237,7 @@ public class MapController {
 
         // Add the sorted and filtered data to the table.
         wifiDistanceTable.setItems(sortedData);
-        wifiDistanceTable.getColumns().addAll(distanceCol,ssidCol, costCol, providerCol);
+        wifiDistanceTable.getColumns().addAll(distanceCol, ssidCol, costCol, providerCol);
 
     }
 

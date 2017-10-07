@@ -32,6 +32,7 @@ import static seng202.team1.Controller.MapController.getUserClicks;
  * Created on 17/09/17.
  *
  * @author Josh Bernasconi
+ * @author Cameron Auld
  */
 public class AddBikeDialogController {
 
@@ -154,16 +155,17 @@ public class AddBikeDialogController {
         if (userClicks.size() == 1) {
             // User has clicked once - set this to the start point
             Point.Double secondToLastPoint = userClicks.get((userClicks.size() - 1));
-            startLatField.setText(Double.toString(secondToLastPoint.getX()));
-            startLongField.setText(Double.toString(secondToLastPoint.getY()));
+            startLatField.setText(String.format ("%.6f", secondToLastPoint.getX()));
+            startLongField.setText(String.format ("%.6f", secondToLastPoint.getY()));
         } else if (userClicks.size() > 1){
             // User has clicked at least twice
             Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
-            endLatField.setText(Double.toString(lastPoint.getX()));
-            endLongField.setText(Double.toString(lastPoint.getY()));
+            endLatField.setText(String.format ("%.6f", lastPoint.getX()));
+            endLongField.setText(String.format ("%.6f", lastPoint.getY()));
             Point.Double secondToLastPoint = userClicks.get((userClicks.size() - 2));
-            startLatField.setText(Double.toString(secondToLastPoint.getX()));
-            startLongField.setText(Double.toString(secondToLastPoint.getY()));
+            startLatField.setText(String.format ("%.6f", secondToLastPoint.getX()));
+            startLongField.setText(String.format ("%.6f", secondToLastPoint.getY()));
+
         }
 
         root.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -304,7 +306,7 @@ public class AddBikeDialogController {
         Float endLong = Float.valueOf(0);
         try {
             endLong = Float.parseFloat(endLongField.getText());
-            if (startLong < -180 || startLong > 180) {
+            if (endLong < -180 || endLong > 180) {
                 throw new NumberFormatException("Longitude must be between -180 and 180.");
             }
             endLongLabel.setTextFill(Color.BLACK);
