@@ -95,7 +95,7 @@ public class CSVExporterTest {
 
         // Save bike trip to the database
         try {
-            DatabaseManager.addRecord(bikeTrip, username, "csvTestExportBikeTrips");
+            DatabaseManager.addRecord(bikeTrip, username, "");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -129,7 +129,7 @@ public class CSVExporterTest {
 
         // Save bike trip to the database
         try {
-            DatabaseManager.addRecord(bikeTrip, username, "csvTestExportBikeTripsWithNulls");
+            DatabaseManager.addRecord(bikeTrip, username, "");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -168,7 +168,7 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addRecord(wifiPoint, username, "csvTestExportWifiHotspots");
+            DatabaseManager.addRecord(wifiPoint, username, "");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -208,7 +208,7 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addRecord(wifiPoint, username, "csvTestExportWifiHotspotsWithNulls");
+            DatabaseManager.addRecord(wifiPoint, username, "");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -242,7 +242,7 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addRecord(retailer, username, "csvTestExportRetailers");
+            DatabaseManager.addRecord(retailer, username, "");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -275,7 +275,7 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addRecord(retailer, username, "csvTestExportRetailersWithNulls");
+            DatabaseManager.addRecord(retailer, username, "");
         } catch (SQLException e) {
             e.printStackTrace();
         }
