@@ -95,8 +95,6 @@ public class LoginController {
     @FXML
     private CheckBox acceptTermsOfService;
 
-    @FXML
-    private Button viewTOS;
 
     private final static int MIN_PASSWORD_LENGTH = 0;
 
@@ -167,7 +165,7 @@ public class LoginController {
     }
 
     /**
-     * Changes the screen to view the TOS
+     * Opens a pop up to view the TOS
      */
     public void showTOS() throws IOException {
         System.out.println("TOS button pressed");

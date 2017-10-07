@@ -38,7 +38,7 @@ public class ListViewerController {
     private UserAccountModel user;
     private Stage stage;
 
-    private static final double windowHeaderSizeAdjust = 10;
+    private static final double windowHeaderSizeAdjust = 30;
 
     public void initialize() {
 
