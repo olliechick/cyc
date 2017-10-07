@@ -66,7 +66,7 @@ body{
     display: none;
 }
 </style>
-<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBrALsvaGRKhQxRw6X5VvydPqA5wMfwDN8&"></script>
     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
     </script>
 <script type="text/javascript" src="http://code.martinpearman.co.uk/googlemapsapi/contextmenu/1.0/src/ContextMenu.js"></script>
@@ -114,6 +114,11 @@ function initialise(){
 	mapOptions.zoom=12;
 	mapOptions.center=new google.maps.LatLng(40.759071, -73.902467);
 	mapOptions.mapTypeId=google.maps.MapTypeId.ROADMAP;
+	mapOptions.disableDefaultUI=false;
+	mapOptions.mapTypeControl=false;
+	mapOptions.streetViewControl=false;
+	mapOptions.fullscreenControl=false;
+
 	
 	var map=new google.maps.Map(document.getElementById('map_container'), mapOptions);
 	
@@ -122,6 +127,9 @@ function initialise(){
 	directionsRendererOptions.hideRouteList=true;
 	directionsRendererOptions.suppressMarkers=false;
 	directionsRendererOptions.preserveViewport=false;
+    directionsRendererOptions.polylineOptions={
+        strokeColor: "red"
+    }
 	var directionsRenderer=new google.maps.DirectionsRenderer(directionsRendererOptions);
 	var directionsService=new google.maps.DirectionsService();
     directionsRenderer.setPanel(document.getElementById('right-panel'));
@@ -139,6 +147,7 @@ function initialise(){
 	menuItems.push({className:'context_menu_item', eventName:'clear_directions_click', id:'clearDirectionsItem', label:'Clear directions'});
     menuItems.push({className:'context_menu_item', eventName:'save_directions_click', id:'saveDirectionsItem', label:'Save Route'});
 	menuItems.push({className:'context_menu_item', eventName:'get_directions_click', id:'getDirectionsItem', label:'Get directions'});
+    menuItems.push({className:'context_menu_item', eventName:'search_directions_click', id:'searchDirectionsItem', label:'Search Routes'});
 	//	a menuItem with no properties will be rendered as a separator
 	menuItems.push({});
     menuItems.push({className:'context_menu_item', eventName:'add_retailer_click', id:'addRetailerItem', label:'Add Retailer'});
@@ -183,14 +192,18 @@ function initialise(){
 		switch(eventName){
 			case 'directions_origin_click':
 				originMarker.setPosition(latLng);
+                app.origin(latLng.lat(), latLng.lng());
 				if(!originMarker.getMap()){
 					originMarker.setMap(map);
+
 				}
 				break;
 			case 'directions_destination_click':
 				destinationMarker.setPosition(latLng);
+                app.destination(latLng.lat(), latLng.lng());
 				if(!destinationMarker.getMap()){
 					destinationMarker.setMap(map);
+
 				}
 				break;
             case 'save_directions_click':
@@ -200,6 +213,7 @@ function initialise(){
 			case 'clear_directions_click':
 				directionsRenderer.setMap(null);
                 document.getElementById('right-panel').style.display='none';
+                app.clearRoute();
 				//	set CSS styles to defaults
 				document.getElementById('clearDirectionsItem').style.display='';
 				document.getElementById('directionsDestinationItem').style.display='';
@@ -257,6 +271,7 @@ function initialise(){
 			document.getElementById('getDirectionsItem').style.display='block';
 
 		}
+
 	});
 
 
@@ -278,17 +293,43 @@ function initialise(){
     var retailerMarkerCluster;
 
 
+    /* Requests a route using start and end LatLng coordinates and renders it using
+   using directionsDisplay.
+ */
+    document.calcRoute = function calcRoute(start, end) {
+
+        var request = {
+            origin: start,
+            destination: end,
+            travelMode: 'BICYCLING',
+            unitSystem: google.maps.UnitSystem.METRIC
+        };
+        directionsService.route(request, function(response, status) {
+            if (status == 'OK') {
+                directionsRenderer.setDirections(response);
+                directionsRenderer.setMap(map);
+                var myJSON = JSON.stringify(response);
+                app.directions(myJSON);
+                document.getElementById('right-panel').style.display='block';
+
+            }
+            else {
+                window.alert('Directions request failed due to ' + status);
+            }
+        });
+    }
+
     /* Clusters wifi markers in wifiMarkerArray. Does NOT remove or add
    markers dynamically, to update clusters call updatewifiMarkerCluster.
    Note that updatewifiMarkerCluster must iterate through the entire wifiMarkerArray.
  */
-    document.wifiCluster = function wifiCluster()
+    document.wifiCluster = function wifiCluster(icons)
     {
         wifiMarkerCluster = new MarkerClusterer(map, wifiMarkerArray,
-            {imagePath: 'wifiCluster/bluewifi',
+            {imagePath: icons,
                 ignoreHiddenMarkers: true,
                 zoomOnClick: false,
-                maxZoom: 13});
+                maxZoom: 15});
     };
 
 
@@ -296,13 +337,13 @@ function initialise(){
       markers dynamically, to update clusters call updateRetailerMarkerCluster.
       Note that updateRetailerMarkerCluster must iterate through the entire retailerMarkerArray.
     */
-    document.retailerCluster = function retailerCluster()
+    document.retailerCluster = function retailerCluster(icons)
     {
         retailerMarkerCluster = new MarkerClusterer(map, retailerMarkerArray,
-            {imagePath: 'retailerCluster/pink',
+            {imagePath: icons,
                 ignoreHiddenMarkers: true,
                 zoomOnClick: false,
-                maxZoom: 15});
+                maxZoom: 16});
     };
 
     document.changeRetailerIcon = function changeRetailerIcon(index, icon) {
@@ -324,10 +365,12 @@ function initialise(){
     };
 
 
-    document.circleWIFI = function circleWIFI(index, icon, iconRevert)
+    document.circleWIFI = function circleWIFI(index, icon)
     {
         wifiMarkerArray[index].setVisible(true);
         wifiMarkerArray[index].setIcon(icon);
+        map.panTo(wifiMarkerArray[index].getPosition());
+        map.setZoom(16);
 
     };
 
