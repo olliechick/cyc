@@ -1073,8 +1073,9 @@ public class MapController {
             if (showWIFINearRetailer) {
                 ArrayList<WIFIPointDistance> pointDistances = new ArrayList<>();
                 ArrayList<Integer> indexes = searchWifiPoints(lat, lng, retailerToWIFISearchDistance, wifiPoints, true);
+                resetWIFIIcons("WIFI2.png");
                 for (int i = 0; i < indexes.size(); i++) {
-                    String scriptStr = "document.circleWIFI(" + indexes.get(i) + ", 'WIFISELECTED.png', 'WIFI2.png')";
+                    String scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", 'WIFISELECTED.png')";
                     webView.getEngine().executeScript(scriptStr);
                     WIFIPointDistance pointDistance = new WIFIPointDistance(wifiPoints.get(indexes.get(i)), indexes.get(i));
                     pointDistances.add(pointDistance);
@@ -1083,10 +1084,7 @@ public class MapController {
                 ArrayList<Point2D.Float> waypoints = new ArrayList<>();
                 waypoints.add(waypoint);
                 ArrayList<WIFIPointDistance> sortedPointDistances = sortedWIFIPointsByMinimumDistanceToRoute(pointDistances, waypoints);
-                for (int i = 0; i < sortedPointDistances.size(); i++) {
-                    String scriptStr = "document.circleAndNumberWIFI(" + sortedPointDistances.get(i).getIndexMap() + ", 'WIFISELECTED.png', '" + Integer.toString(i + 1) + "')";
-                    webView.getEngine().executeScript(scriptStr);
-                }
+                setTableViewWIFI(sortedPointDistances);
             } else if (showOnlyNearestWIFIToRetailer) {
                 int indexOfWifi = findClosestWifiPointToRetailer(wifiPoints, lat.floatValue(), lng.floatValue());
                 System.out.println(indexOfWifi);
