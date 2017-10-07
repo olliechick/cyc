@@ -9,13 +9,12 @@ import java.util.ArrayList;
  *
  * @author Josh Bernasconi
  */
-public class BikeTripList implements java.io.Serializable{
+public class BikeTripList extends PointList implements java.io.Serializable{
 
     private ArrayList<BikeTrip> bikeTrips = new ArrayList<>();
-    private String listName;
 
     public BikeTripList(String listName, ArrayList<BikeTrip> trips) {
-        this.listName = listName;
+        super(listName);
         this.bikeTrips = trips;
     }
 
@@ -30,10 +29,6 @@ public class BikeTripList implements java.io.Serializable{
 
     public void removeBikeTrip(BikeTrip bikeTrip) {
         bikeTrips.remove(bikeTrip);
-    }
-
-    public String getListName() {
-        return listName;
     }
 
 }

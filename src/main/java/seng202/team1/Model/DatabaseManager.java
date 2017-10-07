@@ -4,6 +4,7 @@ package seng202.team1.Model;
 import javax.xml.transform.Result;
 import java.awt.Point;
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -255,7 +256,7 @@ public class DatabaseManager {
         int numOfQs; //number of question marks to put in the statement
 
         if (point instanceof RetailerLocation) {
-            numOfQs = 11;
+            numOfQs = 12;
         /*    statement = "INSERT INTO retailer (userid, listid, name, addressLine1, addressLine2, city, state, " +
                     "zipcode, blockLot, primaryFunction, secondaryFunction, latitude, longitude) " +
                     "(SELECT listid, userid " +
@@ -263,11 +264,12 @@ public class DatabaseManager {
                     "WHERE user.username=? AND list.listName=?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"; */
             statement = "INSERT INTO retailer (listid, name, addressLine1, addressLine2, city, state, " +
                     "zipcode, blockLot, primaryFunction, secondaryFunction, latitude, longitude) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                    //new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?";
+                    "VALUES ( " +
+                    new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
 
             RetailerLocation retailer = (RetailerLocation) point;
             preparedStatement = connection.prepareStatement(statement);
+
 
             preparedStatement.setInt(1, getListID(username, listName));
             preparedStatement.setString(2, retailer.getName());
@@ -284,45 +286,46 @@ public class DatabaseManager {
 
             preparedStatement.execute();
 
+
         } else if (point instanceof WifiPoint) {
             numOfQs = 17;
-            statement = "INSERT INTO wifi (objectID, latitude, longitude, placeName, location, locationType, " +
-                    "hood, borough, city, zipcode, cost, provider, remarks, SSID, sourceId, datetimeactivated, username) " +
+            statement = "INSERT INTO wifi (listid, objectID, latitude, longitude, placeName, location, locationType, " +
+                    "hood, borough, city, zipcode, cost, provider, remarks, SSID, sourceId, datetimeactivated) " +
                     "VALUES (" + new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
 
             WifiPoint wifiPoint = (WifiPoint) point;
             preparedStatement = connection.prepareStatement(statement);
 
-            preparedStatement.setInt(1, wifiPoint.getObjectId());
-            preparedStatement.setFloat(2, wifiPoint.getLatitude());
-            preparedStatement.setFloat(3, wifiPoint.getLongitude());
-            preparedStatement.setString(4, wifiPoint.getPlaceName());
-            preparedStatement.setString(5, wifiPoint.getLocation());
-            preparedStatement.setString(6, wifiPoint.getLocationType());
-            preparedStatement.setString(7, wifiPoint.getHood());
-            preparedStatement.setString(8, wifiPoint.getBorough());
-            preparedStatement.setString(9, wifiPoint.getCity());
-            preparedStatement.setString(10, Integer.toString(wifiPoint.getZipcode()));
-            preparedStatement.setString(11, wifiPoint.getCost());
-            preparedStatement.setString(12, wifiPoint.getProvider());
-            preparedStatement.setString(13, wifiPoint.getRemarks());
-            preparedStatement.setString(14, wifiPoint.getSsid());
-            preparedStatement.setString(15, wifiPoint.getSourceId());
+            preparedStatement.setInt(1, getListID(username, listName));
+            preparedStatement.setInt(2, wifiPoint.getObjectId());
+            preparedStatement.setFloat(3, wifiPoint.getLatitude());
+            preparedStatement.setFloat(4, wifiPoint.getLongitude());
+            preparedStatement.setString(5, wifiPoint.getPlaceName());
+            preparedStatement.setString(6, wifiPoint.getLocation());
+            preparedStatement.setString(7, wifiPoint.getLocationType());
+            preparedStatement.setString(8, wifiPoint.getHood());
+            preparedStatement.setString(9, wifiPoint.getBorough());
+            preparedStatement.setString(10, wifiPoint.getCity());
+            preparedStatement.setString(11, Integer.toString(wifiPoint.getZipcode()));
+            preparedStatement.setString(12, wifiPoint.getCost());
+            preparedStatement.setString(13, wifiPoint.getProvider());
+            preparedStatement.setString(14, wifiPoint.getRemarks());
+            preparedStatement.setString(15, wifiPoint.getSsid());
+            preparedStatement.setString(16, wifiPoint.getSourceId());
             if (wifiPoint.getDatetimeActivated() == null) {
-                preparedStatement.setString(16, null);
+                preparedStatement.setString(17, null);
             } else {
-                preparedStatement.setString(16, wifiPoint.getDatetimeActivated().toString());
+                preparedStatement.setString(17, wifiPoint.getDatetimeActivated().toString());
             }
-            preparedStatement.setString(17, username);
-
             preparedStatement.execute();
+
 
         } else if (point instanceof BikeTrip) {
             numOfQs = 12; //number of question marks to put in the statement
 
-            statement = "INSERT INTO trip (duration, startTime, stopTime, startLatitude, " +
+            statement = "INSERT INTO trip (listid, duration, startTime, stopTime, startLatitude, " +
                     "startLongitude, endLatitude, endLongitude, " +
-                    "bikeID, gender, birthYear, tripDistance, username) VALUES (" +
+                    "bikeID, gender, birthYear, tripDistance) VALUES (" +
                     new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
 
             BikeTrip trip = (BikeTrip) point;
@@ -464,6 +467,7 @@ public class DatabaseManager {
         ArrayList<RetailerLocation> result = new ArrayList<>();
         try {
             preparedStatement = connection.prepareStatement(statement);
+
             preparedStatement.setInt(1, getListID(username, listName));
 
             ResultSet rs = preparedStatement.executeQuery();
@@ -504,6 +508,7 @@ public class DatabaseManager {
     public static int getListID(String username, String listName) {
         String statement = "SELECT id FROM list WHERE username=? AND listName=?";
         PreparedStatement preparedStatement;
+        int listid = -1;
 
         try {
             preparedStatement = connection.prepareStatement(statement);
@@ -514,35 +519,63 @@ public class DatabaseManager {
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
-                return rs.getInt(1);
+                listid = rs.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
-    }
-
-    public static void createNewList(String username, String listName) {
-        if (getListID(username, listName) == 0) { // List does not exist
-            String statement = "INSERT INTO list (username, listName) VALUES (?, ?);";
-            PreparedStatement preparedStatement;
-
-            try {
-                preparedStatement = connection.prepareStatement(statement);
-
-                preparedStatement.setString(1, username);
-                preparedStatement.setString(2, listName);
-
-                preparedStatement.execute();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
+        if (listid == -1) {
+            createNewList(username, listName);
+            return getListID(username, listName);
         } else {
-            System.out.println("List already exists.");
+            return listid;
         }
     }
 
+    public static void createNewList(String username, String listName) {
+
+        String statement = "INSERT INTO list (username, listName) VALUES (?, ?);";
+        PreparedStatement preparedStatement;
+
+        try {
+            preparedStatement = connection.prepareStatement(statement);
+
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, listName);
+
+            preparedStatement.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     *
+     */
+    public static void populateList(String username, PointList pointList) {
+        try {
+            open();
+            if (pointList instanceof RetailerLocationList) {
+                for (RetailerLocation retailerLocation : ((RetailerLocationList) pointList).getRetailerLocations()) {
+                    addRecordExistingConnection(retailerLocation, username, pointList.getListName());
+                }
+
+            } else if (pointList instanceof WifiPointList) {
+                for (WifiPoint wifiPoint : ((WifiPointList) pointList).getWifiPoints()) {
+                    addRecordExistingConnection(wifiPoint, username, pointList.getListName());
+                }
+            } else if (pointList instanceof BikeTripList) {
+                for (BikeTrip bikeTrip : ((BikeTripList) pointList).getBikeTrips()) {
+                    addRecordExistingConnection(bikeTrip, username, pointList.getListName());
+                }
+            }
+            close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Gets all of the wifi points associated with a user.
@@ -550,13 +583,17 @@ public class DatabaseManager {
      * @param username the username of the user.
      * @return all of WiFi points associated to this user.
      */
-    public static ArrayList<WifiPoint> getWifiPoints(String username) {
-        String statement = "SELECT * FROM wifi WHERE username=?";
+    public static ArrayList<WifiPoint> getWifiPoints(String username, String listName) {
+        String statement = "SELECT * FROM wifi WHERE listid=?";
         PreparedStatement preparedStatement;
         ArrayList<WifiPoint> result = new ArrayList<>();
         try {
             preparedStatement = connection.prepareStatement(statement);
-            preparedStatement.setString(1, username);
+            int listid = getListID(username, listName);
+            if (listid == -1) {
+
+            }
+            preparedStatement.setInt(1, getListID(username, listName));
 
             ResultSet rs = preparedStatement.executeQuery();
 

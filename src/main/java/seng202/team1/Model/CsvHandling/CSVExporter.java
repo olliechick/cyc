@@ -101,7 +101,7 @@ public class CSVExporter {
     public static void exportWifiHotspots(String filename, String username) throws IOException, SQLException {
         // Import the users's wifis from the database
         DatabaseManager.open();
-        ArrayList<WifiPoint> wifiPoints = getWifiPoints(username);
+        ArrayList<WifiPoint> wifiPoints = getWifiPoints(username, "exportWifiHotspots");
         DatabaseManager.close();
 
         // Create an ArrayList of Strings, where each String is a bike trip line in the CSV

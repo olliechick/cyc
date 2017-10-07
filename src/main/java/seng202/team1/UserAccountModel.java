@@ -184,7 +184,7 @@ public class UserAccountModel implements java.io.Serializable {
         ArrayList<WifiPoint> result = new ArrayList<>();
         try {
             DatabaseManager.open();
-            result = DatabaseManager.getWifiPoints(userName);
+            result = DatabaseManager.getWifiPoints(userName, ""); //TODO: Get current listName?
             System.out.println(String.format("%d custom wifi points retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
@@ -200,7 +200,7 @@ public class UserAccountModel implements java.io.Serializable {
         ArrayList<RetailerLocation> result = new ArrayList<>();
         try {
             DatabaseManager.open();
-            result = DatabaseManager.getRetailers(userName); //TODO: Get current listName?
+            result = DatabaseManager.getRetailers(userName, ""); //TODO: Get current listName?
             System.out.println(String.format("%d custom retailers retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
@@ -246,6 +246,8 @@ public class UserAccountModel implements java.io.Serializable {
     //TODO change to use database list when implemented.
     public void addBikeTripList(BikeTripList bikeTripList) {
         bikeTripLists.add(bikeTripList);
+        DatabaseManager.createNewList(userName, bikeTripList.getListName());
+        DatabaseManager.populateList(userName, bikeTripList);
         SerializerImplementation.serializeUser(this);
     }
 

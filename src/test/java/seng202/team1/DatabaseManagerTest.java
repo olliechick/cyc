@@ -136,7 +136,24 @@ public class DatabaseManagerTest {
         }
 
         DatabaseManager.open();
-        assertEquals(wifi, DatabaseManager.getWifiPoints(model.getUserName()).get(0));
+        System.out.println(DatabaseManager.getListID(model.getUserName(), "myWifi"));
+        assertEquals(wifi, DatabaseManager.getWifiPoints(model.getUserName(), "myWifi").get(0));
+        DatabaseManager.close();
+    }
+
+    @Test
+    public void addWifiPointToDifferentList() throws Exception {
+        try {
+            DatabaseManager.addRecord(wifi, model.getUserName(), "NotMyWifi");
+            DatabaseManager.addRecord(wifi, model.getUserName(), "myWifi");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        DatabaseManager.open();
+        System.out.println(DatabaseManager.getListID(model.getUserName(), "myWifi"));
+        assertEquals(wifi, DatabaseManager.getWifiPoints(model.getUserName(), "myWifi").get(0));
         DatabaseManager.close();
     }
 

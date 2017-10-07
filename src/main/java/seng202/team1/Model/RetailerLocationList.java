@@ -9,13 +9,12 @@ import java.util.ArrayList;
  *
  * @author Josh Bernasconi
  */
-public class RetailerLocationList implements java.io.Serializable {
+public class RetailerLocationList extends PointList implements java.io.Serializable {
 
     private ArrayList<RetailerLocation> retailerLocations = new ArrayList<>();
-    private String listName;
 
     public RetailerLocationList(String listName, ArrayList<RetailerLocation> locations) {
-        this.listName = listName;
+        super(listName);
         this.retailerLocations = locations;
     }
 
@@ -31,7 +30,4 @@ public class RetailerLocationList implements java.io.Serializable {
         retailerLocations.remove(retailerLocation);
     }
 
-    public String getListName() {
-        return listName;
-    }
 }

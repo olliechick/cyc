@@ -9,13 +9,12 @@ import java.util.ArrayList;
  *
  * @author Josh Bernasconi
  */
-public class WifiPointList implements java.io.Serializable {
+public class WifiPointList extends PointList implements java.io.Serializable {
 
     private ArrayList<WifiPoint> wifiPoints = new ArrayList<>();
-    private String listName;
 
     public WifiPointList(String listName, ArrayList<WifiPoint> wifiPoints) {
-        this.listName = listName;
+        super(listName);
         this.wifiPoints = wifiPoints;
     }
 
@@ -31,7 +30,4 @@ public class WifiPointList implements java.io.Serializable {
         wifiPoints.remove(wifiPoint);
     }
 
-    public String getListName() {
-        return listName;
-    }
 }
