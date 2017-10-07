@@ -304,7 +304,7 @@ public class AddBikeDialogController {
         Float endLong = Float.valueOf(0);
         try {
             endLong = Float.parseFloat(endLongField.getText());
-            if (startLong < -180 || startLong > 180) {
+            if (endLong < -180 || endLong > 180) {
                 throw new NumberFormatException("Longitude must be between -180 and 180.");
             }
             endLongLabel.setTextFill(Color.BLACK);
