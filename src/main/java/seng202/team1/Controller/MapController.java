@@ -274,7 +274,6 @@ public class MapController {
     }
 
 
-
     @FXML
     private void switchView() {
         stage.close();
@@ -1021,14 +1020,15 @@ public class MapController {
             clickPoint.setLocation(lat, lng);
             userClicks.add(clickPoint);
         }
+
         public void origin(Double lat, Double lng) {
-            startingLatTextField.setText(lat.toString());
-            startingLongTextField.setText(lng.toString());
+            startingLatTextField.setText(String.format ("%.6f", lat));
+            startingLongTextField.setText(String.format ("%.6f", lng));
         }
 
         public void destination(Double lat, Double lng) {
-            endingLatTextField.setText(lat.toString());
-            endingLongTextField.setText(lng.toString());
+            endingLatTextField.setText(String.format ("%.6f", lat));
+            endingLongTextField.setText(String.format ("%.6f", lng));
         }
 
         public void addRetailer(Double lat, Double lng) {
@@ -1054,6 +1054,7 @@ public class MapController {
             userClicks.add(destinationPoint);
             addCustomBikeTrip();
         }
+
         public void clearRoute() {
             resetRetailerIcons(RETAILER_ICON_FILENAME);
             resetWIFIIcons(WIFI_ICON_FILENAME);
@@ -1121,7 +1122,7 @@ public class MapController {
                 ArrayList<Integer> indexes = searchWifiPoints(lat, lng, retailerToWIFISearchDistance, wifiPoints, true);
                 resetWIFIIcons(WIFI_ICON_FILENAME);
                 for (int i = 0; i < indexes.size(); i++) {
-                    String scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", '" + WIFI_ICON_SELECTED_FILENAME +"')";
+                    String scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", '" + WIFI_ICON_SELECTED_FILENAME + "')";
                     webView.getEngine().executeScript(scriptStr);
                     WIFIPointDistance pointDistance = new WIFIPointDistance(wifiPoints.get(indexes.get(i)), indexes.get(i));
                     pointDistances.add(pointDistance);
@@ -1134,7 +1135,7 @@ public class MapController {
             } else if (showOnlyNearestWIFIToRetailer) {
                 int indexOfWifi = findClosestWifiPointToRetailer(wifiPoints, lat.floatValue(), lng.floatValue());
                 resetWIFIIcons(WIFI_ICON_FILENAME);
-                String scriptStr = "document.changeWIFIIcon(" + indexOfWifi + ", '" + WIFI_ICON_SELECTED_FILENAME +"')";
+                String scriptStr = "document.changeWIFIIcon(" + indexOfWifi + ", '" + WIFI_ICON_SELECTED_FILENAME + "')";
                 webView.getEngine().executeScript(scriptStr);
             }
 
