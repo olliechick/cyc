@@ -240,6 +240,7 @@ public class RetailerTableController extends TableController {
                 DatabaseManager.open();
                 DatabaseManager.deleteList(model.getUserName(), currentListName, RetailerLocationList.class);
                 DatabaseManager.close();
+                super.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

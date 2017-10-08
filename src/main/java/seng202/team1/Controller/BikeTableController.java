@@ -307,6 +307,7 @@ public class BikeTableController extends TableController {
                 DatabaseManager.open();
                 DatabaseManager.deleteList(model.getUserName(), currentListName, BikeTripList.class);
                 DatabaseManager.close();
+                super.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

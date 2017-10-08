@@ -203,10 +203,10 @@ public class WifiTableController extends TableController {
                 DatabaseManager.open();
                 DatabaseManager.deleteList(model.getUserName(), currentListName, WifiPointList.class);
                 DatabaseManager.close();
+                super.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            // TODO: Close stage, as list has been deleted
         }
     }
 
