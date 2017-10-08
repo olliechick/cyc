@@ -28,7 +28,7 @@
    <children>
       <Button alignment="CENTER" minWidth="80.0" mnemonicParsing="false" onMouseClicked="#closeButtonPushed" text="Close" GridPane.rowIndex="3" />
       <Text fx:id="versionText" strokeType="OUTSIDE" strokeWidth="0.0" text="Version X, built X.X.2017" GridPane.rowIndex="2" />
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Created by Cameron Auld, Josh Bernasconi, Josh Burt, Ollie Chick, and Ridge Nairn, for SENG201 at the University of Canterbury. " textAlignment="CENTER" wrappingWidth="375.0" GridPane.rowIndex="1" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Created by Cameron Auld, Josh Bernasconi, Josh Burt, Ollie Chick, and Ridge Nairn, for SENG202 at the University of Canterbury. " textAlignment="CENTER" wrappingWidth="375.0" GridPane.rowIndex="1" />
       <Label minHeight="-Infinity" text="About CYC: Your Cycling" wrapText="true">
          <font>
             <Font name="System Bold" size="13.0" />
