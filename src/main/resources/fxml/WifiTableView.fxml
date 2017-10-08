@@ -69,7 +69,7 @@
    <bottom>
       <VBox BorderPane.alignment="CENTER">
          <children>
-            <TabPane fx:id="clearSearchesButton" tabClosingPolicy="UNAVAILABLE">
+            <TabPane tabClosingPolicy="UNAVAILABLE">
                <tabs>
                   <Tab text="Filtering">
                      <content>
@@ -94,7 +94,7 @@
                               <ComboBox fx:id="filterBoroughComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <ComboBox fx:id="filterCostComboBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                               <ComboBox fx:id="filterProviderComboBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                              <Button mnemonicParsing="false" onAction="#clearFilters" text="Clear Filters" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                              <Button mnemonicParsing="false" onAction="#resetFilters" text="Clear Filters" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -109,9 +109,6 @@
                               <Label text="Wifi Search: Either in range or near Point" GridPane.columnSpan="2" />
                               <Label GridPane.columnIndex="1" />
                               <Label GridPane.columnIndex="2" />
-                              <Label fx:id="nameLabel1" text="Name placeholder" visible="false" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                              <Label fx:id="loadLabel1" text="Loading:" visible="false" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                              <ProgressIndicator fx:id="progressSpinner1" progress="0.0" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                               <TextField fx:id="startLatitudeTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <TextField fx:id="startLongitudeTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <TextField fx:id="endLatitudeTextField" GridPane.columnIndex="3" GridPane.rowIndex="1" />

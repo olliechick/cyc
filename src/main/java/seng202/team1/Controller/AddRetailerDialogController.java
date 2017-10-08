@@ -30,6 +30,7 @@ import static seng202.team1.Controller.MapController.getUserClicks;
  */
 public class AddRetailerDialogController {
 
+    //region Injected Fields
     @FXML
     private TextField latField;
 
@@ -82,9 +83,9 @@ public class AddRetailerDialogController {
 
     @FXML
     private Label nameLabel;
+    //endregion
 
     private Stage stage;
-
     private RetailerLocation retailerLocation;
 
     private String name;
@@ -100,6 +101,10 @@ public class AddRetailerDialogController {
     private String state = "NY";
     private String blockLot = null;
 
+    /**
+     * Check the fields for validity and if so, add the retailer.
+     * Else warn of errors.
+     */
     @FXML
     void addRetailer() {
         if (checkFields()) {
@@ -125,6 +130,7 @@ public class AddRetailerDialogController {
             stage.close();
         }
     }
+
 
     @FXML
     void cancel() {
@@ -154,17 +160,14 @@ public class AddRetailerDialogController {
             longField.setText(String.format ("%.6f", lastPoint.getY()));
         }
 
-        root.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ENTER) {
-                    checkFields();
-                    if (!addButton.isDisabled()) {
-                        addRetailer();
-                    }
-                } else if (event.getCode() == KeyCode.ESCAPE) {
-                    stage1.close();
+        root.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                checkFields();
+                if (!addButton.isDisabled()) {
+                    addRetailer();
                 }
+            } else if (event.getCode() == KeyCode.ESCAPE) {
+                stage1.close();
             }
         });
 

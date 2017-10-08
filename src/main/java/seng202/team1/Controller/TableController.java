@@ -51,30 +51,28 @@ public abstract class TableController {
         cm.getItems().addAll(editMenuItem, showOnMap, deleteMenuItem);
 
 
-        table.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
+        table.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
 
-                cm.hide();
+            cm.hide();
 
-                if (event.getButton() == MouseButton.SECONDARY)
-                {
-                    if (table.getSelectionModel().getSelectedItem() != null) {
-                        cm.show(table, event.getScreenX(), event.getScreenY());
-                    }
+            if (event.getButton() == MouseButton.SECONDARY)
+            {
+                if (table.getSelectionModel().getSelectedItem() != null) {
+                    cm.show(table, event.getScreenX(), event.getScreenY());
                 }
+            }
 
-                if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
+            if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
 
-                    DataPoint rowData = table.getSelectionModel().getSelectedItem();
+                DataPoint rowData = table.getSelectionModel().getSelectedItem();
 
-                    if (rowData != null) {
-                        showDataPopup(table.getSelectionModel().getSelectedItem());
-                    }
+                if (rowData != null) {
+                    showDataPopup(table.getSelectionModel().getSelectedItem());
                 }
             }
         });
     }
+
 
     /**
      * Opens a FileChooser popup, allowing the user to choose a file.
@@ -100,6 +98,7 @@ public abstract class TableController {
 
     }
 
+
     /**
      * Opens a FileChooser popup, allowing the user to choose where to save a file.
      * Only allows for saving of .csv files
@@ -123,6 +122,7 @@ public abstract class TableController {
 
     }
 
+
     /**
      * set the loading animation to visible and start it spinning indefinitely.
      */
@@ -132,6 +132,7 @@ public abstract class TableController {
         loadLabel.setVisible(true);
         progressSpinner.setProgress(-1);
     }
+
 
     /**
      * Stop and hide the loading animation.
@@ -143,6 +144,7 @@ public abstract class TableController {
         loadLabel.setVisible(false);
     }
 
+
     /**
      * Opens a modal popup with the toString of the object
      * as the text.
@@ -150,6 +152,7 @@ public abstract class TableController {
     private void showDataPopup(DataPoint data) {
         AlertGenerator.createAlert(data.getName(), data.getDescription());
     }
+
 
     /**
      * Set this controllers stage, allowing it to close properly
@@ -159,6 +162,7 @@ public abstract class TableController {
     void setStage(Stage curStage) {
         stage = curStage;
     }
+
 
     /**
      * Open the about screen.
@@ -178,12 +182,14 @@ public abstract class TableController {
 
     }
 
+
     /**
      * Close the stage.
      */
     public void close() {
         stage.fireEvent( new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
     }
+
 
     public void setMapController(MapController mapController) {
         this.mapController = mapController;

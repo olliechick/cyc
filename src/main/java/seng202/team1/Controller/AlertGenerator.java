@@ -36,6 +36,7 @@ public class AlertGenerator {
         alert.showAndWait();
     }
 
+
     /**
      * Creates an alert with the header "Error" that will pop up and alert the user.
      * Takes one parameter, the contents of the popup.
@@ -45,6 +46,7 @@ public class AlertGenerator {
     public static void createAlert(String content) {
         createAlert("Error", content);
     }
+
 
     /**
      * Creates a choice dialog that will pop up and alert the user.
@@ -75,6 +77,7 @@ public class AlertGenerator {
         }
     }
 
+
     /**
      * Creates a pop up that asks the user for to enter a name for a new list.
      *
@@ -94,6 +97,14 @@ public class AlertGenerator {
         }
     }
 
+
+    /**
+     * Creates a popup asking the user what they want to do with a newly imported
+     * set of data.
+     *
+     * @param entriesLoaded The number of entries successfully loaded.
+     * @return The String they selected, or null if canceled TODO return an int for each choice
+     */
     public static String createImportChoiceDialog(int entriesLoaded) {
         List<String> choices = new ArrayList<>();
         choices.add("Append the data into the table and to the current list");

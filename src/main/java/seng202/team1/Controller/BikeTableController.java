@@ -46,6 +46,7 @@ import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 public class BikeTableController extends TableController {
 
 
+    //region Injected Fields
     @FXML
     private TextField bikeSearchField;
 
@@ -78,16 +79,87 @@ public class BikeTableController extends TableController {
 
     @FXML
     private TextField endLongTextField;
+    //endregion
 
     private UserAccountModel model;
     private ObservableList<BikeTrip> dataPoints;
     private FilteredList<BikeTrip> filteredData;
     private ObservableList<BikeTrip> originalData;
+    private SortedList<BikeTrip> sortedData;
 
     private String currentListName;
 
-    private final static String DEFAULT_BIKE_TRIPS_FILENAME = "/csv/biketrip.csv";
+    //region SETUP
+    /**
+     * Display the currently logged in users name at the bottom of the table
+     */
+    void setName() {
+        nameLabel.setText("Logged in as: " + model.getUserName() + ", List: " + currentListName);
+        nameLabel.setVisible(true);
+    }
 
+
+    /**
+     * Initialise this controllers UserAccountModel to be the current user,
+     * and load the default data.
+     *
+     * @param userAccountModel the details of the currently logged in user.
+     */
+    void initModel(UserAccountModel userAccountModel) {
+
+        this.model = userAccountModel;
+        //importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME, false);
+        warningLabel.setText("");
+    }
+
+
+    /**
+     * Initialise the context menu buttons to point to the correct methods, edit and delete
+     */
+    void initContextMenu() {
+        super.editMenuItem.setOnAction(event -> {
+            cm.hide();
+            if (table.getSelectionModel().getSelectedItem() != null) {
+                editBikeTrip(table.getSelectionModel().getSelectedItem());
+            }
+        });
+
+        super.showOnMap.setOnAction(event -> {
+            cm.hide();
+            if (table.getSelectionModel().getSelectedItem() != null){
+                showTripOnMap(table.getSelectionModel().getSelectedItem());
+            }
+        });
+
+        super.deleteMenuItem.setOnAction(event -> {
+            cm.hide();
+            if (table.getSelectionModel().getSelectedItem() != null) {
+                deleteBikeTrip(table.getSelectionModel().getSelectedItem());
+            }
+        });
+
+    }
+
+
+    /**
+     * Set up the table to use the given list of points instead of a csv.
+     *
+     * @param listName The name of the list loaded.
+     * @param points the list of BikeTrips to display in the table.
+     */
+    public void setupWithList(String listName, ArrayList<BikeTrip> points) {
+        setFilters();
+        currentListName = listName;
+        setTableViewBike(points);
+        stopLoadingAni();
+        setPredicate();
+        populateCustomBikeTrips();
+        clearFilters();
+    }
+    //endregion
+
+
+    //region FILTERING
     /**
      * Checks the combo boxes and bike ID field for data and filters the displayed
      * data accordingly.
@@ -109,6 +181,7 @@ public class BikeTableController extends TableController {
         ));
     }
 
+
     /**
      * Checks if the Bike ID of the given bike trip contains the entered bike ID.
      *
@@ -124,6 +197,7 @@ public class BikeTableController extends TableController {
         }
     }
 
+
     /**
      * Checks if the selected gender matches the gender of the given bike trip.
      *
@@ -137,51 +211,41 @@ public class BikeTableController extends TableController {
             return (filterGenderComboBox.getValue() == bikeTrip.getGenderDescription());
         }
     }
+    //endregion
 
+
+    //region USER INTERACTION
     /**
-     * Display the currently logged in users name at the bottom of the table
+     * Opens a dialog to add a bike trip, adds the trip if valid, otherwise does nothing.
      */
-    void setName() {
-        nameLabel.setText("Logged in as: " + model.getUserName() + ", List: " + currentListName);
-        nameLabel.setVisible(true);
+    public void addBikeTrip() {
+
+        try {
+            FXMLLoader addBikeLoader = new FXMLLoader(getClass().getResource("/fxml/AddBikeDialog.fxml"));
+            Parent root = addBikeLoader.load();
+            AddBikeDialogController addBikeDialog = addBikeLoader.getController();
+            Stage stage1 = new Stage();
+
+            addBikeDialog.setDialog(stage1, root);
+            addBikeDialog.initModel(model);
+            stage1.showAndWait();
+
+            BikeTrip test = addBikeDialog.getBikeTrip();
+            if (test != null) {
+                if (dataPoints.contains(test)) {
+                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
+                } else {
+                    dataPoints.add(addBikeDialog.getBikeTrip());
+                    originalData.add(addBikeDialog.getBikeTrip());
+                    model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    /**
-     * Initialise the context menu buttons to point to the correct methods, edit and delete
-     */
-    void initContextMenu() {
-        super.editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                cm.hide();
-                if (table.getSelectionModel().getSelectedItem() != null) {
-                    editBikeTrip(table.getSelectionModel().getSelectedItem());
-                }
-            }
-        });
-
-        super.showOnMap.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                cm.hide();
-                if (table.getSelectionModel().getSelectedItem() != null){
-                    showTripOnMap(table.getSelectionModel().getSelectedItem());
-                }
-            }
-        });
-
-        super.deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                cm.hide();
-                if (table.getSelectionModel().getSelectedItem() != null) {
-                    deleteBikeTrip(table.getSelectionModel().getSelectedItem());
-                }
-            }
-        });
-
-
-    }
 
     /**
      * Open a dialog with all the details of the currently selected Bike Trip filled out,
@@ -217,6 +281,7 @@ public class BikeTableController extends TableController {
         }
     }
 
+
     //TODO fix this v
     /**
      * Delete the currently selected bike trip from the list of trips
@@ -228,6 +293,7 @@ public class BikeTableController extends TableController {
         originalData.remove(selectedBikeTrip);
     }
 
+
     /**
      * Takes a given bike trip from a context menu and then adds it too the map.
      * @param selectedBikeTrip passed by onclick listener
@@ -236,15 +302,80 @@ public class BikeTableController extends TableController {
         super.mapController.showGivenTrip(selectedBikeTrip);
     }
 
-    /**
-     * Sets the filter ComboBox options.
-     */
-    private void setFilters() {
 
-        filterGenderComboBox.getItems().clear();
-        filterGenderComboBox.getItems().addAll("All", "male", "female", "unknown");
-        filterGenderComboBox.getSelectionModel().selectFirst();
+    /**
+     * Delete all bike trips from the current list
+     */
+    public void deleteAllBikeTrips() {
+        boolean delete = AlertGenerator.createChoiceDialog("Delete All Points", "Delete all points", "Are you sure you want to delete all the points in this list?");
+        if (delete) {
+            dataPoints.clear();
+            //TODO delete from list when implemented
+        }
     }
+
+
+    public void searchBikeTrips() {
+        Double startLat = 0.00;
+        Double startLong = 0.00;
+        Double endLat = 0.00;
+        Double endLong = 0.00;
+        Double delta = 100.0;
+        boolean startPointsGood = false;
+        boolean endPointsGood = false;
+
+        try {
+            startLat = Double.parseDouble(startLatTextField.getText());
+            startLong = Double.parseDouble(startLongTextField.getText());
+            startPointsGood = true;
+
+        } catch (NumberFormatException e){
+            System.out.println("Bad Start lat or Long");
+        }
+        try {
+            endLat = Double.parseDouble(endLatTextField.getText());
+            endLong = Double.parseDouble(endLongTextField.getText());
+            endPointsGood = true;
+        } catch (NumberFormatException e){
+            System.out.println("Bad End Lat Long");
+        }
+        ArrayList<BikeTrip> results = new ArrayList<>();
+        ArrayList<BikeTrip> searcher = new ArrayList<>();
+        for (Object trip : dataPoints){
+            searcher.add((BikeTrip) trip); // remove this block if it gets slow
+        }
+        if (startPointsGood && endPointsGood){
+            results = DataAnalyser.searchBikeTrips(startLat,startLong,delta,searcher,true);
+            results = DataAnalyser.searchBikeTrips(endLat,endLong,delta,results,false);
+        } else if(startPointsGood){
+            results = DataAnalyser.searchBikeTrips(startLat,startLong,delta,searcher,true);
+        } else if(endPointsGood){
+            results = DataAnalyser.searchBikeTrips(endLat,endLong,delta,searcher,false);
+        } else{
+            warningLabel.setText("Valid Search Points must be entered in either the start Point, End Point or Both.");
+            return;
+        }
+        dataPoints.clear();
+        dataPoints.addAll(results);
+
+    }
+    //endregion
+
+
+    //region IMPORT/EXPORT
+    /**
+     * Get the path for a csv to load, open one if given.
+     */
+    public void importBike() {
+
+        String filename = getCsvFilename();
+        if (filename != null) {
+            dataPoints.clear();
+            originalData.clear();
+            importBikeCsv(filename, true);
+        }
+    }
+
 
     /**
      * Creates a task to run on another thread to open the file, to stop GUI hangs.
@@ -312,18 +443,6 @@ public class BikeTableController extends TableController {
         new Thread(loadBikeCsv).start();
     }
 
-    /**
-     * Get the path for a csv to load, open one if given.
-     */
-    public void importBike() {
-
-        String filename = getCsvFilename();
-        if (filename != null) {
-            dataPoints.clear();
-            originalData.clear();
-            importBikeCsv(filename, true);
-        }
-    }
 
     /**
      * Get the path for a csv to export to, export to it if given.
@@ -341,46 +460,16 @@ public class BikeTableController extends TableController {
             }
         }
     }
+    //endregion
 
+
+    //region SETUP TABLE
     /**
-     * Opens a dialog to add a bike trip, adds the trip if valid, otherwise does nothing.
+     * Create the columns for the bike table.
+     *
+     * @return An <code>ObservableList</code> of <code>TableColumn<BikeTrip, ?></code>
      */
-    public void addBikeTrip() {
-
-        try {
-            FXMLLoader addBikeLoader = new FXMLLoader(getClass().getResource("/fxml/AddBikeDialog.fxml"));
-            Parent root = addBikeLoader.load();
-            AddBikeDialogController addBikeDialog = addBikeLoader.getController();
-            Stage stage1 = new Stage();
-
-            addBikeDialog.setDialog(stage1, root);
-            addBikeDialog.initModel(model);
-            stage1.showAndWait();
-
-            BikeTrip test = addBikeDialog.getBikeTrip();
-            if (test != null) {
-                if (dataPoints.contains(test)) {
-                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
-                } else {
-                    dataPoints.add(addBikeDialog.getBikeTrip());
-                    originalData.add(addBikeDialog.getBikeTrip());
-                    model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Creates and links the table columns to their data.
-     * TODO add more relevant columns
-     */
-    private void setTableViewBike(ArrayList<BikeTrip> data) {
-
-        dataPoints = FXCollections.observableArrayList(data);
-        originalData = FXCollections.observableArrayList(data);
+    private ObservableList<TableColumn<BikeTrip, ?>> createColumns() {
 
         TableColumn<BikeTrip, Integer> bikeIdCol = new TableColumn<>("Bike ID");
         TableColumn<BikeTrip, Character> genderCol = new TableColumn<>("Gender");
@@ -392,7 +481,6 @@ public class BikeTableController extends TableController {
         TableColumn<BikeTrip, Point.Float> endLatitudeCol = new TableColumn<>("Latitude");
         TableColumn<BikeTrip, Point.Float> endLongitudeCol = new TableColumn<>("Longitude");
         TableColumn<BikeTrip, ContextualLength> distCol = new TableColumn<>("Distance (m)");
-        table.getColumns().clear();
 
         // Attempts to access public properties of name "Property", falls back to get<property>() methods if no property available
         bikeIdCol.setCellValueFactory(new PropertyValueFactory<>("bikeId"));
@@ -407,29 +495,49 @@ public class BikeTableController extends TableController {
         startLocCol.getColumns().addAll(startLatitudeCol, startLongitudeCol);
         endLocCol.getColumns().addAll(endLatitudeCol, endLongitudeCol);
 
-        filteredData = new FilteredList<>(dataPoints, p -> true);
+        ArrayList<TableColumn<BikeTrip, ?>> columns = new ArrayList<>();
+        //bikeIdCol, genderCol, durationCol, distCol, startLocCol, endLocCol
+        columns.add(bikeIdCol);
+        columns.add(genderCol);
+        columns.add(durationCol);
+        columns.add(distCol);
+        columns.add(startLocCol);
+        columns.add(endLocCol);
 
-        SortedList<BikeTrip> sortedData = new SortedList<>(filteredData);
-        sortedData.comparatorProperty().bind(table.comparatorProperty());
+        return FXCollections.observableArrayList(columns);
 
+    }
+
+
+    /**
+     * Creates and links the table columns to their data.
+     * TODO add more relevant columns
+     */
+    private void setTableViewBike(ArrayList<BikeTrip> data) {
+
+        setUpData(data);
+
+        table.getColumns().clear();
+        table.getColumns().addAll(createColumns());
         table.setItems(sortedData);
-        table.getColumns().addAll(bikeIdCol, genderCol, durationCol, distCol, startLocCol, endLocCol);
 
         setFilters();
     }
 
-    /**
-     * Initialise this controllers UserAccountModel to be the current user,
-     * and load the default data.
-     *
-     * @param userAccountModel the details of the currently logged in user.
-     */
-    void initModel(UserAccountModel userAccountModel) {
 
-        this.model = userAccountModel;
-        //importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME, false);
-        warningLabel.setText("");
+    /**
+     * Initialise the lists used throughout the table.
+     * @param data The ArrayList of data the table uses.
+     */
+    private void setUpData(ArrayList<BikeTrip> data) {
+        dataPoints = FXCollections.observableArrayList(data);
+        originalData = FXCollections.observableArrayList(data);
+        filteredData = new FilteredList<>(dataPoints, p -> true);
+        sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(table.comparatorProperty());
+
     }
+
 
     /**
      * Adds the users custom bike trips to the table.
@@ -439,6 +547,18 @@ public class BikeTableController extends TableController {
         dataPoints.addAll(customTrips);
         originalData.addAll(customTrips);
     }
+
+
+    /**
+     * Sets the filter ComboBox options.
+     */
+    private void setFilters() {
+
+        filterGenderComboBox.getItems().clear();
+        filterGenderComboBox.getItems().addAll("All", "male", "female", "unknown");
+        filterGenderComboBox.getSelectionModel().selectFirst();
+    }
+
 
     /**
      * Clear all input in the filters
@@ -454,79 +574,15 @@ public class BikeTableController extends TableController {
         dataPoints.addAll(originalData);
 
     }
-
-
-    public void searchBikeTrips() {
-        Double startLat = 0.00;
-        Double startLong = 0.00;
-        Double endLat = 0.00;
-        Double endLong = 0.00;
-        Double delta = 100.0;
-        boolean startPointsGood = false;
-        boolean endPointsGood = false;
-
-        try {
-            startLat = Double.parseDouble(startLatTextField.getText());
-            startLong = Double.parseDouble(startLongTextField.getText());
-            startPointsGood = true;
-
-        } catch (NumberFormatException e){
-            System.out.println("Bad Start lat or Long");
-        }
-        try {
-            endLat = Double.parseDouble(endLatTextField.getText());
-            endLong = Double.parseDouble(endLongTextField.getText());
-            endPointsGood = true;
-        } catch (NumberFormatException e){
-            System.out.println("Bad End Lat Long");
-        }
-        ArrayList<BikeTrip> results = new ArrayList<>();
-        ArrayList<BikeTrip> searcher = new ArrayList<>();
-        for (Object trip : dataPoints){
-            searcher.add((BikeTrip) trip); // remove this block if it gets slow
-        }
-        if (startPointsGood && endPointsGood){
-            results = DataAnalyser.searchBikeTrips(startLat,startLong,delta,searcher,true);
-            results = DataAnalyser.searchBikeTrips(endLat,endLong,delta,results,false);
-        } else if(startPointsGood){
-            results = DataAnalyser.searchBikeTrips(startLat,startLong,delta,searcher,true);
-        } else if(endPointsGood){
-            results = DataAnalyser.searchBikeTrips(endLat,endLong,delta,searcher,false);
-        } else{
-            warningLabel.setText("Valid Search Points must be entered in either the start Point, End Point or Both.");
-            return;
-        }
-        dataPoints.clear();
-        dataPoints.addAll(results);
-
-    }
+    //endregion
 
     /**
-     * Set up the table to use the given list of points instead of a csv.
-     *
-     * @param listName The name of the list loaded.
-     * @param points the list of BikeTrips to display in the table.
+     * WIP TODO use and potentially move to super class
+     * @param entriesLoaded
      */
-    public void setupWithList(String listName, ArrayList<BikeTrip> points) {
-        setFilters();
-        currentListName = listName;
-        setTableViewBike(points);
-        stopLoadingAni();
-        setPredicate();
-        populateCustomBikeTrips();
-        clearFilters();
-    }
-
-    public void deleteAllBikeTrips() {
-        boolean delete = AlertGenerator.createChoiceDialog("Delete All Points", "Delete all points", "Are you sure you want to delete all the points in this list?");
-        if (delete) {
-            dataPoints.clear();
-            //TODO delete from list when implemented
-        }
-    }
-
     private void checkAndAddToList(int entriesLoaded) {
         System.out.println(AlertGenerator.createImportChoiceDialog(entriesLoaded));
     }
+
 
 }

@@ -36,6 +36,7 @@ import static seng202.team1.Controller.MapController.getUserClicks;
  */
 public class AddBikeDialogController {
 
+    //region Injected Fields
     @FXML
     private Button addButton;
 
@@ -107,6 +108,7 @@ public class AddBikeDialogController {
 
     @FXML
     private RadioButton stopPM;
+    //endregion
 
     private BikeTrip bikeTrip;
     private Stage stage;
@@ -125,10 +127,10 @@ public class AddBikeDialogController {
     private Point.Float endPoint;
     private UserAccountModel model;
 
+    //region SETUP
     void initModel(UserAccountModel model) {
         this.model = model;
     }
-
 
     /**
      * Set up the window as a dialog.
@@ -168,17 +170,14 @@ public class AddBikeDialogController {
 
         }
 
-        root.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ENTER) {
-                    checkFields();
-                    if (!addButton.isDisabled()) {
-                        addBike();
-                    }
-                } else if (event.getCode() == KeyCode.ESCAPE) {
-                    stage1.close();
+        root.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                checkFields();
+                if (!addButton.isDisabled()) {
+                    addBike();
                 }
+            } else if (event.getCode() == KeyCode.ESCAPE) {
+                stage1.close();
             }
         });
     }
@@ -224,7 +223,7 @@ public class AddBikeDialogController {
 
         addButton.setText("Save");
     }
-
+    //endregion
 
     /**
      * Check the fields for validity and if so, add the bike trip.

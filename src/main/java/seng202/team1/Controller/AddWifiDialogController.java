@@ -38,6 +38,7 @@ import static seng202.team1.Controller.MapController.getUserClicks;
  */
 public class AddWifiDialogController {
 
+    //region Injected Fields
     @FXML
     private TextField provField;
 
@@ -100,6 +101,7 @@ public class AddWifiDialogController {
 
     @FXML
     private Label latLabel;
+    //endregion
 
     private Stage stage;
     private final ObservableList<String> boroughs = FXCollections.observableArrayList("Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island");
@@ -149,17 +151,14 @@ public class AddWifiDialogController {
             longField.setText(String.format ("%.6f", lastPoint.getY()));
         }
 
-        root.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ENTER) {
-                    checkFields();
-                    if (!addButton.isDisabled()) {
-                        addWifi();
-                    }
-                } else if (event.getCode() == KeyCode.ESCAPE) {
-                    stage1.close();
+        root.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                checkFields();
+                if (!addButton.isDisabled()) {
+                    addWifi();
                 }
+            } else if (event.getCode() == KeyCode.ESCAPE) {
+                stage1.close();
             }
         });
 
