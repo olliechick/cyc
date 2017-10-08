@@ -1,15 +1,10 @@
 package seng202.team1.Model.CsvHandling;
 
 import org.apache.commons.csv.CSVRecord;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import seng202.team1.Model.BikeTrip;
-import seng202.team1.Model.DatabaseManager;
-import seng202.team1.Model.RetailerLocation;
-import seng202.team1.Model.WifiPoint;
+import org.junit.*;
+import seng202.team1.Model.*;
 
+import javax.xml.crypto.Data;
 import java.awt.Point;
 import java.io.File;
 import java.sql.SQLException;
@@ -40,20 +35,27 @@ public class CSVExporterTest {
         // Make sure the directory is there for the file
         File file = new File(OUTPUT_DIR);
         file.mkdirs();
+        DatabaseManager.open();
+        DatabaseManager.close();
+        DatabaseManager.deleteDatabase();
+        System.out.println("-----");
     }
 
-/*
-    @Before
-    public void setUp() throws Exception {
-        // Set up database to store data points in
+    private void addRecordToDatabase(DataPoint dataPoint) {
         try {
             DatabaseManager.open();
+            DatabaseManager.addRecord(dataPoint, username, listName);
+            DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Before
+    public void setUp() throws Exception {
 
     }
-*/
+
 
     @Test
     public void testExportCSV() throws Exception {
@@ -93,11 +95,7 @@ public class CSVExporterTest {
                 bikeID, gender, birthYear, tripDistance);
 
         // Save bike trip to the database
-        try {
-            DatabaseManager.addRecord(bikeTrip, username, listName);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        addRecordToDatabase(bikeTrip);
 
         // Export it to file (this is what is being tested)
         exportBikeTrips(OUTPUT_FILE, username, listName);
@@ -126,11 +124,8 @@ public class CSVExporterTest {
                 bikeID, gender, birthYear, tripDistance);
 
         // Save bike trip to the database
-        try {
-            DatabaseManager.addRecord(bikeTrip, username, listName);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        addRecordToDatabase(bikeTrip);
+
 
         // Export it to file (this is what is being tested)
         exportBikeTrips(OUTPUT_FILE, username, listName);
@@ -165,11 +160,7 @@ public class CSVExporterTest {
                 cost, provider, remarks, ssid, sourceId, datetimeActivated);
 
         // Save wifi point to the database
-        try {
-            DatabaseManager.addRecord(wifiPoint, username, listName);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        addRecordToDatabase(wifiPoint);
 
         // Export it to file (this is what is being tested)
         exportWifiHotspots(OUTPUT_FILE, username, listName);
@@ -205,11 +196,7 @@ public class CSVExporterTest {
                 cost, provider, remarks, ssid, sourceId, datetimeActivated);
 
         // Save wifi point to the database
-        try {
-            DatabaseManager.addRecord(wifiPoint, username, listName);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        addRecordToDatabase(wifiPoint);
 
         // Export it to file (this is what is being tested)
         exportWifiHotspots(OUTPUT_FILE, username, listName);
@@ -238,12 +225,8 @@ public class CSVExporterTest {
         RetailerLocation retailer = new RetailerLocation(name, addressLine1, addressLine2, city, state,
                 zipcode, blockLot, primaryFunction, secondaryFunction, coords);
 
-        // Save wifi point to the database
-        try {
-            DatabaseManager.addRecord(retailer, username, listName);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        // Save retailer point to the database
+        addRecordToDatabase(retailer);
 
         // Export it to file (this is what is being tested)
         exportRetailers(OUTPUT_FILE, username, listName);
@@ -271,12 +254,8 @@ public class CSVExporterTest {
         RetailerLocation retailer = new RetailerLocation(name, addressLine1, addressLine2, city, state,
                 zipcode, blockLot, primaryFunction, secondaryFunction, coords);
 
-        // Save wifi point to the database
-        try {
-            DatabaseManager.addRecord(retailer, username, listName);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        // Save retailer point to the database
+        addRecordToDatabase(retailer);
 
         // Export it to file (this is what is being tested)
         exportRetailers(OUTPUT_FILE, username, listName);
@@ -290,13 +269,8 @@ public class CSVExporterTest {
 
 
     @After
-    public void tearDown() throws Exception {/*
-        // Close and delete database
-        try {
-            DatabaseManager.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }*/
+    public void tearDown() throws Exception {
+        DatabaseManager.close();
         DatabaseManager.deleteDatabase();
     }
 

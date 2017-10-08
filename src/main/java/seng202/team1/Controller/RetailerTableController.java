@@ -174,7 +174,7 @@ public class RetailerTableController extends TableController {
                 } else {
                     dataPoints.add(retailerLocation);
                     originalData.add(retailerLocation);
-                    model.addCustomRetailerLocation(retailerLocation);
+                    model.addPoint(retailerLocation, currentListName);
                 }
             }
         } catch (IOException e) {

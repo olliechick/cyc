@@ -226,7 +226,7 @@ public class WifiTableController extends TableController {
                 } else {
                     dataPoints.add(newWifiPoint);
                     originalData.addAll(newWifiPoint);
-                    model.addCustomWifiLocation(newWifiPoint);
+                    model.addPoint(newWifiPoint, currentListName);
                 }
             }
         } catch (IOException e) {

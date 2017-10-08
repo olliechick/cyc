@@ -1,9 +1,6 @@
 package seng202.team1;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import seng202.team1.Model.*;
 
 import javax.xml.crypto.Data;
@@ -81,38 +78,31 @@ public class DatabaseManagerTest {
                 borough, city, zipcode, cost, provider, remarks, ssid, sourceID, startTime);
     }
 
-    /*
-        @Before
-        public void SetUp() {
-            try {
-                DatabaseManager.open();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
 
-        }
-    /*/
+    @Before
+    public void SetUp() throws Exception{
+        DatabaseManager.open();
+    }
+
     @After
-    public void TearDown() {/*
-        try {
-            DatabaseManager.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }*/
+    public void TearDown() throws Exception{
+        DatabaseManager.close();
         DatabaseManager.deleteDatabase();
     }
 
     @Test
     public void createNewDatabase() throws Exception {
-        DatabaseManager.open();
         Assert.assertTrue(DatabaseManager.isDatabaseConnected());
-        DatabaseManager.close();
     }
 
     @Test
-    public void deleteDatabase() {
-        DatabaseManager.deleteDatabase();
-        assertFalse(DatabaseManager.isDatabaseConnected());
+    public void addWifiPointToDifferentList() throws Exception {
+
+        DatabaseManager.addRecord(wifi, model.getUserName(), "NotMyWifi");
+        DatabaseManager.addRecord(wifi, model.getUserName(), "myWifi");
+
+        System.out.println(DatabaseManager.getListID(model.getUserName(), "myWifi", WifiPointList.class));
+        assertEquals(wifi, DatabaseManager.getWifiPoints(model.getUserName(), "myWifi").get(0));
     }
 
     @Test
@@ -122,123 +112,77 @@ public class DatabaseManagerTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        DatabaseManager.open();
         assertEquals(retailer, DatabaseManager.getRetailers(model.getUserName(), "myRetailers").get(0));
-        DatabaseManager.close();
     }
 
     @Test
     public void addWifiPoint() throws Exception {
-        try {
-            DatabaseManager.addRecord(wifi, model.getUserName(), "myWifi");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        DatabaseManager.open();
+        DatabaseManager.addRecord(wifi, model.getUserName(), "myWifi");
+
+
         System.out.println(DatabaseManager.getListID(model.getUserName(), "myWifi", WifiPointList.class));
         assertEquals(wifi, DatabaseManager.getWifiPoints(model.getUserName(), "myWifi").get(0));
-        DatabaseManager.close();
-    }
-
-    @Test
-    public void addWifiPointToDifferentList() throws Exception {
-        try {
-            DatabaseManager.addRecord(wifi, model.getUserName(), "NotMyWifi");
-            DatabaseManager.addRecord(wifi, model.getUserName(), "myWifi");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        DatabaseManager.open();
-        System.out.println(DatabaseManager.getListID(model.getUserName(), "myWifi", WifiPointList.class));
-        assertEquals(wifi, DatabaseManager.getWifiPoints(model.getUserName(), "myWifi").get(0));
-        DatabaseManager.close();
     }
 
     @Test
     public void addWifiPointToSameList() throws Exception {
-        try {
-            DatabaseManager.addRecord(wifi, model.getUserName(), "NotMyWifi");
-            DatabaseManager.addRecord(wifi, model.getUserName(), "myWifi");
-            DatabaseManager.addRecord(wifi, model.getUserName(), "myWifi");
-            DatabaseManager.addRecord(wifi, "OtherName", "AlsoNotMyWifi");
-            DatabaseManager.addRecord(wifi, model.getUserName(), "MYWIFI"); // Different case
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        DatabaseManager.addRecord(wifi, model.getUserName(), "NotMyWifi");
+        DatabaseManager.addRecord(wifi, model.getUserName(), "myWifi");
+        DatabaseManager.addRecord(wifi, model.getUserName(), "myWifi");
+        DatabaseManager.addRecord(wifi, "OtherName", "AlsoNotMyWifi");
+        DatabaseManager.addRecord(wifi, model.getUserName(), "MYWIFI"); // Different case
 
-        DatabaseManager.open();
         ArrayList<WifiPoint> wifiPoints = DatabaseManager.getWifiPoints(model.getUserName(), "myWifi");
 
         for (WifiPoint wifiPoint : wifiPoints) {
             System.out.println(wifiPoint.getName());
         }
         assertEquals(2, DatabaseManager.getWifiPoints(model.getUserName(), "myWifi").size());
-        DatabaseManager.close();
     }
 
     @Test
     public void addBikeTrip() throws Exception {
 
-        try {
-            DatabaseManager.addRecord(trip, model.getUserName(), "myBikeTrips");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        DatabaseManager.addRecord(trip, model.getUserName(), "myBikeTrips");
+
         System.out.println(trip.getBikeId());
-        DatabaseManager.open();
         assertEquals(trip, DatabaseManager.getBikeTrips(model.getUserName(), "myBikeTrips").get(0));
-        DatabaseManager.close();
     }
 
     @Test
     public void getOnlyUserTrips() throws Exception {
-        try {
-            DatabaseManager.addRecord(trip, model.getUserName(), "myTrips");
-            DatabaseManager.addRecord(trip, model.getUserName(), "myTrips");
 
-            DatabaseManager.addRecord(trip, "notMyUser", "myTrips"); // Wrong user
-            DatabaseManager.addRecord(trip, model.getUserName(), "NotMyTrips"); // Wrong list
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        DatabaseManager.open();
+        DatabaseManager.addRecord(trip, model.getUserName(), "myTrips");
+        DatabaseManager.addRecord(trip, model.getUserName(), "myTrips");
+
+        DatabaseManager.addRecord(trip, "notMyUser", "myTrips"); // Wrong user
+        DatabaseManager.addRecord(trip, model.getUserName(), "NotMyTrips"); // Wrong list
         assertEquals(2, DatabaseManager.getBikeTrips(model.getUserName(), "myTrips").size());
-        DatabaseManager.close();
     }
 
     @Test
     public void getItemsOfSameListNameOfDifferentType() throws Exception {
-        try {
-            DatabaseManager.addRecord(trip, model.getUserName(), "testList");
-            DatabaseManager.addRecord(wifi, model.getUserName(), "testList");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        DatabaseManager.open();
+
+        DatabaseManager.addRecord(trip, model.getUserName(), "testList");
+        DatabaseManager.addRecord(wifi, model.getUserName(), "testList");
+
         assertEquals(1, DatabaseManager.getBikeTrips(model.getUserName(), "testList").size());
         assertEquals(1, DatabaseManager.getWifiPoints(model.getUserName(), "testList").size());
 
-        DatabaseManager.close();
     }
 
     @Test
     public void getLists() throws Exception {
-        try {
-            DatabaseManager.addRecord(trip, model.getUserName(), "testList0"); // Wrong type
-            DatabaseManager.addRecord(wifi, model.getUserName(), "testList1"); // YES
-            DatabaseManager.addRecord(wifi, model.getUserName(), "testList2"); // YES
-            DatabaseManager.addRecord(retailer, model.getUserName(), "testList3"); // Wrong type
-            DatabaseManager.addRecord(wifi, "otherUser", "DifferentUser"); // Wrong user
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        DatabaseManager.open();
+
+        DatabaseManager.addRecord(trip, model.getUserName(), "testList0"); // Wrong type
+        DatabaseManager.addRecord(wifi, model.getUserName(), "testList1"); // YES
+        DatabaseManager.addRecord(wifi, model.getUserName(), "testList2"); // YES
+        DatabaseManager.addRecord(retailer, model.getUserName(), "testList3"); // Wrong type
+        DatabaseManager.addRecord(wifi, "otherUser", "DifferentUser"); // Wrong user
+
         ArrayList<String> lists = DatabaseManager.getLists(model.getUserName(), WifiPointList.class);
-        DatabaseManager.close();
         List<String> expected = Arrays.asList("testList1", "testList2");
         assertEquals(expected, lists);
     }

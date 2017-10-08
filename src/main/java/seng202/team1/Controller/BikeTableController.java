@@ -233,7 +233,7 @@ public class BikeTableController extends TableController {
                 } else {
                     dataPoints.add(addBikeDialog.getBikeTrip());
                     originalData.add(addBikeDialog.getBikeTrip());
-                    model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
+                    model.addPoint(addBikeDialog.getBikeTrip(), currentListName);
                 }
             }
 

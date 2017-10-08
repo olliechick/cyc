@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class DatabaseManager {
     private static Connection connection;
     private static File localDatabaseFile;
+    private static boolean inUse = false;
 
 
     /**
@@ -39,12 +40,25 @@ public class DatabaseManager {
 
         connection = DriverManager.getConnection(url);
         connection.setAutoCommit(false);
-        if (databaseExists) {
-            System.out.println("Database connected.");
+        if (inUse()) {
+            try {
+                System.out.println("DB in use - sleeping for 1s");
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         } else {
-            createDatabaseTables();
-            System.out.println("Database established and connected.");
+            inUse = true;
+
+            if (databaseExists) {
+                System.out.println("Database connected.");
+            } else {
+                createDatabaseTables();
+                System.out.println("Database established and connected.");
+            }
         }
+
+
 
     }
 
@@ -74,9 +88,12 @@ public class DatabaseManager {
             connection.commit();
             connection.close();
             connection = null;
+            inUse = false;
         }
         System.out.println("Database disconnected.");
     }
+
+    public static boolean inUse() { return inUse; };
 
     /**
      * Creates all database tables.
@@ -264,9 +281,11 @@ public class DatabaseManager {
                     new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
 
             RetailerLocation retailer = (RetailerLocation) point;
+            int listid = getListID(username, listName, RetailerLocationList.class);
+
             preparedStatement = connection.prepareStatement(statement);
 
-            preparedStatement.setInt(1, getListID(username, listName, RetailerLocationList.class));
+            preparedStatement.setInt(1, listid);
             preparedStatement.setString(2, retailer.getName());
             preparedStatement.setString(3, retailer.getAddressLine1());
             preparedStatement.setString(4, retailer.getAddressLine2());
@@ -289,9 +308,11 @@ public class DatabaseManager {
                     "VALUES (" + new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
 
             WifiPoint wifiPoint = (WifiPoint) point;
+            int listid = getListID(username, listName, WifiPointList.class);
+
             preparedStatement = connection.prepareStatement(statement);
 
-            preparedStatement.setInt(1, getListID(username, listName, WifiPointList.class));
+            preparedStatement.setInt(1, listid);
             preparedStatement.setInt(2, wifiPoint.getObjectId());
             preparedStatement.setFloat(3, wifiPoint.getLatitude());
             preparedStatement.setFloat(4, wifiPoint.getLongitude());
@@ -324,9 +345,11 @@ public class DatabaseManager {
                     new String(new char[numOfQs - 1]).replace("\0", "?, ") + "?)";
 
             BikeTrip trip = (BikeTrip) point;
+            int listid = getListID(username, listName, BikeTripList.class);
+
             preparedStatement = connection.prepareStatement(statement);
 
-            preparedStatement.setInt(1, getListID(username, listName, BikeTripList.class));
+            preparedStatement.setInt(1, listid);
             preparedStatement.setLong(2, trip.getTripDuration());
             preparedStatement.setString(3, trip.getStartTime().toString());
             preparedStatement.setString(4, trip.getStopTime().toString());
@@ -356,9 +379,7 @@ public class DatabaseManager {
      * @throws SQLException
      */
     public static void addRecord(DataPoint point, String username, String listName) throws SQLException {
-        DatabaseManager.open();
         addRecordExistingConnection(point, username, listName);
-        DatabaseManager.close();
     }
 
 
@@ -370,7 +391,6 @@ public class DatabaseManager {
      * @throws SQLException
      */
     public static void addRecords(ArrayList<? extends DataPoint> points, String username, String listName) throws SQLException {
-        DatabaseManager.open();
         for (DataPoint point : points) {
             try {
                 addRecordExistingConnection(point, username, listName);
@@ -378,7 +398,6 @@ public class DatabaseManager {
                 e.printStackTrace();
             }
         }
-        DatabaseManager.close();
     }
 
 
@@ -590,7 +609,6 @@ public class DatabaseManager {
      */
     public static void populateList(String username, PointList pointList) {
         try {
-            open();
             if (pointList instanceof RetailerLocationList) {
                 for (RetailerLocation retailerLocation : ((RetailerLocationList) pointList).getRetailerLocations()) {
                     addRecordExistingConnection(retailerLocation, username, pointList.getListName());
@@ -605,7 +623,6 @@ public class DatabaseManager {
                     addRecordExistingConnection(bikeTrip, username, pointList.getListName());
                 }
             }
-            close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

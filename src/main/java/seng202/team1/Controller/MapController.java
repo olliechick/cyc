@@ -762,7 +762,7 @@ public class MapController {
                     System.out.println(wifiPoints.size());
                     addWifi(newWifiPoint.getLatitude(), newWifiPoint.getLongitude(), newWifiPoint.toInfoString());
                     //System.out.print(newWifiPoint);
-                    model.addCustomWifiLocation(newWifiPoint);
+                    model.addPoint(newWifiPoint, currentWifiPointList);
                     updateWIFI();
                     webView.getEngine().executeScript("document.wifiCluster()");
                 }
@@ -795,7 +795,7 @@ public class MapController {
                     retailerLocation.setId(retailerPoints.size());
                     retailerPoints.add(retailerLocation);
                     addRetailer(retailerLocation.getLatitude(), retailerLocation.getLongitude(), retailerLocation.toInfoString());
-                    model.addCustomRetailerLocation(retailerLocation);
+                    model.addPoint(retailerLocation, currentRetailerList);
                     updateRetailers();
                 }
             }
@@ -821,7 +821,7 @@ public class MapController {
                     AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
                 } else {
                     bikeTrips.add(addBikeDialog.getBikeTrip());
-                    model.addCustomBikeTrip(addBikeDialog.getBikeTrip());
+                    model.addPoint(addBikeDialog.getBikeTrip(), currentBikeTripList);
                 }
             }
 

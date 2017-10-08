@@ -193,7 +193,7 @@ public class ListViewerController {
                 System.out.println("SQL error occurred");
             }
 
-            user.addBikeTripList(bikeTripList);
+            user.addPointList(bikeTripList);
             switchToBikeTable(bikeTripList);
         }
     }
@@ -208,6 +208,8 @@ public class ListViewerController {
         System.out.println("New Retailer List named: " + listName);
         if (listName != null) {
             RetailerLocationList retailerLocationList = new RetailerLocationList(listName, new ArrayList<>());
+            user.addPointList(retailerLocationList);
+
             switchToRetailerTable(retailerLocationList);
         }
     }
@@ -222,6 +224,7 @@ public class ListViewerController {
         System.out.println("New Wifi List named: " + listName);
         if (listName != null) {
             WifiPointList wifiPointList = new WifiPointList(listName, new ArrayList<>());
+            user.addPointList(wifiPointList);
             switchToWifiTable(wifiPointList);
         }
     }

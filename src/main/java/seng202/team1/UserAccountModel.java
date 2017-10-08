@@ -5,6 +5,7 @@ import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CSVLoader;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 
+import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -30,9 +31,6 @@ public class UserAccountModel implements java.io.Serializable {
     private String userName;
     private byte[] password;
     private byte[] salt;
-    private ArrayList<BikeTripList> bikeTripLists = new ArrayList<>();
-    private ArrayList<RetailerLocationList> retailerLocationLists = new ArrayList<>();
-    private ArrayList<WifiPointList> wifiPointLists = new ArrayList<>();
 
     /**
      * Constructor with account type set to "User".
@@ -72,12 +70,9 @@ public class UserAccountModel implements java.io.Serializable {
      */
     private void createDefaultLists() {
         try {
-            BikeTripList defaultTrips = new BikeTripList("Default", CSVLoader.populateBikeTrips());
-            bikeTripLists.add(defaultTrips);
-            RetailerLocationList defaultRetailers = new RetailerLocationList("Default", CSVLoader.populateRetailers());
-            retailerLocationLists.add(defaultRetailers);
-            WifiPointList defaultWifis = new WifiPointList("Default", CSVLoader.populateWifiHotspots());
-            wifiPointLists.add(defaultWifis);
+            addPointList(new BikeTripList("Default", CSVLoader.populateBikeTrips()));
+            addPointList(new RetailerLocationList("Default", CSVLoader.populateRetailers()));
+            addPointList(new WifiPointList("Default", CSVLoader.populateWifiHotspots()));
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Some of the default lists could not be created!");
         }
@@ -200,36 +195,22 @@ public class UserAccountModel implements java.io.Serializable {
     }
 
 
-    public void addCustomBikeTrip(BikeTrip bikeTrip) {
-        addPoint(bikeTrip);
-    }
-
-
-    public void addCustomRetailerLocation(RetailerLocation retailerLocation) {
-        addPoint(retailerLocation);
-    }
-
-
-    public void addCustomWifiLocation(WifiPoint wifiPoint) {
-        addPoint(wifiPoint);
-    }
-
-
-    private void addPoint(DataPoint point) {
+    public void addPoint(DataPoint point, String listName) {
         try {
-            DatabaseManager.addRecord(point, userName, ""); // TODO: Use current list
+            DatabaseManager.open();
+            DatabaseManager.addRecord(point, userName, listName);
+            DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
 
-    public void addBikeTripList(BikeTripList bikeTripList) {
-        bikeTripLists.add(bikeTripList);
+    public void addPointList(PointList pointList) {
         try {
             DatabaseManager.open();
-            DatabaseManager.createNewList(userName, bikeTripList.getListName(), BikeTripList.class);
-            DatabaseManager.populateList(userName, bikeTripList);
+            DatabaseManager.createNewList(userName, pointList.getListName(), BikeTripList.class);
+            DatabaseManager.populateList(userName, pointList);
             DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();
