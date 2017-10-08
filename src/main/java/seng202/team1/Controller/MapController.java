@@ -954,7 +954,7 @@ public class MapController {
         }
     }
 
-    public void logout() {
+    public void saveAndLogout() {
         System.out.println("Logout");
         boolean confirmLogout = true;
         SerializerImplementation.serializeUser(model);
@@ -965,22 +965,34 @@ public class MapController {
 
         if (confirmLogout) {
             model = null;
-            try {
-                windowManager.closeAllTrackedStages();
-
-                FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-                Parent loginView = loginLoader.load();
-
-                Scene loginScene = new Scene(loginView);
-                loginScene.getStylesheets().add("/css/loginStyle.css");
-                stage.setScene(loginScene);
-                stage.setHeight(loginView.getScene().getHeight());
-                stage.setWidth(loginView.getScene().getWidth());
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            logout();
         }
+    }
+
+    public void logout() {
+        System.out.println("Logout");
+        model = null;
+
+        try {
+            windowManager.closeAllTrackedStages();
+
+            FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+            Parent loginView = loginLoader.load();
+
+            Scene loginScene = new Scene(loginView);
+            loginScene.getStylesheets().add("/css/loginStyle.css");
+            stage.setScene(loginScene);
+            stage.setHeight(loginView.getScene().getHeight());
+            stage.setWidth(loginView.getScene().getWidth());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteAccount() {
+        SerializerImplementation.deleteUserAccountModel(model.getUserName());
+        logout();
     }
 
     @FXML

@@ -58,4 +58,14 @@ public final class SerializerImplementation {
         }
         return user;
     }
+
+    public static void deleteUserAccountModel(String userName){
+        String userPath = Directory.USERS.directory() + userName + USER_EXT;
+        File userFile = new File(userPath);
+        if (userFile.delete()) {
+            System.out.println("User deleted");
+        } else {
+            System.out.println("Failed to delete user");
+        }
+    }
 }

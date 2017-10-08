@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.web.WebView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
@@ -29,7 +29,7 @@
                   <Menu mnemonicParsing="false" text="Account">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#startPasswordChange" text="Change Password" />
-                        <MenuItem mnemonicParsing="false" text="Delete Acount" />
+                        <MenuItem mnemonicParsing="false" onAction="#deleteAccount" text="Delete Acount" />
                     </items>
                   </Menu>
                   <MenuItem mnemonicParsing="false" onAction="#logout" text="Logout" />
@@ -76,7 +76,7 @@
                      <content>
                          <GridPane hgap="5.0" prefHeight="583.0" prefWidth="100.0" vgap="2.0" BorderPane.alignment="CENTER">
                              <columnConstraints>
-                                 <ColumnConstraints hgrow="SOMETIMES"  minWidth="10.0" prefWidth="100.0" />
+                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                              </columnConstraints>
                              <rowConstraints>
                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -158,6 +158,7 @@
                         <GridPane hgap="5.0" vgap="2.0">
                            <columnConstraints>
                               <ColumnConstraints />
+                              <ColumnConstraints />
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -185,7 +186,7 @@
                               <TextField fx:id="startingLongTextField" GridPane.rowIndex="4" />
                               <TextField fx:id="endingLatTextField" GridPane.rowIndex="6" />
                               <TextField fx:id="endingLongTextField" GridPane.rowIndex="8" />
-                               <Label fx:id="resultsLabel" prefHeight="96.0" prefWidth="190.0" text="Current Bike Trip" textAlignment="CENTER" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="10" GridPane.rowSpan="1" GridPane.valignment="TOP"/>
+                               <Label fx:id="resultsLabel" prefHeight="96.0" prefWidth="190.0" text="Current Bike Trip" textAlignment="CENTER" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="10" GridPane.rowSpan="1" GridPane.valignment="TOP" />
                               <Label prefHeight="77.0" prefWidth="185.0" text="Enter Co-ordinates to search from" wrapText="true" GridPane.columnIndex="0" />
 
                               <GridPane GridPane.rowIndex="9">
