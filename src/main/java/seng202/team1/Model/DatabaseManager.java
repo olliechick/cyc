@@ -515,6 +515,7 @@ public class DatabaseManager {
         PreparedStatement preparedStatement;
 
         try {
+
             preparedStatement = connection.prepareStatement(statement);
 
             preparedStatement.setString(1, username);
@@ -528,7 +529,6 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
