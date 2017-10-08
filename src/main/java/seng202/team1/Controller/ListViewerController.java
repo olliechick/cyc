@@ -10,13 +10,15 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import seng202.team1.Model.BikeTripList;
-import seng202.team1.Model.RetailerLocationList;
-import seng202.team1.Model.WifiPointList;
+import seng202.team1.Model.*;
+import seng202.team1.Model.CsvHandling.CSVLoader;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 
 //TODO change to user database lists once implemented.
 /**
@@ -123,6 +125,7 @@ public class ListViewerController {
     @FXML
     void chooseBikeList() {
         BikeTripList selectedBikeList = bikeListView.getSelectionModel().getSelectedItem();
+        //BikeTripList selectedBikeList = DatabaseManager.getLists(user.getUserName(), BikeTrip.class);
         if (selectedBikeList != null) {
             System.out.println(selectedBikeList.getBikeTrips().size() + " trips in list");
 
@@ -169,6 +172,15 @@ public class ListViewerController {
         System.out.println("New Bike List named: " + listName);
         if (listName != null) {
             BikeTripList bikeTripList = new BikeTripList(listName, new ArrayList<>());
+            try {
+                DatabaseManager.open();
+                DatabaseManager.createNewList(user.getUserName(), listName, BikeTrip.class);
+                DatabaseManager.populateList(user.getUserName(),  bikeTripList);
+                DatabaseManager.close();
+            } catch (SQLException e){
+                System.out.println("SQL error occurred");
+            }
+
             user.addBikeTripList(bikeTripList);
             switchToBikeTable(bikeTripList);
         }

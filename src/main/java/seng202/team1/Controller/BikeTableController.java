@@ -21,11 +21,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import seng202.team1.Model.BikeTrip;
-import seng202.team1.Model.ContextualLength;
+import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
-import seng202.team1.Model.DataAnalyser;
-import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.awt.Point;
