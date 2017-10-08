@@ -102,7 +102,7 @@ public class MapController {
     private int wifiSearchDistance = 100;
     private int retailerSearchDistance = 50;
     private int retailerToWIFISearchDistance = 200;
-    private boolean drawRouteUsingPolyLines = false;
+    private boolean drawRouteUsingPolyLines = true;
     @FXML
     private UserAccountModel model;
     @FXML
