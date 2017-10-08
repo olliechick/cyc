@@ -742,6 +742,7 @@ public class MapController {
             Stage stage1 = new Stage();
 
             addBikeDialog.setDialog(stage1, root);
+            addBikeDialog.initModel(model);
             stage1.showAndWait();
 
             BikeTrip test = addBikeDialog.getBikeTrip();
