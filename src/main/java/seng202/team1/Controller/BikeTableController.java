@@ -300,7 +300,7 @@ public class BikeTableController extends TableController {
             public void handle(WorkerStateEvent event) {
 
                 if (loadBikeCsv.getValue() != null) {
-                    checkAndAddToList(loadBikeCsv.getValue().size());
+                    //checkAndAddToList(loadBikeCsv.getValue().size());
                     setTableViewBike(loadBikeCsv.getValue());
                     setPredicate();
                     populateCustomBikeTrips();
