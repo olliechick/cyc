@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -11,131 +7,90 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.AddRetailerDialogController">
+<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.AddRetailerDialogController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="621.0" minWidth="10.0" prefWidth="400.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="145.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="0.0" minWidth="0.0" prefWidth="0.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints maxHeight="67.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="84.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="98.0" minHeight="9.0" prefHeight="9.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="123.0" minHeight="10.0" prefHeight="97.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="33.0" minHeight="9.0" prefHeight="9.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="90.0" minHeight="10.0" prefHeight="71.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="59.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="90.0" minHeight="10.0" prefHeight="71.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="59.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints />
+    <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="26.0" prefHeight="26.0" />
   </rowConstraints>
    <children>
-      <Label text="Add a custom retailer location" GridPane.halignment="CENTER" />
-      <GridPane GridPane.rowIndex="1">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="154.0" minWidth="10.0" prefWidth="131.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="244.0" minWidth="10.0" prefWidth="240.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <Label text="Add a custom retailer location" GridPane.columnSpan="3" GridPane.halignment="CENTER">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
+      <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="7" />
+       <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="10" />
+      <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="13" />
+      <Label fx:id="nameLabel" prefHeight="15.0" prefWidth="131.0" text="Name" GridPane.rowIndex="2" />
+      <TextField fx:id="nameField" prefHeight="25.0" prefWidth="251.0" promptText="Example retailer" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <Label fx:id="address2Label" text="Address (pre-line)" GridPane.rowIndex="4" />
+      <TextField fx:id="addressField" promptText="123 Example St" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+      <TextField fx:id="address2Field" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+      <TextField fx:id="zipField" promptText="10002" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+      <Label fx:id="addressLabel" text="Address" GridPane.rowIndex="5">
+         <padding>
+            <Insets right="10.0" top="5.0" />
+         </padding>
+      </Label>
+      <Label fx:id="zipLabel" text="ZIP code" GridPane.rowIndex="6">
+         <padding>
+            <Insets right="10.0" top="5.0" />
+         </padding>
+      </Label>
+         <TextField fx:id="longField" promptText="-73.12345" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+         <TextField fx:id="latField" promptText="41.12345" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+         <Label fx:id="latLabel" text="Longitude" GridPane.rowIndex="9">
+             <padding>
+                 <Insets right="10.0" top="5.0" />
+             </padding>
+         </Label>
+      <Label fx:id="secondaryLabel" text="Secondary function" GridPane.rowIndex="12">
+         <padding>
+            <Insets right="10.0" top="5.0" />
+         </padding>
+      </Label>
+      <TextField fx:id="secondaryField" GridPane.columnIndex="2" GridPane.rowIndex="12" />
+      <TextField fx:id="primaryField" promptText="Shopping" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+         <Label fx:id="longLabel" text="Latitude" GridPane.rowIndex="8">
+             <padding>
+                 <Insets right="10.0" top="5.0" />
+             </padding>
+         </Label>
+      <Label fx:id="primaryLabel" text="Primary function" GridPane.rowIndex="11">
+         <padding>
+            <Insets right="10.0" top="5.0" />
+         </padding>
+      </Label>
+      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnSpan="2147483647" GridPane.halignment="RIGHT" GridPane.rowIndex="14">
          <children>
-            <Label fx:id="nameLabel" prefHeight="15.0" prefWidth="131.0" text="Name:" />
-            <TextField fx:id="nameField" prefHeight="25.0" prefWidth="251.0" promptText="Buy n Large" GridPane.columnIndex="1" />
+            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" prefWidth="100.0" text="Cancel" />
+            <Button fx:id="addButton" mnemonicParsing="false" onAction="#addRetailer" prefWidth="100.0" text="Add" />
          </children>
-      </GridPane>
-      <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
-      <GridPane GridPane.rowIndex="3">
-         <children>
-            <Label fx:id="address2Label" text="Address (pre-line):" />
-            <Label fx:id="addressLabel" text="Address:" GridPane.rowIndex="1">
-               <padding>
-                  <Insets right="10.0" top="5.0" />
-               </padding>
-            </Label>
-            <TextField fx:id="addressField" promptText="123 Example St" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="address2Field" GridPane.columnIndex="1" />
-            <Label fx:id="zipLabel" text="ZIP:" GridPane.rowIndex="2">
-               <padding>
-                  <Insets right="10.0" top="5.0" />
-               </padding>
-            </Label>
-            <TextField fx:id="zipField" promptText="10002" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-         </children>
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="154.0" minWidth="10.0" prefWidth="131.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="201.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-         </rowConstraints>
-      </GridPane>
-      <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
-       <GridPane GridPane.rowIndex="5">
-           <children>
-               <Label fx:id="latLabel" text="Longitude:" GridPane.rowIndex="1">
-                   <padding>
-                       <Insets right="10.0" top="5.0" />
-                   </padding>
-               </Label>
-               <Label fx:id="longLabel" text="Latitude:">
-                   <padding>
-                       <Insets right="10.0" top="5.0" />
-                   </padding>
-               </Label>
-               <TextField fx:id="latField" promptText="41.12345" GridPane.columnIndex="1" />
-               <TextField fx:id="longField" promptText="-73.12345" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-           </children>
-           <columnConstraints>
-               <ColumnConstraints hgrow="SOMETIMES" maxWidth="154.0" minWidth="10.0" prefWidth="129.0" />
-               <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="203.0" />
-           </columnConstraints>
-           <rowConstraints>
-               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-           </rowConstraints>
-       </GridPane>
-       <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
-      <GridPane GridPane.rowIndex="7">
-         <children>
-            <Label fx:id="secondaryLabel" text="Secondary function:" GridPane.rowIndex="1">
-               <padding>
-                  <Insets right="10.0" top="5.0" />
-               </padding>
-            </Label>
-            <Label fx:id="primaryLabel" text="Primary function:">
-               <padding>
-                  <Insets right="10.0" top="5.0" />
-               </padding>
-            </Label>
-            <TextField fx:id="primaryField" promptText="Shopping" GridPane.columnIndex="1" />
-            <TextField fx:id="secondaryField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-         </children>
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="154.0" minWidth="10.0" prefWidth="129.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="203.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-         </rowConstraints>
-      </GridPane>
-      <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="8" />
-      <GridPane GridPane.rowIndex="9">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Button fx:id="addButton" mnemonicParsing="false" onAction="#addRetailer" text="Add" GridPane.halignment="CENTER" />
-            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Cancel" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-         </children>
-      </GridPane>
+      </HBox>
+      <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="11" />
+      <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="1" />
    </children>
    <padding>
       <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
