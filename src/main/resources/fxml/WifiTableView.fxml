@@ -44,7 +44,7 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#deleteAllWifiPoints" text="Delete all Wifi Points from current list" />
+                  <MenuItem mnemonicParsing="false" onAction="#deleteAllWifiPoints" text="Delete List" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

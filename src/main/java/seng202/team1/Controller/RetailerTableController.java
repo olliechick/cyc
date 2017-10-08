@@ -231,11 +231,11 @@ public class RetailerTableController extends TableController {
      * Delete all the retailers from the current list
      */
     public void deleteAllRetailers() {
-        boolean delete = AlertGenerator.createChoiceDialog("Delete All Points", "Delete all points", "Are you sure you want to delete all the points in this list?");
+        boolean delete = AlertGenerator.createChoiceDialog("Delete List", "Delete list", "Are you sure you want to delete this list, and all the points in this list?");
         if (delete) {
             try {
                 DatabaseManager.open();
-                DatabaseManager.deletePointsOfList(model.getUserName(), currentListName, RetailerLocationList.class);
+                DatabaseManager.deleteList(model.getUserName(), currentListName, RetailerLocationList.class);
                 DatabaseManager.close();
             } catch (SQLException e) {
                 e.printStackTrace();

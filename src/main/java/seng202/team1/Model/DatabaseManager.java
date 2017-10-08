@@ -711,9 +711,10 @@ public class DatabaseManager {
         return result;
     }
 
-    public static void deletePointsOfList(String username, String listName, Class type) {
+    public static void deleteList(String username, String listName, Class type) {
         String statement_template = "DELETE FROM %s WHERE listid=?;";
-        PreparedStatement preparedStatement;
+        String statement_2 = "DELETE FROM list WHERE listName=?";
+        PreparedStatement preparedStatement, preparedStatement2;
 
         try {
             int listid = getListID(username, listName, type);
@@ -728,12 +729,16 @@ public class DatabaseManager {
             }
 
             String statement = String.format(statement_template, table);
-            System.out.println(listid);
+
+            // Delete points
             preparedStatement = connection.prepareStatement(statement);
-
             preparedStatement.setInt(1, listid);
-
             preparedStatement.execute();
+
+            // Delete list
+            preparedStatement2 = connection.prepareStatement(statement_2);
+            preparedStatement2.setString(1, listName);
+            preparedStatement2.execute();
 
         } catch (SQLException e) {
             e.printStackTrace();

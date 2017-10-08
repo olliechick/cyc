@@ -303,11 +303,11 @@ public class BikeTableController extends TableController {
      * Delete all bike trips from the current list
      */
     public void deleteAllBikeTrips() {
-        boolean delete = AlertGenerator.createChoiceDialog("Delete All Points", "Delete all points", "Are you sure you want to delete all the points in this list?");
+        boolean delete = AlertGenerator.createChoiceDialog("Delete List", "Delete List", "Are you sure you want to delete this list, and all the trips in this list?");
         if (delete) {
             try {
                 DatabaseManager.open();
-                DatabaseManager.deletePointsOfList(model.getUserName(), currentListName, BikeTripList.class);
+                DatabaseManager.deleteList(model.getUserName(), currentListName, BikeTripList.class);
                 DatabaseManager.close();
             } catch (SQLException e) {
                 e.printStackTrace();
