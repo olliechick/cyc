@@ -554,6 +554,33 @@ public class DatabaseManager {
     }
 
     /**
+     * Gets all the lists associated with a user of a certain type.
+     * @param username Username of the user in question
+     * @param type Type of list, i.e. BikeTripList.class
+     */
+    public static ArrayList<String> getLists(String username) {
+        ArrayList<String> result = new ArrayList<>();
+        PreparedStatement preparedStatement;
+
+        String statement = "SELECT listName FROM list WHERE username=?";
+
+        try {
+            preparedStatement = connection.prepareStatement(statement);
+
+            preparedStatement.setString(1, username);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                result.add(rs.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
      * Gets all of the wifi points associated with a user.
      *
      * @param username the username of the user.

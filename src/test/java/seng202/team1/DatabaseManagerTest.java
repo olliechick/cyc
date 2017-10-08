@@ -9,12 +9,15 @@ import seng202.team1.Model.DatabaseManager;
 import seng202.team1.Model.RetailerLocation;
 import seng202.team1.Model.WifiPoint;
 
+import javax.xml.crypto.Data;
 import java.awt.Point;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -218,5 +221,24 @@ public class DatabaseManagerTest {
         assertEquals(1, DatabaseManager.getWifiPoints(model.getUserName(), "testList").size());
 
         DatabaseManager.close();
+    }
+
+    @Test
+    public void getLists() throws Exception {
+        try {
+            DatabaseManager.addRecord(trip, model.getUserName(), "testList");
+            DatabaseManager.addRecord(wifi, model.getUserName(), "testList");
+            DatabaseManager.addRecord(wifi, model.getUserName(), "testList2");
+            DatabaseManager.addRecord(retailer, model.getUserName(), "testList3");
+
+            DatabaseManager.addRecord(wifi, "otherUser", "DifferentUser");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        DatabaseManager.open();
+        ArrayList<String> lists = DatabaseManager.getLists(model.getUserName());
+        DatabaseManager.close();
+        List<String> expected = Arrays.asList("testList", "testList2", "testList3");
+        assertEquals(expected, lists);
     }
 }
