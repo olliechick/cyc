@@ -35,7 +35,7 @@
       <RowConstraints maxHeight="26.0" prefHeight="26.0" />
   </rowConstraints>
    <children>
-      <Label text="Add a custom retailer location" GridPane.columnSpan="3" GridPane.halignment="CENTER">
+      <Label text="Add a retailer" GridPane.columnSpan="3" GridPane.halignment="CENTER">
          <font>
             <Font size="20.0" />
          </font></Label>
@@ -61,7 +61,7 @@
       </Label>
          <TextField fx:id="longField" promptText="-73.12345" GridPane.columnIndex="2" GridPane.rowIndex="9" />
          <TextField fx:id="latField" promptText="41.12345" GridPane.columnIndex="2" GridPane.rowIndex="8" />
-         <Label fx:id="latLabel" text="Longitude" GridPane.rowIndex="9">
+         <Label fx:id="longLabel" text="Longitude" GridPane.rowIndex="9">
              <padding>
                  <Insets right="10.0" top="5.0" />
              </padding>
@@ -73,7 +73,7 @@
       </Label>
       <TextField fx:id="secondaryField" GridPane.columnIndex="2" GridPane.rowIndex="12" />
       <TextField fx:id="primaryField" promptText="Shopping" GridPane.columnIndex="2" GridPane.rowIndex="11" />
-         <Label fx:id="longLabel" text="Latitude" GridPane.rowIndex="8">
+         <Label fx:id="latLabel" text="Latitude" GridPane.rowIndex="8">
              <padding>
                  <Insets right="10.0" top="5.0" />
              </padding>

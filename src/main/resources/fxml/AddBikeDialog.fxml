@@ -36,7 +36,7 @@
       <RowConstraints maxHeight="26.0" minHeight="-Infinity" prefHeight="26.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label fx:id="addBikeTripLabel" text="Add a custom bike trip" GridPane.columnSpan="5" GridPane.halignment="CENTER">
+      <Label fx:id="addBikeTripLabel" text="Add a bike trip" GridPane.columnSpan="5" GridPane.halignment="CENTER">
          <font>
             <Font size="20.0" />
          </font></Label>
@@ -85,22 +85,22 @@
       <TextField fx:id="endLongField" promptText="-73.12346" GridPane.columnIndex="4" GridPane.rowIndex="9" />
       <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4" GridPane.rowSpan="6" />
       <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="8" />
-      <Label fx:id="startDateLabel" prefHeight="20.0" prefWidth="80.0" text="Date" GridPane.rowIndex="7">
+      <Label fx:id="dateLabel" prefHeight="20.0" prefWidth="80.0" text="Date" GridPane.rowIndex="7">
          <padding>
             <Insets right="10.0" top="5.0" />
          </padding>
       </Label>
-      <Label fx:id="startTimeLabel" prefHeight="20.0" prefWidth="70.0" text="Time" GridPane.rowIndex="6">
+      <Label fx:id="timeLabel" prefHeight="20.0" prefWidth="70.0" text="Time" GridPane.rowIndex="6">
          <padding>
             <Insets right="10.0" top="5.0" />
          </padding>
       </Label>
-      <Label fx:id="startLatLabel" prefHeight="20.0" prefWidth="80.0" text="Latitude" GridPane.rowIndex="8">
+      <Label fx:id="latLabel" prefHeight="20.0" prefWidth="80.0" text="Latitude" GridPane.rowIndex="8">
          <padding>
             <Insets right="10.0" top="5.0" />
          </padding>
       </Label>
-      <Label fx:id="startLongLabel" prefHeight="20.0" prefWidth="80.0" text="Longitude" GridPane.rowIndex="9">
+      <Label fx:id="longLabel" prefHeight="20.0" prefWidth="80.0" text="Longitude" GridPane.rowIndex="9">
          <padding>
             <Insets right="10.0" top="5.0" />
          </padding>

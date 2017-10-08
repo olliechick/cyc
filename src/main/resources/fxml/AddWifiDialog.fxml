@@ -39,7 +39,7 @@
       <RowConstraints maxHeight="26.0" minHeight="0.0" prefHeight="26.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label text="Add a custom WiFi point" GridPane.columnSpan="3" GridPane.halignment="CENTER">
+      <Label text="Add a WiFi hotspot" GridPane.columnSpan="3" GridPane.halignment="CENTER">
          <font>
             <Font size="20.0" />
          </font></Label>
