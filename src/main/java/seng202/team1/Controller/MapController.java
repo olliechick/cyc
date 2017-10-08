@@ -957,7 +957,7 @@ public class MapController {
     public void logout() {
         System.out.println("Logout");
         boolean confirmLogout = true;
-
+        SerializerImplementation.serializeUser(model);
         if (!windowManager.getStagesOpen().isEmpty()) {
             confirmLogout = AlertGenerator.createChoiceDialog("Close", "You still have tables open.",
                     "\nYour data might not be saved.\n\nAre you sure you want to logout?");
