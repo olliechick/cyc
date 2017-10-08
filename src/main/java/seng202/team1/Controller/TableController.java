@@ -149,6 +149,8 @@ public abstract class TableController {
     }
 
 
+
+
     /**
      * Opens a modal popup with the toString of the object
      * as the text.

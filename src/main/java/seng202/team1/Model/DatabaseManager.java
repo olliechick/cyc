@@ -155,7 +155,6 @@ public class DatabaseManager {
                 "    dateTimeActivated TEXT\n" +
                 ");";
 
-
         String createListTable = "CREATE TABLE list\n" +
                 "(\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
@@ -711,6 +710,12 @@ public class DatabaseManager {
         return result;
     }
 
+    /**
+     * Deletes a list from the database.
+     * @param username User whose list is being deleted.
+     * @param listName Name of the list that is being deleted.
+     * @param type Type of list that is being deleted, e.g. BikeTripList.class
+     */
     public static void deleteList(String username, String listName, Class type) {
         String statement_template = "DELETE FROM %s WHERE listid=?;";
         String statement_2 = "DELETE FROM list WHERE listName=? AND type=?";
@@ -743,6 +748,170 @@ public class DatabaseManager {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Updates a point with new values
+     * @param username Username of the owner of the point
+     * @param listName Name of the list the point exists in
+     * @param oldPoint Point to be updated
+     * @param newPoint New values to be included in database
+     */
+    public static void updatePoint(String username, String listName, DataPoint oldPoint, DataPoint newPoint) {
+        PreparedStatement preparedStatement1;
+        PreparedStatement preparedStatement2;
+
+        String statement1;
+        String statement2;
+
+        int idToUpdate;
+
+
+        if (oldPoint instanceof WifiPoint) {
+            statement1 = "SELECT id FROM wifi WHERE listid=? AND latitude=? AND longitude=? AND ssid=?";
+            try {
+                int listid = getListID(username, listName, WifiPointList.class);
+
+                preparedStatement1 = connection.prepareStatement(statement1);
+
+                preparedStatement1.setInt(1, listid);
+                preparedStatement1.setFloat(2, ((WifiPoint) oldPoint).getLatitude());
+                preparedStatement1.setFloat(3, ((WifiPoint) oldPoint).getLongitude());
+                preparedStatement1.setString(4, ((WifiPoint) oldPoint).getSsid());
+
+                ResultSet rs = preparedStatement1.executeQuery();
+
+                if (rs.next()) {
+                    idToUpdate = rs.getInt(1);
+
+                    statement2 = "UPDATE wifi SET listid=?, objectID=?, latitude=?, longitude=?, placeName=?, location=?, locationType=?, " +
+                            "hood=?, borough=?, city=?, zipcode=?, cost=?, provider=?, remarks=?, SSID=?, sourceId=?, datetimeactivated=? WHERE id=?";
+
+                    preparedStatement2 = connection.prepareStatement(statement2);
+
+                    WifiPoint wifiPoint = (WifiPoint) newPoint;
+
+                    preparedStatement2.setInt(1, listid);
+                    preparedStatement2.setInt(2, wifiPoint.getObjectId());
+                    preparedStatement2.setFloat(3, wifiPoint.getLatitude());
+                    preparedStatement2.setFloat(4, wifiPoint.getLongitude());
+                    preparedStatement2.setString(5, wifiPoint.getPlaceName());
+                    preparedStatement2.setString(6, wifiPoint.getLocation());
+                    preparedStatement2.setString(7, wifiPoint.getLocationType());
+                    preparedStatement2.setString(8, wifiPoint.getHood());
+                    preparedStatement2.setString(9, wifiPoint.getBorough());
+                    preparedStatement2.setString(10, wifiPoint.getCity());
+                    preparedStatement2.setString(11, Integer.toString(wifiPoint.getZipcode()));
+                    preparedStatement2.setString(12, wifiPoint.getCost());
+                    preparedStatement2.setString(13, wifiPoint.getProvider());
+                    preparedStatement2.setString(14, wifiPoint.getRemarks());
+                    preparedStatement2.setString(15, wifiPoint.getSsid());
+                    preparedStatement2.setString(16, wifiPoint.getSourceId());
+                    if (wifiPoint.getDatetimeActivated() == null) {
+                        preparedStatement2.setString(17, null);
+                    } else {
+                        preparedStatement2.setString(17, wifiPoint.getDatetimeActivated().toString());
+                    }
+                    preparedStatement2.setInt(18, idToUpdate);
+                    
+                    preparedStatement2.execute();
+
+                    System.out.println("Wifi Point successfully updated");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        } else if (oldPoint instanceof RetailerLocation) {
+            statement1 = "SELECT id FROM retailer WHERE listid=? AND primaryFunction=? AND name=?";
+            try {
+                int listid = getListID(username, listName, WifiPointList.class);
+
+                preparedStatement1 = connection.prepareStatement(statement1);
+
+                preparedStatement1.setInt(1, listid);
+                preparedStatement1.setString(2, ((RetailerLocation) oldPoint).getPrimaryFunction());
+                preparedStatement1.setString(3, oldPoint.getName());
+
+                ResultSet rs = preparedStatement1.executeQuery();
+
+                if (rs.next()) {
+                    idToUpdate = rs.getInt(1);
+
+                    statement2 = "UPDATE retailer SET listid=?, name=?, addressLine1=?, addressLine2=?, city=?, state=?, " +
+                            "zipcode=?, blockLot=?, primaryFunction=?, secondaryFunction=?, latitude=?, longitude=? WHERE id=?";
+
+                    preparedStatement2 = connection.prepareStatement(statement2);
+
+                    RetailerLocation newRetailer = (RetailerLocation) newPoint;
+
+                    preparedStatement2.setInt(1, listid);
+                    preparedStatement2.setString(2, newRetailer.getName());
+                    preparedStatement2.setString(3, newRetailer.getAddressLine1());
+                    preparedStatement2.setString(4, newRetailer.getAddressLine2());
+                    preparedStatement2.setString(5, newRetailer.getCity());
+                    preparedStatement2.setString(6, newRetailer.getState());
+                    preparedStatement2.setString(7, Integer.toString(newRetailer.getZipcode()));
+                    preparedStatement2.setString(8, newRetailer.getBlockLot());
+                    preparedStatement2.setString(9, newRetailer.getPrimaryFunction());
+                    preparedStatement2.setString(10, newRetailer.getSecondaryFunction());
+                    preparedStatement2.setFloat(11, newRetailer.getLatitude());
+                    preparedStatement2.setFloat(12, newRetailer.getLongitude());
+                    preparedStatement2.setInt(13, idToUpdate);
+
+                    preparedStatement2.execute();
+
+                    System.out.println("Retailer successfully updated");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (oldPoint instanceof BikeTrip) {
+            statement1 = "SELECT id FROM trip WHERE listid=? AND =? AND =?";
+            try {
+                int listid = getListID(username, listName, BikeTripList.class);
+
+                preparedStatement1 = connection.prepareStatement(statement1);
+
+                preparedStatement1.setInt(1, listid);
+
+                
+                
+                ResultSet rs = preparedStatement1.executeQuery();
+
+                if (rs.next()) {
+                    idToUpdate = rs.getInt(1);
+
+                    statement2 = "UPDATE trip SET listid=?, duration=?, startTime=?, stopTime=?, startLatitude=?, " +
+                            "startLongitude=?, endLatitude=?, endLongitude=?, " +
+                            "bikeID=?, gender=?, birthYear=?, tripDistance=? WHERE id=?";
+
+                    preparedStatement2 = connection.prepareStatement(statement2);
+
+                    BikeTrip trip = (BikeTrip) newPoint;
+
+                    preparedStatement2.setInt(1, listid);
+                    preparedStatement2.setLong(2, trip.getTripDuration());
+                    preparedStatement2.setString(3, trip.getStartTime().toString());
+                    preparedStatement2.setString(4, trip.getStopTime().toString());
+                    preparedStatement2.setFloat(5, trip.getStartLatitude());
+                    preparedStatement2.setFloat(6, trip.getStartLongitude());
+                    preparedStatement2.setFloat(7, trip.getEndLatitude());
+                    preparedStatement2.setFloat(8, trip.getEndLongitude());
+                    preparedStatement2.setInt(9, trip.getBikeId());
+                    preparedStatement2.setString(10, Character.toString(trip.getGender()));
+                    preparedStatement2.setInt(11, trip.getBirthYear());
+                    preparedStatement2.setDouble(12, trip.getTripDistance());
+                    preparedStatement2.setInt(13, idToUpdate);
+
+                    preparedStatement2.execute();
+
+                    System.out.println("Retailer successfully updated");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

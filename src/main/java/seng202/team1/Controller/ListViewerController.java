@@ -16,7 +16,6 @@ import seng202.team1.UserAccountModel;
 import java.io.IOException;
 import java.util.ArrayList;
 
-//TODO change to user database lists once implemented.
 /**
  * Created on 3/10/17.
  *
