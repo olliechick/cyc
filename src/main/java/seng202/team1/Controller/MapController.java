@@ -954,6 +954,10 @@ public class MapController {
         }
     }
 
+    /**
+     * Confirm logout if some tables remain open.
+     * If confirmed, serialize user and then log out.
+     */
     public void saveAndLogout() {
         System.out.println("Logout");
         boolean confirmLogout = true;
@@ -969,6 +973,9 @@ public class MapController {
         }
     }
 
+    /**
+     * Reset the current user and switch back to the login screen.
+     */
     public void logout() {
         System.out.println("Logout");
         model = null;
@@ -990,9 +997,18 @@ public class MapController {
         }
     }
 
+
+    /**
+     * Confirm that the user wants to delete their account.
+     * If so, delete it. Otherwise do nothing.
+     */
     public void deleteAccount() {
-        SerializerImplementation.deleteUserAccountModel(model.getUserName());
-        logout();
+        boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Account", "Are you sure you want to delete your account?",
+                                                                    "This cannot be undone.");
+        if (confirmDelete) {
+            SerializerImplementation.deleteUserAccountModel(model.getUserName());
+            logout();
+        }
     }
 
     @FXML

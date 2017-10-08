@@ -62,6 +62,11 @@ public final class SerializerImplementation {
         return user;
     }
 
+    /**
+     * Permanently delete the serialized user file associated with this user name.
+     *
+     * @param userName The userName of the account to delete.
+     */
     public static void deleteUserAccountModel(String userName){
         Path userPath = FileSystems.getDefault().getPath(Directory.USERS.directory() + userName + USER_EXT); //Directory.USERS.directory() + userName + USER_EXT;
         try {
