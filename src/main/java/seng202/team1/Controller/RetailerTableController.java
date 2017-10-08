@@ -12,7 +12,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -350,7 +349,7 @@ public class RetailerTableController extends TableController {
         String filename = getCsvFilenameSave();
         if (filename != null) {
             try {
-                exportRetailers(filename, model.getUserName());
+                exportRetailers(filename, model.getUserName(), currentListName);
             } catch (IOException e) {
                 AlertGenerator.createAlert("Couldn't export file.");
             } catch (SQLException e) {
