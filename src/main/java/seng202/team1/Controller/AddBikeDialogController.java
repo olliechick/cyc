@@ -1,5 +1,7 @@
 package seng202.team1.Controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -126,8 +128,13 @@ public class AddBikeDialogController {
     private Point.Float startPoint;
     private Point.Float endPoint;
     private UserAccountModel model;
+    private ObservableList<TextField> fields = FXCollections.observableArrayList();
 
     //region SETUP
+    public void initialize() {
+        fields.addAll(idField, startTimeField, stopTimeField, startLatField, startLongField, endLatField, endLongField);
+    }
+
     void initModel(UserAccountModel model) {
         this.model = model;
     }
@@ -193,22 +200,6 @@ public class AddBikeDialogController {
     void setDialog(Stage stage1, Parent root, BikeTrip bikeTrip) {
         setDialog(stage1, root);
 
-        startLatField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getStartLatitude())));
-        }));
-
-        startLongField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getStartLongitude())));
-        }));
-
-        endLatField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getEndLatitude())));
-        }));
-
-        endLongField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getEndLongitude())));
-        }));
-
         idField.setText(String.valueOf(bikeTrip.getBikeId()));
         startTimeField.setText(bikeTrip.getStartTime().toLocalTime().toString());
         stopTimeField.setText(bikeTrip.getStopTime().toLocalTime().toString());
@@ -221,7 +212,20 @@ public class AddBikeDialogController {
         endLatField.setText(String.valueOf(bikeTrip.getEndLatitude()));
         endLongField.setText(String.valueOf(bikeTrip.getEndLongitude()));
 
+        for (TextField textField : fields) {
+            textField.textProperty().addListener((((observable, oldValue, newValue) -> {
+                addButton.setDisable(false);
+            })));
+        }
+        startDatePicker.valueProperty().addListener((((observable, oldValue, newValue) -> {
+            addButton.setDisable(false);
+        })));
+        stopDatePicker.valueProperty().addListener((((observable, oldValue, newValue) -> {
+            addButton.setDisable(false);
+        })));
+
         addButton.setText("Save");
+        addButton.setDisable(true);
     }
     //endregion
 
