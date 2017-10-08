@@ -21,11 +21,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
-import seng202.team1.Model.DataAnalyser;
-import seng202.team1.Model.GenerateFields;
-import seng202.team1.Model.RetailerLocation;
-import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
@@ -559,10 +556,10 @@ public class RetailerTableController extends TableController {
      * Add the user's custom Retailer Points to the table.
      */
     private void populateCustomRetailerLocations() {
-        ArrayList<RetailerLocation> customRetailerLocations = model.getCustomRetailerLocations();
+        RetailerLocationList customRetailerLocations = model.getRetailerPointsFromList(currentListName);
 
-        dataPoints.addAll(customRetailerLocations);
-        originalData.addAll(customRetailerLocations);
+        dataPoints.addAll(customRetailerLocations.getRetailerLocations());
+        originalData.addAll(customRetailerLocations.getRetailerLocations());
     }
 
 

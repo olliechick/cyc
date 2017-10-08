@@ -20,11 +20,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
-import seng202.team1.Model.DataAnalyser;
-import seng202.team1.Model.GenerateFields;
-import seng202.team1.Model.SerializerImplementation;
-import seng202.team1.Model.WifiPoint;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
@@ -525,10 +522,10 @@ public class WifiTableController extends TableController {
      * Add the user's custom Wifi points to the current data
      */
     private void populateCustomWifiPoints() {
-        ArrayList<WifiPoint> customWifi = model.getCustomWifiPoints();
+        WifiPointList customWifi = model.getWifiPointsFromList(currentListName);
 
-        dataPoints.addAll(customWifi);
-        originalData.addAll(customWifi);
+        dataPoints.addAll(customWifi.getWifiPoints());
+        originalData.addAll(customWifi.getWifiPoints());
     }
 
 

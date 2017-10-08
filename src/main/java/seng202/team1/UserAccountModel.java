@@ -1,18 +1,9 @@
 package seng202.team1;
 
 import seng202.team1.Controller.AlertGenerator;
-import seng202.team1.Model.BikeTrip;
-import seng202.team1.Model.BikeTripList;
-import seng202.team1.Model.DataPoint;
-import seng202.team1.Model.DatabaseManager;
-import seng202.team1.Model.PasswordManager;
-import seng202.team1.Model.RetailerLocation;
-import seng202.team1.Model.RetailerLocationList;
-import seng202.team1.Model.SerializerImplementation;
-import seng202.team1.Model.WifiPoint;
+import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CSVLoader;
 import seng202.team1.Model.CsvHandling.CsvParserException;
-import seng202.team1.Model.WifiPointList;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -167,72 +158,62 @@ public class UserAccountModel implements java.io.Serializable {
     }
 
 
-    public ArrayList<BikeTrip> getCustomBikeTrips() {
+    public BikeTripList getBikeTripsFromList(String listName) {
         ArrayList<BikeTrip> result = new ArrayList<>();
         try {
             DatabaseManager.open();
-            result = DatabaseManager.getBikeTrips(userName, ""); // TODO: Support lists
+            result = DatabaseManager.getBikeTrips(userName, listName);
             System.out.println(String.format("%d custom trips retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result;
+        return new BikeTripList(listName, result);
     }
 
-    public ArrayList<WifiPoint> getCustomWifiPoints() {
+
+    public WifiPointList getWifiPointsFromList(String listName) {
         ArrayList<WifiPoint> result = new ArrayList<>();
         try {
             DatabaseManager.open();
-            result = DatabaseManager.getWifiPoints(userName, ""); //TODO: Get current listName?
-            System.out.println(String.format("%d custom wifi points retrieved.", result.size()));
+            result = DatabaseManager.getWifiPoints(userName, listName);
+            System.out.println(String.format("%d custom trips retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result;
-
+        return new WifiPointList(listName, result);
     }
 
 
-    @Deprecated // To be replaced with method below
-    public ArrayList<RetailerLocation> getCustomRetailerLocations() {
+    public RetailerLocationList getRetailerPointsFromList(String listName) {
         ArrayList<RetailerLocation> result = new ArrayList<>();
         try {
             DatabaseManager.open();
-            result = DatabaseManager.getRetailers(userName, ""); //TODO: Get current listName?
+            result = DatabaseManager.getRetailers(userName, listName);
             System.out.println(String.format("%d custom retailers retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result;
+        return new RetailerLocationList(listName, result);
     }
 
-    public ArrayList<RetailerLocation> getCustomRetailerLocations(String listName) {
-        ArrayList<RetailerLocation> result = new ArrayList<>();
-        try {
-            DatabaseManager.open();
-            result = DatabaseManager.getRetailers(userName, listName); //TODO: Get current listName?
-            System.out.println(String.format("%d custom retailers retrieved.", result.size()));
-            DatabaseManager.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
 
     public void addCustomBikeTrip(BikeTrip bikeTrip) {
         addPoint(bikeTrip);
     }
 
+
     public void addCustomRetailerLocation(RetailerLocation retailerLocation) {
         addPoint(retailerLocation);
     }
 
+
     public void addCustomWifiLocation(WifiPoint wifiPoint) {
         addPoint(wifiPoint);
     }
+
 
     private void addPoint(DataPoint point) {
         try {
@@ -241,6 +222,7 @@ public class UserAccountModel implements java.io.Serializable {
             e.printStackTrace();
         }
     }
+
 
     public void addBikeTripList(BikeTripList bikeTripList) {
         bikeTripLists.add(bikeTripList);
@@ -255,24 +237,56 @@ public class UserAccountModel implements java.io.Serializable {
         SerializerImplementation.serializeUser(this);
     }
 
+
     public ArrayList<BikeTripList> getBikeTripLists() {
-        return bikeTripLists;
+        ArrayList<String> results = new ArrayList<>();
+        ArrayList<BikeTripList> output = new ArrayList<>();
+        for (String result : results) {
+            output.add(getBikeTripsFromList(result));
+        }
+        return output;
     }
+
 
     public ArrayList<RetailerLocationList> getRetailerLocationLists() {
-        return retailerLocationLists;
+        ArrayList<String> results = new ArrayList<>();
+        ArrayList<RetailerLocationList> output = new ArrayList<>();
+        for (String result : results) {
+            output.add(getRetailerPointsFromList(result));
+        }
+        return output;
     }
 
+
     public ArrayList<WifiPointList> getWifiPointLists() {
-        return wifiPointLists;
+        ArrayList<String> results = getListNamesOfType(WifiPointList.class);
+        ArrayList<WifiPointList> output = new ArrayList<>();
+        for (String result : results) {
+            output.add(getWifiPointsFromList(result));
+        }
+        return output;
     }
+
+
+    public ArrayList<String> getListNamesOfType(Class type) {
+        ArrayList<String> results = new ArrayList<>();
+        try {
+            DatabaseManager.open();
+            results = DatabaseManager.getLists(userName, type);
+            DatabaseManager.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return results;
+    }
+
 
     public static void createUser(UserAccountModel user) {
         SerializerImplementation.serializeUser(user);
     }
 
+
     public static UserAccountModel getUser(String username) throws IOException {
         return SerializerImplementation.deserializeUser(username);
     }
 }
-

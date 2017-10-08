@@ -74,6 +74,11 @@ public class MapController {
 
     private boolean isMapLoaded = false;
 
+    private String currentBikeTripList  = "Default";
+    private String currentWifiPointList = "Default";
+    private String currentRetailerList  = "Default";
+
+
     private WindowManager windowManager = new WindowManager();
 
     ArrayList<RetailerLocation> retailerPoints = null;
@@ -433,7 +438,7 @@ public class MapController {
     private void loadAllBikeTrips() {
         try {
             bikeTrips = populateBikeTrips();
-            bikeTrips.addAll(model.getCustomBikeTrips());
+            bikeTrips.addAll(model.getBikeTripsFromList(currentBikeTripList).getBikeTrips());
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load bike trips.");
             e.printStackTrace();
@@ -444,7 +449,7 @@ public class MapController {
     private void loadAllWifi() {
         try {
             wifiPoints = populateWifiHotspots();
-            wifiPoints.addAll(model.getCustomWifiPoints());
+            wifiPoints.addAll(model.getWifiPointsFromList(currentWifiPointList).getWifiPoints());
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load WiFi points.");
             e.printStackTrace();
@@ -467,7 +472,7 @@ public class MapController {
     private void loadAllRetailers() {
         try {
             retailerPoints = populateRetailers();
-            retailerPoints.addAll(model.getCustomRetailerLocations());
+            retailerPoints.addAll(model.getRetailerPointsFromList(currentRetailerList).getRetailerLocations());
         } catch (CsvParserException | IOException e) {
             AlertGenerator.createAlert("Error", "Cannot load retailers.");
             e.printStackTrace();
@@ -763,8 +768,8 @@ public class MapController {
      * Add the user's custom Wifi points to the current data
      */
     private void populateCustomWifiPoints() {
-        ArrayList<WifiPoint> customWifi = model.getCustomWifiPoints();
-        wifiPoints.addAll(customWifi);
+        WifiPointList customWifi = model.getWifiPointsFromList(currentWifiPointList);
+        wifiPoints.addAll(customWifi.getWifiPoints());
     }
 
     /**

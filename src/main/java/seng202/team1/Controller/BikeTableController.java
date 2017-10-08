@@ -539,9 +539,9 @@ public class BikeTableController extends TableController {
      * Adds the users custom bike trips to the table.
      */
     private void populateCustomBikeTrips() {
-        ArrayList<BikeTrip> customTrips = model.getCustomBikeTrips();
-        dataPoints.addAll(customTrips);
-        originalData.addAll(customTrips);
+        BikeTripList customTrips = model.getBikeTripsFromList(currentListName);
+        dataPoints.addAll(customTrips.getBikeTrips());
+        originalData.addAll(customTrips.getBikeTrips());
     }
 
 
