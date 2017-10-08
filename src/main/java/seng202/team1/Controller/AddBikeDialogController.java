@@ -145,7 +145,7 @@ public class AddBikeDialogController {
         stage = stage1;
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
-        stage.setTitle("Add Bike Trip");
+        stage.setTitle("Add bike trip");
         stage.setScene(new Scene(root));
         startAM.setToggleGroup(startToggleGroup);
         startPM.setToggleGroup(startToggleGroup);
@@ -162,16 +162,16 @@ public class AddBikeDialogController {
         if (userClicks.size() == 1) {
             // User has clicked once - set this to the start point
             Point.Double secondToLastPoint = userClicks.get((userClicks.size() - 1));
-            startLatField.setText(String.format ("%.6f", secondToLastPoint.getX()));
-            startLongField.setText(String.format ("%.6f", secondToLastPoint.getY()));
-        } else if (userClicks.size() > 1){
+            startLatField.setText(String.format("%.6f", secondToLastPoint.getX()));
+            startLongField.setText(String.format("%.6f", secondToLastPoint.getY()));
+        } else if (userClicks.size() > 1) {
             // User has clicked at least twice
             Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
-            endLatField.setText(String.format ("%.6f", lastPoint.getX()));
-            endLongField.setText(String.format ("%.6f", lastPoint.getY()));
+            endLatField.setText(String.format("%.6f", lastPoint.getX()));
+            endLongField.setText(String.format("%.6f", lastPoint.getY()));
             Point.Double secondToLastPoint = userClicks.get((userClicks.size() - 2));
-            startLatField.setText(String.format ("%.6f", secondToLastPoint.getX()));
-            startLongField.setText(String.format ("%.6f", secondToLastPoint.getY()));
+            startLatField.setText(String.format("%.6f", secondToLastPoint.getX()));
+            startLongField.setText(String.format("%.6f", secondToLastPoint.getY()));
 
         }
 
