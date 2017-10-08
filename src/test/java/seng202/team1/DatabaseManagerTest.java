@@ -4,10 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import seng202.team1.Model.BikeTrip;
-import seng202.team1.Model.DatabaseManager;
-import seng202.team1.Model.RetailerLocation;
-import seng202.team1.Model.WifiPoint;
+import seng202.team1.Model.*;
 
 import javax.xml.crypto.Data;
 import java.awt.Point;
@@ -139,7 +136,7 @@ public class DatabaseManagerTest {
         }
 
         DatabaseManager.open();
-        System.out.println(DatabaseManager.getListID(model.getUserName(), "myWifi"));
+        System.out.println(DatabaseManager.getListID(model.getUserName(), "myWifi", WifiPointList.class));
         assertEquals(wifi, DatabaseManager.getWifiPoints(model.getUserName(), "myWifi").get(0));
         DatabaseManager.close();
     }
@@ -155,7 +152,7 @@ public class DatabaseManagerTest {
         }
 
         DatabaseManager.open();
-        System.out.println(DatabaseManager.getListID(model.getUserName(), "myWifi"));
+        System.out.println(DatabaseManager.getListID(model.getUserName(), "myWifi", WifiPointList.class));
         assertEquals(wifi, DatabaseManager.getWifiPoints(model.getUserName(), "myWifi").get(0));
         DatabaseManager.close();
     }
@@ -226,19 +223,18 @@ public class DatabaseManagerTest {
     @Test
     public void getLists() throws Exception {
         try {
-            DatabaseManager.addRecord(trip, model.getUserName(), "testList");
-            DatabaseManager.addRecord(wifi, model.getUserName(), "testList");
-            DatabaseManager.addRecord(wifi, model.getUserName(), "testList2");
-            DatabaseManager.addRecord(retailer, model.getUserName(), "testList3");
-
-            DatabaseManager.addRecord(wifi, "otherUser", "DifferentUser");
+            DatabaseManager.addRecord(trip, model.getUserName(), "testList0"); // Wrong type
+            DatabaseManager.addRecord(wifi, model.getUserName(), "testList1"); // YES
+            DatabaseManager.addRecord(wifi, model.getUserName(), "testList2"); // YES
+            DatabaseManager.addRecord(retailer, model.getUserName(), "testList3"); // Wrong type
+            DatabaseManager.addRecord(wifi, "otherUser", "DifferentUser"); // Wrong user
         } catch (SQLException e) {
             e.printStackTrace();
         }
         DatabaseManager.open();
-        ArrayList<String> lists = DatabaseManager.getLists(model.getUserName());
+        ArrayList<String> lists = DatabaseManager.getLists(model.getUserName(), WifiPointList.class);
         DatabaseManager.close();
-        List<String> expected = Arrays.asList("testList", "testList2", "testList3");
+        List<String> expected = Arrays.asList("testList1", "testList2");
         assertEquals(expected, lists);
     }
 }

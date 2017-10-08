@@ -246,7 +246,7 @@ public class UserAccountModel implements java.io.Serializable {
     //TODO change to use database list when implemented.
     public void addBikeTripList(BikeTripList bikeTripList) {
         bikeTripLists.add(bikeTripList);
-        DatabaseManager.createNewList(userName, bikeTripList.getListName());
+        DatabaseManager.createNewList(userName, bikeTripList.getListName(), BikeTripList.class);
         DatabaseManager.populateList(userName, bikeTripList);
         SerializerImplementation.serializeUser(this);
     }
