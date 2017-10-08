@@ -40,6 +40,7 @@ public class SerializerImplementationTest extends TestCase {
     }
 
     public void testDeserializeUser() throws Exception {
+        SerializerImplementation.serializeUser(user);
         UserAccountModel user = SerializerImplementation.deserializeUser(username);
         assertEquals(username, user.getUserName());
         assertEquals(true, PasswordManager.isExpectedPassword(password, user.getSalt(), user
