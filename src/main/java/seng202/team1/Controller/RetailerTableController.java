@@ -84,6 +84,7 @@ public class RetailerTableController extends TableController {
     private ObservableList<RetailerLocation> dataPoints;
     private FilteredList<RetailerLocation> filteredData;
     private ObservableList<RetailerLocation> originalData;
+    private SortedList<RetailerLocation> sortedData;
 
     private String currentListName;
 
@@ -169,7 +170,7 @@ public class RetailerTableController extends TableController {
      * @param selectedItem the selected Retailer Location to delete.
      */
     private void deleteRetailer(RetailerLocation selectedItem) {
-        //TODO add a removedRetailers list to userAccountModel and add to there, then remove all those on load.
+        //TODO be persistent
         dataPoints.remove(selectedItem);
         originalData.remove(selectedItem);
     }
@@ -183,7 +184,6 @@ public class RetailerTableController extends TableController {
      * updating the filter each time one changes.
      * Adapted from
      * https://stackoverflow.com/questions/33016064/javafx-multiple-textfields-should-filter-one-tableview
-     * TODO thread if slow
      */
     private void setPredicate() {
 
@@ -361,14 +361,13 @@ public class RetailerTableController extends TableController {
 
     /**
      * Creates the columns of the table.
+     * Sets up the lists of data for filtering.
      * Sets their value factories so that the data is displayed correctly.
-     * Sets up the lists of data for filtering TODO move out
      * Displays the columns
      */
     private void setTableViewRetailer(ArrayList<RetailerLocation> data) {
 
-        dataPoints = FXCollections.observableArrayList(data);
-        originalData = FXCollections.observableArrayList(data);
+        setUpLists(data);
 
         // Create the columns
         TableColumn<RetailerLocation, String> nameCol = new TableColumn<>("Name");
@@ -376,13 +375,6 @@ public class RetailerTableController extends TableController {
         TableColumn<RetailerLocation, String> primaryCol = new TableColumn<>("Primary Function");
         TableColumn<RetailerLocation, String> secondaryCol = new TableColumn<>("Secondary Function");
         TableColumn<RetailerLocation, String> zipCol = new TableColumn<>("ZIP");
-
-        //Set the IDs of the columns, not used yet TODO remove if never use
-        nameCol.setId("name");
-        addressCol.setId("address");
-        primaryCol.setId("primary");
-        secondaryCol.setId("secondary");
-        zipCol.setId("zip");
 
         //Clear the default columns, or any columns in the table.
         table.getColumns().clear();
@@ -394,15 +386,18 @@ public class RetailerTableController extends TableController {
         secondaryCol.setCellValueFactory(new PropertyValueFactory<>("secondaryFunction"));
         zipCol.setCellValueFactory(new PropertyValueFactory<>("zipcode"));
 
-        // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
-        filteredData = new FilteredList<>(dataPoints, p -> true);
-
-        SortedList<RetailerLocation> sortedData = new SortedList<>(filteredData);
-        sortedData.comparatorProperty().bind(table.comparatorProperty());
-
         // Add the sorted and filtered data to the table.
         table.setItems(sortedData);
         table.getColumns().addAll(nameCol, addressCol, primaryCol, secondaryCol, zipCol);
+    }
+
+    private void setUpLists(ArrayList<RetailerLocation> data) {
+        dataPoints = FXCollections.observableArrayList(data);
+        originalData = FXCollections.observableArrayList(data);
+        // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
+        filteredData = new FilteredList<>(dataPoints, p -> true);
+        sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(table.comparatorProperty());
     }
 
     /**

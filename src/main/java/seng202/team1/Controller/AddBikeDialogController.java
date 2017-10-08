@@ -229,7 +229,6 @@ public class AddBikeDialogController {
     /**
      * Check the fields for validity and if so, add the bike trip.
      * Else warn of errors.
-     * TODO add checking and text field actual use
      */
     public void addBike() {
         if (checkFields()) {
