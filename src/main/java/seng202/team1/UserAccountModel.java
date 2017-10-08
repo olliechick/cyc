@@ -1,11 +1,20 @@
 package seng202.team1;
 
 import seng202.team1.Controller.AlertGenerator;
-import seng202.team1.Model.*;
+import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.BikeTripList;
 import seng202.team1.Model.CsvHandling.CSVLoader;
 import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.DataPoint;
+import seng202.team1.Model.DatabaseManager;
+import seng202.team1.Model.PasswordManager;
+import seng202.team1.Model.PointList;
+import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.RetailerLocationList;
+import seng202.team1.Model.SerializerImplementation;
+import seng202.team1.Model.WifiPoint;
+import seng202.team1.Model.WifiPointList;
 
-import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -224,7 +233,6 @@ public class UserAccountModel implements java.io.Serializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        SerializerImplementation.serializeUser(this);
     }
 
 

@@ -31,27 +31,8 @@ import netscape.javascript.JSObject;
 import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
 import org.codefx.libfx.control.webview.WebViews;
 import seng202.team1.Model.BikeTrip;
-import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.BikeTripList;
 import seng202.team1.Model.DataAnalyser;
-import seng202.team1.Model.GenerateFields;
-import seng202.team1.Model.Google.BikeDirections;
-import seng202.team1.Model.RetailerLocation;
-import seng202.team1.Model.RetailerPointDistance;
-import seng202.team1.Model.SerializerImplementation;
-import seng202.team1.Model.WIFIPointDistance;
-import seng202.team1.Model.WifiPoint;
-import seng202.team1.UserAccountModel;
-
-import java.awt.Point;
-import java.awt.geom.Point2D;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
 import static seng202.team1.Model.DataAnalyser.findClosestRetailerToBikeTrip;
 import static seng202.team1.Model.DataAnalyser.findClosestWifiPointToRetailer;
 import static seng202.team1.Model.DataAnalyser.findClosestWifiToRoute;
@@ -60,8 +41,25 @@ import static seng202.team1.Model.DataAnalyser.searchWifiPoints;
 import static seng202.team1.Model.DataAnalyser.searchWifiPointsOnRoute;
 import static seng202.team1.Model.DataAnalyser.sortedRetailerPointsByMinimumDistanceToRoute;
 import static seng202.team1.Model.DataAnalyser.sortedWIFIPointsByMinimumDistanceToRoute;
+import seng202.team1.Model.GenerateFields;
 import static seng202.team1.Model.GenerateFields.generateSecondaryFunctionsList;
 import static seng202.team1.Model.GenerateFields.generateWifiProviders;
+import seng202.team1.Model.Google.BikeDirections;
+import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.RetailerLocationList;
+import seng202.team1.Model.RetailerPointDistance;
+import seng202.team1.Model.SerializerImplementation;
+import seng202.team1.Model.WIFIPointDistance;
+import seng202.team1.Model.WifiPoint;
+import seng202.team1.Model.WifiPointList;
+import seng202.team1.UserAccountModel;
+
+import java.awt.Point;
+import java.awt.geom.Point2D;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 
 /**
@@ -85,29 +83,12 @@ public class MapController {
     public ArrayList<String> uniqueSecondaryFunctions = null;
     public ArrayList<String> uniquePrimaryFunctions = null;
     public ArrayList<String> uniqueProviders = null;
-    private ArrayList<String> retailerListNames = null;
-    private ArrayList<String> bikeTripListNames = null;
-    private ArrayList<String> wifiListNames = null;
     public ArrayList<BikeTrip> tripsNearPoint = null;
     public int currentTripCounter = 0;
-
-    private boolean isMapLoaded = false;
-
-    private String currentBikeTripList  = "Default";
-    private String currentWifiPointList = "Default";
-    private String currentRetailerList  = "Default";
-
-
-    private WindowManager windowManager = new WindowManager();
-
     ArrayList<RetailerLocation> retailerPoints = null;
     ArrayList<WifiPoint> wifiPoints = null;
     ArrayList<BikeTrip> bikeTrips = null;
-
-
     ObservableList<WIFIPointDistance> observableWIFIDistances = null;
-
-
     ObservableList<RetailerPointDistance> observableRetailerDistances = null;
     JavascriptBridge clickListner;
     JavascriptBridge retailerListner;
@@ -116,6 +97,14 @@ public class MapController {
         System.out.println("Denied: " + eventString);
         return true;
     };
+    private ArrayList<String> retailerListNames = null;
+    private ArrayList<String> bikeTripListNames = null;
+    private ArrayList<String> wifiListNames = null;
+    private boolean isMapLoaded = false;
+    private String currentBikeTripList  = "Default";
+    private String currentWifiPointList = "Default";
+    private String currentRetailerList  = "Default";
+    private WindowManager windowManager = new WindowManager();
     // Some control booleans
     private boolean showRetailersNearRoute = true;
     private boolean showOnlyNearestRetailerToRoute = false;
@@ -141,13 +130,13 @@ public class MapController {
     private ComboBox filterSecondaryComboBox;
 
     @FXML
-    private ComboBox bikeTripListComboBox;
+    private ComboBox listBikeTripComboBox;
 
     @FXML
-    private ComboBox wifiListComboBox;
+    private ComboBox listWifiComboBox;
 
     @FXML
-    private ComboBox retailerListComboBox;
+    private ComboBox listRetailerComboBox;
 
     @FXML
     private TextField streetSearchField;
@@ -583,9 +572,9 @@ public class MapController {
     @FXML
     private void updateBikeTripLists() {
         bikeTripListNames = model.getListNamesOfType(BikeTripList.class);
-        bikeTripListComboBox.getItems().clear();
-        bikeTripListComboBox.getItems().addAll(bikeTripListNames);
-        bikeTripListComboBox.getSelectionModel().selectFirst();
+        listBikeTripComboBox.getItems().clear();
+        listBikeTripComboBox.getItems().addAll(bikeTripListNames);
+        listBikeTripComboBox.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -594,18 +583,18 @@ public class MapController {
         for (String wifiPointListName : wifiListNames) {
             System.out.println(wifiPointListName);
         }
-        wifiListComboBox.getItems().clear();
-        wifiListComboBox.getItems().addAll(wifiListNames);
-        wifiListComboBox.getSelectionModel().selectFirst();
+        listWifiComboBox.getItems().clear();
+        listWifiComboBox.getItems().addAll(wifiListNames);
+        listWifiComboBox.getSelectionModel().selectFirst();
     }
 
     @FXML
     private void updateRetailerLists() {
         retailerListNames = model.getListNamesOfType(RetailerLocationList.class);
-        retailerListComboBox.getItems().clear();
+        listRetailerComboBox.getItems().clear();
         System.out.println("Adding to retailer.");
-        retailerListComboBox.getItems().addAll(retailerListNames);
-        retailerListComboBox.getSelectionModel().selectFirst();
+        listRetailerComboBox.getItems().addAll(retailerListNames);
+        listRetailerComboBox.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -726,7 +715,7 @@ public class MapController {
         filterZipComboBox.getItems().addAll("All");
         filterZipComboBox.getSelectionModel().selectFirst();
 
-        retailerListComboBox.getSelectionModel().selectFirst();
+        listRetailerComboBox.getSelectionModel().selectFirst();
 
         // WIFI
         filterBoroughComboBox.getItems().addAll("All");
@@ -738,7 +727,7 @@ public class MapController {
         filterProviderComboBox.getItems().addAll("All");
         filterProviderComboBox.getSelectionModel().selectFirst();
 
-        wifiListComboBox.getSelectionModel().selectFirst();
+        listWifiComboBox.getSelectionModel().selectFirst();
 
         // BIKE TRIP
         //bikeTripListComboBox.getSelectionModel().selectFirst();
@@ -893,10 +882,10 @@ public class MapController {
         filterSecondaryComboBox.getSelectionModel().selectFirst();
         filterZipComboBox.getSelectionModel().selectFirst();
         streetSearchField.clear();
-        retailerListComboBox.getItems().clear();
-        retailerListComboBox.getSelectionModel().selectFirst();
+        listRetailerComboBox.getItems().clear();
+        listRetailerComboBox.getSelectionModel().selectFirst();
         updateRetailers();
-        //updateRetailerLists();
+        updateRetailerLists();
     }
 
     @FXML
@@ -904,9 +893,9 @@ public class MapController {
         filterCostComboBox.getSelectionModel().selectFirst();
         filterProviderComboBox.getSelectionModel().selectFirst();
         filterBoroughComboBox.getSelectionModel().selectFirst();
-        wifiListComboBox.getSelectionModel().selectFirst();
+        listWifiComboBox.getSelectionModel().selectFirst();
         updateWIFI();
-        //updateWifiLists();
+        updateWifiLists();
     }
 
     @FXML
@@ -923,7 +912,7 @@ public class MapController {
         filterProviderComboBox.getItems().remove(1, filterProviderComboBox.getItems().size());
         filterBoroughComboBox.getItems().remove(1, filterBoroughComboBox.getItems().size());
 
-        retailerListComboBox.getItems().remove(1, retailerListComboBox.getItems().size());
+        listRetailerComboBox.getItems().remove(1, listRetailerComboBox.getItems().size());
 
 
 
@@ -1138,6 +1127,104 @@ public class MapController {
     }
 
     /**
+     * Creates the columns of the table.
+     * Sets their value factories so that the data is displayed correctly.
+     * Sets up the lists of data for filtering TODO move out
+     * Displays the columns
+     */
+    private void setTableViewRetailer(ArrayList<RetailerPointDistance> data) {
+
+        observableRetailerDistances = FXCollections.observableArrayList(data);
+
+        // Create the columns
+        TableColumn<RetailerPointDistance, String> nameCol = new TableColumn<>("Name");
+        TableColumn<RetailerPointDistance, String> distanceCol = new TableColumn<>("Distance");
+        TableColumn<RetailerPointDistance, String> primaryFunctionCol = new TableColumn<>("Primary Function");
+
+
+        //Set the IDs of the columns, not used yet TODO remove if never use
+        nameCol.setId("name");
+        distanceCol.setId("distance");
+        primaryFunctionCol.setId("primaryfunction");
+
+
+        //Clear the default columns, or any columns in the table.
+        retailerDistanceTable.getColumns().clear();
+
+        //Sets up each column to get the correct entry in each dataPoint
+
+        distanceCol.setCellValueFactory(new PropertyValueFactory<>("TripDistanceTwoD"));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        primaryFunctionCol.setCellValueFactory(new PropertyValueFactory<>("primaryFunction"));
+
+        // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
+        //filteredData = new FilteredList<>(dataPoints, p -> true);
+
+        SortedList<RetailerPointDistance> sortedData = new SortedList<>(observableRetailerDistances);
+        sortedData.comparatorProperty().bind(retailerDistanceTable.comparatorProperty());
+
+        // Add the sorted and filtered data to the table.
+        retailerDistanceTable.setItems(sortedData);
+        retailerDistanceTable.getColumns().addAll(distanceCol, nameCol, primaryFunctionCol);
+    }
+
+    private void resetWIFIIcons(String icon) {
+        String scriptStr = "document.resetWIFIIcon('" + icon + "')";
+        webView.getEngine().executeScript(scriptStr);
+    }
+
+    private void resetRetailerIcons(String icon) {
+        String scriptStr = "document.resetRetailerIcon('" + icon + "')";
+        webView.getEngine().executeScript(scriptStr);
+    }
+
+    /**
+     * Creates the columns of the table.
+     * Sets their value factories so that the data is displayed correctly.
+     * Sets up the lists of data for filtering TODO move out
+     * Displays the columns
+     */
+    private void setTableViewWIFI(ArrayList<WIFIPointDistance> data) {
+
+        observableWIFIDistances = FXCollections.observableArrayList(data);
+
+        // Create the columns
+        TableColumn<WIFIPointDistance, String> ssidCol = new TableColumn<>("SSID");
+        TableColumn<WIFIPointDistance, String> distanceCol = new TableColumn<>("Distance");
+        TableColumn<WIFIPointDistance, String> costCol = new TableColumn<>("Cost");
+        TableColumn<WIFIPointDistance, String> providerCol = new TableColumn<>("Provider");
+
+
+        //Set the IDs of the columns, not used yet TODO remove if never use
+        ssidCol.setId("ssid");
+        distanceCol.setId("distance");
+        costCol.setId("cost");
+        providerCol.setId("provider");
+
+
+        //Clear the default columns, or any columns in the table.
+        wifiDistanceTable.getColumns().clear();
+
+        //Sets up each column to get the correct entry in each dataPoint
+
+        distanceCol.setCellValueFactory(new PropertyValueFactory<>("TripDistanceTwoD"));
+        ssidCol.setCellValueFactory(new PropertyValueFactory<>("SSID"));
+        costCol.setCellValueFactory(new PropertyValueFactory<>("Cost"));
+        providerCol.setCellValueFactory(new PropertyValueFactory<>("Provider"));
+
+        // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
+        //filteredData = new FilteredList<>(dataPoints, p -> true);
+
+        SortedList<WIFIPointDistance> sortedData = new SortedList<>(observableWIFIDistances);
+        sortedData.comparatorProperty().bind(wifiDistanceTable.comparatorProperty());
+
+        // Add the sorted and filtered data to the table.
+        wifiDistanceTable.setItems(sortedData);
+        wifiDistanceTable.getColumns().addAll(distanceCol, ssidCol, costCol, providerCol);
+
+    }
+
+    /**
      * JavaScript interface object. Can be used to pass
      */
 
@@ -1267,105 +1354,6 @@ public class MapController {
             }
 
         }
-    }
-
-
-    /**
-     * Creates the columns of the table.
-     * Sets their value factories so that the data is displayed correctly.
-     * Sets up the lists of data for filtering TODO move out
-     * Displays the columns
-     */
-    private void setTableViewRetailer(ArrayList<RetailerPointDistance> data) {
-
-        observableRetailerDistances = FXCollections.observableArrayList(data);
-
-        // Create the columns
-        TableColumn<RetailerPointDistance, String> nameCol = new TableColumn<>("Name");
-        TableColumn<RetailerPointDistance, String> distanceCol = new TableColumn<>("Distance");
-        TableColumn<RetailerPointDistance, String> primaryFunctionCol = new TableColumn<>("Primary Function");
-
-
-        //Set the IDs of the columns, not used yet TODO remove if never use
-        nameCol.setId("name");
-        distanceCol.setId("distance");
-        primaryFunctionCol.setId("primaryfunction");
-
-
-        //Clear the default columns, or any columns in the table.
-        retailerDistanceTable.getColumns().clear();
-
-        //Sets up each column to get the correct entry in each dataPoint
-
-        distanceCol.setCellValueFactory(new PropertyValueFactory<>("TripDistanceTwoD"));
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        primaryFunctionCol.setCellValueFactory(new PropertyValueFactory<>("primaryFunction"));
-
-        // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
-        //filteredData = new FilteredList<>(dataPoints, p -> true);
-
-        SortedList<RetailerPointDistance> sortedData = new SortedList<>(observableRetailerDistances);
-        sortedData.comparatorProperty().bind(retailerDistanceTable.comparatorProperty());
-
-        // Add the sorted and filtered data to the table.
-        retailerDistanceTable.setItems(sortedData);
-        retailerDistanceTable.getColumns().addAll(distanceCol, nameCol, primaryFunctionCol);
-    }
-
-    private void resetWIFIIcons(String icon) {
-        String scriptStr = "document.resetWIFIIcon('" + icon + "')";
-        webView.getEngine().executeScript(scriptStr);
-    }
-
-    private void resetRetailerIcons(String icon) {
-        String scriptStr = "document.resetRetailerIcon('" + icon + "')";
-        webView.getEngine().executeScript(scriptStr);
-    }
-
-    /**
-     * Creates the columns of the table.
-     * Sets their value factories so that the data is displayed correctly.
-     * Sets up the lists of data for filtering TODO move out
-     * Displays the columns
-     */
-    private void setTableViewWIFI(ArrayList<WIFIPointDistance> data) {
-
-        observableWIFIDistances = FXCollections.observableArrayList(data);
-
-        // Create the columns
-        TableColumn<WIFIPointDistance, String> ssidCol = new TableColumn<>("SSID");
-        TableColumn<WIFIPointDistance, String> distanceCol = new TableColumn<>("Distance");
-        TableColumn<WIFIPointDistance, String> costCol = new TableColumn<>("Cost");
-        TableColumn<WIFIPointDistance, String> providerCol = new TableColumn<>("Provider");
-
-
-        //Set the IDs of the columns, not used yet TODO remove if never use
-        ssidCol.setId("ssid");
-        distanceCol.setId("distance");
-        costCol.setId("cost");
-        providerCol.setId("provider");
-
-
-        //Clear the default columns, or any columns in the table.
-        wifiDistanceTable.getColumns().clear();
-
-        //Sets up each column to get the correct entry in each dataPoint
-
-        distanceCol.setCellValueFactory(new PropertyValueFactory<>("TripDistanceTwoD"));
-        ssidCol.setCellValueFactory(new PropertyValueFactory<>("SSID"));
-        costCol.setCellValueFactory(new PropertyValueFactory<>("Cost"));
-        providerCol.setCellValueFactory(new PropertyValueFactory<>("Provider"));
-
-        // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
-        //filteredData = new FilteredList<>(dataPoints, p -> true);
-
-        SortedList<WIFIPointDistance> sortedData = new SortedList<>(observableWIFIDistances);
-        sortedData.comparatorProperty().bind(wifiDistanceTable.comparatorProperty());
-
-        // Add the sorted and filtered data to the table.
-        wifiDistanceTable.setItems(sortedData);
-        wifiDistanceTable.getColumns().addAll(distanceCol, ssidCol, costCol, providerCol);
-
     }
 
 }

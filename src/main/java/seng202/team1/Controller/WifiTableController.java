@@ -20,12 +20,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
-import seng202.team1.Model.DataAnalyser;
-import seng202.team1.Model.GenerateFields;
-import seng202.team1.Model.SerializerImplementation;
-import seng202.team1.Model.WifiPoint;
-import seng202.team1.Model.WifiPointList;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
@@ -175,7 +171,8 @@ public class WifiTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
                 } else {
                     selectedWifiPoint.setAllProperties(newWifiPoint);
-                    SerializerImplementation.serializeUser(model);
+                    SerializerImplementation.serializeUser(model); // TODO: Use database to edit point
+
                     table.refresh();
                 }
             }
@@ -191,7 +188,7 @@ public class WifiTableController extends TableController {
      * @param selectedWifi The currently selected wifi.
      */
     private void deleteWifi(WifiPoint selectedWifi) {
-        //TODO actually be persistent
+        //TODO Use database to delete point
         dataPoints.removeAll(selectedWifi);
     }
 

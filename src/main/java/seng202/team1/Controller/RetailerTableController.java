@@ -7,7 +7,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,8 +20,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import static seng202.team1.Model.CsvHandling.CSVExporter.exportRetailers;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
+import seng202.team1.Model.DatabaseManager;
 import seng202.team1.Model.GenerateFields;
 import seng202.team1.Model.RetailerLocation;
 import seng202.team1.Model.RetailerLocationList;
@@ -32,9 +34,6 @@ import seng202.team1.UserAccountModel;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import static seng202.team1.Model.CsvHandling.CSVExporter.exportRetailers;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 
 /**
  * Logic for the retailer table GUI
@@ -210,7 +209,7 @@ public class RetailerTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
                 } else {
                     selectedRetailerLocation.setAllProperties(newRetailerLocation);
-                    SerializerImplementation.serializeUser(model);
+                    SerializerImplementation.serializeUser(model); // TODO: Use database to store edited point
                     table.refresh();
                 }
             }
@@ -492,7 +491,6 @@ public class RetailerTableController extends TableController {
                 break;
         }
         stopLoadingAni();
-        populateCustomRetailerLocations();
         setPredicate();
         clearFilters();
     }

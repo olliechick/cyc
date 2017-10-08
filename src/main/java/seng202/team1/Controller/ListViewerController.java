@@ -1,6 +1,5 @@
 package seng202.team1.Controller;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,17 +7,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import seng202.team1.Model.*;
-import seng202.team1.Model.CsvHandling.CSVLoader;
+import seng202.team1.Model.BikeTripList;
+import seng202.team1.Model.RetailerLocationList;
+import seng202.team1.Model.WifiPointList;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
-
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 
 //TODO change to user database lists once implemented.
 /**
@@ -187,6 +183,7 @@ public class ListViewerController {
 
             user.addPointList(bikeTripList);
             switchToBikeTable(bikeTripList);
+            // TODO: call MapController.updateBikeTripLists()?
         }
     }
 

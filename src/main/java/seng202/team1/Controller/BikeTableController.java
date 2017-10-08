@@ -22,16 +22,18 @@ import javafx.stage.Stage;
 import seng202.team1.Model.BikeTrip;
 import seng202.team1.Model.BikeTripList;
 import seng202.team1.Model.ContextualLength;
+import static seng202.team1.Model.CsvHandling.CSVExporter.exportBikeTrips;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.DataAnalyser;
+import seng202.team1.Model.DatabaseManager;
+import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.awt.Point;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import static seng202.team1.Model.CsvHandling.CSVExporter.exportBikeTrips;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 
 
 /**
@@ -263,7 +265,7 @@ public class BikeTableController extends TableController {
                     AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
                 } else {
                     selectedBikeTrip.setAllProperties(newBikeTrip);
-                    SerializerImplementation.serializeUser(model);
+                    SerializerImplementation.serializeUser(model); // TODO: Use database to store edited trip
                     table.refresh();
                 }
             }
@@ -460,7 +462,6 @@ public class BikeTableController extends TableController {
                 break;
         }
         stopLoadingAni();
-        populateCustomBikeTrips();
         setPredicate();
         clearFilters();
     }
