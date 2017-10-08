@@ -412,11 +412,10 @@ public class RetailerTableController extends TableController {
                 if (loadRetailerCsv.getValue() != null) {
                     // Initialise the values in the filter combo boxes now that we have data to work with
                     setFilters(loadRetailerCsv.getValue());
-
+                    model.addPointList(new RetailerLocationList(currentListName, loadRetailerCsv.getValue()));
                     setTableViewRetailer(loadRetailerCsv.getValue());
                     stopLoadingAni();
                     setPredicate();
-                    populateCustomRetailerLocations();
                     clearFilters();
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading retailers. Is your csv correct?");
@@ -512,7 +511,7 @@ public class RetailerTableController extends TableController {
      */
     private void setTableViewRetailer(ArrayList<RetailerLocation> data) {
 
-        setUpData(data);
+        setUpData(model.getRetailerPointsFromList(currentListName).getRetailerLocations());
 
         //Clear the default columns, or any columns in the table.
         table.getColumns().clear();
@@ -520,9 +519,6 @@ public class RetailerTableController extends TableController {
         table.getColumns().addAll(createColumns());
         // Add the sorted and filtered data to the table.
         table.setItems(sortedData);
-
-        model.addPointList(new RetailerLocationList(currentListName, data));
-
     }
 
 
@@ -556,17 +552,6 @@ public class RetailerTableController extends TableController {
         filterZipComboBox.getItems().addAll(GenerateFields.generateRetailerZipcodes(retailerLocations));
         filterZipComboBox.getSelectionModel().selectFirst();
 
-    }
-
-
-    /**
-     * Add the user's custom Retailer Points to the table.
-     */
-    private void populateCustomRetailerLocations() {
-        RetailerLocationList customRetailerLocations = model.getRetailerPointsFromList(currentListName);
-
-        dataPoints.addAll(customRetailerLocations.getRetailerLocations());
-        originalData.addAll(customRetailerLocations.getRetailerLocations());
     }
 
 

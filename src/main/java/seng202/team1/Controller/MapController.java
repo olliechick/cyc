@@ -451,24 +451,22 @@ public class MapController {
 
     @FXML
     private void loadAllBikeTrips() {
-        try {
-            bikeTrips = populateBikeTrips();
+
+           // bikeTrips = populateBikeTrips();
+            bikeTrips = new ArrayList<BikeTrip>();
             bikeTrips.addAll(model.getBikeTripsFromList(currentBikeTripList).getBikeTrips());
-        } catch (CsvParserException | IOException e) {
-            AlertGenerator.createAlert("Error", "Cannot load bike trips.");
-            e.printStackTrace();
-        }
+
+
+
     }
 
     @FXML
     private void loadAllWifi() {
-        try {
-            wifiPoints = populateWifiHotspots();
+
+           // wifiPoints = populateWifiHotspots();
+            wifiPoints = new ArrayList<WifiPoint>();
             wifiPoints.addAll(model.getWifiPointsFromList(currentWifiPointList).getWifiPoints());
-        } catch (CsvParserException | IOException e) {
-            AlertGenerator.createAlert("Error", "Cannot load WiFi points.");
-            e.printStackTrace();
-        }
+
         reloadAllWifi();
     }
 
@@ -485,13 +483,11 @@ public class MapController {
     }
 
     private void loadAllRetailers() {
-        try {
-            retailerPoints = populateRetailers();
+
+           //retailerPoints = populateRetailers();
+            retailerPoints = new ArrayList<RetailerLocation>();
             retailerPoints.addAll(model.getRetailerPointsFromList(currentRetailerList).getRetailerLocations());
-        } catch (CsvParserException | IOException e) {
-            AlertGenerator.createAlert("Error", "Cannot load retailers.");
-            e.printStackTrace();
-        }
+
         reloadAllRetailers();
 
     }
