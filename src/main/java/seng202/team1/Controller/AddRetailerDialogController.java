@@ -2,7 +2,6 @@ package seng202.team1.Controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -10,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -155,7 +153,7 @@ public class AddRetailerDialogController {
         stage = stage1;
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
-        stage.setTitle("Add Retailer Location");
+        stage.setTitle("Add a retailer");
         stage.setScene(new Scene(root));
 
 
@@ -163,8 +161,8 @@ public class AddRetailerDialogController {
         if (!userClicks.isEmpty()) {
             // User has clicked
             Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
-            latField.setText(String.format ("%.6f", lastPoint.getX()));
-            longField.setText(String.format ("%.6f", lastPoint.getY()));
+            latField.setText(String.format("%.6f", lastPoint.getX()));
+            longField.setText(String.format("%.6f", lastPoint.getY()));
         }
 
         root.setOnKeyPressed(event -> {

@@ -21,7 +21,6 @@ public class AlertGenerator {
 
     /**
      * Creates an alert that will pop up and alert the user.
-     * Takes two parameters, the title of the popup and the contents of the popup.
      *
      * @param title   the title of the popup
      * @param content the contents of the popup
@@ -39,7 +38,6 @@ public class AlertGenerator {
 
     /**
      * Creates an alert with the header "Error" that will pop up and alert the user.
-     * Takes one parameter, the contents of the popup.
      *
      * @param content the contents of the popup
      */
@@ -49,10 +47,8 @@ public class AlertGenerator {
 
 
     /**
-     * Creates a choice dialog that will pop up and alert the user.
-     * Takes three parameters: the title of the pop up, the header message and the contents of the popup
-     *
-     * Returns true if the user clicks ok, false otherwise.
+     * Creates a choice dialog that will pop up and ask the user to confirm an action.
+     * It will present the user with two buttons, Cancel and OK.
      *
      * @param title   the title of the popup
      * @param header  the test for the header, null for no header
@@ -70,11 +66,7 @@ public class AlertGenerator {
         alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            return true;
-        } else {
-            return false;
-        }
+        return result.isPresent() && result.get() == ButtonType.OK;
     }
 
 
@@ -103,9 +95,9 @@ public class AlertGenerator {
      * set of data.
      *
      * @param entriesLoaded The number of entries successfully loaded.
-     * @return The String they selected, or null if canceled TODO return an int for each choice
+     * @return The index of the string they selected, or -1 if canceled TODO return an int for each choice
      */
-    public static String createImportChoiceDialog(int entriesLoaded) {
+    public static int createImportChoiceDialog(int entriesLoaded) {
         List<String> choices = new ArrayList<>();
         choices.add("Append the data into the table and to the current list");
         choices.add("Just append the data into the table");
@@ -118,6 +110,11 @@ public class AlertGenerator {
         dialog.initModality(Modality.APPLICATION_MODAL);
 
         Optional<String> result = dialog.showAndWait();
-        return result.orElse(null);
+        if (result.isPresent()) {
+            return choices.indexOf(result.get());
+        } else {
+            return -1;
+        }
+
     }
 }

@@ -1,11 +1,14 @@
 package seng202.team1.Controller;
 
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
@@ -15,6 +18,8 @@ import seng202.team1.Model.DataPoint;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
 /**
@@ -55,8 +60,7 @@ public abstract class TableController {
 
             cm.hide();
 
-            if (event.getButton() == MouseButton.SECONDARY)
-            {
+            if (event.getButton() == MouseButton.SECONDARY) {
                 if (table.getSelectionModel().getSelectedItem() != null) {
                     cm.show(table, event.getScreenX(), event.getScreenY());
                 }
@@ -165,7 +169,23 @@ public abstract class TableController {
 
 
     /**
-     * Open the about screen.
+     * Opens the user manual in the user's default web browser.
+     */
+    public void openUserManual() {
+        String userManualURL = "https://docs.google.com/document/d/1r2fCUzSR7SVSGZpKeHyz7Pz81htCDBOYc75GL5hcRnM/edit?usp=sharing";
+        new Thread(() -> {
+            try {
+                java.awt.Desktop.getDesktop().browse(new URI(userManualURL));
+            } catch (IOException | URISyntaxException e) {
+                AlertGenerator.createAlert("Could not load user manual.");
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+
+    /**
+     * Opens the about screen.
      */
     public void openAbout() {
         try {
@@ -175,8 +195,7 @@ public abstract class TableController {
             AboutController aboutController = showAbout.getController();
             aboutController.setStage(stage, root);
             stage.show();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -187,7 +206,7 @@ public abstract class TableController {
      * Close the stage.
      */
     public void close() {
-        stage.fireEvent( new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+        stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
     }
 
 
@@ -198,7 +217,6 @@ public abstract class TableController {
     /**
      * Initialise the context menu buttons to perform the correct actions.
      * Must setOnAction for editMenuItem, deleteMenuItem and ShowOnMap.
-     *
      */
     abstract void initContextMenu();
 }

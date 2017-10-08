@@ -20,8 +20,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.DataAnalyser;
+import seng202.team1.Model.GenerateFields;
+import seng202.team1.Model.SerializerImplementation;
+import seng202.team1.Model.WifiPoint;
+import seng202.team1.Model.WifiPointList;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
@@ -417,12 +421,9 @@ public class WifiTableController extends TableController {
             public void handle(WorkerStateEvent event) {
 
                 if (loadWifiCsv.getValue() != null) {
-                    setFilters(loadWifiCsv.getValue());
                     model.addPointList(new WifiPointList(currentListName, loadWifiCsv.getValue()));
                     setTableViewWifi(loadWifiCsv.getValue());
-                    stopLoadingAni();
-                    setPredicate();
-                    resetFilters();
+                    handleImport(loadWifiCsv.getValue());
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading wifis. Is your csv correct?");
                     stopLoadingAni();
@@ -441,6 +442,72 @@ public class WifiTableController extends TableController {
         new Thread(loadWifiCsv).start();
     }
 
+    private void handleImport(ArrayList<WifiPoint> importedData) {
+        int userChoice = checkAndAddToList(importedData.size());
+
+        switch (userChoice) {
+            case 0: //Append to table and list
+                System.out.println("Append to table and list");
+                appendToDataAndList(importedData);
+                break;
+            case 1: //Append to table, not to list
+                System.out.println("Append to table, not to list");
+                appendToData(importedData);
+                break;
+            case 2: //Create new list of loaded points
+                appendToNewList(importedData);
+                System.out.println("Nothing yet 2");
+                break;
+            case -1: //Canceled load.
+                System.out.println("Canceled");
+                break;
+            default:
+                AlertGenerator.createAlert("Default reached");
+                break;
+        }
+        stopLoadingAni();
+        populateCustomWifiPoints();
+        setPredicate();
+        resetFilters();
+    }
+
+    private void appendToDataAndList(ArrayList<WifiPoint> importedData) {
+        appendToData(importedData);
+        //TODO add to current list
+    }
+
+    private void appendToData(ArrayList<WifiPoint> importedData) {
+        int count = 0;
+        for (WifiPoint wifiPoint : importedData) {
+            if (!dataPoints.contains(wifiPoint)) {
+                dataPoints.add(wifiPoint);
+                originalData.add(wifiPoint);
+                count++;
+            }
+        }
+        String addedMessage = count + " unique entries successfully added.";
+        if (count != importedData.size()) {
+            addedMessage = addedMessage + "\n" + (importedData.size() - count) + " duplicates not added.";
+        }
+        AlertGenerator.createAlert("Entries Added", addedMessage);
+    }
+
+    private void appendToNewList(ArrayList<WifiPoint> importedData) {
+        String listName;
+        if (!dataPoints.isEmpty()) {
+            listName = AlertGenerator.createAddListDialog();
+        } else {
+            listName = currentListName;
+        }
+        if (listName != null) {
+            dataPoints.clear();
+            originalData.clear();
+            WifiPointList newList = new WifiPointList(listName, importedData);
+            setupWithList(newList.getListName(), newList.getWifiPoints());
+            //TODO push new list to user
+            setName();
+        }
+    }
 
     /**
      * Gets an absolute filepath to a chosen csv.
@@ -449,8 +516,6 @@ public class WifiTableController extends TableController {
 
         String filename = getCsvFilename();
         if (filename != null) {
-            dataPoints.clear();
-            originalData.clear();
             importWifiCsv(filename, true);
         }
     }
@@ -471,6 +536,10 @@ public class WifiTableController extends TableController {
                 AlertGenerator.createAlert("Couldn't get WiFi hotspots.");
             }
         }
+    }
+
+    private int checkAndAddToList(int entriesLoaded) {
+        return AlertGenerator.createImportChoiceDialog(entriesLoaded);
     }
     //endregion
 

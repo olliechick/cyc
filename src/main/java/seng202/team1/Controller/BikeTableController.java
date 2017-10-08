@@ -7,7 +7,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +19,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import seng202.team1.Model.*;
+import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.BikeTripList;
+import seng202.team1.Model.ContextualLength;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.UserAccountModel;
 
@@ -62,9 +63,6 @@ public class BikeTableController extends TableController {
     private Button searchButton;
 
     @FXML
-    private Label warningLabel;
-
-    @FXML
     private TextField startLatTextField;
 
     @FXML
@@ -87,10 +85,10 @@ public class BikeTableController extends TableController {
 
     //region SETUP
     /**
-     * Display the currently logged in users name at the bottom of the table
+     * Display the currently logged in user's name and the current list at the bottom of the table
      */
     void setName() {
-        nameLabel.setText("Logged in as: " + model.getUserName() + ", List: " + currentListName);
+        nameLabel.setText("Logged in as: " + model.getUserName() + ". List: " + currentListName);
         nameLabel.setVisible(true);
     }
 
@@ -105,7 +103,6 @@ public class BikeTableController extends TableController {
 
         this.model = userAccountModel;
         //importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME, false);
-        warningLabel.setText("");
     }
 
 
@@ -328,10 +325,10 @@ public class BikeTableController extends TableController {
             startLat = Double.parseDouble(startLatTextField.getText());
             startLong = Double.parseDouble(startLongTextField.getText());
             startPointsGood = true;
-
         } catch (NumberFormatException e){
             System.out.println("Bad Start lat or Long");
         }
+
         try {
             endLat = Double.parseDouble(endLatTextField.getText());
             endLong = Double.parseDouble(endLongTextField.getText());
@@ -339,7 +336,8 @@ public class BikeTableController extends TableController {
         } catch (NumberFormatException e){
             System.out.println("Bad End Lat Long");
         }
-        ArrayList<BikeTrip> results = new ArrayList<>();
+
+        ArrayList<BikeTrip> results;
         ArrayList<BikeTrip> searcher = new ArrayList<>();
         for (Object trip : dataPoints){
             searcher.add((BikeTrip) trip); // remove this block if it gets slow
@@ -352,7 +350,7 @@ public class BikeTableController extends TableController {
         } else if(endPointsGood){
             results = DataAnalyser.searchBikeTrips(endLat,endLong,delta,searcher,false);
         } else{
-            warningLabel.setText("Valid Search Points must be entered in either the start Point, End Point or Both.");
+            AlertGenerator.createAlert("You must enter a valid start location and/or a valid end location.");
             return;
         }
         dataPoints.clear();
@@ -370,8 +368,6 @@ public class BikeTableController extends TableController {
 
         String filename = getCsvFilename();
         if (filename != null) {
-            dataPoints.clear();
-            originalData.clear();
             importBikeCsv(filename, true);
         }
     }
@@ -416,10 +412,7 @@ public class BikeTableController extends TableController {
 
                 if (loadBikeCsv.getValue() != null) {
                     model.addPointList(new BikeTripList(currentListName, loadBikeCsv.getValue()));
-                    setTableViewBike(loadBikeCsv.getValue());
-                    setPredicate();
-                    clearFilters();
-                    stopLoadingAni();
+                    handleImport(loadBikeCsv.getValue());
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading bike trips. Is your csv correct?");
                     stopLoadingAni();
@@ -440,6 +433,74 @@ public class BikeTableController extends TableController {
         });
 
         new Thread(loadBikeCsv).start();
+    }
+
+
+    private void handleImport(ArrayList<BikeTrip> importedData) {
+        int userChoice = checkAndAddToList(importedData.size());
+
+        switch (userChoice) {
+            case 0: //Append to table and list
+                System.out.println("Append to table and list");
+                appendToDataAndList(importedData);
+                break;
+            case 1: //Append to table, not to list
+                System.out.println("Append to table, not to list");
+                appendToData(importedData);
+                break;
+            case 2: //Create new list of loaded points
+                appendToNewList(importedData);
+                System.out.println("Nothing yet 2");
+                break;
+            case -1: //Canceled load.
+                System.out.println("Canceled");
+                break;
+            default:
+                AlertGenerator.createAlert("Default reached");
+                break;
+        }
+        stopLoadingAni();
+        populateCustomBikeTrips();
+        setPredicate();
+        clearFilters();
+    }
+
+    private void appendToDataAndList(ArrayList<BikeTrip> importedData) {
+        appendToData(importedData);
+        //TODO add to current list
+    }
+
+    private void appendToData(ArrayList<BikeTrip> importedData) {
+        int count = 0;
+        for (BikeTrip bikeTrip : importedData) {
+            if (!dataPoints.contains(bikeTrip)) {
+                dataPoints.add(bikeTrip);
+                originalData.add(bikeTrip);
+                count++;
+            }
+        }
+        String addedMessage = count + " unique entries successfully added.";
+        if (count != importedData.size()) {
+            addedMessage = addedMessage + "\n" + (importedData.size() - count) + " duplicates not added.";
+        }
+        AlertGenerator.createAlert("Entries Added", addedMessage);
+    }
+
+    private void appendToNewList(ArrayList<BikeTrip> importedData) {
+        String listName;
+        if (!dataPoints.isEmpty()) {
+            listName = AlertGenerator.createAddListDialog();
+        } else {
+            listName = currentListName;
+        }
+        if (listName != null) {
+            dataPoints.clear();
+            originalData.clear();
+            BikeTripList newList = new BikeTripList(listName, importedData);
+            setupWithList(newList.getListName(), newList.getBikeTrips());
+            //TODO push new list to user
+            setName();
+        }
     }
 
 
@@ -473,10 +534,10 @@ public class BikeTableController extends TableController {
         TableColumn<BikeTrip, Integer> bikeIdCol = new TableColumn<>("Bike ID");
         TableColumn<BikeTrip, Character> genderCol = new TableColumn<>("Gender");
         TableColumn<BikeTrip, ContextualLength> durationCol = new TableColumn<>("Duration");
-        TableColumn<BikeTrip, Point.Float> startLocCol = new TableColumn<>("Start Location");
+        TableColumn<BikeTrip, Point.Float> startLocCol = new TableColumn<>("Start location");
         TableColumn<BikeTrip, Point.Float> startLatitudeCol = new TableColumn<>("Latitude");
         TableColumn<BikeTrip, Point.Float> startLongitudeCol = new TableColumn<>("Longitude");
-        TableColumn<BikeTrip, Point.Float> endLocCol = new TableColumn<>("End Location");
+        TableColumn<BikeTrip, Point.Float> endLocCol = new TableColumn<>("End location");
         TableColumn<BikeTrip, Point.Float> endLatitudeCol = new TableColumn<>("Latitude");
         TableColumn<BikeTrip, Point.Float> endLongitudeCol = new TableColumn<>("Longitude");
         TableColumn<BikeTrip, ContextualLength> distCol = new TableColumn<>("Distance (m)");
@@ -521,9 +582,6 @@ public class BikeTableController extends TableController {
         table.setItems(sortedData);
 
         setFilters();
-
-        //model.addPointList(new BikeTripList(currentListName, data));
-
     }
 
 
@@ -572,8 +630,8 @@ public class BikeTableController extends TableController {
      * WIP TODO use and potentially move to super class
      * @param entriesLoaded
      */
-    private void checkAndAddToList(int entriesLoaded) {
-        System.out.println(AlertGenerator.createImportChoiceDialog(entriesLoaded));
+    private int checkAndAddToList(int entriesLoaded) {
+        return AlertGenerator.createImportChoiceDialog(entriesLoaded);
     }
 
 

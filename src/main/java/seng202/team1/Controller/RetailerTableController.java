@@ -21,8 +21,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.DataAnalyser;
+import seng202.team1.Model.GenerateFields;
+import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.RetailerLocationList;
+import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
@@ -413,10 +417,7 @@ public class RetailerTableController extends TableController {
                     // Initialise the values in the filter combo boxes now that we have data to work with
                     setFilters(loadRetailerCsv.getValue());
                     model.addPointList(new RetailerLocationList(currentListName, loadRetailerCsv.getValue()));
-                    setTableViewRetailer(loadRetailerCsv.getValue());
-                    stopLoadingAni();
-                    setPredicate();
-                    clearFilters();
+                    handleImport(loadRetailerCsv.getValue());
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading retailers. Is your csv correct?");
                     stopLoadingAni();
@@ -445,8 +446,6 @@ public class RetailerTableController extends TableController {
 
         String filename = getCsvFilename();
         if (filename != null) {
-            dataPoints.clear();
-            originalData.clear();
             importRetailerCsv(filename, true);
         }
     }
@@ -466,6 +465,77 @@ public class RetailerTableController extends TableController {
             } catch (SQLException e) {
                 AlertGenerator.createAlert("Couldn't get retailers.");
             }
+        }
+    }
+
+    private void handleImport(ArrayList<RetailerLocation> importedData) {
+        int userChoice = checkAndAddToList(importedData.size());
+
+        switch (userChoice) {
+            case 0: //Append to table and list
+                System.out.println("Append to table and list");
+                appendToDataAndList(importedData);
+                break;
+            case 1: //Append to table, not to list
+                System.out.println("Append to table, not to list");
+                appendToData(importedData);
+                break;
+            case 2: //Create new list of loaded points
+                appendToNewList(importedData);
+                System.out.println("Nothing yet 2");
+                break;
+            case -1: //Canceled load.
+                System.out.println("Canceled");
+                break;
+            default:
+                AlertGenerator.createAlert("Default reached");
+                break;
+        }
+        stopLoadingAni();
+        populateCustomRetailerLocations();
+        setPredicate();
+        clearFilters();
+    }
+
+    private int checkAndAddToList(int entriesLoaded) {
+        return AlertGenerator.createImportChoiceDialog(entriesLoaded);
+    }
+
+    private void appendToDataAndList(ArrayList<RetailerLocation> importedData) {
+        appendToData(importedData);
+        //TODO add to current list
+    }
+
+    private void appendToData(ArrayList<RetailerLocation> importedData) {
+        int count = 0;
+        for (RetailerLocation retailerLocation : importedData) {
+            if (!dataPoints.contains(retailerLocation)) {
+                dataPoints.add(retailerLocation);
+                originalData.add(retailerLocation);
+                count++;
+            }
+        }
+        String addedMessage = count + " unique entries successfully added.";
+        if (count != importedData.size()) {
+            addedMessage = addedMessage + "\n" + (importedData.size() - count) + " duplicates not added.";
+        }
+        AlertGenerator.createAlert("Entries Added", addedMessage);
+    }
+
+    private void appendToNewList(ArrayList<RetailerLocation> importedData) {
+        String listName;
+        if (!dataPoints.isEmpty()) {
+            listName = AlertGenerator.createAddListDialog();
+        } else {
+            listName = currentListName;
+        }
+        if (listName != null) {
+            dataPoints.clear();
+            originalData.clear();
+            RetailerLocationList newList = new RetailerLocationList(listName, importedData);
+            setupWithList(newList.getListName(), newList.getRetailerLocations());
+            //TODO push new list to user
+            setName();
         }
     }
     //endregion

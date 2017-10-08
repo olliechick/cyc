@@ -1,20 +1,15 @@
 package seng202.team1;
 
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import seng202.team1.Controller.AlertGenerator;
-import seng202.team1.Model.DatabaseManager;
 import seng202.team1.Model.Directory;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * Main class for launching the application.
@@ -44,7 +39,7 @@ public class Main extends Application {
             Parent root = loginLoader.load();
 
             Scene scene = new Scene(root);
-            scene.getStylesheets().add("/css/loginStyle.css");
+            //scene.getStylesheets().add("/css/loginStyle.css");
 
             primaryStage.setScene(scene);
             primaryStage.show();

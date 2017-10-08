@@ -2,7 +2,6 @@ package seng202.team1.Controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,19 +11,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import seng202.team1.Model.WifiPoint;
 
-
 import java.awt.Point;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
 
 import static seng202.team1.Controller.MapController.getUserClicks;
 
@@ -139,7 +134,7 @@ public class AddWifiDialogController {
         stage = stage1;
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
-        stage.setTitle("Add Wifi Point");
+        stage.setTitle("Add a WiFi hotspot");
         stage.setScene(new Scene(root));
 
         boroComboBox.setItems(boroughs);
@@ -153,8 +148,8 @@ public class AddWifiDialogController {
         if (!userClicks.isEmpty()) {
             // User has clicked
             Point.Double lastPoint = userClicks.get((userClicks.size() - 1));
-            latField.setText(String.format ("%.6f", lastPoint.getX()));
-            longField.setText(String.format ("%.6f", lastPoint.getY()));
+            latField.setText(String.format("%.6f", lastPoint.getX()));
+            longField.setText(String.format("%.6f", lastPoint.getY()));
         }
 
         root.setOnKeyPressed(event -> {

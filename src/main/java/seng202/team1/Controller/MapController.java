@@ -14,8 +14,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.web.WebEngine;
@@ -26,24 +30,36 @@ import javafx.stage.WindowEvent;
 import netscape.javascript.JSObject;
 import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
 import org.codefx.libfx.control.webview.WebViews;
-import seng202.team1.Model.*;
+import seng202.team1.Model.BikeTrip;
 import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.DataAnalyser;
+import seng202.team1.Model.GenerateFields;
 import seng202.team1.Model.Google.BikeDirections;
+import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.RetailerPointDistance;
+import seng202.team1.Model.SerializerImplementation;
+import seng202.team1.Model.WIFIPointDistance;
+import seng202.team1.Model.WifiPoint;
 import seng202.team1.UserAccountModel;
 
-import java.awt.geom.Point2D;
-
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-
-import static seng202.team1.Controller.MapController.userClicks;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
-import static seng202.team1.Model.DataAnalyser.*;
+import static seng202.team1.Model.DataAnalyser.findClosestRetailerToBikeTrip;
+import static seng202.team1.Model.DataAnalyser.findClosestWifiPointToRetailer;
+import static seng202.team1.Model.DataAnalyser.findClosestWifiToRoute;
+import static seng202.team1.Model.DataAnalyser.searchRetailerLocationsOnRoute;
+import static seng202.team1.Model.DataAnalyser.searchWifiPoints;
+import static seng202.team1.Model.DataAnalyser.searchWifiPointsOnRoute;
+import static seng202.team1.Model.DataAnalyser.sortedRetailerPointsByMinimumDistanceToRoute;
+import static seng202.team1.Model.DataAnalyser.sortedWIFIPointsByMinimumDistanceToRoute;
 import static seng202.team1.Model.GenerateFields.generateSecondaryFunctionsList;
 import static seng202.team1.Model.GenerateFields.generateWifiProviders;
 
@@ -442,7 +458,8 @@ public class MapController {
             generateRoute(route1);
         } else if (tripsNearPoint == null) {
             resultsLabel.setText("No points have been found or you have not yet searched please try again");
-        } else if (currentTripCounter < 0) {
+        } else {
+            // currentTripCounter < 0
             resultsLabel.setText("You have reached the start of the list");
             currentTripCounter = 0; // stops someone running the value very low
         }
@@ -809,6 +826,7 @@ public class MapController {
             Stage stage1 = new Stage();
 
             addBikeDialog.setDialog(stage1, root);
+            addBikeDialog.initModel(model);
             stage1.showAndWait();
 
             BikeTrip test = addBikeDialog.getBikeTrip();
@@ -946,6 +964,26 @@ public class MapController {
 
     }
 
+
+    /**
+     * Opens the user manual in the user's default web browser.
+     */
+    public void openUserManual() {
+        String userManualURL = "https://docs.google.com/document/d/1r2fCUzSR7SVSGZpKeHyz7Pz81htCDBOYc75GL5hcRnM/edit?usp=sharing";
+        new Thread(() -> {
+            try {
+                java.awt.Desktop.getDesktop().browse(new URI(userManualURL));
+            } catch (IOException | URISyntaxException e) {
+                AlertGenerator.createAlert("Could not load user manual.");
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+
+    /**
+     * Opens the about screen.
+     */
     public void openAbout() {
         try {
             FXMLLoader showAbout = new FXMLLoader(getClass().getResource("/fxml/aboutView.fxml"));
@@ -1029,7 +1067,11 @@ public class MapController {
         }
     }
 
-    public void logout() {
+    /**
+     * Confirm logout if some tables remain open.
+     * If confirmed, serialize user and then log out.
+     */
+    public void saveAndLogout() {
         System.out.println("Logout");
         boolean confirmLogout = true;
         SerializerImplementation.serializeUser(model);
@@ -1040,21 +1082,45 @@ public class MapController {
 
         if (confirmLogout) {
             model = null;
-            try {
-                windowManager.closeAllTrackedStages();
+            logout();
+        }
+    }
 
-                FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-                Parent loginView = loginLoader.load();
+    /**
+     * Reset the current user and switch back to the login screen.
+     */
+    public void logout() {
+        System.out.println("Logout");
+        model = null;
 
-                Scene loginScene = new Scene(loginView);
-                loginScene.getStylesheets().add("/css/loginStyle.css");
-                stage.setScene(loginScene);
-                stage.setHeight(loginView.getScene().getHeight());
-                stage.setWidth(loginView.getScene().getWidth());
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            windowManager.closeAllTrackedStages();
+
+            FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+            Parent loginView = loginLoader.load();
+
+            Scene loginScene = new Scene(loginView);
+            //loginScene.getStylesheets().add("/css/loginStyle.css");
+            stage.setScene(loginScene);
+            stage.setHeight(loginView.getScene().getHeight());
+            stage.setWidth(loginView.getScene().getWidth());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Confirm that the user wants to delete their account.
+     * If so, delete it. Otherwise do nothing.
+     */
+    public void deleteAccount() {
+        boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Account", "Are you sure you want to delete your account?",
+                "This cannot be undone.");
+        if (confirmDelete) {
+            SerializerImplementation.deleteUserAccountModel(model.getUserName());
+            logout();
         }
     }
 
@@ -1083,13 +1149,13 @@ public class MapController {
         }
 
         public void origin(Double lat, Double lng) {
-            startingLatTextField.setText(String.format ("%.6f", lat));
-            startingLongTextField.setText(String.format ("%.6f", lng));
+            startingLatTextField.setText(String.format("%.6f", lat));
+            startingLongTextField.setText(String.format("%.6f", lng));
         }
 
         public void destination(Double lat, Double lng) {
-            endingLatTextField.setText(String.format ("%.6f", lat));
-            endingLongTextField.setText(String.format ("%.6f", lng));
+            endingLatTextField.setText(String.format("%.6f", lat));
+            endingLongTextField.setText(String.format("%.6f", lng));
         }
 
         public void addRetailer(Double lat, Double lng) {

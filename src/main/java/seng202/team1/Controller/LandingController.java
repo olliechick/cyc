@@ -146,6 +146,7 @@ public class LandingController {
         }
     }
 
+    /*
     /**
      * Logout the current user and switch back to the login screen.
      */
@@ -157,7 +158,7 @@ public class LandingController {
             Parent loginView = loginLoader.load();
 
             Scene loginScene = new Scene(loginView);
-            loginScene.getStylesheets().add("/css/loginStyle.css");
+            //loginScene.getStylesheets().add("/css/loginStyle.css");
             stage.setScene(loginScene);
             stage.show();
         } catch (IOException e) {

@@ -1,97 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane hgap="10.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.LoginController">
+<GridPane hgap="10.0" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.LoginController">
   <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="186.0" minWidth="10.0" prefWidth="130.0" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="430.0" minWidth="10.0" prefWidth="291.0" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="216.0" minWidth="10.0" prefWidth="109.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="300.0" />
   </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="109.0" minHeight="10.0" prefHeight="67.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="40.0" minHeight="0.0" prefHeight="40.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="331.0" minHeight="10.0" prefHeight="331.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <Text fx:id="headerLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to CYC: Your Cycling!" wrappingWidth="505.6875" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
-            <font>
-                <Font name="System Bold" size="29.0" />
-            </font>
-        </Text>
-        <TabPane blendMode="MULTIPLY" maxWidth="291.0" minWidth="291.0" nodeOrientation="LEFT_TO_RIGHT" scaleShape="false" snapToPixel="false" tabClosingPolicy="UNAVAILABLE" tabMaxWidth="145.0" tabMinWidth="145.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+        <TabPane blendMode="MULTIPLY" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefWidth="300.0" scaleShape="false" snapToPixel="false" tabClosingPolicy="UNAVAILABLE" tabMinWidth="125.0" GridPane.rowIndex="1">
             <tabs>
             <Tab text="Log in">
                <content>
-                  <GridPane prefHeight="228.0" prefWidth="213.0">
+                  <GridPane hgap="10.0" prefHeight="228.0" prefWidth="213.0" vgap="10.0">
                     <columnConstraints>
-                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="125.0" minWidth="10.0" prefWidth="125.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label fx:id="usernameLabel" nodeOrientation="LEFT_TO_RIGHT" text="Username:" />
+                        <Label fx:id="usernameLabel" nodeOrientation="LEFT_TO_RIGHT" prefHeight="16.0" prefWidth="75.0" text="Username" />
                         <TextField fx:id="usernameTextField" onAction="#login" GridPane.columnIndex="1" />
-                        <Label fx:id="passwordLabel" text="Password:" GridPane.rowIndex="1" />
+                        <Label fx:id="passwordLabel" text="Password" GridPane.rowIndex="1" />
                         <PasswordField fx:id="passwordField" onAction="#login" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" text="Log in" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+                        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" text="Log in" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                      </children>
                      <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </GridPane>
                </content>
             </Tab>
             <Tab text="Sign up">
                <content>
-                  <GridPane>
+                  <GridPane hgap="10.0" vgap="10.0">
                     <columnConstraints>
-                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="125.0" minWidth="10.0" prefWidth="125.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label fx:id="newUsernameLabel" text="Username:" />
-                        <Label fx:id="newPasswordLabel" text="Password:" GridPane.rowIndex="1" />
-                        <Label id="passwordConfirm" fx:id="confirmPasswordLabel" text="Confirm Password:" GridPane.rowIndex="2" />
-                        <Label fx:id="birthdayLabel" text="Birthday:" GridPane.rowIndex="3" />
-                        <Label fx:id="genderLabel" text="Gender:" GridPane.rowIndex="4" />
+                        <Label fx:id="newUsernameLabel" text="Username" />
+                        <Label fx:id="newPasswordLabel" text="Password" GridPane.rowIndex="1" />
+                        <Label id="passwordConfirm" fx:id="confirmPasswordLabel" text="Confirm password" GridPane.rowIndex="2" />
+                        <Label fx:id="birthdayLabel" text="Birthday" GridPane.rowIndex="3" />
+                        <Label fx:id="genderLabel" text="Gender (optional)" GridPane.rowIndex="4" />
                         <TextField fx:id="newUsernameTextField" GridPane.columnIndex="1" />
                         <PasswordField fx:id="newPasswordTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <PasswordField fx:id="newConfirmPasswordTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -107,10 +91,10 @@
                               <Font size="12.0" />
                            </font>
                         </Hyperlink>
-                        <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUp" text="Sign Up" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
+                        <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUp" text="Sign up" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
                      </children>
                      <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </GridPane>
                </content>
@@ -123,6 +107,11 @@
                 <Insets />
             </opaqueInsets>
         </TabPane>
+      <Text fx:id="headerLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to CYC: Your Cycling!" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
    </children>
    <padding>
       <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
