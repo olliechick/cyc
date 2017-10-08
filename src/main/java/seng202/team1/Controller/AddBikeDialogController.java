@@ -155,6 +155,8 @@ public class AddBikeDialogController {
         startPM.setToggleGroup(startToggleGroup);
         stopPM.setToggleGroup(stopToggleGroup);
         stopAM.setToggleGroup(stopToggleGroup);
+        startDatePicker.setValue(LocalDate.now());
+        stopDatePicker.setValue(LocalDate.now());
 
         startAM.setSelected(true);
         stopAM.setSelected(true);
