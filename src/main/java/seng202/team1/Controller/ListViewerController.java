@@ -36,6 +36,7 @@ public class ListViewerController {
     private ListView<WifiPointList> wifiListView;
 
     private UserAccountModel user;
+    private MapController mapController;
     private Stage stage;
 
     public void initialize() {
@@ -105,9 +106,10 @@ public class ListViewerController {
         });
     }
 
-    public void setUp(UserAccountModel user, Stage stage) {
+    public void setUp(UserAccountModel user, Stage stage, MapController mapController) {
         setUser(user);
         this.stage = stage;
+        this.mapController = mapController;
     }
 
     public void setUser(UserAccountModel user) {
@@ -209,6 +211,7 @@ public class ListViewerController {
             bikeTableController.initModel(user);
             bikeTableController.setupWithList(bikeTripList.getListName(), bikeTripList.getBikeTrips());
             bikeTableController.setName();
+            bikeTableController.setMapController(mapController);
             bikeTableController.initContextMenu();
 
             bikeTableController.setStage(stage);
@@ -230,6 +233,7 @@ public class ListViewerController {
             retailerTableController.initModel(user);
             retailerTableController.setupWithList(retailerLocationList.getListName(), retailerLocationList.getRetailerLocations());
             retailerTableController.setName();
+            retailerTableController.setMapController(mapController);
             retailerTableController.initContextMenu();
 
             retailerTableController.setStage(stage);
@@ -251,6 +255,7 @@ public class ListViewerController {
             wifiTableController.initModel(user);
             wifiTableController.setupWithList(wifiPointList.getListName(), wifiPointList.getWifiPoints());
             wifiTableController.setName();
+            wifiTableController.setMapController(mapController);
             wifiTableController.initContextMenu();
 
             wifiTableController.setStage(stage);

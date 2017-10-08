@@ -138,21 +138,7 @@ public class WifiTableController extends TableController {
      * @param selectedHotspot point to show.
      */
     public void showHotspostOnmap(WifiPoint selectedHotspot){
-        FXMLLoader showMapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
-        Parent root = null;
-        try {
-            root = showMapLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        MapController map = showMapLoader.getController();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        map.setUp(model, stage);
-        stage.show();
-
-        map.showGivenWifi(selectedHotspot);
+        super.mapController.showGivenWifi(selectedHotspot);
     }
 
     /**

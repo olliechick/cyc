@@ -233,23 +233,7 @@ public class BikeTableController extends TableController {
      * @param selectedBikeTrip passed by onclick listener
      */
     private void showTripOnMap(BikeTrip selectedBikeTrip) {
-        FXMLLoader showMapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
-        Parent root = null;
-        try {
-            root = showMapLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        MapController map = showMapLoader.getController();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        map.setUp(model, stage);
-        stage.show();
-
-        map.showGivenTrip(selectedBikeTrip);
-
-
+        super.mapController.showGivenTrip(selectedBikeTrip);
     }
 
     /**

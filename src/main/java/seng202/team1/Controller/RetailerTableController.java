@@ -539,22 +539,7 @@ public class RetailerTableController extends TableController {
     }
 
     public void showRetailerOnMap(RetailerLocation selectedShop){
-
-        FXMLLoader showMapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
-        Parent root = null;
-        try {
-            root = showMapLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        MapController map = showMapLoader.getController();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        map.setUp(model, stage);
-        stage.show();
-
-        map.showGivenShop(selectedShop);
+        super.mapController.showGivenShop(selectedShop);
     }
 
     public void deleteAllRetailers() {

@@ -37,6 +37,7 @@ public abstract class TableController {
 
     private Stage stage;
 
+    protected MapController mapController;
     protected ContextMenu cm = new ContextMenu();
     protected MenuItem editMenuItem = new MenuItem("Edit");
     protected MenuItem deleteMenuItem = new MenuItem("Delete");
@@ -182,6 +183,10 @@ public abstract class TableController {
      */
     public void close() {
         stage.fireEvent( new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+    }
+
+    public void setMapController(MapController mapController) {
+        this.mapController = mapController;
     }
 
     /**
