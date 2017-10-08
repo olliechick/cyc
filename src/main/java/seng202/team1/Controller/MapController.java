@@ -742,6 +742,7 @@ public class MapController {
             Stage stage1 = new Stage();
 
             addBikeDialog.setDialog(stage1, root);
+            addBikeDialog.initModel(model);
             stage1.showAndWait();
 
             BikeTrip test = addBikeDialog.getBikeTrip();
@@ -953,10 +954,14 @@ public class MapController {
         }
     }
 
-    public void logout() {
+    /**
+     * Confirm logout if some tables remain open.
+     * If confirmed, serialize user and then log out.
+     */
+    public void saveAndLogout() {
         System.out.println("Logout");
         boolean confirmLogout = true;
-
+        SerializerImplementation.serializeUser(model);
         if (!windowManager.getStagesOpen().isEmpty()) {
             confirmLogout = AlertGenerator.createChoiceDialog("Close", "You still have tables open.",
                     "\nYour data might not be saved.\n\nAre you sure you want to logout?");
@@ -964,21 +969,45 @@ public class MapController {
 
         if (confirmLogout) {
             model = null;
-            try {
-                windowManager.closeAllTrackedStages();
+            logout();
+        }
+    }
 
-                FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-                Parent loginView = loginLoader.load();
+    /**
+     * Reset the current user and switch back to the login screen.
+     */
+    public void logout() {
+        System.out.println("Logout");
+        model = null;
 
-                Scene loginScene = new Scene(loginView);
-                loginScene.getStylesheets().add("/css/loginStyle.css");
-                stage.setScene(loginScene);
-                stage.setHeight(loginView.getScene().getHeight());
-                stage.setWidth(loginView.getScene().getWidth());
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            windowManager.closeAllTrackedStages();
+
+            FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+            Parent loginView = loginLoader.load();
+
+            Scene loginScene = new Scene(loginView);
+            loginScene.getStylesheets().add("/css/loginStyle.css");
+            stage.setScene(loginScene);
+            stage.setHeight(loginView.getScene().getHeight());
+            stage.setWidth(loginView.getScene().getWidth());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Confirm that the user wants to delete their account.
+     * If so, delete it. Otherwise do nothing.
+     */
+    public void deleteAccount() {
+        boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Account", "Are you sure you want to delete your account?",
+                                                                    "This cannot be undone.");
+        if (confirmDelete) {
+            SerializerImplementation.deleteUserAccountModel(model.getUserName());
+            logout();
         }
     }
 

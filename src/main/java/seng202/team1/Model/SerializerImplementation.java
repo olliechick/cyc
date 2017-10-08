@@ -5,6 +5,9 @@ package seng202.team1.Model;
 import seng202.team1.UserAccountModel;
 
 import java.io.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Static class to serialize and deserialize the users.
@@ -57,5 +60,19 @@ public final class SerializerImplementation {
             e.printStackTrace();
         }
         return user;
+    }
+
+    /**
+     * Permanently delete the serialized user file associated with this user name.
+     *
+     * @param userName The userName of the account to delete.
+     */
+    public static void deleteUserAccountModel(String userName){
+        Path userPath = FileSystems.getDefault().getPath(Directory.USERS.directory() + userName + USER_EXT); //Directory.USERS.directory() + userName + USER_EXT;
+        try {
+            Files.delete(userPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

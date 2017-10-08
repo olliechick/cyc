@@ -1,5 +1,7 @@
 package seng202.team1.Controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -100,6 +102,11 @@ public class AddRetailerDialogController {
     private String city = "New York";
     private String state = "NY";
     private String blockLot = null;
+    private ObservableList<TextField> fields = FXCollections.observableArrayList();
+
+    public void initialize() {
+        fields.addAll(nameField, addressField, address2Field, primaryField, secondaryField, zipField, latField, longField);
+    }
 
     /**
      * Check the fields for validity and if so, add the retailer.
@@ -190,14 +197,6 @@ public class AddRetailerDialogController {
         latitude = retailerLocation.getLatitude();
         longitude = retailerLocation.getLongitude();
 
-        nameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            addButton.setDisable(newValue.equals(retailerLocation.getName()));
-        });
-
-        primaryField.textProperty().addListener((observable, oldValue, newValue) -> {
-            addButton.setDisable(newValue.equals(retailerLocation.getPrimaryFunction()));
-        });
-
         nameField.setText(retailerLocation.getName());
         addressField.setText(retailerLocation.getAddressLine1());
         address2Field.setText(retailerLocation.getAddressLine2());
@@ -207,6 +206,13 @@ public class AddRetailerDialogController {
         latField.setText(String.valueOf(retailerLocation.getLatitude()));
         longField.setText(String.valueOf(retailerLocation.getLongitude()));
 
+        for (TextField textField : fields) {
+            textField.textProperty().addListener((((observable, oldValue, newValue) -> {
+                addButton.setDisable(false);
+            })));
+        }
+
+        addButton.setDisable(true);
         addButton.setText("Save");
     }
 
