@@ -418,11 +418,10 @@ public class WifiTableController extends TableController {
 
                 if (loadWifiCsv.getValue() != null) {
                     setFilters(loadWifiCsv.getValue());
-
+                    model.addPointList(new WifiPointList(currentListName, loadWifiCsv.getValue()));
                     setTableViewWifi(loadWifiCsv.getValue());
                     stopLoadingAni();
                     setPredicate();
-                    populateCustomWifiPoints();
                     resetFilters();
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading wifis. Is your csv correct?");
@@ -485,7 +484,7 @@ public class WifiTableController extends TableController {
      */
     private void setTableViewWifi(ArrayList<WifiPoint> data) {
 
-        setUpData(data);
+        setUpData(model.getWifiPointsFromList(currentListName).getWifiPoints());
 
         TableColumn<WifiPoint, String> nameCol = new TableColumn<>("Name");
         TableColumn<WifiPoint, String> locationCol = new TableColumn<>("Location");
@@ -547,7 +546,6 @@ public class WifiTableController extends TableController {
         setTableViewWifi(points);
         stopLoadingAni();
         setPredicate();
-        populateCustomWifiPoints();
         resetFilters();
     }
 

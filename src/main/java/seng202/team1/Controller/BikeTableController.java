@@ -146,10 +146,9 @@ public class BikeTableController extends TableController {
     public void setupWithList(String listName, ArrayList<BikeTrip> points) {
         setFilters();
         currentListName = listName;
-        setTableViewBike(points);
+        setTableViewBike(model.getBikeTripsFromList(listName).getBikeTrips());
         stopLoadingAni();
         setPredicate();
-        populateCustomBikeTrips();
         clearFilters();
     }
     //endregion
@@ -416,10 +415,9 @@ public class BikeTableController extends TableController {
             public void handle(WorkerStateEvent event) {
 
                 if (loadBikeCsv.getValue() != null) {
-                    //checkAndAddToList(loadBikeCsv.getValue().size());
+                    model.addPointList(new BikeTripList(currentListName, loadBikeCsv.getValue()));
                     setTableViewBike(loadBikeCsv.getValue());
                     setPredicate();
-                    populateCustomBikeTrips();
                     clearFilters();
                     stopLoadingAni();
                 } else {
@@ -516,13 +514,16 @@ public class BikeTableController extends TableController {
      */
     private void setTableViewBike(ArrayList<BikeTrip> data) {
 
-        setUpData(data);
+        setUpData(model.getBikeTripsFromList(currentListName).getBikeTrips());
 
         table.getColumns().clear();
         table.getColumns().addAll(createColumns());
         table.setItems(sortedData);
 
         setFilters();
+
+        //model.addPointList(new BikeTripList(currentListName, data));
+
     }
 
 
@@ -537,16 +538,6 @@ public class BikeTableController extends TableController {
         sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(table.comparatorProperty());
 
-    }
-
-
-    /**
-     * Adds the users custom bike trips to the table.
-     */
-    private void populateCustomBikeTrips() {
-        BikeTripList customTrips = model.getBikeTripsFromList(currentListName);
-        dataPoints.addAll(customTrips.getBikeTrips());
-        originalData.addAll(customTrips.getBikeTrips());
     }
 
 
