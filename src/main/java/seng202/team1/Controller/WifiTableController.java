@@ -462,7 +462,7 @@ public class WifiTableController extends TableController {
         String filename = getCsvFilenameSave();
         if (filename != null) {
             try {
-                exportWifiHotspots(filename, model.getUserName());
+                exportWifiHotspots(filename, model.getUserName(), currentListName);
             } catch (IOException e) {
                 AlertGenerator.createAlert("Couldn't export file.");
             } catch (SQLException e) {

@@ -459,7 +459,7 @@ public class RetailerTableController extends TableController {
         String filename = getCsvFilenameSave();
         if (filename != null) {
             try {
-                exportRetailers(filename, model.getUserName());
+                exportRetailers(filename, model.getUserName(), currentListName);
             } catch (IOException e) {
                 AlertGenerator.createAlert("Couldn't export file.");
             } catch (SQLException e) {
