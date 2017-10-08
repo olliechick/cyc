@@ -236,14 +236,12 @@ public class UserAccountModel implements java.io.Serializable {
 
     private void addPoint(DataPoint point) {
         try {
-            //TODO: Have this thrown further up
-            DatabaseManager.addRecord(point, userName, "My List of Trips");
+            DatabaseManager.addRecord(point, userName, ""); // TODO: Use current list
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    //TODO change to use database list when implemented.
     public void addBikeTripList(BikeTripList bikeTripList) {
         bikeTripLists.add(bikeTripList);
         try {
