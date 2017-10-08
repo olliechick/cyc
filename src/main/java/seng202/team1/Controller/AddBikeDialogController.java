@@ -1,15 +1,15 @@
 package seng202.team1.Controller;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.*;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -76,26 +76,22 @@ public class AddBikeDialogController {
     @FXML
     private Label startTimeLabel;
 
-    @FXML
-    private Label stopTimeLabel;
+    private Label stopTimeLabel = startTimeLabel;
 
     @FXML
     private Label startLatLabel;
 
+    private Label endLatLabel = startLatLabel;
+
     @FXML
     private Label startLongLabel;
 
-    @FXML
-    private Label endLatLabel;
-
-    @FXML
-    private Label endLongLabel;
+    private Label endLongLabel = startLongLabel;
 
     @FXML
     private Label startDateLabel;
 
-    @FXML
-    private Label stopDateLabel;
+    private Label stopDateLabel = startDateLabel;
 
     @FXML
     private RadioButton startAM;
