@@ -153,7 +153,7 @@ public class AddRetailerDialogController {
         stage = stage1;
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
-        stage.setTitle("Add retailer");
+        stage.setTitle("Add a retailer");
         stage.setScene(new Scene(root));
 
 

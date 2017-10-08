@@ -134,7 +134,7 @@ public class AddWifiDialogController {
         stage = stage1;
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
-        stage.setTitle("Add WiFi hotspot");
+        stage.setTitle("Add a WiFi hotspot");
         stage.setScene(new Scene(root));
 
         boroComboBox.setItems(boroughs);

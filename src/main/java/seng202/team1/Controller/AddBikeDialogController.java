@@ -76,24 +76,16 @@ public class AddBikeDialogController {
     private Label idLabel;
 
     @FXML
-    private Label startTimeLabel;
-
-    private Label stopTimeLabel = startTimeLabel;
+    private Label timeLabel;
 
     @FXML
-    private Label startLatLabel;
-
-    private Label endLatLabel = startLatLabel;
+    private Label latLabel;
 
     @FXML
-    private Label startLongLabel;
-
-    private Label endLongLabel = startLongLabel;
+    private Label longLabel;
 
     @FXML
-    private Label startDateLabel;
-
-    private Label stopDateLabel = startDateLabel;
+    private Label dateLabel;
 
     @FXML
     private RadioButton startAM;
@@ -145,7 +137,7 @@ public class AddBikeDialogController {
         stage = stage1;
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
-        stage.setTitle("Add bike trip");
+        stage.setTitle("Add a bike trip");
         stage.setScene(new Scene(root));
         startAM.setToggleGroup(startToggleGroup);
         startPM.setToggleGroup(startToggleGroup);
@@ -252,6 +244,7 @@ public class AddBikeDialogController {
      */
     private boolean checkFields() {
         boolean valid = true;
+        boolean validDateTime = true;
 
         // Bike ID
         try {
@@ -263,114 +256,66 @@ public class AddBikeDialogController {
             valid = false;
         }
 
-        // Start latitude
+        // Latitude
         Float startLat = Float.valueOf(0);
+        Float endLat = Float.valueOf(0);
         try {
             startLat = Float.parseFloat(startLatField.getText());
             if (startLat < -90 || startLat > 90) {
                 throw new NumberFormatException("Latitude must be between -90 and 90.");
             }
-            startLatLabel.setTextFill(Color.BLACK);
+            endLat = Float.parseFloat(endLatField.getText());
+            if (endLat < -90 || endLat > 90) {
+                throw new NumberFormatException("Latitude must be between -90 and 90.");
+            }
+            latLabel.setTextFill(Color.BLACK);
         } catch (NumberFormatException e) {
-            startLatLabel.setTextFill(Color.RED);
+            latLabel.setTextFill(Color.RED);
             valid = false;
         }
 
-        // Start longitude
+        // Longitude
         Float startLong = Float.valueOf(0);
+        Float endLong = Float.valueOf(0);
         try {
             startLong = Float.parseFloat(startLongField.getText());
             if (startLong < -180 || startLong > 180) {
                 throw new NumberFormatException("Longitude must be between -180 and 180.");
             }
-            startLongLabel.setTextFill(Color.BLACK);
-        } catch (NumberFormatException e) {
-            startLongLabel.setTextFill(Color.RED);
-            valid = false;
-        }
-
-        // End latitude
-        Float endLat = Float.valueOf(0);
-        try {
-            endLat = Float.parseFloat(endLatField.getText());
-            if (endLat < -90 || endLat > 90) {
-                throw new NumberFormatException("Latitude must be between -90 and 90.");
-            }
-            endLatLabel.setTextFill(Color.BLACK);
-        } catch (NumberFormatException e) {
-            endLatLabel.setTextFill(Color.RED);
-            valid = false;
-        }
-
-        // End longitude
-        Float endLong = Float.valueOf(0);
-        try {
             endLong = Float.parseFloat(endLongField.getText());
             if (endLong < -180 || endLong > 180) {
                 throw new NumberFormatException("Longitude must be between -180 and 180.");
             }
-            endLongLabel.setTextFill(Color.BLACK);
+            longLabel.setTextFill(Color.BLACK);
         } catch (NumberFormatException e) {
-            endLongLabel.setTextFill(Color.RED);
+            longLabel.setTextFill(Color.RED);
             valid = false;
         }
 
-        // Start time
+        // Time
         try {
-            startTime = LocalTime.parse(startTimeField.getText(), DateTimeFormatter.ofPattern("H:m:s"));
+            startTime = LocalTime.parse(startTimeField.getText(), DateTimeFormatter.ofPattern("H:m[:s]"));
             if (startPM.isSelected() && startTime.getHour() < 12) {
                 startTime = startTime.plusHours(12);
             }
-            startTimeLabel.setTextFill(Color.BLACK);
-        } catch (DateTimeParseException e) {
-            try {
-                startTime = LocalTime.parse(startTimeField.getText(), DateTimeFormatter.ofPattern("H:m"));
-                if (startPM.isSelected() && startTime.getHour() < 12) {
-                    startTime = startTime.plusHours(12);
-                }
-                startTimeLabel.setTextFill(Color.BLACK);
-            } catch (DateTimeParseException e2) {
-                startTimeLabel.setTextFill(Color.RED);
-                valid = false;
-            }
-        }
-
-        // Stop time
-        try {
-            stopTime = LocalTime.parse(stopTimeField.getText(), DateTimeFormatter.ofPattern("H:m:s"));
+            stopTime = LocalTime.parse(stopTimeField.getText(), DateTimeFormatter.ofPattern("H:m[:s]"));
             if (stopPM.isSelected() && stopTime.getHour() < 12) {
                 stopTime = stopTime.plusHours(12);
             }
-            stopTimeLabel.setTextFill(Color.BLACK);
+            timeLabel.setTextFill(Color.BLACK);
         } catch (DateTimeParseException e) {
-            try {
-                stopTime = LocalTime.parse(stopTimeField.getText(), DateTimeFormatter.ofPattern("H:m"));
-                if (stopPM.isSelected() && stopTime.getHour() < 12) {
-                    stopTime = stopTime.plusHours(12);
-                }
-                stopTimeLabel.setTextFill(Color.BLACK);
-            } catch (DateTimeParseException e2) {
-                stopTimeLabel.setTextFill(Color.RED);
-                valid = false;
-            }
+            timeLabel.setTextFill(Color.RED);
+            valid = false;
         }
 
-        // Start date
-        if (startDatePicker.getValue() == null) {
-            startDateLabel.setTextFill(Color.RED);
+        // Date
+        if (startDatePicker.getValue() == null || stopDatePicker == null) {
+            dateLabel.setTextFill(Color.RED);
             valid = false;
         } else {
             startDate = startDatePicker.getValue();
-            startDateLabel.setTextFill(Color.BLACK);
-        }
-
-        // Stop date
-        if (stopDatePicker.getValue() == null) {
-            stopDateLabel.setTextFill(Color.RED);
-            valid = false;
-        } else {
             stopDate = stopDatePicker.getValue();
-            stopDateLabel.setTextFill(Color.BLACK);
+            dateLabel.setTextFill(Color.BLACK);
         }
 
         // Merge dates and times
@@ -379,26 +324,23 @@ public class AddBikeDialogController {
             stopDateTime = stopDate.atTime(stopTime);
         } catch (NullPointerException e) {
             valid = false;
+            validDateTime = false;
         }
 
         // Create start and end points and
         // check start datetime is before stop datetime
-        if (valid) {
+        if (validDateTime) {
             startPoint = new Point.Float(startLong, startLat);
             endPoint = new Point.Float(endLong, endLat);
             if (startDateTime.isBefore(stopDateTime)) {
                 // Start is before end (blue sky)
-                startDateLabel.setTextFill(Color.BLACK);
-                stopDateLabel.setTextFill(Color.BLACK);
-                startTimeLabel.setTextFill(Color.BLACK);
-                stopTimeLabel.setTextFill(Color.BLACK);
+                dateLabel.setTextFill(Color.BLACK);
+                timeLabel.setTextFill(Color.BLACK);
                 addBikeTripLabel.setText("Add a custom bike trip"); //default text
             } else if (startDateTime.isEqual(stopDateTime)) {
-                // Start is at the same time as end (bike trip took less than a second? erroneous
-                startDateLabel.setTextFill(Color.RED);
-                stopDateLabel.setTextFill(Color.RED);
-                startTimeLabel.setTextFill(Color.RED);
-                stopTimeLabel.setTextFill(Color.RED);
+                // Start is at the same time as end (bike trip took less than a second?) - erroneous
+                dateLabel.setTextFill(Color.RED);
+                timeLabel.setTextFill(Color.RED);
                 valid = false;
                 // Adjust the title label - ideally this would be a popup (like the one commented
                 // out below) - but this pops up in the wrong place.
@@ -406,10 +348,8 @@ public class AddBikeDialogController {
                 // AlertGenerator.createAlert("You can't have a 0-time bike trip.");
             } else {
                 // Start is after end (definitely erroneous)
-                startDateLabel.setTextFill(Color.RED);
-                stopDateLabel.setTextFill(Color.RED);
-                startTimeLabel.setTextFill(Color.RED);
-                stopTimeLabel.setTextFill(Color.RED);
+                dateLabel.setTextFill(Color.RED);
+                timeLabel.setTextFill(Color.RED);
                 valid = false;
                 // Adjust the title label - ideally this would be a popup (like the one commented
                 // out below) - but this pops up in the wrong place.
