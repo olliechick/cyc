@@ -2,12 +2,10 @@ package seng202.team1.Controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -17,8 +15,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -190,6 +186,8 @@ public class LoginController {
      */
     public void login() {
 
+        String invalidCredentialsMessage = "Please check your username and password and try again.";
+
         System.out.println("Log in button clicked");
 
         String username = usernameTextField.getText();
@@ -206,7 +204,7 @@ public class LoginController {
         } catch (IOException e) {
             usernameLabel.setTextFill(Color.RED);
             passwordLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Either Username or Password is incorrect. Please try again");
+            AlertGenerator.createAlert(invalidCredentialsMessage);
             return;
         }
 
@@ -221,13 +219,13 @@ public class LoginController {
             // Wrong password
             usernameLabel.setTextFill(Color.RED);
             passwordLabel.setTextFill(Color.RED);
-            AlertGenerator.createAlert("Either Username or Password is incorrect. Please try again");
+            AlertGenerator.createAlert(invalidCredentialsMessage);
         }
     }
 
     /**
      * Processes a user sign up.
-     * Does not allow empty user names, but does allow empty passwords.
+     * Does not allow empty usernames or passwords shorter in length than MIN_PASSWORD_LENGTH.
      *
      * @throws IOException If it can't create the user file.
      */
@@ -240,7 +238,6 @@ public class LoginController {
         LocalDate birthday = birthdayEntryField.getValue();
         char gender;
 
-        System.out.println(acceptTermsOfService.isSelected());
         // Work out gender
         String genderName = genderBox.getValue();
         if (genderName.equals("Male")) {
@@ -266,7 +263,7 @@ public class LoginController {
             newPasswordLabel.setTextFill(Color.BLACK);
             confirmPasswordLabel.setTextFill(Color.BLACK);
             acceptTermsOfService.setTextFill(Color.BLACK);
-            AlertGenerator.createAlert("A user with that name already exist. Please try another username.");
+            AlertGenerator.createAlert("A user with that username already exist. Please try another username.");
             return;
         } else {
             // username is ok
@@ -277,7 +274,7 @@ public class LoginController {
             newPasswordLabel.setTextFill(Color.RED);
             confirmPasswordLabel.setTextFill(Color.BLACK);
             acceptTermsOfService.setTextFill(Color.BLACK);
-            AlertGenerator.createAlert("Password must be longer than " +
+            AlertGenerator.createAlert("Password must contain at least " +
                     MIN_PASSWORD_LENGTH + " characters.");
             return;
         } else if (!password.equals(confirmPassword)) {

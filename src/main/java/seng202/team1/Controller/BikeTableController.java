@@ -7,7 +7,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -66,9 +65,6 @@ public class BikeTableController extends TableController {
     private Button searchButton;
 
     @FXML
-    private Label warningLabel;
-
-    @FXML
     private TextField startLatTextField;
 
     @FXML
@@ -91,10 +87,10 @@ public class BikeTableController extends TableController {
 
     //region SETUP
     /**
-     * Display the currently logged in users name at the bottom of the table
+     * Display the currently logged in user's name and the current list at the bottom of the table
      */
     void setName() {
-        nameLabel.setText("Logged in as: " + model.getUserName() + ", List: " + currentListName);
+        nameLabel.setText("Logged in as: " + model.getUserName() + ". List: " + currentListName);
         nameLabel.setVisible(true);
     }
 
@@ -109,7 +105,6 @@ public class BikeTableController extends TableController {
 
         this.model = userAccountModel;
         //importBikeCsv(DEFAULT_BIKE_TRIPS_FILENAME, false);
-        warningLabel.setText("");
     }
 
 
@@ -307,7 +302,7 @@ public class BikeTableController extends TableController {
      * Delete all bike trips from the current list
      */
     public void deleteAllBikeTrips() {
-        boolean delete = AlertGenerator.createChoiceDialog("Delete All Points", "Delete all points", "Are you sure you want to delete all the points in this list?");
+        boolean delete = AlertGenerator.createChoiceDialog("Delete all", null, "Are you sure you want to delete all the points in this list?");
         if (delete) {
             dataPoints.clear();
             //TODO delete from list when implemented
@@ -328,10 +323,10 @@ public class BikeTableController extends TableController {
             startLat = Double.parseDouble(startLatTextField.getText());
             startLong = Double.parseDouble(startLongTextField.getText());
             startPointsGood = true;
-
         } catch (NumberFormatException e){
             System.out.println("Bad Start lat or Long");
         }
+
         try {
             endLat = Double.parseDouble(endLatTextField.getText());
             endLong = Double.parseDouble(endLongTextField.getText());
@@ -339,7 +334,8 @@ public class BikeTableController extends TableController {
         } catch (NumberFormatException e){
             System.out.println("Bad End Lat Long");
         }
-        ArrayList<BikeTrip> results = new ArrayList<>();
+
+        ArrayList<BikeTrip> results;
         ArrayList<BikeTrip> searcher = new ArrayList<>();
         for (Object trip : dataPoints){
             searcher.add((BikeTrip) trip); // remove this block if it gets slow
@@ -352,7 +348,7 @@ public class BikeTableController extends TableController {
         } else if(endPointsGood){
             results = DataAnalyser.searchBikeTrips(endLat,endLong,delta,searcher,false);
         } else{
-            warningLabel.setText("Valid Search Points must be entered in either the start Point, End Point or Both.");
+            AlertGenerator.createAlert("You must enter a valid start location and/or a valid end location.");
             return;
         }
         dataPoints.clear();
@@ -535,10 +531,10 @@ public class BikeTableController extends TableController {
         TableColumn<BikeTrip, Integer> bikeIdCol = new TableColumn<>("Bike ID");
         TableColumn<BikeTrip, Character> genderCol = new TableColumn<>("Gender");
         TableColumn<BikeTrip, ContextualLength> durationCol = new TableColumn<>("Duration");
-        TableColumn<BikeTrip, Point.Float> startLocCol = new TableColumn<>("Start Location");
+        TableColumn<BikeTrip, Point.Float> startLocCol = new TableColumn<>("Start location");
         TableColumn<BikeTrip, Point.Float> startLatitudeCol = new TableColumn<>("Latitude");
         TableColumn<BikeTrip, Point.Float> startLongitudeCol = new TableColumn<>("Longitude");
-        TableColumn<BikeTrip, Point.Float> endLocCol = new TableColumn<>("End Location");
+        TableColumn<BikeTrip, Point.Float> endLocCol = new TableColumn<>("End location");
         TableColumn<BikeTrip, Point.Float> endLatitudeCol = new TableColumn<>("Latitude");
         TableColumn<BikeTrip, Point.Float> endLongitudeCol = new TableColumn<>("Longitude");
         TableColumn<BikeTrip, ContextualLength> distCol = new TableColumn<>("Distance (m)");
