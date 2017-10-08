@@ -47,7 +47,7 @@
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#openListViewer" text="Open a list" />
                           <MenuItem mnemonicParsing="false" onAction="#resetMap" text="Reset Map" />
-                  <MenuItem mnemonicParsing="false" onAction="#openListViewer" text="Open a list" />
+
               </items>
             </Menu>
                 <Menu mnemonicParsing="false" text="Help">
