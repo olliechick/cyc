@@ -198,8 +198,13 @@ public class WifiTableController extends TableController {
     public void deleteAllWifiPoints() {
         boolean delete = AlertGenerator.createChoiceDialog("Delete All Points", "Delete all points", "Are you sure you want to delete all the points in this list?");
         if (delete) {
-            dataPoints.clear();
-            //TODO delete from list when implemented
+            try {
+                DatabaseManager.open();
+                DatabaseManager.deletePointsOfList(model.getUserName(), currentListName, WifiPointList.class);
+                DatabaseManager.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

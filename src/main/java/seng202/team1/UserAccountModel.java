@@ -207,9 +207,18 @@ public class UserAccountModel implements java.io.Serializable {
 
 
     public void addPointList(PointList pointList) {
+        Class pointListClass = null;
+        if (pointList instanceof WifiPointList) {
+            pointListClass = WifiPointList.class;
+        } else if (pointList instanceof RetailerLocationList) {
+            pointListClass = RetailerLocationList.class;
+        } else if (pointList instanceof BikeTripList) {
+            pointListClass = BikeTripList.class;
+        }
+
         try {
             DatabaseManager.open();
-            DatabaseManager.createNewList(userName, pointList.getListName(), BikeTripList.class);
+            DatabaseManager.createNewList(userName, pointList.getListName(), pointListClass);
             DatabaseManager.populateList(userName, pointList);
             DatabaseManager.close();
         } catch (SQLException e) {

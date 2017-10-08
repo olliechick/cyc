@@ -250,7 +250,7 @@ public class BikeTableController extends TableController {
      *
      * @param selectedBikeTrip The currently selected bike trip.
      */
-    private void editBikeTrip(BikeTrip selectedBikeTrip) {
+    private void editBikeTrip(BikeTrip selectedBikeTrip) { //TODO: Implement via database
         try {
             FXMLLoader addBikeLoader = new FXMLLoader(getClass().getResource("/fxml/AddBikeDialog.fxml"));
             Parent root = addBikeLoader.load();
@@ -305,8 +305,13 @@ public class BikeTableController extends TableController {
     public void deleteAllBikeTrips() {
         boolean delete = AlertGenerator.createChoiceDialog("Delete All Points", "Delete all points", "Are you sure you want to delete all the points in this list?");
         if (delete) {
-            dataPoints.clear();
-            //TODO delete from list when implemented
+            try {
+                DatabaseManager.open();
+                DatabaseManager.deletePointsOfList(model.getUserName(), currentListName, BikeTripList.class);
+                DatabaseManager.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

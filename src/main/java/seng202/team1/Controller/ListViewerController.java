@@ -184,14 +184,6 @@ public class ListViewerController {
         System.out.println("New Bike List named: " + listName);
         if (listName != null) {
             BikeTripList bikeTripList = new BikeTripList(listName, new ArrayList<>());
-            try {
-                DatabaseManager.open();
-                DatabaseManager.createNewList(user.getUserName(), listName, BikeTrip.class);
-                DatabaseManager.populateList(user.getUserName(),  bikeTripList);
-                DatabaseManager.close();
-            } catch (SQLException e){
-                System.out.println("SQL error occurred");
-            }
 
             user.addPointList(bikeTripList);
             switchToBikeTable(bikeTripList);

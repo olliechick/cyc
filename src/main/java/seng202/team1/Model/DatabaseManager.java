@@ -711,5 +711,32 @@ public class DatabaseManager {
         return result;
     }
 
+    public static void deletePointsOfList(String username, String listName, Class type) {
+        String statement_template = "DELETE FROM %s WHERE listid=?;";
+        PreparedStatement preparedStatement;
 
+        try {
+            int listid = getListID(username, listName, type);
+            String table = null;
+
+            if (type == BikeTripList.class) {
+                table = "trip";
+            } else if (type == WifiPointList.class) {
+                table = "wifi";
+            } else if (type == RetailerLocationList.class) {
+                table = "retailer";
+            }
+
+            String statement = String.format(statement_template, table);
+            System.out.println(listid);
+            preparedStatement = connection.prepareStatement(statement);
+
+            preparedStatement.setInt(1, listid);
+
+            preparedStatement.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
