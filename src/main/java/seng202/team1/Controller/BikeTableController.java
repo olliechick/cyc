@@ -300,11 +300,12 @@ public class BikeTableController extends TableController {
             public void handle(WorkerStateEvent event) {
 
                 if (loadBikeCsv.getValue() != null) {
+                    //checkAndAddToList(loadBikeCsv.getValue().size());
                     setTableViewBike(loadBikeCsv.getValue());
-                    stopLoadingAni();
                     setPredicate();
                     populateCustomBikeTrips();
                     clearFilters();
+                    stopLoadingAni();
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading bike trips. Is your csv correct?");
                     stopLoadingAni();
@@ -538,6 +539,10 @@ public class BikeTableController extends TableController {
             dataPoints.clear();
             //TODO delete from list when implemented
         }
+    }
+
+    private void checkAndAddToList(int entriesLoaded) {
+        System.out.println(AlertGenerator.createImportChoiceDialog(entriesLoaded));
     }
 
 }

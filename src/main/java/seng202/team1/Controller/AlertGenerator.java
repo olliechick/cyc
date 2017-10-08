@@ -2,10 +2,14 @@ package seng202.team1.Controller;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.Region;
+import javafx.stage.Modality;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -88,5 +92,21 @@ public class AlertGenerator {
         } else {
             return null;
         }
+    }
+
+    public static String createImportChoiceDialog(int entriesLoaded) {
+        List<String> choices = new ArrayList<>();
+        choices.add("Append the data into the table and to the current list");
+        choices.add("Just append the data into the table");
+        choices.add("Create a new list with this data");
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
+        dialog.setTitle("Import CSV");
+        dialog.setHeaderText(entriesLoaded + " entries loaded.\nHow do you want to import?");
+        dialog.setContentText(null);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+
+        Optional<String> result = dialog.showAndWait();
+        return result.orElse(null);
     }
 }
