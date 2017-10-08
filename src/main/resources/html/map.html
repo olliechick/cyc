@@ -373,6 +373,14 @@ function initialise(){
 
     };
 
+    document.circleRetailer = function circleRetailer(index, icon)
+    {
+        retailerMarkerArray[index].setVisible(true);
+        retailerMarkerArray[index].setIcon(icon);
+        map.panTo(retailerMarkerArray[index].getPosition());
+        map.setZoom(17);
+    }
+
     document.resetWIFIIcon = function resetWIFIIcon(icon) {
         for (i = 0; i < wifiMarkerArray.length; i++) {
             wifiMarkerArray[i].setIcon(icon);

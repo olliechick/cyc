@@ -38,6 +38,7 @@ import static seng202.team1.Controller.MapController.getUserClicks;
  */
 public class AddWifiDialogController {
 
+    //region Injected Fields
     @FXML
     private TextField provField;
 
@@ -100,8 +101,10 @@ public class AddWifiDialogController {
 
     @FXML
     private Label latLabel;
+    //endregion
 
     private Stage stage;
+    private ObservableList<TextField> fields = FXCollections.observableArrayList();
     private final ObservableList<String> boroughs = FXCollections.observableArrayList("Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island");
     private final ObservableList<String> costs = FXCollections.observableArrayList("Free", "Limited Free", "Partner Site");
 
@@ -120,6 +123,11 @@ public class AddWifiDialogController {
     private LocalDateTime dateTimeActivated;
 
     private WifiPoint wifiPoint;
+
+    public void initialize() {
+        fields.addAll(ssidField, streetField, zipField, hoodField,
+                latField, longField, provField);
+    }
 
     /**
      * Set up the window as a dialog.
@@ -149,17 +157,14 @@ public class AddWifiDialogController {
             longField.setText(String.format ("%.6f", lastPoint.getY()));
         }
 
-        root.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ENTER) {
-                    checkFields();
-                    if (!addButton.isDisabled()) {
-                        addWifi();
-                    }
-                } else if (event.getCode() == KeyCode.ESCAPE) {
-                    stage1.close();
+        root.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                checkFields();
+                if (!addButton.isDisabled()) {
+                    addWifi();
                 }
+            } else if (event.getCode() == KeyCode.ESCAPE) {
+                stage1.close();
             }
         });
 
@@ -183,19 +188,6 @@ public class AddWifiDialogController {
         sourceId = wifiPoint.getSourceId();
         dateTimeActivated = wifiPoint.getDatetimeActivated();
 
-        //coords, ssid
-        ssidField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            addButton.setDisable(newValue.equals(wifiPoint.getSsid()));
-        }));
-
-        latField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            addButton.setDisable(newValue.equals(String.valueOf(wifiPoint.getLatitude())));
-        }));
-
-        longField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            addButton.setDisable(newValue.equals(String.valueOf(wifiPoint.getLongitude())));
-        }));
-
         ssidField.setText(wifiPoint.getSsid());
         streetField.setText(wifiPoint.getLocation());
         zipField.setText(String.valueOf(wifiPoint.getZipcode()));
@@ -209,6 +201,19 @@ public class AddWifiDialogController {
             remarksField.setText(wifiPoint.getRemarks());
         }
 
+        for (TextField textField : fields) {
+            textField.textProperty().addListener((((observable, oldValue, newValue) -> {
+                addButton.setDisable(false);
+            })));
+        }
+        boroComboBox.getSelectionModel().selectedItemProperty().addListener((((observable, oldValue, newValue) -> {
+            addButton.setDisable(false);
+        })));
+        costComboBox.getSelectionModel().selectedItemProperty().addListener((((observable, oldValue, newValue) -> {
+            addButton.setDisable(false);
+        })));
+
+        addButton.setDisable(true);
         addButton.setText("Save");
         stage.setTitle("Edit WiFi hotspot");
     }

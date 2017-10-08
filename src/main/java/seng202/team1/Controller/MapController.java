@@ -72,6 +72,8 @@ public class MapController {
     public ArrayList<BikeTrip> tripsNearPoint = null;
     public int currentTripCounter = 0;
 
+    private boolean isMapLoaded = false;
+
     private WindowManager windowManager = new WindowManager();
 
     ArrayList<RetailerLocation> retailerPoints = null;
@@ -200,6 +202,11 @@ public class MapController {
                     public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
                         if (newState == Worker.State.SUCCEEDED) {
                             loadData();
+                            isMapLoaded = true;
+                            System.out.println("Map loaded");
+                        } else {
+                            isMapLoaded = false;
+                            System.out.println("Map not Loaded");
                         }
                     }
                 });
@@ -213,14 +220,9 @@ public class MapController {
 
 
         // Check the map has been loaded before attempting to add markers to it.
-        webEngine.getLoadWorker().stateProperty().addListener(
-                new ChangeListener<Worker.State>() {
-                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
-                        if (newState == Worker.State.SUCCEEDED) {
-                            reloadData();
-                        }
-                    }
-                });
+        if (isMapLoaded) {
+            reloadData();
+        }
 
     }
 
@@ -894,24 +896,16 @@ public class MapController {
         routePoints.add(selectedTrip.getEndPoint());
 
         // Check the map has been loaded before attempting to add a route to it.
-        webEngine.getLoadWorker().stateProperty().addListener(
-                new ChangeListener<Worker.State>() {
-                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
-                        if (newState == Worker.State.SUCCEEDED) {
-                            generateRoute(routePoints);
-                            startingLatTextField.setText(Float.toString(selectedTrip.getStartLatitude()));
-                            startingLongTextField.setText(Float.toString(selectedTrip.getStartLongitude()));
-                            endingLatTextField.setText(Float.toString(selectedTrip.getEndLatitude()));
-                            endingLongTextField.setText(Float.toString(selectedTrip.getEndLongitude()));
-                            resultsLabel.setText(selectedTrip.nicerDescription());
-                            typeSelectorTabPane.getSelectionModel().select(2);
-
-                        }
-
-
-                    }
-                });
-
+        if (isMapLoaded) {
+            generateRoute(routePoints);
+            startingLatTextField.setText(Float.toString(selectedTrip.getStartLatitude()));
+            startingLongTextField.setText(Float.toString(selectedTrip.getStartLongitude()));
+            endingLatTextField.setText(Float.toString(selectedTrip.getEndLatitude()));
+            endingLongTextField.setText(Float.toString(selectedTrip.getEndLongitude()));
+            resultsLabel.setText(selectedTrip.nicerDescription());
+            typeSelectorTabPane.getSelectionModel().select(2);
+            stage.toFront();
+        }
     }
 
 
@@ -921,31 +915,22 @@ public class MapController {
      * @param selectedShop Retailer to show
      */
     public void showGivenShop(RetailerLocation selectedShop) {
-        webEngine.getLoadWorker().stateProperty().addListener(
-                new ChangeListener<Worker.State>() {
-                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
-                        if (newState == Worker.State.SUCCEEDED) {
-                            int indexOfRetailer = retailerPoints.indexOf(selectedShop);
-                            String scriptStr1 = "document.circleRetailer(" + indexOfRetailer + ", '" + RETAILER_ICON_SELECTED_FILENAME + "')";
-                            webView.getEngine().executeScript(scriptStr1);
-                        }
-                    }
-                });
+        if (isMapLoaded) {
+            int indexOfRetailer = retailerPoints.indexOf(selectedShop);
+            String scriptStr1 = "document.circleRetailer(" + indexOfRetailer + ", '" + RETAILER_ICON_SELECTED_FILENAME + "')";
+            webView.getEngine().executeScript(scriptStr1);
+            stage.toFront();
+        }
     }
 
     public void showGivenWifi(WifiPoint hotspot) {
-        webEngine.getLoadWorker().stateProperty().addListener(
-                new ChangeListener<Worker.State>() {
-                    public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
-                        if (newState == Worker.State.SUCCEEDED) {
-                            int indexOfRetailer = wifiPoints.indexOf(hotspot);
-                            String scriptStr1 = "document.circleWIFI(" + indexOfRetailer + ", '" + WIFI_ICON_SELECTED_FILENAME + "')";
-                            webView.getEngine().executeScript(scriptStr1);
-                            typeSelectorTabPane.getSelectionModel().select(1);
-
-                        }
-                    }
-                });
+        if (isMapLoaded) {
+            int indexOfRetailer = wifiPoints.indexOf(hotspot);
+            String scriptStr1 = "document.circleWIFI(" + indexOfRetailer + ", '" + WIFI_ICON_SELECTED_FILENAME + "')";
+            webView.getEngine().executeScript(scriptStr1);
+            typeSelectorTabPane.getSelectionModel().select(1);
+            stage.toFront();
+        }
     }
 
 
@@ -957,7 +942,7 @@ public class MapController {
             ListViewerController listViewController = listViewLoader.getController();
 
             Stage stage1 = windowManager.createTrackedStage();
-            listViewController.setUp(model, stage1);
+            listViewController.setUp(model, stage1, this);
 
             stage1.setScene(new Scene(listView));
             stage1.setTitle("Lists");

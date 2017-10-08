@@ -1,5 +1,7 @@
 package seng202.team1.Controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -36,6 +38,7 @@ import static seng202.team1.Controller.MapController.getUserClicks;
  */
 public class AddBikeDialogController {
 
+    //region Injected Fields
     @FXML
     private Button addButton;
 
@@ -107,6 +110,7 @@ public class AddBikeDialogController {
 
     @FXML
     private RadioButton stopPM;
+    //endregion
 
     private BikeTrip bikeTrip;
     private Stage stage;
@@ -124,11 +128,16 @@ public class AddBikeDialogController {
     private Point.Float startPoint;
     private Point.Float endPoint;
     private UserAccountModel model;
+    private ObservableList<TextField> fields = FXCollections.observableArrayList();
+
+    //region SETUP
+    public void initialize() {
+        fields.addAll(idField, startTimeField, stopTimeField, startLatField, startLongField, endLatField, endLongField);
+    }
 
     void initModel(UserAccountModel model) {
         this.model = model;
     }
-
 
     /**
      * Set up the window as a dialog.
@@ -168,17 +177,14 @@ public class AddBikeDialogController {
 
         }
 
-        root.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ENTER) {
-                    checkFields();
-                    if (!addButton.isDisabled()) {
-                        addBike();
-                    }
-                } else if (event.getCode() == KeyCode.ESCAPE) {
-                    stage1.close();
+        root.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                checkFields();
+                if (!addButton.isDisabled()) {
+                    addBike();
                 }
+            } else if (event.getCode() == KeyCode.ESCAPE) {
+                stage1.close();
             }
         });
     }
@@ -194,22 +200,6 @@ public class AddBikeDialogController {
     void setDialog(Stage stage1, Parent root, BikeTrip bikeTrip) {
         setDialog(stage1, root);
 
-        startLatField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getStartLatitude())));
-        }));
-
-        startLongField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getStartLongitude())));
-        }));
-
-        endLatField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getEndLatitude())));
-        }));
-
-        endLongField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            addButton.setDisable(newValue.equals(String.valueOf(bikeTrip.getEndLongitude())));
-        }));
-
         idField.setText(String.valueOf(bikeTrip.getBikeId()));
         startTimeField.setText(bikeTrip.getStartTime().toLocalTime().toString());
         stopTimeField.setText(bikeTrip.getStopTime().toLocalTime().toString());
@@ -222,14 +212,26 @@ public class AddBikeDialogController {
         endLatField.setText(String.valueOf(bikeTrip.getEndLatitude()));
         endLongField.setText(String.valueOf(bikeTrip.getEndLongitude()));
 
-        addButton.setText("Save");
-    }
+        for (TextField textField : fields) {
+            textField.textProperty().addListener((((observable, oldValue, newValue) -> {
+                addButton.setDisable(false);
+            })));
+        }
+        startDatePicker.valueProperty().addListener((((observable, oldValue, newValue) -> {
+            addButton.setDisable(false);
+        })));
+        stopDatePicker.valueProperty().addListener((((observable, oldValue, newValue) -> {
+            addButton.setDisable(false);
+        })));
 
+        addButton.setText("Save");
+        addButton.setDisable(true);
+    }
+    //endregion
 
     /**
      * Check the fields for validity and if so, add the bike trip.
      * Else warn of errors.
-     * TODO add checking and text field actual use
      */
     public void addBike() {
         if (checkFields()) {

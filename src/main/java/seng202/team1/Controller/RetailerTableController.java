@@ -12,7 +12,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -44,6 +43,7 @@ import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
  */
 public class RetailerTableController extends TableController {
 
+    //region Injected Fields
     @FXML
     private ComboBox<String> filterPrimaryComboBox;
 
@@ -79,16 +79,17 @@ public class RetailerTableController extends TableController {
 
     @FXML
     private Label warningLabel;
+    //endregion
 
     private UserAccountModel model;
     private ObservableList<RetailerLocation> dataPoints;
     private FilteredList<RetailerLocation> filteredData;
     private ObservableList<RetailerLocation> originalData;
+    private SortedList<RetailerLocation> sortedData;
 
     private String currentListName;
 
-    private final static String DEFAULT_RETAILER_LOCATIONS_FILENAME = "/csv/Lower_Manhattan_Retailers.csv";
-
+    //region SETUP
     /**
      * Display the user name at the bottom of the table
      */
@@ -97,39 +98,93 @@ public class RetailerTableController extends TableController {
         nameLabel.setVisible(true);
     }
 
+
+    /**
+     * Initialise this controllers UserAccountModel to be the current user,
+     * and load the default data.
+     *
+     * @param userAccountModel the details of the currently logged in user.
+     */
+    void initModel(UserAccountModel userAccountModel) {
+        this.model = userAccountModel;
+        //importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME, false);
+        warningLabel.setText("");
+    }
+
+
     /**
      * Initialise the context menu buttons to point to the correct methods, edit and delete
      */
     void initContextMenu() {
-        super.editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                //System.out.println(table.getSelectionModel().getSelectedItem());
-                cm.hide();
-                if (table.getSelectionModel().getSelectedItem() != null) {
-                    editRetailer(table.getSelectionModel().getSelectedItem());
-                }
+        super.editMenuItem.setOnAction(event -> {
+            //System.out.println(table.getSelectionModel().getSelectedItem());
+            cm.hide();
+            if (table.getSelectionModel().getSelectedItem() != null) {
+                editRetailer(table.getSelectionModel().getSelectedItem());
             }
         });
-        super.showOnMap.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                cm.hide();
-                if(table.getSelectionModel().getSelectedItem() != null){
-                    showRetailerOnMap(table.getSelectionModel().getSelectedItem());
-                }
+        super.showOnMap.setOnAction(event -> {
+            cm.hide();
+            if(table.getSelectionModel().getSelectedItem() != null){
+                showRetailerOnMap(table.getSelectionModel().getSelectedItem());
             }
         });
-        super.deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                cm.hide();
-                if (table.getSelectionModel().getSelectedItem() != null) {
-                    deleteRetailer(table.getSelectionModel().getSelectedItem());
-                }
+        super.deleteMenuItem.setOnAction(event -> {
+            cm.hide();
+            if (table.getSelectionModel().getSelectedItem() != null) {
+                deleteRetailer(table.getSelectionModel().getSelectedItem());
             }
         });
     }
+
+
+    /**
+     * Set up the table to use the given list of points instead of a csv.
+     *
+     * @param listName The name of the list loaded.
+     * @param points the list of RetailerLocations to display in the table.
+     */
+    public void setupWithList(String listName, ArrayList<RetailerLocation> points) {
+        setFilters(points);
+        currentListName = listName;
+        setTableViewRetailer(points);
+        stopLoadingAni();
+        setPredicate();
+        clearFilters();
+    }
+    //endregion
+
+
+    //region USER INTERACTION
+    /**
+     * Creates a pop up to get the data for a new Retailer Location.
+     * If valid data is entered the Retailer is added, if it is not a duplicate.
+     */
+    public void addRetailer() {
+        try {
+            FXMLLoader addRetailerLoader = new FXMLLoader(getClass().getResource("/fxml/AddRetailerDialog.fxml"));
+            Parent root = addRetailerLoader.load();
+            AddRetailerDialogController addRetailerDialog = addRetailerLoader.getController();
+            Stage stage1 = new Stage();
+
+            addRetailerDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+
+            RetailerLocation retailerLocation = addRetailerDialog.getRetailerLocation();
+            if (retailerLocation != null) {
+                if (dataPoints.contains(retailerLocation)) {
+                    AlertGenerator.createAlert("Duplicate retailer", "That retailer already exists!");
+                } else {
+                    dataPoints.add(retailerLocation);
+                    originalData.add(retailerLocation);
+                    model.addCustomRetailerLocation(retailerLocation);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Open a dialog with all the details of the currently selected Retailer filled out,
@@ -163,6 +218,7 @@ public class RetailerTableController extends TableController {
         }
     }
 
+
     /**
      * Delete the selected retailer from the list of currently displayed retailers
      *
@@ -175,6 +231,71 @@ public class RetailerTableController extends TableController {
     }
 
     /**
+     * Delete all the retailers from the current list
+     */
+    public void deleteAllRetailers() {
+        boolean delete = AlertGenerator.createChoiceDialog("Delete All Points", "Delete all points", "Are you sure you want to delete all the points in this list?");
+        if (delete) {
+            dataPoints.clear();
+            //TODO delete from list when implemented
+        }
+    }
+
+
+    /**
+     * Searches the retailers by a given Lat or Long, or by a range provided.
+     */
+    public void searchRetailersbyLatLong() {
+        Double startLat, startLong;
+        Double endLat;
+        Double endLong;
+        Double delta = 100.0;
+        warningLabel.setTextFill(Color.BLACK);
+        warningLabel.setText("");
+        try {
+            startLat = Double.parseDouble(startLatTextField.getText());
+            startLong = Double.parseDouble(startLongTextField.getText());
+        } catch (NumberFormatException e){
+            warningLabel.setText("Starting Latitude and Longitude must be Co-ordinates in Decimal Form");
+            warningLabel.setTextFill(Color.RED);
+            return;
+        }
+        try {
+            endLat = Double.parseDouble(endLatTextField.getText());
+            endLong = Double.parseDouble(endLongTextField.getText());
+        } catch (NumberFormatException e){
+            warningLabel.setText("Invaild End Latitude or Longitude, Using start points only");
+            endLat = 0.00;
+            endLong = 0.00;
+        }
+        ArrayList<RetailerLocation> results;
+        if (endLat.equals(0.00) || endLong.equals(0.00)) {
+            results = DataAnalyser.searchRetailerLocations(startLat,startLong,delta,dataPoints);
+            System.out.println("Searched on start");
+        } else if(endLat != 0.00 && endLong != 0.00){
+            delta = DataAnalyser.calculateDistance(startLat,startLong,endLat,endLong);
+            results = DataAnalyser.searchRetailerLocations(startLat,startLong,delta,dataPoints);
+            results = DataAnalyser.searchRetailerLocations(endLat,endLong,delta,results);
+            System.out.println("Searched based on start and end");
+        } else {
+            warningLabel.setText("Invaild End Latitude or Longitude, Using start points only");
+            results = DataAnalyser.searchRetailerLocations(startLat,startLong,delta,dataPoints);
+            System.out.println("Searched on start bad start and end");
+        }
+        System.out.println("Found: " + results.size() + " results");
+        dataPoints.clear();
+        dataPoints.addAll(results);
+    }
+
+
+    public void showRetailerOnMap(RetailerLocation selectedShop){
+        super.mapController.showGivenShop(selectedShop);
+    }
+    //endregion
+
+
+    //region FILTERING
+    /**
      * Checks the combo boxes and street field for data and filters the displayed
      * data accordingly.
      * The first section of the lambda generates a boolean on each table entry, depending if they fit the
@@ -183,7 +304,6 @@ public class RetailerTableController extends TableController {
      * updating the filter each time one changes.
      * Adapted from
      * https://stackoverflow.com/questions/33016064/javafx-multiple-textfields-should-filter-one-tableview
-     * TODO thread if slow
      */
     private void setPredicate() {
 
@@ -197,6 +317,7 @@ public class RetailerTableController extends TableController {
                 filterZipComboBox.valueProperty()
         ));
     }
+
 
     /**
      * Checks the given retailerLocation against the filter in the primary function ComboBox.
@@ -212,6 +333,7 @@ public class RetailerTableController extends TableController {
             return retailerLocation.getPrimaryFunction().equals(filterPrimaryComboBox.getValue());
         }
     }
+
 
     /**
      * Checks the address line 1 of the given retailerLocation against the text in the street
@@ -230,6 +352,7 @@ public class RetailerTableController extends TableController {
         }
     }
 
+
     /**
      * Check the zip code of the given RetailerLocation against the selected zip code.
      *
@@ -243,26 +366,10 @@ public class RetailerTableController extends TableController {
             return retailerLocation.getZipcode() == (Integer) filterZipComboBox.getValue();
         }
     }
+    //endregion
 
-    /**
-     * Generate and set the filter options for the given retailer set.
-     *
-     * @param retailerLocations the ArrayList of retailers to generate filters from.
-     */
-    private void setFilters(ArrayList<RetailerLocation> retailerLocations) {
 
-        filterPrimaryComboBox.getItems().clear();
-        filterPrimaryComboBox.getItems().add("All");
-        filterPrimaryComboBox.getItems().addAll(GenerateFields.generatePrimaryFunctionsList(retailerLocations));
-        filterPrimaryComboBox.getSelectionModel().selectFirst();
-
-        filterZipComboBox.getItems().clear();
-        filterZipComboBox.getItems().add("All");
-        filterZipComboBox.getItems().addAll(GenerateFields.generateRetailerZipcodes(retailerLocations));
-        filterZipComboBox.getSelectionModel().selectFirst();
-
-    }
-
+    //region IMPORT/EXPORT
     /**
      * Creates a task to load the csv data, runs it on another thread.
      * The loading animations are shown until load completes, then the UI is updated.
@@ -329,6 +436,7 @@ public class RetailerTableController extends TableController {
         new Thread(loadRetailerCsv).start();
     }
 
+
     /**
      * Get the path for a csv to load, open one if given
      */
@@ -342,6 +450,7 @@ public class RetailerTableController extends TableController {
         }
     }
 
+
     /**
      * Get the path for a csv to export to, export to it if given.
      */
@@ -350,7 +459,7 @@ public class RetailerTableController extends TableController {
         String filename = getCsvFilenameSave();
         if (filename != null) {
             try {
-                exportRetailers(filename, model.getUserName());
+                exportRetailers(filename, model.getUserName(), currentListName);
             } catch (IOException e) {
                 AlertGenerator.createAlert("Couldn't export file.");
             } catch (SQLException e) {
@@ -358,34 +467,21 @@ public class RetailerTableController extends TableController {
             }
         }
     }
+    //endregion
 
+
+    //region SETUP TABLE
     /**
-     * Creates the columns of the table.
-     * Sets their value factories so that the data is displayed correctly.
-     * Sets up the lists of data for filtering TODO move out
-     * Displays the columns
+     * Create the columns for use in the table
+     * @return An ObservableList of TableColumn<RetailerLocation, ?>
      */
-    private void setTableViewRetailer(ArrayList<RetailerLocation> data) {
-
-        dataPoints = FXCollections.observableArrayList(data);
-        originalData = FXCollections.observableArrayList(data);
-
+    private ObservableList<TableColumn<RetailerLocation, ?>> createColumns() {
         // Create the columns
         TableColumn<RetailerLocation, String> nameCol = new TableColumn<>("Name");
         TableColumn<RetailerLocation, String> addressCol = new TableColumn<>("Address");
         TableColumn<RetailerLocation, String> primaryCol = new TableColumn<>("Primary Function");
         TableColumn<RetailerLocation, String> secondaryCol = new TableColumn<>("Secondary Function");
         TableColumn<RetailerLocation, String> zipCol = new TableColumn<>("ZIP");
-
-        //Set the IDs of the columns, not used yet TODO remove if never use
-        nameCol.setId("name");
-        addressCol.setId("address");
-        primaryCol.setId("primary");
-        secondaryCol.setId("secondary");
-        zipCol.setId("zip");
-
-        //Clear the default columns, or any columns in the table.
-        table.getColumns().clear();
 
         //Sets up each column to get the correct entry in each dataPoint
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -394,45 +490,70 @@ public class RetailerTableController extends TableController {
         secondaryCol.setCellValueFactory(new PropertyValueFactory<>("secondaryFunction"));
         zipCol.setCellValueFactory(new PropertyValueFactory<>("zipcode"));
 
-        // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
-        filteredData = new FilteredList<>(dataPoints, p -> true);
+        ArrayList<TableColumn<RetailerLocation, ?>> columns = new ArrayList<>();
+        //nameCol, addressCol, primaryCol, secondaryCol, zipCol
+        columns.add(nameCol);
+        columns.add(addressCol);
+        columns.add(primaryCol);
+        columns.add(secondaryCol);
+        columns.add(zipCol);
 
-        SortedList<RetailerLocation> sortedData = new SortedList<>(filteredData);
-        sortedData.comparatorProperty().bind(table.comparatorProperty());
-
-        // Add the sorted and filtered data to the table.
-        table.setItems(sortedData);
-        table.getColumns().addAll(nameCol, addressCol, primaryCol, secondaryCol, zipCol);
+        return FXCollections.observableArrayList(columns);
     }
+
 
     /**
-     * Creates a pop up to get the data for a new Retailer Location.
-     * If valid data is entered the Retailer is added, if it is not a duplicate.
+     * Creates the columns of the table.
+     * Sets their value factories so that the data is displayed correctly.
+     * Sets up the lists of data for filtering
+     * Displays the columns
      */
-    public void addRetailer() {
-        try {
-            FXMLLoader addRetailerLoader = new FXMLLoader(getClass().getResource("/fxml/AddRetailerDialog.fxml"));
-            Parent root = addRetailerLoader.load();
-            AddRetailerDialogController addRetailerDialog = addRetailerLoader.getController();
-            Stage stage1 = new Stage();
+    private void setTableViewRetailer(ArrayList<RetailerLocation> data) {
 
-            addRetailerDialog.setDialog(stage1, root);
-            stage1.showAndWait();
+        setUpData(data);
 
-            RetailerLocation retailerLocation = addRetailerDialog.getRetailerLocation();
-            if (retailerLocation != null) {
-                if (dataPoints.contains(retailerLocation)) {
-                    AlertGenerator.createAlert("Duplicate retailer", "That retailer already exists!");
-                } else {
-                    dataPoints.add(retailerLocation);
-                    originalData.add(retailerLocation);
-                    model.addCustomRetailerLocation(retailerLocation);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //Clear the default columns, or any columns in the table.
+        table.getColumns().clear();
+        // Add the columns to the table
+        table.getColumns().addAll(createColumns());
+        // Add the sorted and filtered data to the table.
+        table.setItems(sortedData);
+
     }
+
+
+    /**
+     * Initialise the lists used throughout the table.
+     * @param data The ArrayList of data the table uses.
+     */
+    private void setUpData(ArrayList<RetailerLocation> data) {
+        dataPoints = FXCollections.observableArrayList(data);
+        originalData = FXCollections.observableArrayList(data);
+        filteredData = new FilteredList<>(dataPoints, p -> true);
+        sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(table.comparatorProperty());
+    }
+
+
+    /**
+     * Generate and set the filter options for the given retailer set.
+     *
+     * @param retailerLocations the ArrayList of retailers to generate filters from.
+     */
+    private void setFilters(ArrayList<RetailerLocation> retailerLocations) {
+
+        filterPrimaryComboBox.getItems().clear();
+        filterPrimaryComboBox.getItems().add("All");
+        filterPrimaryComboBox.getItems().addAll(GenerateFields.generatePrimaryFunctionsList(retailerLocations));
+        filterPrimaryComboBox.getSelectionModel().selectFirst();
+
+        filterZipComboBox.getItems().clear();
+        filterZipComboBox.getItems().add("All");
+        filterZipComboBox.getItems().addAll(GenerateFields.generateRetailerZipcodes(retailerLocations));
+        filterZipComboBox.getSelectionModel().selectFirst();
+
+    }
+
 
     /**
      * Add the user's custom Retailer Points to the table.
@@ -444,17 +565,6 @@ public class RetailerTableController extends TableController {
         originalData.addAll(customRetailerLocations);
     }
 
-    /**
-     * Initialise this controllers UserAccountModel to be the current user,
-     * and load the default data.
-     *
-     * @param userAccountModel the details of the currently logged in user.
-     */
-    void initModel(UserAccountModel userAccountModel) {
-        this.model = userAccountModel;
-        //importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME, false);
-        warningLabel.setText("");
-    }
 
     /**
      * Clear all input in the filters
@@ -464,6 +574,7 @@ public class RetailerTableController extends TableController {
         filterZipComboBox.getSelectionModel().selectFirst();
         streetSearchField.clear();
     }
+
 
     /**
      * Clears the searches for the search view and resets the data back to list at the start of searching
@@ -477,92 +588,6 @@ public class RetailerTableController extends TableController {
             dataPoints.add((RetailerLocation) data);
         }
     }
-
-    /**
-     * Searches the retailers by a given Lat or Long, or by a range provided.
-     */
-    public void searchRetailersbyLatLong() {
-        Double startLat, startLong;
-        Double endLat;
-        Double endLong;
-        Double delta = 100.0;
-        warningLabel.setTextFill(Color.BLACK);
-        warningLabel.setText("");
-        try {
-            startLat = Double.parseDouble(startLatTextField.getText());
-            startLong = Double.parseDouble(startLongTextField.getText());
-        } catch (NumberFormatException e){
-            warningLabel.setText("Starting Latitude and Longitude must be Co-ordinates in Decimal Form");
-            warningLabel.setTextFill(Color.RED);
-            return;
-        }
-        try {
-            endLat = Double.parseDouble(endLatTextField.getText());
-            endLong = Double.parseDouble(endLongTextField.getText());
-        } catch (NumberFormatException e){
-            warningLabel.setText("Invaild End Latitude or Longitude, Using start points only");
-            endLat = 0.00;
-            endLong = 0.00;
-        }
-        ArrayList<RetailerLocation> results;
-        if (endLat.equals(0.00) || endLong.equals(0.00)) {
-            results = DataAnalyser.searchRetailerLocations(startLat,startLong,delta,dataPoints);
-            System.out.println("Searched on start");
-        } else if(endLat != 0.00 && endLong != 0.00){
-            delta = DataAnalyser.calculateDistance(startLat,startLong,endLat,endLong);
-            results = DataAnalyser.searchRetailerLocations(startLat,startLong,delta,dataPoints);
-            results = DataAnalyser.searchRetailerLocations(endLat,endLong,delta,results);
-            System.out.println("Searched based on start and end");
-        } else {
-            warningLabel.setText("Invaild End Latitude or Longitude, Using start points only");
-            results = DataAnalyser.searchRetailerLocations(startLat,startLong,delta,dataPoints);
-            System.out.println("Searched on start bad start and end");
-        }
-        System.out.println("Found: " + results.size() + " results");
-        dataPoints.clear();
-        dataPoints.addAll(results);
-    }
-
-    /**
-     * Set up the table to use the given list of points instead of a csv.
-     *
-     * @param listName The name of the list loaded.
-     * @param points the list of RetailerLocations to display in the table.
-     */
-    public void setupWithList(String listName, ArrayList<RetailerLocation> points) {
-        setFilters(points);
-        currentListName = listName;
-        setTableViewRetailer(points);
-        stopLoadingAni();
-        setPredicate();
-        clearFilters();
-    }
-
-    public void showRetailerOnMap(RetailerLocation selectedShop){
-
-        FXMLLoader showMapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
-        Parent root = null;
-        try {
-            root = showMapLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        MapController map = showMapLoader.getController();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        map.setUp(model, stage);
-        stage.show();
-
-        map.showGivenShop(selectedShop);
-    }
-
-    public void deleteAllRetailers() {
-        boolean delete = AlertGenerator.createChoiceDialog("Delete All Points", "Delete all points", "Are you sure you want to delete all the points in this list?");
-        if (delete) {
-            dataPoints.clear();
-            //TODO delete from list when implemented
-        }
-    }
+    //endregion
 
 }

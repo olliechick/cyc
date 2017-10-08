@@ -57,14 +57,17 @@ public class CSVExporter {
      *
      * @param filename The name of the file to save
      * @param username Username of the user whose bike trips will be exported
+     * @param listName The name of the list which the bike trips will be exported from
      * @throws IOException  If an IO Exception occurs
      * @throws SQLException If there is an error with the database
      */
-    public static void exportBikeTrips(String filename, String username) throws IOException, SQLException {
+    public static void exportBikeTrips(String filename, String username, String listName) throws IOException, SQLException {
         // Import the users's bike trips from the database
         DatabaseManager.open();
-        ArrayList<BikeTrip> bikeTrips = getBikeTrips(username, ""); // TODO: Support lists
+        ArrayList<BikeTrip> bikeTrips = getBikeTrips(username, listName);
         DatabaseManager.close();
+
+        // Export them to file
         exportBikeTrips(filename, bikeTrips);
     }
 
@@ -116,14 +119,17 @@ public class CSVExporter {
      *
      * @param filename The name of the file to save
      * @param username Username of the user whose wifi points will be exported
+     * @param listName The name of the list which the bike trips will be exported from
      * @throws IOException  If an IO Exception occurs
      * @throws SQLException If there is an error with the database
      */
-    public static void exportWifiHotspots(String filename, String username) throws IOException, SQLException {
+    public static void exportWifiHotspots(String filename, String username, String listName) throws IOException, SQLException {
         // Import the users's wifis from the database
         DatabaseManager.open();
-        ArrayList<WifiPoint> wifiPoints = getWifiPoints(username, ""); // TODO: Support lists
+        ArrayList<WifiPoint> wifiPoints = getWifiPoints(username, listName);
         DatabaseManager.close();
+
+        // Export them to file
         exportWifiHotspots(filename, wifiPoints);
     }
 
@@ -183,14 +189,17 @@ public class CSVExporter {
      *
      * @param filename The name of the file to save
      * @param username Username of the user whose wifi points will be exported
+     * @param listName The name of the list which the bike trips will be exported from
      * @throws IOException  If an IO Exception occurs
      * @throws SQLException If there is an error with the database
      */
-    public static void exportRetailers(String filename, String username) throws IOException, SQLException {
+    public static void exportRetailers(String filename, String username, String listName) throws IOException, SQLException {
         // Import the users's retailers from the database
         DatabaseManager.open();
-        ArrayList<RetailerLocation> retailers = getRetailers(username, "");
+        ArrayList<RetailerLocation> retailers = getRetailers(username, listName);
         DatabaseManager.close();
+
+        // Export them to file
         exportRetailers(filename, retailers);
     }
 

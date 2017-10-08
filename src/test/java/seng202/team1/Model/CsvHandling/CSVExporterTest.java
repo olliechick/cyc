@@ -32,6 +32,7 @@ public class CSVExporterTest {
     private final static String OUTPUT_DIR = "src/test/resources/";
     private final static String OUTPUT_FILE = OUTPUT_DIR + "testoutput.csv";
     private final static String username = "testUser";
+    private final static String listName = "testList";
 
 
     @BeforeClass
@@ -91,17 +92,15 @@ public class CSVExporterTest {
         BikeTrip bikeTrip = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
                 bikeID, gender, birthYear, tripDistance);
 
-        String username = "testUser";
-
         // Save bike trip to the database
         try {
-            DatabaseManager.addRecord(bikeTrip, username, "");
+            DatabaseManager.addRecord(bikeTrip, username, listName);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         // Export it to file (this is what is being tested)
-        exportBikeTrips(OUTPUT_FILE, username);
+        exportBikeTrips(OUTPUT_FILE, username, listName);
 
         // Load it back in using CSVLoader
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips(OUTPUT_FILE);
@@ -109,7 +108,6 @@ public class CSVExporterTest {
         assertEquals(bikeTrip, bikeTrips.get(0)); //check the bike trip is the same
         assertEquals(1, bikeTrips.size()); //check there is only one
     }
-
 
     @Test
     public void testExportBikeTripsWithNulls() throws Exception {
@@ -129,13 +127,13 @@ public class CSVExporterTest {
 
         // Save bike trip to the database
         try {
-            DatabaseManager.addRecord(bikeTrip, username, "");
+            DatabaseManager.addRecord(bikeTrip, username, listName);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         // Export it to file (this is what is being tested)
-        exportBikeTrips(OUTPUT_FILE, username);
+        exportBikeTrips(OUTPUT_FILE, username, listName);
 
         // Load it back in using CSVLoader
         ArrayList<BikeTrip> bikeTrips = CSVLoader.populateBikeTrips(OUTPUT_FILE);
@@ -168,13 +166,13 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addRecord(wifiPoint, username, "");
+            DatabaseManager.addRecord(wifiPoint, username, listName);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         // Export it to file (this is what is being tested)
-        exportWifiHotspots(OUTPUT_FILE, username);
+        exportWifiHotspots(OUTPUT_FILE, username, listName);
 
         // Load it back in using CSVLoader
         ArrayList<WifiPoint> wifiPoints = CSVLoader.populateWifiHotspots(OUTPUT_FILE);
@@ -208,13 +206,13 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addRecord(wifiPoint, username, "");
+            DatabaseManager.addRecord(wifiPoint, username, listName);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         // Export it to file (this is what is being tested)
-        exportWifiHotspots(OUTPUT_FILE, username);
+        exportWifiHotspots(OUTPUT_FILE, username, listName);
 
         // Load it back in using CSVLoader
         ArrayList<WifiPoint> wifiPoints = CSVLoader.populateWifiHotspots(OUTPUT_FILE);
@@ -242,13 +240,13 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addRecord(retailer, username, "");
+            DatabaseManager.addRecord(retailer, username, listName);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         // Export it to file (this is what is being tested)
-        exportRetailers(OUTPUT_FILE, username);
+        exportRetailers(OUTPUT_FILE, username, listName);
 
         // Load it back in using CSVLoader
         ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers(OUTPUT_FILE);
@@ -275,13 +273,13 @@ public class CSVExporterTest {
 
         // Save wifi point to the database
         try {
-            DatabaseManager.addRecord(retailer, username, "");
+            DatabaseManager.addRecord(retailer, username, listName);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         // Export it to file (this is what is being tested)
-        exportRetailers(OUTPUT_FILE, username);
+        exportRetailers(OUTPUT_FILE, username, listName);
 
         // Load it back in using CSVLoader
         ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers(OUTPUT_FILE);

@@ -38,8 +38,13 @@ public class ListViewerController {
     private ListView<WifiPointList> wifiListView;
 
     private UserAccountModel user;
+    private MapController mapController;
     private Stage stage;
 
+    /**
+     * Setup the cell factories of the listViews to display the list names corresponding to a PointList
+     * Also set the double click action on a list entry to call the correct chooseXXX method.
+     */
     public void initialize() {
 
         bikeListView.setCellFactory(param -> new ListCell<BikeTripList>() {
@@ -81,43 +86,47 @@ public class ListViewerController {
             }
         });
 
-        bikeListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
-                    chooseBikeList();
-                }
+        bikeListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
+                chooseBikeList();
             }
         });
-        retailerListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
-                    chooseRetailerList();
-                }
+        retailerListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
+                chooseRetailerList();
             }
         });
-        wifiListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
-                    chooseWifiList();
-                }
+        wifiListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
+                chooseWifiList();
             }
         });
     }
 
-    public void setUp(UserAccountModel user, Stage stage) {
+    /**
+     * Setup the controller with the model info it needs.
+     *
+     * @param user the current user and their data.
+     * @param stage the stage this controller's view is displayed on.
+     * @param mapController the mapController that created this view and controller
+     */
+    public void setUp(UserAccountModel user, Stage stage, MapController mapController) {
         setUser(user);
         this.stage = stage;
+        this.mapController = mapController;
     }
 
+    /**
+     * Set the user and get their lists.
+     * @param user
+     */
     public void setUser(UserAccountModel user) {
         this.user = user;
         bikeListView.getItems().addAll(user.getBikeTripLists());
         retailerListView.getItems().addAll(user.getRetailerLocationLists());
         wifiListView.getItems().addAll(user.getWifiPointLists());
     }
+
 
     /**
      * Opens a new bike table when the user selects a list of bike trips from the list of options.
@@ -133,6 +142,7 @@ public class ListViewerController {
         }
     }
 
+
     /**
      * Opens a new retailer table when the user selects a list of retailers from the list of options.
      */
@@ -146,6 +156,7 @@ public class ListViewerController {
         }
 
     }
+
 
     /**
      * Opens a new wifi table when the user selects a list of wifi points from the list of options.
@@ -162,6 +173,7 @@ public class ListViewerController {
 
 
     }
+
 
     /**
      * Creates a new list of bike trips and opens a table with that list loaded.
@@ -186,6 +198,7 @@ public class ListViewerController {
         }
     }
 
+
     /**
      * Creates a new list of retailers and opens a table with that list loaded.
      */
@@ -198,6 +211,7 @@ public class ListViewerController {
             switchToRetailerTable(retailerLocationList);
         }
     }
+
 
     /**
      * Creates a new list of wifi and opens a table with that list loaded.
@@ -212,6 +226,12 @@ public class ListViewerController {
         }
     }
 
+
+    /**
+     * Switch from this view to a bike trip table.
+     *
+     * @param bikeTripList The list to initialise the table with.
+     */
     private void switchToBikeTable(BikeTripList bikeTripList) {
         try {
             FXMLLoader bikeTableLoder = new FXMLLoader(getClass().getResource("/fxml/BikeTableView.fxml"));
@@ -221,6 +241,7 @@ public class ListViewerController {
             bikeTableController.initModel(user);
             bikeTableController.setupWithList(bikeTripList.getListName(), bikeTripList.getBikeTrips());
             bikeTableController.setName();
+            bikeTableController.setMapController(mapController);
             bikeTableController.initContextMenu();
 
             bikeTableController.setStage(stage);
@@ -233,6 +254,12 @@ public class ListViewerController {
         }
     }
 
+
+    /**
+     * Switch from this view to a retailer table.
+     *
+     * @param retailerLocationList The list to initialise the table with.
+     */
     private void switchToRetailerTable(RetailerLocationList retailerLocationList) {
         try {
             FXMLLoader retailerTableLoder = new FXMLLoader(getClass().getResource("/fxml/RetailerTableView.fxml"));
@@ -242,6 +269,7 @@ public class ListViewerController {
             retailerTableController.initModel(user);
             retailerTableController.setupWithList(retailerLocationList.getListName(), retailerLocationList.getRetailerLocations());
             retailerTableController.setName();
+            retailerTableController.setMapController(mapController);
             retailerTableController.initContextMenu();
 
             retailerTableController.setStage(stage);
@@ -254,6 +282,12 @@ public class ListViewerController {
         }
     }
 
+
+    /**
+     * Switch from this view to a wifi point table.
+     *
+     * @param wifiPointList The list to initialise the table with.
+     */
     private void switchToWifiTable(WifiPointList wifiPointList) {
         try {
             FXMLLoader wifiTableLoder = new FXMLLoader(getClass().getResource("/fxml/WifiTableView.fxml"));
@@ -263,6 +297,7 @@ public class ListViewerController {
             wifiTableController.initModel(user);
             wifiTableController.setupWithList(wifiPointList.getListName(), wifiPointList.getWifiPoints());
             wifiTableController.setName();
+            wifiTableController.setMapController(mapController);
             wifiTableController.initContextMenu();
 
             wifiTableController.setStage(stage);

@@ -12,7 +12,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -43,6 +42,7 @@ import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
  */
 public class WifiTableController extends TableController {
 
+    //region Injected Fields
     @FXML
     private ComboBox<String> filterBoroughComboBox;
 
@@ -54,7 +54,6 @@ public class WifiTableController extends TableController {
 
     @FXML
     private TableView<WifiPoint> table;
-
 
     @FXML
     private Label nameLabel;
@@ -80,15 +79,18 @@ public class WifiTableController extends TableController {
     @FXML
     private Label warningLabel;
 
+    @FXML
+    private Button clearSearchesButton;
+    //endregion
 
     private UserAccountModel model;
     private ObservableList<WifiPoint> dataPoints;
     private FilteredList<WifiPoint> filteredData;
     private ObservableList<WifiPoint> originalData;
+    private SortedList<WifiPoint> sortedData;
     private String currentListName;
 
-    private final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "/csv/NYC_Free_Public_WiFi_03292017.csv";
-
+    //region SETUP
     /**
      * Displays the currently logged in user's name at the bottom of the table.
      */
@@ -97,63 +99,57 @@ public class WifiTableController extends TableController {
         nameLabel.setVisible(true);
     }
 
+
     /**
      * Initialise the context menu buttons to point to the correct methods, edit and delete
      */
     void initContextMenu() {
-        super.editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                cm.hide();
-                if (table.getSelectionModel().getSelectedItem() != null) {
-                    editWifi(table.getSelectionModel().getSelectedItem());
-                }
+        super.editMenuItem.setOnAction(event -> {
+            cm.hide();
+            if (table.getSelectionModel().getSelectedItem() != null) {
+                editWifi(table.getSelectionModel().getSelectedItem());
             }
         });
 
-        super.showOnMap.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                cm.hide();
-                if (table.getSelectionModel().getSelectedItem() != null) {
-                    showHotspostOnmap(table.getSelectionModel().getSelectedItem());
-                }
+        super.showOnMap.setOnAction(event -> {
+            cm.hide();
+            if (table.getSelectionModel().getSelectedItem() != null) {
+                showHotspostOnmap(table.getSelectionModel().getSelectedItem());
             }
         });
 
-        super.deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                cm.hide();
-                if (table.getSelectionModel().getSelectedItem() != null) {
-                    deleteWifi(table.getSelectionModel().getSelectedItem());
-                }
+        super.deleteMenuItem.setOnAction(event -> {
+            cm.hide();
+            if (table.getSelectionModel().getSelectedItem() != null) {
+                deleteWifi(table.getSelectionModel().getSelectedItem());
             }
         });
     }
 
 
+    /**
+     * Initialise this controllers UserAccountModel to be the current user,
+     * and load the default data.
+     *
+     * @param userAccountModel the details of the currently logged in user.
+     */
+    void initModel(UserAccountModel userAccountModel) {
+        this.model = userAccountModel;
+        //importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME, false);
+        warningLabel.setText("");
+    }
+    //endregion
+
+
+    //region USER INTERACTION
     /**
      *Takes a seleted wifi point and shows it in the map view.
      * @param selectedHotspot point to show.
      */
     public void showHotspostOnmap(WifiPoint selectedHotspot){
-        FXMLLoader showMapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
-        Parent root = null;
-        try {
-            root = showMapLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        MapController map = showMapLoader.getController();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        map.setUp(model, stage);
-        stage.show();
-
-        map.showGivenWifi(selectedHotspot);
+        super.mapController.showGivenWifi(selectedHotspot);
     }
+
 
     /**
      * Open a dialog with all the details of the currently selected Wifi filled out,
@@ -187,38 +183,123 @@ public class WifiTableController extends TableController {
         }
     }
 
+
     /**
      * Delete the currently selected Wifi from the list of displayed data.
      *
      * @param selectedWifi The currently selected wifi.
      */
     private void deleteWifi(WifiPoint selectedWifi) {
-        //TODO add a removedWifi list to userAccountModel and add to there, then remove all those on load.
+        //TODO actually be persistent
         dataPoints.removeAll(selectedWifi);
     }
 
+
     /**
-     * Generates and sets the filter options for Wifi.
-     *
-     * @param data An ArrayList of the WifiPoints to generate filters for
+     * Delete all points from the current list
      */
-    private void setFilters(ArrayList<WifiPoint> data) {
-        filterBoroughComboBox.getItems().clear();
-        filterBoroughComboBox.getItems().add("All");
-        filterBoroughComboBox.getItems().addAll(GenerateFields.generateWifiBoroughs(data));
-        filterBoroughComboBox.getSelectionModel().selectFirst();
-
-        filterCostComboBox.getItems().clear();
-        filterCostComboBox.getItems().add("All");
-        filterCostComboBox.getItems().addAll(GenerateFields.generateWifiTypes(data));
-        filterCostComboBox.getSelectionModel().selectFirst();
-
-        filterProviderComboBox.getItems().clear();
-        filterProviderComboBox.getItems().add("All");
-        filterProviderComboBox.getItems().addAll(GenerateFields.generateWifiProviders(data));
-        filterProviderComboBox.getSelectionModel().selectFirst();
+    public void deleteAllWifiPoints() {
+        boolean delete = AlertGenerator.createChoiceDialog("Delete All Points", "Delete all points", "Are you sure you want to delete all the points in this list?");
+        if (delete) {
+            dataPoints.clear();
+            //TODO delete from list when implemented
+        }
     }
 
+
+    /**
+     * Opens a dialog for the user to enter data for a new Wifi Point.
+     * If valid, checks it doesn't match any existing points and adds it to the table,
+     * as well as the user's list of custom points.
+     */
+    public void addWifi() {
+        try {
+            FXMLLoader addWifiLoader = new FXMLLoader(getClass().getResource("/fxml/AddWifiDialog.fxml"));
+            Parent root = addWifiLoader.load();
+            AddWifiDialogController addWifiDialog = addWifiLoader.getController();
+            Stage stage1 = new Stage();
+
+            addWifiDialog.setDialog(stage1, root);
+            stage1.showAndWait();
+
+            WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
+            if (newWifiPoint != null) {
+                if (dataPoints.contains(newWifiPoint)) {
+                    AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
+                } else {
+                    dataPoints.add(newWifiPoint);
+                    originalData.addAll(newWifiPoint);
+                    model.addCustomWifiLocation(newWifiPoint);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @FXML
+    public void searchWifi() {
+
+        Double startLat;
+        Double startLong;
+        Double endLat = 0.00; ///To test if they have good Doubles
+        Double endLong = 0.00;
+        double delta = 1000;
+        try {
+            startLat = Double.parseDouble(startLatitudeTextField.getText());
+            startLong = Double.parseDouble(startLongitudeTextField.getText());
+        } catch (NumberFormatException e) {
+            System.out.println("Bad Starting Lat and Long");
+            warningLabel.setText("Starting latitude and Longitude must be provided as Decimal Co-Ordinants");
+            return;
+        }
+        try {
+            endLat = Double.parseDouble(endLatitudeTextField.getText());
+            endLong = Double.parseDouble(endLongitudeTextField.getText());
+        } catch (NumberFormatException e) {
+            System.out.println("Bad end lat and long using default distance");
+        }
+        ObservableList results;
+        if (endLat.equals(0.00) || endLong.equals(0.00)) {
+            System.out.println("Searching For Points");
+            results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints);
+            System.out.println(results.size());
+        }else if (endLat != 0.00 && endLong != 0.00) {
+            System.out.println("Searching For Points - search in range delta");
+            delta = DataAnalyser.calculateDistance(startLat,startLong,endLat,endLong);
+            results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints); // Goes from the start point to the end Point
+            results = DataAnalyser.searchWifiPoints(endLat,endLong,delta,results ); // Takes the list of points from the start point and then
+            // Runs through them from the endpoint finding points in range
+        } else {
+            System.out.println("Searching For Points - custom delta");
+            delta = DataAnalyser.calculateDistance(startLat,startLong,endLat,endLong);
+            results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints);
+        }
+
+        dataPoints.clear();
+        for (Object result : results) {
+            dataPoints.add((WifiPoint) result);
+        }
+    }
+
+
+    @FXML
+    public void clearSearchFilters () {
+        startLatitudeTextField.setText("");
+        startLongitudeTextField.setText("");
+        endLatitudeTextField.setText("");
+        endLongitudeTextField.setText("");
+        warningLabel.setText("");
+        for(Object data : originalData){
+            dataPoints.add((WifiPoint) data);
+        }
+
+    }
+    //endregion
+
+
+    //region FILTERING
     /**
      * Checks each wifi point against the filters,
      * setting them displayed or not depending on matching or not.
@@ -235,6 +316,7 @@ public class WifiTableController extends TableController {
                 filterProviderComboBox.valueProperty()));
     }
 
+
     /**
      * Check the cost of the given wifi point matches the cost selected in the filter box.
      *
@@ -248,6 +330,7 @@ public class WifiTableController extends TableController {
             return wifiPoint.getCost().equals(filterCostComboBox.getValue());
         }
     }
+
 
     /**
      * Check the borough of the given WifiPoint matches the borough selected in the ComboBox
@@ -263,6 +346,7 @@ public class WifiTableController extends TableController {
         }
     }
 
+
     /**
      * Check the provider of the given WifiPoint against the provider selected in the ComboBox
      *
@@ -277,6 +361,19 @@ public class WifiTableController extends TableController {
         }
     }
 
+
+    /**
+     * Clear all input in the filters
+     */
+    public void resetFilters() {
+        filterCostComboBox.getSelectionModel().selectFirst();
+        filterProviderComboBox.getSelectionModel().selectFirst();
+        filterBoroughComboBox.getSelectionModel().selectFirst();
+    }
+    //endregion
+
+
+    //region IMPORT/EXPORT
     /**
      * Creates a task to run on another thread to open the file,
      * to stop GUI hangs.
@@ -323,7 +420,7 @@ public class WifiTableController extends TableController {
                     stopLoadingAni();
                     setPredicate();
                     populateCustomWifiPoints();
-                    clearFilters();
+                    resetFilters();
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading wifis. Is your csv correct?");
                     stopLoadingAni();
@@ -342,6 +439,7 @@ public class WifiTableController extends TableController {
         new Thread(loadWifiCsv).start();
     }
 
+
     /**
      * Gets an absolute filepath to a chosen csv.
      */
@@ -355,6 +453,7 @@ public class WifiTableController extends TableController {
         }
     }
 
+
     /**
      * Get the path for a csv to export to, export to it if given.
      */
@@ -363,7 +462,7 @@ public class WifiTableController extends TableController {
         String filename = getCsvFilenameSave();
         if (filename != null) {
             try {
-                exportWifiHotspots(filename, model.getUserName());
+                exportWifiHotspots(filename, model.getUserName(), currentListName);
             } catch (IOException e) {
                 AlertGenerator.createAlert("Couldn't export file.");
             } catch (SQLException e) {
@@ -371,17 +470,19 @@ public class WifiTableController extends TableController {
             }
         }
     }
+    //endregion
 
+
+    //region SETUP TABLE
     /**
      * Creates the columns of the table.
      * Sets their value factories so that the data is displayed correctly.
-     * Sets up the lists of data for filtering TODO move out
+     * Sets up the lists of data for filtering
      * Displays the columns
      */
     private void setTableViewWifi(ArrayList<WifiPoint> data) {
 
-        dataPoints = FXCollections.observableArrayList(data);
-        originalData = FXCollections.observableArrayList(data);
+        setUpData(data);
 
         TableColumn<WifiPoint, String> nameCol = new TableColumn<>("Name");
         TableColumn<WifiPoint, String> locationCol = new TableColumn<>("Location");
@@ -402,45 +503,23 @@ public class WifiTableController extends TableController {
         costCol.setCellValueFactory(new PropertyValueFactory<>("cost"));
         providerCol.setCellValueFactory(new PropertyValueFactory<>("provider"));
 
-        filteredData = new FilteredList<>(dataPoints, p -> true);
-
-        SortedList<WifiPoint> sortedData = new SortedList<>(filteredData);
-        sortedData.comparatorProperty().bind(table.comparatorProperty());
-
         table.setItems(sortedData);
         table.getColumns().addAll(nameCol, locationCol, costCol, providerCol);
 
     }
 
     /**
-     * Opens a dialog for the user to enter data for a new Wifi Point.
-     * If valid, checks it doesn't match any existing points and adds it to the table,
-     * as well as the user's list of custom points.
+     * Initialises the various data lists to the given ArrayList
+     * @param data The data to use in this instance.
      */
-    public void addWifi() {
-        try {
-            FXMLLoader addWifiLoader = new FXMLLoader(getClass().getResource("/fxml/AddWifiDialog.fxml"));
-            Parent root = addWifiLoader.load();
-            AddWifiDialogController addWifiDialog = addWifiLoader.getController();
-            Stage stage1 = new Stage();
-
-            addWifiDialog.setDialog(stage1, root);
-            stage1.showAndWait();
-
-            WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
-            if (newWifiPoint != null) {
-                if (dataPoints.contains(newWifiPoint)) {
-                    AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
-                } else {
-                    dataPoints.add(newWifiPoint);
-                    originalData.addAll(newWifiPoint);
-                    model.addCustomWifiLocation(newWifiPoint);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void setUpData(ArrayList<WifiPoint> data) {
+        dataPoints = FXCollections.observableArrayList(data);
+        originalData = FXCollections.observableArrayList(data);
+        filteredData = new FilteredList<>(dataPoints, p -> true);
+        sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(table.comparatorProperty());
     }
+
 
     /**
      * Add the user's custom Wifi points to the current data
@@ -452,17 +531,6 @@ public class WifiTableController extends TableController {
         originalData.addAll(customWifi);
     }
 
-    /**
-     * Initialise this controllers UserAccountModel to be the current user,
-     * and load the default data.
-     *
-     * @param userAccountModel the details of the currently logged in user.
-     */
-    void initModel(UserAccountModel userAccountModel) {
-        this.model = userAccountModel;
-        //importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME, false);
-        warningLabel.setText("");
-    }
 
     /**
      * Set up the table to use the given list of points instead of a csv.
@@ -477,82 +545,31 @@ public class WifiTableController extends TableController {
         stopLoadingAni();
         setPredicate();
         populateCustomWifiPoints();
-        clearFilters();
+        resetFilters();
     }
+
 
     /**
-     * Clear all input in the filters
+     * Generates and sets the filter options for Wifi.
+     *
+     * @param data An ArrayList of the WifiPoints to generate filters for
      */
-    public void clearFilters() {
-        filterCostComboBox.getSelectionModel().selectFirst();
-        filterProviderComboBox.getSelectionModel().selectFirst();
+    private void setFilters(ArrayList<WifiPoint> data) {
+        filterBoroughComboBox.getItems().clear();
+        filterBoroughComboBox.getItems().add("All");
+        filterBoroughComboBox.getItems().addAll(GenerateFields.generateWifiBoroughs(data));
         filterBoroughComboBox.getSelectionModel().selectFirst();
+
+        filterCostComboBox.getItems().clear();
+        filterCostComboBox.getItems().add("All");
+        filterCostComboBox.getItems().addAll(GenerateFields.generateWifiTypes(data));
+        filterCostComboBox.getSelectionModel().selectFirst();
+
+        filterProviderComboBox.getItems().clear();
+        filterProviderComboBox.getItems().add("All");
+        filterProviderComboBox.getItems().addAll(GenerateFields.generateWifiProviders(data));
+        filterProviderComboBox.getSelectionModel().selectFirst();
     }
-
-    @FXML
-    public void searchWifi() {
-
-        Double startLat;
-        Double startLong;
-        Double endLat = 0.00; ///To test if they have good Doubles
-        Double endLong = 0.00;
-        double delta = 1000;
-        try {
-            startLat = Double.parseDouble(startLatitudeTextField.getText());
-            startLong = Double.parseDouble(startLongitudeTextField.getText());
-        } catch (NumberFormatException e) {
-            System.out.println("Bad Starting Lat and Long");
-            warningLabel.setText("Starting latitude and Longitude must be provided as Decimal Co-Ordinants");
-            return;
-        }
-        try {
-            endLat = Double.parseDouble(endLatitudeTextField.getText());
-            endLong = Double.parseDouble(endLongitudeTextField.getText());
-        } catch (NumberFormatException e) {
-            System.out.println("Bad end lat and long using default distance");
-        }
-        ObservableList results;
-        if (endLat.equals(0.00) || endLong.equals(0.00)) {
-            System.out.println("Searching For Points");
-            results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints);
-            System.out.println(results.size());
-        }else if (endLat != 0.00 && endLong != 0.00) {
-            System.out.println("Searching For Points - search in range delta");
-            delta = DataAnalyser.calculateDistance(startLat,startLong,endLat,endLong);
-            results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints); // Goes from the start point to the end Point
-            results = DataAnalyser.searchWifiPoints(endLat,endLong,delta,results ); // Takes the list of points from the start point and then
-                                                                                    // Runs through them from the endpoint finding points in range
-        } else {
-            System.out.println("Searching For Points - custom delta");
-            delta = DataAnalyser.calculateDistance(startLat,startLong,endLat,endLong);
-            results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints);
-        }
-
-        dataPoints.clear();
-        for (Object result : results) {
-            dataPoints.add((WifiPoint) result);
-        }
-        }
-
-    @FXML
-    public void clearSearchFilters () {
-        startLatitudeTextField.setText("");
-        startLongitudeTextField.setText("");
-        endLatitudeTextField.setText("");
-        endLongitudeTextField.setText("");
-        warningLabel.setText("");
-        for(Object data : originalData){
-            dataPoints.add((WifiPoint) data);
-        }
-
-    }
-
-    public void deleteAllWifiPoints() {
-        boolean delete = AlertGenerator.createChoiceDialog("Delete All Points", "Delete all points", "Are you sure you want to delete all the points in this list?");
-        if (delete) {
-            dataPoints.clear();
-            //TODO delete from list when implemented
-        }
-    }
+    //endregion
 
     }
