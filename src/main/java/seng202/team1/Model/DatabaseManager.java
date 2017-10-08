@@ -826,7 +826,7 @@ public class DatabaseManager {
         } else if (oldPoint instanceof RetailerLocation) {
             statement1 = "SELECT id FROM retailer WHERE listid=? AND primaryFunction=? AND name=?";
             try {
-                int listid = getListID(username, listName, WifiPointList.class);
+                int listid = getListID(username, listName, RetailerLocationList.class);
 
                 preparedStatement1 = connection.prepareStatement(statement1);
 
@@ -868,15 +868,21 @@ public class DatabaseManager {
                 e.printStackTrace();
             }
         } else if (oldPoint instanceof BikeTrip) {
-            statement1 = "SELECT id FROM trip WHERE listid=? AND =? AND =?";
+            statement1 = "SELECT id FROM trip WHERE listid=? AND startLongitude=? AND startLatitude=? AND endLongitude=? AND endLatitude=? AND bikeid=?";
             try {
                 int listid = getListID(username, listName, BikeTripList.class);
 
                 preparedStatement1 = connection.prepareStatement(statement1);
 
-                preparedStatement1.setInt(1, listid);
+                BikeTrip oldTrip = (BikeTrip) oldPoint;
 
-                
+                preparedStatement1.setInt(1, listid);
+                preparedStatement1.setFloat(2, oldTrip.getStartLongitude());
+                preparedStatement1.setFloat(3, oldTrip.getStartLatitude());
+                preparedStatement1.setFloat(4, oldTrip.getEndLongitude());
+                preparedStatement1.setFloat(5, oldTrip.getEndLatitude());
+                preparedStatement1.setInt(6, ((BikeTrip) oldPoint).getBikeId());
+
                 
                 ResultSet rs = preparedStatement1.executeQuery();
 

@@ -26,8 +26,11 @@ import static org.junit.Assert.assertFalse;
 public class DatabaseManagerTest {
 
     private static BikeTrip trip;
+    private static BikeTrip trip2;
     private static RetailerLocation retailer;
+    private static RetailerLocation retailer2;
     private static WifiPoint wifi;
+    private static WifiPoint wifi2;
     private static UserAccountModel model;
 
     @BeforeClass
@@ -72,10 +75,16 @@ public class DatabaseManagerTest {
 
         retailer = new RetailerLocation(name, addressLine1, addressLine2, city, state,
                 zipcode, blockLot, primaryFunction, secondaryFunction, coords);
+        retailer2 = new RetailerLocation("otherRetailer", addressLine1, addressLine2, city, state,
+                zipcode, blockLot, primaryFunction, secondaryFunction, coords);
         trip = new BikeTrip(startTime, stopTime, startPoint, endPoint, bikeID,
+                gender, birthYear);
+        trip2 = new BikeTrip(startTime, stopTime, startPoint, endPoint, 9339,
                 gender, birthYear);
         wifi = new WifiPoint(objectID, wificoords, placeName, location, locationType, hood,
                 borough, city, zipcode, cost, provider, remarks, ssid, sourceID, startTime);
+        wifi2 = new WifiPoint(objectID, wificoords, placeName, location, locationType, hood,
+                borough, city, zipcode, cost, provider, remarks, "NewSSID", sourceID, startTime);
     }
 
 
@@ -185,5 +194,32 @@ public class DatabaseManagerTest {
         ArrayList<String> lists = DatabaseManager.getLists(model.getUserName(), WifiPointList.class);
         List<String> expected = Arrays.asList("testList1", "testList2");
         assertEquals(expected, lists);
+    }
+
+    @Test
+    public void updateBikeTrip() throws Exception {
+        DatabaseManager.addRecord(trip, model.getUserName(), "update");
+        DatabaseManager.updatePoint(model.getUserName(), "update", trip, trip2);
+        BikeTripList trips = new BikeTripList("update", DatabaseManager.getBikeTrips(model.getUserName(), "update"));
+        assertEquals(1, trips.getBikeTrips().size());
+        assertEquals(trip2, trips.getBikeTrips().get(0));
+    }
+
+    @Test
+    public void updateWifiPoint() throws Exception {
+        DatabaseManager.addRecord(wifi, model.getUserName(), "update");
+        DatabaseManager.updatePoint(model.getUserName(), "update", wifi, wifi2);
+        WifiPointList wifiPointList = new WifiPointList("update", DatabaseManager.getWifiPoints(model.getUserName(), "update"));
+        assertEquals(1, wifiPointList.getWifiPoints().size());
+        assertEquals(wifi2, wifiPointList.getWifiPoints().get(0));
+    }
+
+    @Test
+    public void updateRetailerLocation() throws Exception {
+        DatabaseManager.addRecord(retailer, model.getUserName(), "update");
+        DatabaseManager.updatePoint(model.getUserName(), "update", retailer, retailer2);
+        RetailerLocationList retailerLocationList = new RetailerLocationList("update", DatabaseManager.getRetailers(model.getUserName(), "update"));
+        assertEquals(1, retailerLocationList.getRetailerLocations().size());
+        assertEquals(retailer2, retailerLocationList.getRetailerLocations().get(0));
     }
 }
