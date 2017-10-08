@@ -21,7 +21,6 @@ public class AlertGenerator {
 
     /**
      * Creates an alert that will pop up and alert the user.
-     * Takes two parameters, the title of the popup and the contents of the popup.
      *
      * @param title   the title of the popup
      * @param content the contents of the popup
@@ -39,7 +38,6 @@ public class AlertGenerator {
 
     /**
      * Creates an alert with the header "Error" that will pop up and alert the user.
-     * Takes one parameter, the contents of the popup.
      *
      * @param content the contents of the popup
      */
@@ -49,10 +47,8 @@ public class AlertGenerator {
 
 
     /**
-     * Creates a choice dialog that will pop up and alert the user.
-     * Takes three parameters: the title of the pop up, the header message and the contents of the popup
-     *
-     * Returns true if the user clicks ok, false otherwise.
+     * Creates a choice dialog that will pop up and ask the user to confirm an action.
+     * It will present the user with two buttons, Cancel and OK.
      *
      * @param title   the title of the popup
      * @param header  the test for the header, null for no header
@@ -70,11 +66,7 @@ public class AlertGenerator {
         alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            return true;
-        } else {
-            return false;
-        }
+        return result.isPresent() && result.get() == ButtonType.OK;
     }
 
 
