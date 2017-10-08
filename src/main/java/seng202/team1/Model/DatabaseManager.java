@@ -713,7 +713,7 @@ public class DatabaseManager {
 
     public static void deleteList(String username, String listName, Class type) {
         String statement_template = "DELETE FROM %s WHERE listid=?;";
-        String statement_2 = "DELETE FROM list WHERE listName=?";
+        String statement_2 = "DELETE FROM list WHERE listName=? AND type=?";
         PreparedStatement preparedStatement, preparedStatement2;
 
         try {
@@ -738,6 +738,7 @@ public class DatabaseManager {
             // Delete list
             preparedStatement2 = connection.prepareStatement(statement_2);
             preparedStatement2.setString(1, listName);
+            preparedStatement2.setString(2, type.toGenericString());
             preparedStatement2.execute();
 
         } catch (SQLException e) {

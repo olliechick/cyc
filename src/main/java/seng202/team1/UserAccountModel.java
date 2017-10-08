@@ -218,7 +218,7 @@ public class UserAccountModel implements java.io.Serializable {
 
         try {
             DatabaseManager.open();
-            DatabaseManager.createNewList(userName, pointList.getListName(), pointListClass);
+            //DatabaseManager.createNewList(userName, pointList.getListName(), pointListClass);
             DatabaseManager.populateList(userName, pointList);
             DatabaseManager.close();
         } catch (SQLException e) {

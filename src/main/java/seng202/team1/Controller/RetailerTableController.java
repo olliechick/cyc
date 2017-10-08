@@ -521,6 +521,8 @@ public class RetailerTableController extends TableController {
         // Add the sorted and filtered data to the table.
         table.setItems(sortedData);
 
+        model.addPointList(new RetailerLocationList(currentListName, data));
+
     }
 
 
