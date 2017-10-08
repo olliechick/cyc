@@ -85,6 +85,7 @@ public class WifiTableController extends TableController {
     private ObservableList<WifiPoint> dataPoints;
     private FilteredList<WifiPoint> filteredData;
     private ObservableList<WifiPoint> originalData;
+    private SortedList<WifiPoint> sortedData;
     private String currentListName;
 
     private final static String DEFAULT_WIFI_HOTSPOTS_FILENAME = "/csv/NYC_Free_Public_WiFi_03292017.csv";
@@ -179,7 +180,7 @@ public class WifiTableController extends TableController {
      * @param selectedWifi The currently selected wifi.
      */
     private void deleteWifi(WifiPoint selectedWifi) {
-        //TODO add a removedWifi list to userAccountModel and add to there, then remove all those on load.
+        //TODO actually be persistent
         dataPoints.removeAll(selectedWifi);
     }
 
@@ -366,8 +367,7 @@ public class WifiTableController extends TableController {
      */
     private void setTableViewWifi(ArrayList<WifiPoint> data) {
 
-        dataPoints = FXCollections.observableArrayList(data);
-        originalData = FXCollections.observableArrayList(data);
+        setUpData(data);
 
         TableColumn<WifiPoint, String> nameCol = new TableColumn<>("Name");
         TableColumn<WifiPoint, String> locationCol = new TableColumn<>("Location");
@@ -388,14 +388,17 @@ public class WifiTableController extends TableController {
         costCol.setCellValueFactory(new PropertyValueFactory<>("cost"));
         providerCol.setCellValueFactory(new PropertyValueFactory<>("provider"));
 
-        filteredData = new FilteredList<>(dataPoints, p -> true);
-
-        SortedList<WifiPoint> sortedData = new SortedList<>(filteredData);
-        sortedData.comparatorProperty().bind(table.comparatorProperty());
-
         table.setItems(sortedData);
         table.getColumns().addAll(nameCol, locationCol, costCol, providerCol);
 
+    }
+
+    private void setUpData(ArrayList<WifiPoint> data) {
+        dataPoints = FXCollections.observableArrayList(data);
+        originalData = FXCollections.observableArrayList(data);
+        filteredData = new FilteredList<>(dataPoints, p -> true);
+        sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(table.comparatorProperty());
     }
 
     /**

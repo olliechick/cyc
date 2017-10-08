@@ -12,7 +12,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -170,7 +169,7 @@ public class RetailerTableController extends TableController {
      * @param selectedItem the selected Retailer Location to delete.
      */
     private void deleteRetailer(RetailerLocation selectedItem) {
-        //TODO be persistent
+        //TODO add a removedRetailers list to userAccountModel and add to there, then remove all those on load.
         dataPoints.remove(selectedItem);
         originalData.remove(selectedItem);
     }
@@ -184,6 +183,7 @@ public class RetailerTableController extends TableController {
      * updating the filter each time one changes.
      * Adapted from
      * https://stackoverflow.com/questions/33016064/javafx-multiple-textfields-should-filter-one-tableview
+     * TODO thread if slow
      */
     private void setPredicate() {
 
@@ -361,13 +361,13 @@ public class RetailerTableController extends TableController {
 
     /**
      * Creates the columns of the table.
-     * Sets up the lists of data for filtering.
      * Sets their value factories so that the data is displayed correctly.
+     * Sets up the lists of data for filtering
      * Displays the columns
      */
     private void setTableViewRetailer(ArrayList<RetailerLocation> data) {
 
-        setUpLists(data);
+        setUpData(data);
 
         // Create the columns
         TableColumn<RetailerLocation, String> nameCol = new TableColumn<>("Name");
@@ -391,10 +391,9 @@ public class RetailerTableController extends TableController {
         table.getColumns().addAll(nameCol, addressCol, primaryCol, secondaryCol, zipCol);
     }
 
-    private void setUpLists(ArrayList<RetailerLocation> data) {
+    private void setUpData(ArrayList<RetailerLocation> data) {
         dataPoints = FXCollections.observableArrayList(data);
         originalData = FXCollections.observableArrayList(data);
-        // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
         filteredData = new FilteredList<>(dataPoints, p -> true);
         sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(table.comparatorProperty());
