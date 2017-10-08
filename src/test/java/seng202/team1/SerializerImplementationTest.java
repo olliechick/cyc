@@ -48,4 +48,10 @@ public class SerializerImplementationTest extends TestCase {
         assertEquals(true, f.delete());
     }
 
+    public void testDeleteUserAccountModel() throws Exception {
+        SerializerImplementation.serializeUser(user);
+        SerializerImplementation.deleteUserAccountModel(username);
+        assertEquals(false, f.exists());
+    }
+
 }

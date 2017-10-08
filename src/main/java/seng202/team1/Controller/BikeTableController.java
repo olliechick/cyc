@@ -21,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.BikeTripList;
 import seng202.team1.Model.ContextualLength;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
@@ -369,8 +370,6 @@ public class BikeTableController extends TableController {
 
         String filename = getCsvFilename();
         if (filename != null) {
-            dataPoints.clear();
-            originalData.clear();
             importBikeCsv(filename, true);
         }
     }
@@ -414,12 +413,7 @@ public class BikeTableController extends TableController {
             public void handle(WorkerStateEvent event) {
 
                 if (loadBikeCsv.getValue() != null) {
-                    //checkAndAddToList(loadBikeCsv.getValue().size());
-                    setTableViewBike(loadBikeCsv.getValue());
-                    setPredicate();
-                    populateCustomBikeTrips();
-                    clearFilters();
-                    stopLoadingAni();
+                    handleImport(loadBikeCsv.getValue());
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading bike trips. Is your csv correct?");
                     stopLoadingAni();
@@ -440,6 +434,74 @@ public class BikeTableController extends TableController {
         });
 
         new Thread(loadBikeCsv).start();
+    }
+
+
+    private void handleImport(ArrayList<BikeTrip> importedData) {
+        int userChoice = checkAndAddToList(importedData.size());
+
+        switch (userChoice) {
+            case 0: //Append to table and list
+                System.out.println("Append to table and list");
+                appendToDataAndList(importedData);
+                break;
+            case 1: //Append to table, not to list
+                System.out.println("Append to table, not to list");
+                appendToData(importedData);
+                break;
+            case 2: //Create new list of loaded points
+                appendToNewList(importedData);
+                System.out.println("Nothing yet 2");
+                break;
+            case -1: //Canceled load.
+                System.out.println("Canceled");
+                break;
+            default:
+                AlertGenerator.createAlert("Default reached");
+                break;
+        }
+        stopLoadingAni();
+        populateCustomBikeTrips();
+        setPredicate();
+        clearFilters();
+    }
+
+    private void appendToDataAndList(ArrayList<BikeTrip> importedData) {
+        appendToData(importedData);
+        //TODO add to current list
+    }
+
+    private void appendToData(ArrayList<BikeTrip> importedData) {
+        int count = 0;
+        for (BikeTrip bikeTrip : importedData) {
+            if (!dataPoints.contains(bikeTrip)) {
+                dataPoints.add(bikeTrip);
+                originalData.add(bikeTrip);
+                count++;
+            }
+        }
+        String addedMessage = count + " unique entries successfully added.";
+        if (count != importedData.size()) {
+            addedMessage = addedMessage + "\n" + (importedData.size() - count) + " duplicates not added.";
+        }
+        AlertGenerator.createAlert("Entries Added", addedMessage);
+    }
+
+    private void appendToNewList(ArrayList<BikeTrip> importedData) {
+        String listName;
+        if (!dataPoints.isEmpty()) {
+            listName = AlertGenerator.createAddListDialog();
+        } else {
+            listName = currentListName;
+        }
+        if (listName != null) {
+            dataPoints.clear();
+            originalData.clear();
+            BikeTripList newList = new BikeTripList(listName, importedData);
+            setupWithList(newList.getListName(), newList.getBikeTrips());
+            //TODO push new list to user
+            setName();
+        }
     }
 
 
@@ -579,8 +641,8 @@ public class BikeTableController extends TableController {
      * WIP TODO use and potentially move to super class
      * @param entriesLoaded
      */
-    private void checkAndAddToList(int entriesLoaded) {
-        System.out.println(AlertGenerator.createImportChoiceDialog(entriesLoaded));
+    private int checkAndAddToList(int entriesLoaded) {
+        return AlertGenerator.createImportChoiceDialog(entriesLoaded);
     }
 
 
