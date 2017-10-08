@@ -143,8 +143,8 @@ public class DatabaseManager {
                 "(\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
                 "    username TEXT NOT NULL,\n" +
-                "    listName TEXT,\n" +
-                "    type TEXT\n" +
+                "    listName TEXT NOT NULL,\n" +
+                "    type TEXT NOT NULL\n" +
                 ");";
 
         try {
@@ -266,7 +266,6 @@ public class DatabaseManager {
             RetailerLocation retailer = (RetailerLocation) point;
             preparedStatement = connection.prepareStatement(statement);
 
-
             preparedStatement.setInt(1, getListID(username, listName, RetailerLocationList.class));
             preparedStatement.setString(2, retailer.getName());
             preparedStatement.setString(3, retailer.getAddressLine1());
@@ -370,7 +369,7 @@ public class DatabaseManager {
      * @param username Username the points are to be associated with.
      * @throws SQLException
      */
-    public static void addRecords(ArrayList<? extends DataPoint> points, String username, String listName) throws SQLException{
+    public static void addRecords(ArrayList<? extends DataPoint> points, String username, String listName) throws SQLException {
         DatabaseManager.open();
         for (DataPoint point : points) {
             try {
@@ -479,11 +478,13 @@ public class DatabaseManager {
      *
      * @param username Username to query
      * @param listName ListName to query
-     * @param type Type of PointList object
+     * @param type     Type of PointList object
      * @return integer of listid as stored in database
      */
     public static int getListID(String username, String listName, Class type) {
         String statement = "SELECT id FROM list WHERE username=? AND listName=? AND type=?";
+
+
         PreparedStatement preparedStatement;
         int listid = -1;
 
@@ -501,7 +502,7 @@ public class DatabaseManager {
                 System.out.println(String.format("listid for %s of user %s is %d", listName, username, listid));
             } else {
                 createNewList(username, listName, type);
-                listid = getListID(username, listName, type);
+                return getListIDInternally(username, listName, type);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -509,25 +510,78 @@ public class DatabaseManager {
         return listid;
     }
 
-    public static void createNewList(String username, String listName, Class type) {
+    private static int getListIDInternally(String username, String listName, Class type) {
+        String statement = "SELECT id FROM list WHERE username=? AND listName=? AND type=?";
 
-        String statement = "INSERT INTO list (username, listName, type) VALUES (?, ?, ?);";
+
         PreparedStatement preparedStatement;
+        int listid = -1;
 
         try {
-
+            System.out.println(".......");
+            System.out.println(type.toString());
             preparedStatement = connection.prepareStatement(statement);
 
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, listName);
             preparedStatement.setString(3, type.toGenericString());
 
-            preparedStatement.execute();
+            ResultSet rs = preparedStatement.executeQuery();
 
-            System.out.println(String.format("List %s of user %s created", listName, username));
+            while (rs.next()) {
+                listid = rs.getInt(1);
+                System.out.println(String.format("listid for %s of user %s is %d", listName, username, listid));
+            } //else {
+                //throw new SQLException("Could not find existing list");
+            //}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listid;
+    }
+
+    public static boolean listExists(String username, String listName, Class type) {
+        String statement = "SELECT * FROM list WHERE username=? AND listName=? AND type=?";
+        PreparedStatement preparedStatement;
+
+        try {
+            preparedStatement = connection.prepareStatement(statement);
+
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, listName);
+            preparedStatement.setString(3, type.toGenericString());
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            return rs.isClosed();
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static void createNewList(String username, String listName, Class type) {
+
+        String statement = "INSERT INTO list (username, listName, type) VALUES (?, ?, ?);";
+        PreparedStatement preparedStatement;
+
+        if (listExists(username, listName, type)) {
+            try {
+
+                preparedStatement = connection.prepareStatement(statement);
+
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, listName);
+                preparedStatement.setString(3, type.toGenericString());
+
+                preparedStatement.execute();
+
+                System.out.println(String.format("List %s of user %s created", listName, username));
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -559,8 +613,9 @@ public class DatabaseManager {
 
     /**
      * Gets all the lists associated with a user of a certain type.
+     *
      * @param username Username of the user in question
-     * @param type Type of list, i.e. BikeTripList.class
+     * @param type     Type of list, i.e. BikeTripList.class
      */
     public static ArrayList<String> getLists(String username, Class type) {
         ArrayList<String> result = new ArrayList<>();
@@ -597,10 +652,7 @@ public class DatabaseManager {
         ArrayList<WifiPoint> result = new ArrayList<>();
         try {
             preparedStatement = connection.prepareStatement(statement);
-            int listid = getListID(username, listName, WifiPointList.class);
-            if (listid == -1) {
 
-            }
             preparedStatement.setInt(1, getListID(username, listName, WifiPointList.class));
 
             ResultSet rs = preparedStatement.executeQuery();

@@ -163,7 +163,7 @@ public class DatabaseManagerTest {
             DatabaseManager.addRecord(wifi, model.getUserName(), "NotMyWifi");
             DatabaseManager.addRecord(wifi, model.getUserName(), "myWifi");
             DatabaseManager.addRecord(wifi, model.getUserName(), "myWifi");
-            DatabaseManager.addRecord(wifi, model.getUserName(), "AlsoNotMyWifi");
+            DatabaseManager.addRecord(wifi, "OtherName", "AlsoNotMyWifi");
             DatabaseManager.addRecord(wifi, model.getUserName(), "MYWIFI"); // Different case
 
         } catch (SQLException e) {
@@ -171,6 +171,11 @@ public class DatabaseManagerTest {
         }
 
         DatabaseManager.open();
+        ArrayList<WifiPoint> wifiPoints = DatabaseManager.getWifiPoints(model.getUserName(), "myWifi");
+
+        for (WifiPoint wifiPoint : wifiPoints) {
+            System.out.println(wifiPoint.getName());
+        }
         assertEquals(2, DatabaseManager.getWifiPoints(model.getUserName(), "myWifi").size());
         DatabaseManager.close();
     }

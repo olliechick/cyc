@@ -239,7 +239,7 @@ public class UserAccountModel implements java.io.Serializable {
 
 
     public ArrayList<BikeTripList> getBikeTripLists() {
-        ArrayList<String> results = new ArrayList<>();
+        ArrayList<String> results = getListNamesOfType(BikeTripList.class);
         ArrayList<BikeTripList> output = new ArrayList<>();
         for (String result : results) {
             output.add(getBikeTripsFromList(result));
@@ -249,7 +249,7 @@ public class UserAccountModel implements java.io.Serializable {
 
 
     public ArrayList<RetailerLocationList> getRetailerLocationLists() {
-        ArrayList<String> results = new ArrayList<>();
+        ArrayList<String> results = getListNamesOfType(RetailerLocationList.class);
         ArrayList<RetailerLocationList> output = new ArrayList<>();
         for (String result : results) {
             output.add(getRetailerPointsFromList(result));

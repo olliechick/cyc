@@ -69,6 +69,9 @@ public class MapController {
     public ArrayList<String> uniqueSecondaryFunctions = null;
     public ArrayList<String> uniquePrimaryFunctions = null;
     public ArrayList<String> uniqueProviders = null;
+    private ArrayList<String> retailerListNames = null;
+    private ArrayList<String> bikeTripListNames = null;
+    private ArrayList<String> wifiListNames = null;
     public ArrayList<BikeTrip> tripsNearPoint = null;
     public int currentTripCounter = 0;
 
@@ -120,6 +123,15 @@ public class MapController {
 
     @FXML
     private ComboBox filterSecondaryComboBox;
+
+    @FXML
+    private ComboBox bikeTripListComboBox;
+
+    @FXML
+    private ComboBox wifiListComboBox;
+
+    @FXML
+    private ComboBox retailerListComboBox;
 
     @FXML
     private TextField streetSearchField;
@@ -244,6 +256,9 @@ public class MapController {
         loadAllWifi();      // loads all the wifiPoints
         loadAllRetailers(); // loads all the retailerPoints
         setFilters();       // sets the filters based on wifi and retailer points loaded
+        updateBikeTripLists();
+        updateRetailerLists();
+        updateWifiLists();
         loadAllBikeTrips(); // currently only dynamic, requested routes are shown
         win.setMember("app", clickListner);
         WebViews.addHyperlinkListener(webView, eventPrintingListener);
@@ -530,12 +545,54 @@ public class MapController {
 
     }
 
+    private void updateRetailerMapList(String listName) {
+        retailerPoints = model.getRetailerPointsFromList(listName).getRetailerLocations();
+        reloadAllRetailers();
+    }
+
+    private void updateBikeTripMapList(String listName) {
+        bikeTrips = model.getBikeTripsFromList(listName).getBikeTrips();
+    }
+
+    private void updateWifiMapList(String listName) {
+        wifiPoints = model.getWifiPointsFromList(listName).getWifiPoints();
+
+    }
+
     private void updateSecondaryFunctions(ArrayList<RetailerLocation> retailers) {
         ArrayList<String> newSecondaryFunctions = generateSecondaryFunctionsList(retailers);
         filterSecondaryComboBox.getItems().clear();
         filterSecondaryComboBox.getItems().addAll("All");
         filterSecondaryComboBox.getItems().addAll(newSecondaryFunctions);
         filterSecondaryComboBox.getSelectionModel().selectFirst();
+    }
+
+    @FXML
+    private void updateBikeTripLists() {
+        bikeTripListNames = model.getListNamesOfType(BikeTripList.class);
+        bikeTripListComboBox.getItems().clear();
+        bikeTripListComboBox.getItems().addAll(bikeTripListNames);
+        bikeTripListComboBox.getSelectionModel().selectFirst();
+    }
+
+    @FXML
+    private void updateWifiLists() {
+        wifiListNames = model.getListNamesOfType(WifiPointList.class);
+        for (String wifiPointListName : wifiListNames) {
+            System.out.println(wifiPointListName);
+        }
+        wifiListComboBox.getItems().clear();
+        wifiListComboBox.getItems().addAll(wifiListNames);
+        wifiListComboBox.getSelectionModel().selectFirst();
+    }
+
+    @FXML
+    private void updateRetailerLists() {
+        retailerListNames = model.getListNamesOfType(RetailerLocationList.class);
+        retailerListComboBox.getItems().clear();
+        System.out.println("Adding to retailer.");
+        retailerListComboBox.getItems().addAll(retailerListNames);
+        retailerListComboBox.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -656,6 +713,7 @@ public class MapController {
         filterZipComboBox.getItems().addAll("All");
         filterZipComboBox.getSelectionModel().selectFirst();
 
+        retailerListComboBox.getSelectionModel().selectFirst();
 
         // WIFI
         filterBoroughComboBox.getItems().addAll("All");
@@ -666,7 +724,15 @@ public class MapController {
 
         filterProviderComboBox.getItems().addAll("All");
         filterProviderComboBox.getSelectionModel().selectFirst();
+
+        wifiListComboBox.getSelectionModel().selectFirst();
+
+        // BIKE TRIP
+        //bikeTripListComboBox.getSelectionModel().selectFirst();
+
+
     }
+
 
     /**
      * Opens a dialog for the user to enter data for a new Wifi Point.
@@ -813,7 +879,10 @@ public class MapController {
         filterSecondaryComboBox.getSelectionModel().selectFirst();
         filterZipComboBox.getSelectionModel().selectFirst();
         streetSearchField.clear();
+        retailerListComboBox.getItems().clear();
+        retailerListComboBox.getSelectionModel().selectFirst();
         updateRetailers();
+        //updateRetailerLists();
     }
 
     @FXML
@@ -821,7 +890,9 @@ public class MapController {
         filterCostComboBox.getSelectionModel().selectFirst();
         filterProviderComboBox.getSelectionModel().selectFirst();
         filterBoroughComboBox.getSelectionModel().selectFirst();
+        wifiListComboBox.getSelectionModel().selectFirst();
         updateWIFI();
+        //updateWifiLists();
     }
 
     @FXML
@@ -837,6 +908,10 @@ public class MapController {
         filterCostComboBox.getItems().remove(1, filterCostComboBox.getItems().size());
         filterProviderComboBox.getItems().remove(1, filterProviderComboBox.getItems().size());
         filterBoroughComboBox.getItems().remove(1, filterBoroughComboBox.getItems().size());
+
+        retailerListComboBox.getItems().remove(1, retailerListComboBox.getItems().size());
+
+
 
     }
 
