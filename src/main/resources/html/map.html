@@ -119,20 +119,21 @@ function initialise(){
 	mapOptions.streetViewControl=false;
 	mapOptions.fullscreenControl=false;
 
-	
+	var routes = [];
+
 	var map=new google.maps.Map(document.getElementById('map_container'), mapOptions);
 	
 	var directionsRendererOptions={};
 	directionsRendererOptions.draggable=false;
 	directionsRendererOptions.hideRouteList=true;
-	directionsRendererOptions.suppressMarkers=false;
 	directionsRendererOptions.preserveViewport=false;
+    directionsRendererOptions.suppressBicyclingLayer=true;
     directionsRendererOptions.polylineOptions={
         strokeColor: "red"
     }
 	var directionsRenderer=new google.maps.DirectionsRenderer(directionsRendererOptions);
 	var directionsService=new google.maps.DirectionsService();
-    directionsRenderer.setPanel(document.getElementById('right-panel'));
+
 	var contextMenuOptions={};
 	contextMenuOptions.classNames={menu:'context_menu', menuSeparator:'context_menu_separator'};
 
@@ -182,10 +183,10 @@ function initialise(){
 	var destinationMarker=new google.maps.Marker(markerOptions);
 
     // Bike layer displays a cycle friendly map overlay, showing cycle routes
-    var bikeLayer = new google.maps.BicyclingLayer();
+  //  var bikeLayer = new google.maps.BicyclingLayer();
 
     // Set bike layer to our map
-    bikeLayer.setMap(map);
+  //  bikeLayer.setMap(map);
 
 	//	listen for the ContextMenu 'menu_item_selected' event
 	google.maps.event.addListener(contextMenu, 'menu_item_selected', function(latLng, eventName){
@@ -197,6 +198,9 @@ function initialise(){
 					originMarker.setMap(map);
 
 				}
+                if(originMarker.getMap() && destinationMarker.getMap()) {
+                    document.calcRoute(originMarker.getPosition(), destinationMarker.getPosition());
+                }
 				break;
 			case 'directions_destination_click':
 				destinationMarker.setPosition(latLng);
@@ -205,14 +209,18 @@ function initialise(){
 					destinationMarker.setMap(map);
 
 				}
+                if(originMarker.getMap() && destinationMarker.getMap()) {
+                    document.calcRoute(originMarker.getPosition(), destinationMarker.getPosition());
+                }
 				break;
             case 'save_directions_click':
                 app.saveRoute(originMarker.getPosition().lat(), originMarker.getPosition().lng(),
                             destinationMarker.getPosition().lat(), destinationMarker.getPosition().lng());
                 break;
 			case 'clear_directions_click':
-
-                directionsRenderer.setDirections({routes: []});
+                directionsRenderer.setMap(null);
+                destinationMarker.setMap(null);
+                originMarker.setMap(null);
                 document.getElementById('right-panel').style.display='none';
                 app.clearRoute();
 				//	set CSS styles to defaults
@@ -223,6 +231,7 @@ function initialise(){
 				break;
 			case 'get_directions_click':
 				var directionsRequest={};
+                directionsRenderer=new google.maps.DirectionsRenderer(directionsRendererOptions);
 				directionsRequest.destination=destinationMarker.getPosition();
 				directionsRequest.origin=originMarker.getPosition();
 				directionsRequest.travelMode=google.maps.TravelMode.BICYCLING;
@@ -230,11 +239,11 @@ function initialise(){
 				directionsService.route(directionsRequest, function(result, status){
 					if(status===google.maps.DirectionsStatus.OK){
 						//	hide the origin and destination markers as the DirectionsRenderer will render Markers itself
-						originMarker.setMap(null);
-						destinationMarker.setMap(null);
+                        originMarker.setMap(null);
+                        destinationMarker.setMap(null);
 						directionsRenderer.setDirections(result);
 						directionsRenderer.setMap(map);
-
+                        directionsRenderer.setPanel(document.getElementById('right-panel'));
                         var myJSON = JSON.stringify(result);
                         app.directions(myJSON);
                         document.getElementById('right-panel').style.display='block';
@@ -309,7 +318,16 @@ function initialise(){
                 directionsRenderer.setMap(map);
                 var myJSON = JSON.stringify(response);
                 app.directions(myJSON);
+                directionsRenderer.setPanel(document.getElementById('right-panel'));
                 document.getElementById('right-panel').style.display='block';
+                originMarker.setMap(null);
+                destinationMarker.setMap(null);
+                //	hide all but the 'Clear directions' menu item
+                document.getElementById('clearDirectionsItem').style.display='block';
+                document.getElementById('saveDirectionsItem').style.display='block';
+                document.getElementById('directionsDestinationItem').style.display='none';
+                document.getElementById('directionsOriginItem').style.display='none';
+                document.getElementById('getDirectionsItem').style.display='none';
 
             }
             else {
@@ -363,6 +381,20 @@ function initialise(){
         retailerMarkerArray[index].setIcon(icon);
     };
 
+
+    // Draws a route from an array of LatLng literals using polylines
+    document.drawRoute = function drawRoute(coordinateArray)
+    {
+        var newRoute = new google.maps.Polyline({
+            path: coordinateArray,
+            geodesic: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 4
+        });
+        routes.push(newRoute);
+        newRoute.setMap(map);
+    }
 
     document.circleWIFI = function circleWIFI(index, icon)
     {

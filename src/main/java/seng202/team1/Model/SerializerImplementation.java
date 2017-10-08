@@ -71,6 +71,7 @@ public final class SerializerImplementation {
         Path userPath = FileSystems.getDefault().getPath(Directory.USERS.directory() + userName + USER_EXT); //Directory.USERS.directory() + userName + USER_EXT;
         try {
             Files.delete(userPath);
+            System.out.println("User Successfully deleted");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -40,12 +40,19 @@ public class SerializerImplementationTest extends TestCase {
     }
 
     public void testDeserializeUser() throws Exception {
+        SerializerImplementation.serializeUser(user);
         UserAccountModel user = SerializerImplementation.deserializeUser(username);
         assertEquals(username, user.getUserName());
         assertEquals(true, PasswordManager.isExpectedPassword(password, user.getSalt(), user
                 .getPassword()));
         assertEquals(gender, user.getGender());
         assertEquals(true, f.delete());
+    }
+
+    public void testDeleteUserAccountModel() throws Exception {
+        SerializerImplementation.serializeUser(user);
+        SerializerImplementation.deleteUserAccountModel(username);
+        assertEquals(false, f.exists());
     }
 
 }
