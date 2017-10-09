@@ -138,7 +138,7 @@ public class BikeTableController extends TableController {
 
 
     /**
-     * Set up the table to use the given list of points instead of a csv.
+     * Set up the table to use the given list of points instead of a CSV.
      *
      * @param listName The name of the list loaded.
      * @param points   the list of BikeTrips to display in the table.
@@ -383,7 +383,7 @@ public class BikeTableController extends TableController {
     //region IMPORT/EXPORT
 
     /**
-     * Get the path for a csv to load, open one if given.
+     * Get the path for a CSV to load, open one if given.
      */
     public void importBike() {
 
@@ -404,7 +404,7 @@ public class BikeTableController extends TableController {
             /**
              * Defines the task to be run on another thread.
              * runLater is then invoked on the UI thread once the code above it,
-             * ie the loading of the csv, has completed.
+             * ie the loading of the CSV, has completed.
              */
             //@Override
             protected ArrayList<BikeTrip> call() {
@@ -435,7 +435,7 @@ public class BikeTableController extends TableController {
                     model.addPointList(new BikeTripList(currentListName, loadBikeCsv.getValue()));
                     handleImport(loadBikeCsv.getValue());
                 } else {
-                    AlertGenerator.createAlert("Error", "Error loading bike trips. Is your csv correct?");
+                    AlertGenerator.createAlert("Error", "Error loading bike trips. Is your CSV correct?");
                     stopLoadingAni();
                 }
             }
@@ -525,7 +525,7 @@ public class BikeTableController extends TableController {
 
 
     /**
-     * Get the path for a csv to export to, export to it if given.
+     * Get the path for a CSV to export to, export to it if given.
      */
     public void exportBike() {
 
