@@ -1,7 +1,5 @@
 package seng202.team1.Model;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.awt.Point;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -219,8 +217,7 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
     }
 
     /**
-     * Returns the name of the WiFi point (SSID chosen as this is what will appear on the user's device
-     * for them to connect to). If the point is user defined, this will be appended by " (user-defined)".
+     * @return the name of the WiFi point (SSID chosen as this is what appears on the user's device for them to connect to).
      */
     public String getName() {
         return ssid;

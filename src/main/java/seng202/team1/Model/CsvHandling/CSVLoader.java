@@ -381,25 +381,10 @@ public class CSVLoader {
 
                 // Strings that could be null
                 String name = record.get(5);
-                if (name.isEmpty()) {
-                    name = null;
-                }
                 String location = record.get(6);
-                if (location.isEmpty()) {
-                    location = null;
-                }
                 String locationType = record.get(11);
-                if (locationType.isEmpty()) {
-                    locationType = null;
-                }
                 String remarks = record.get(12);
-                if (remarks.isEmpty()) {
-                    remarks = null;
-                }
                 String sourceId = record.get(15);
-                if (sourceId.isEmpty()) {
-                    sourceId = null;
-                }
 
                 // Strings that can't be null
                 String hood = record.get(20);
@@ -544,17 +529,8 @@ public class CSVLoader {
 
                 // Strings that could be null
                 String addressLine1 = record.get(1);
-                if (addressLine1.isEmpty()) {
-                    addressLine1 = null;
-                }
                 String addressLine2 = record.get(2);
-                if (addressLine2.isEmpty()) {
-                    addressLine2 = null;
-                }
                 String blockLot = record.get(6);
-                if (blockLot.isEmpty()) {
-                    blockLot = null;
-                }
 
                 // Strings that can't be null
                 String name = record.get(0);

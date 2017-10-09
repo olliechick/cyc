@@ -258,12 +258,12 @@ public class CSVExporterTest {
     @Test
     public void testExportRetailersWithNull() throws Exception {
         String name = "Pearl Bodywork";
-        String addressLine1 = null;
-        String addressLine2 = null;
+        String addressLine1 = "";
+        String addressLine2 = "";
         String city = "New York";
         String state = "NY";
         int zipcode = -1;
-        String blockLot = null;
+        String blockLot = "";
         String primaryFunction = "Personal and Professional Services";
         String secondaryFunction = "Spa";
         Point.Float coords = null;
@@ -284,7 +284,7 @@ public class CSVExporterTest {
         // Load it back in using CSVLoader
         ArrayList<RetailerLocation> retailers = CSVLoader.populateRetailers(OUTPUT_FILE);
 
-        assertEquals(retailer, retailers.get(0)); //check the wifi point is the same
+        assertEquals(retailer, retailers.get(0)); //check the retailer is the same
         assertEquals(1, retailers.size()); //check there is only one
     }
 

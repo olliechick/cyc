@@ -7,7 +7,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -551,7 +550,7 @@ public class RetailerTableController extends TableController {
         addressCol.setCellValueFactory(new PropertyValueFactory<>("addressLine1"));
         primaryCol.setCellValueFactory(new PropertyValueFactory<>("primaryFunction"));
         secondaryCol.setCellValueFactory(new PropertyValueFactory<>("secondaryFunction"));
-        zipCol.setCellValueFactory(new PropertyValueFactory<>("zipcode"));
+        zipCol.setCellValueFactory(new PropertyValueFactory<>("zipcodeString"));
 
         ArrayList<TableColumn<RetailerLocation, ?>> columns = new ArrayList<>();
         //nameCol, addressCol, primaryCol, secondaryCol, zipCol

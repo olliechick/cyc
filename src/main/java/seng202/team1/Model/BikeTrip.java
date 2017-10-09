@@ -2,7 +2,7 @@ package seng202.team1.Model;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.awt.*;
+import java.awt.Point;
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -36,14 +36,14 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
     /**
      * Constructor for a bike trip.
      *
-     * @param tripDuration       duration (in seconds) of the bike trip
-     * @param startTime          datetime the bike trip started
-     * @param stopTime           datetime the bike trip ended
-     * @param startPoint         co-ordinates of the bike trip's origin
-     * @param endPoint           co-ordinates of the bike trip's terminus
-     * @param bikeId             the ID of the bike
-     * @param gender             the gender of the bike's rider (m, f, or u)
-     * @param birthYear          the year of birth of the rider
+     * @param tripDuration duration (in seconds) of the bike trip
+     * @param startTime    datetime the bike trip started
+     * @param stopTime     datetime the bike trip ended
+     * @param startPoint   co-ordinates of the bike trip's origin
+     * @param endPoint     co-ordinates of the bike trip's terminus
+     * @param bikeId       the ID of the bike
+     * @param gender       the gender of the bike's rider (m, f, or u)
+     * @param birthYear    the year of birth of the rider
      */
     public BikeTrip(long tripDuration, LocalDateTime startTime, LocalDateTime stopTime,
                     Point.Float startPoint, Point.Float endPoint, int bikeId, char gender,
@@ -63,13 +63,13 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
     /**
      * Constructor for a bike trip that calculates trip duration.
      *
-     * @param startTime          datetime the bike trip started
-     * @param stopTime           datetime the bike trip ended
-     * @param startPoint         co-ordinates of the bike trip's origin
-     * @param endPoint           co-ordinates of the bike trip's terminus
-     * @param bikeId             the ID of the bike
-     * @param gender             the gender of the bike's rider (m, f, or u)
-     * @param birthYear          the year of birth of the rider
+     * @param startTime  datetime the bike trip started
+     * @param stopTime   datetime the bike trip ended
+     * @param startPoint co-ordinates of the bike trip's origin
+     * @param endPoint   co-ordinates of the bike trip's terminus
+     * @param bikeId     the ID of the bike
+     * @param gender     the gender of the bike's rider (m, f, or u)
+     * @param birthYear  the year of birth of the rider
      */
     public BikeTrip(LocalDateTime startTime, LocalDateTime stopTime,
                     Point.Float startPoint, Point.Float endPoint, int bikeId, char gender,
@@ -83,14 +83,14 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
     /**
      * Constructor for a bike trip that calculates trip distance.
      *
-     * @param tripDuration       duration (in seconds) of the bike trip
-     * @param startTime          datetime the bike trip started
-     * @param stopTime           datetime the bike trip ended
-     * @param startPoint         co-ordinates of the bike trip's origin
-     * @param endPoint           co-ordinates of the bike trip's terminus
-     * @param bikeId             the ID of the bike
-     * @param gender             the gender of the bike's rider (m, f, or u)
-     * @param birthYear          the year of birth of the rider
+     * @param tripDuration duration (in seconds) of the bike trip
+     * @param startTime    datetime the bike trip started
+     * @param stopTime     datetime the bike trip ended
+     * @param startPoint   co-ordinates of the bike trip's origin
+     * @param endPoint     co-ordinates of the bike trip's terminus
+     * @param bikeId       the ID of the bike
+     * @param gender       the gender of the bike's rider (m, f, or u)
+     * @param birthYear    the year of birth of the rider
      */
     public BikeTrip(long tripDuration, LocalDateTime startTime, LocalDateTime stopTime,
                     Point.Float startPoint, Point.Float endPoint, int bikeId, char gender,
@@ -105,13 +105,13 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
     /**
      * Constructor for a bike trip that calculates trip duration and distance.
      *
-     * @param startTime          datetime the bike trip started
-     * @param stopTime           datetime the bike trip ended
-     * @param startPoint         co-ordinates of the bike trip's origin
-     * @param endPoint           co-ordinates of the bike trip's terminus
-     * @param bikeId             the ID of the bike
-     * @param gender             the gender of the bike's rider (m, f, or u)
-     * @param birthYear          the year of birth of the rider
+     * @param startTime  datetime the bike trip started
+     * @param stopTime   datetime the bike trip ended
+     * @param startPoint co-ordinates of the bike trip's origin
+     * @param endPoint   co-ordinates of the bike trip's terminus
+     * @param bikeId     the ID of the bike
+     * @param gender     the gender of the bike's rider (m, f, or u)
+     * @param birthYear  the year of birth of the rider
      */
     public BikeTrip(LocalDateTime startTime, LocalDateTime stopTime,
                     Point.Float startPoint, Point.Float endPoint, int bikeId, char gender,
@@ -206,6 +206,19 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
         return bikeId;
     }
 
+
+    /**
+     * Used in the table view to display bike IDs, while treating -1 as null.
+     * @return the bike ID of the retailer. If it is -1, then null is returned.
+     */
+    public String getBikeIdString() {
+        if (bikeId == -1) {
+            return null;
+        } else {
+            return "" + bikeId; //bikeId as a String
+        }
+    }
+
     public void setBikeId(int bikeId) {
         this.bikeId = bikeId;
     }
@@ -286,6 +299,7 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
      * Either in m (meters) or km (kilometres). Rounded to the nearest 3 digits of precision.
      * E.g. "236 m", "73.7 km" (without the quotes).
      * Currently coded for trips 1m - 999km.
+     *
      * @return the contextualised distance of the trip
      */
     public ContextualLength getDistance() {
@@ -293,22 +307,42 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
 
         if (tripDistance < 10) {
             //single digit metres (and below)
-            distanceString = Double.parseDouble(new DecimalFormat("#.##").format(tripDistance)) + " m";
+            distanceString = "" + Double.parseDouble(new DecimalFormat("#.##").format(tripDistance));
+            if (distanceString.endsWith(".0")) {
+                // Trim the .0
+                distanceString = distanceString.substring(0, distanceString.length() - 2);
+            }
+            distanceString += " m";
         } else if (tripDistance < 100) {
             //double digit metres
-            distanceString = Double.parseDouble(new DecimalFormat("##.#").format(tripDistance)) + " m";
+            distanceString = "" + Double.parseDouble(new DecimalFormat("##.#").format(tripDistance));
+            if (distanceString.endsWith(".0")) {
+                // Trim the .0
+                distanceString = distanceString.substring(0, distanceString.length() - 2);
+            }
+            distanceString += " m";
         } else if (tripDistance < 1e3) {
             //three digit metres
             distanceString = Math.round(tripDistance) + " m";
         } else if (tripDistance < 1e4) {
             //single digit km
-            distanceString = Double.parseDouble(new DecimalFormat("#.##").format(tripDistance/1e3)) + " km";
+            distanceString = "" + Double.parseDouble(new DecimalFormat("#.##").format(tripDistance / 1e3));
+            if (distanceString.endsWith(".0")) {
+                // Trim the .0
+                distanceString = distanceString.substring(0, distanceString.length() - 2);
+            }
+            distanceString += " km";
         } else if (tripDistance < 1e5) {
             //double digit km
-            distanceString = Double.parseDouble(new DecimalFormat("##.#").format(tripDistance/1e3)) + " km";
+            distanceString = "" + Double.parseDouble(new DecimalFormat("##.#").format(tripDistance / 1e3));
+            if (distanceString.endsWith(".0")) {
+                // Trim the .0
+                distanceString = distanceString.substring(0, distanceString.length() - 2);
+            }
+            distanceString += " km";
         } else {
             //triple digit km (and above)
-            distanceString = Math.round(tripDistance/1e3) + " km";
+            distanceString = Math.round(tripDistance / 1e3) + " km";
         }
 
         return new ContextualLength(tripDistance, distanceString);
@@ -418,8 +452,8 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
     /**
      * @return A nicer description of the trip for the map
      */
-    public String nicerDescription(){
-        return "This trip takes about  " + getDuration() + " and goes to (" +getEndLatitude() + ","+getEndLongitude() + "), a distance of " + String.format("%.0f",tripDistance) + "m away";
+    public String nicerDescription() {
+        return "This trip takes about  " + getDuration() + " and goes to (" + getEndLatitude() + "," + getEndLongitude() + "), a distance of " + String.format("%.0f", tripDistance) + "m away";
     }
 
 
