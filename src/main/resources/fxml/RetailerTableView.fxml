@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -20,7 +25,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.RetailerTableController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="0.0" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.RetailerTableController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -39,11 +44,11 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#addRetailer" text="Add Retailer">
+              <MenuItem mnemonicParsing="false" onAction="#addRetailer" text="Add retailer">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#deleteAllRetailers" text="Delete List" />
+                  <MenuItem mnemonicParsing="false" onAction="#deleteAllRetailers" text="Delete all" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -67,34 +72,31 @@
       </TableView>
    </center>
    <bottom>
-      <VBox BorderPane.alignment="CENTER">
+      <VBox minWidth="0.0" BorderPane.alignment="CENTER">
          <children>
-            <TabPane tabClosingPolicy="UNAVAILABLE">
+            <TabPane minWidth="0.0" tabClosingPolicy="UNAVAILABLE">
                <tabs>
                   <Tab text="Filters">
                      <content>
-                        <GridPane hgap="5.0" vgap="2.0" BorderPane.alignment="CENTER">
+                        <GridPane hgap="10.0" vgap="2.0" BorderPane.alignment="CENTER">
                           <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="237.0" minWidth="10.0" prefWidth="128.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="415.0" minWidth="10.0" prefWidth="259.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="383.0" minWidth="10.0" prefWidth="254.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="270.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
+                              <ColumnConstraints minWidth="10.0" prefWidth="250.0" />
+                              <ColumnConstraints minWidth="10.0" prefWidth="250.0" />
+                            <ColumnConstraints minWidth="10.0" prefWidth="250.0" />
+                              <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
                           </columnConstraints>
                           <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="Retailer Filters:" />
-                              <Label text="Primary Function:" GridPane.columnIndex="1" />
-                              <Label text="Address:" GridPane.columnIndex="3" />
-                              <Label text="ZIP:" GridPane.columnIndex="2" />
-                              <ComboBox fx:id="filterPrimaryComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <ComboBox fx:id="filterZipComboBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                              <TextField fx:id="streetSearchField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                              <Button mnemonicParsing="false" onAction="#clearFilters" text="Clear Filters" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                              <Label text="Primary function" />
+                              <Label text="Address" GridPane.columnIndex="2" />
+                              <Label text="ZIP code" GridPane.columnIndex="1" />
+                              <ComboBox fx:id="filterPrimaryComboBox" prefWidth="250.0" GridPane.rowIndex="1" />
+                              <ComboBox fx:id="filterZipComboBox" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="streetSearchField" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <Button mnemonicParsing="false" onAction="#clearFilters" prefWidth="100.0" text="Clear filters" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -104,44 +106,43 @@
                   </Tab>
                   <Tab text="Searching">
                      <content>
-                        <GridPane hgap="5.0" vgap="5.0">
+                        <GridPane hgap="10.0" vgap="5.0">
                           <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints maxWidth="100.0" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints minWidth="10.0" prefWidth="250.0" />
+                              <ColumnConstraints maxWidth="0.0" minWidth="0.0" prefWidth="0.0" />
+                              <ColumnConstraints maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints minWidth="10.0" prefWidth="250.0" />
+                              <ColumnConstraints maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
                           </columnConstraints>
                           <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="Starting Latitude" GridPane.rowIndex="1" />
-                              <Label text="Starting Longitude" GridPane.rowIndex="2">
+                              <Label text="Start latitude" />
+                              <Label text="Start longitude" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
                               </Label>
-                              <Label text="Search Retailers by Latitude and Longitude" GridPane.columnSpan="2" />
-                              <Label fx:id="warningLabel" text="Label" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" />
-                              <Label text="Ending Latitude" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                              <Label text="Ending Longitude" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                              <TextField fx:id="startLatTextField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <Label text="End latitude" GridPane.columnIndex="3" />
+                              <Label text="End longitude" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <TextField fx:id="startLatTextField" GridPane.columnIndex="1">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
                               </TextField>
-                              <TextField fx:id="startLongTextField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                              <TextField fx:id="startLongTextField" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
                               </TextField>
-                              <TextField fx:id="endLatTextField" layoutX="210.0" layoutY="115.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                              <TextField fx:id="endLongTextField" layoutX="610.0" layoutY="68.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                              <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchRetailersbyLatLong" text="Search" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                              <Button fx:id="clearSearchesButton" mnemonicParsing="false" onAction="#clearSearches" text="Clear Searches" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                              <TextField fx:id="endLatTextField" layoutX="210.0" layoutY="115.0" GridPane.columnIndex="4" />
+                              <TextField fx:id="endLongTextField" layoutX="610.0" layoutY="68.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                              <Button fx:id="searchButton" maxWidth="-Infinity" mnemonicParsing="false" onAction="#searchRetailersbyLatLong" prefWidth="100.0" text="Search" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                              <Button fx:id="clearSearchesButton" maxWidth="-Infinity" mnemonicParsing="false" onAction="#clearSearches" prefWidth="100.0" text="Clear search" GridPane.columnIndex="5" />
+                              <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.rowSpan="2147483647" />
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -163,7 +164,7 @@
                <children>
                   <ProgressIndicator fx:id="progressSpinner" maxHeight="25.0" maxWidth="25.0" progress="0.0" GridPane.columnIndex="2" GridPane.halignment="LEFT" />
                   <Label fx:id="loadLabel" text="Loading:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
-                  <Label fx:id="nameLabel" text="Name placeholder">
+                  <Label fx:id="nameLabel" text="[name placeholder]">
                      <padding>
                         <Insets left="10.0" />
                      </padding></Label>
