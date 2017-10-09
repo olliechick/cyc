@@ -41,6 +41,8 @@ public class UserAccountModel implements java.io.Serializable {
     private byte[] password;
     private byte[] salt;
 
+    public final static int MIN_PASSWORD_LENGTH = 0;
+
     /**
      * Constructor with account type set to "User".
      */
@@ -138,6 +140,10 @@ public class UserAccountModel implements java.io.Serializable {
      * @return True if Changed false if not
      */
     public boolean changePassword(String currentPassword, String newPassword, String confirmPassword, UserAccountModel model) {
+        if( newPassword.length() < MIN_PASSWORD_LENGTH){
+            AlertGenerator.createAlert("Password must contain at least " + MIN_PASSWORD_LENGTH + " characters.");
+            return false;
+        }
         if (PasswordManager.isExpectedPassword(currentPassword, salt, password)) {
             if (!PasswordManager.isExpectedPassword(newPassword, salt, password)) {
                 if (newPassword.equals(confirmPassword)) {
