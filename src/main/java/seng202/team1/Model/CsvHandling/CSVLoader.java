@@ -405,7 +405,7 @@ public class CSVLoader {
                     // If this occurs for all lines in the CSV, a CsvParserException is thrown.
                 }
                 i++;
-                if (i % 100 == 0) {
+                if (i % 1000 == 0) {
                     System.out.println(String.format("processed %d", i));
                 }
             }
