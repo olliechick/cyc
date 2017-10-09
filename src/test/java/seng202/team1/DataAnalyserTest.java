@@ -216,14 +216,21 @@ public class DataAnalyserTest {
     @Test
     public void TestFindTripsByBikeId() throws IOException, CsvParserException {
         ArrayList<BikeTrip> testData = CSVLoader.populateBikeTrips(RES_DIR + "bikeTripTestData.csv");
-        ArrayList<Integer> results = DataAnalyser.findTripsByBikeId(testData, 16281);
+        ArrayList<BikeTrip> results = DataAnalyser.findTripsByBikeId(testData, 16281);
         assertEquals(2,results.size());
     }
 
     @Test
-    public void TestFindBikeTripsByGender(){
+    public void TestFindBikeTripsByGender() throws IOException, CsvParserException {
         ArrayList<BikeTrip> testData = CSVLoader.populateBikeTrips(RES_DIR + "bikeTripTestData.csv");
-        ArrayList<Integer> results = DataAnalyser.findTripsByBikeId(testData, 16281);
-        assertEquals(2,results.size());
+        ArrayList<BikeTrip> results = DataAnalyser.findTripsByGender(testData, 'm');
+        assertEquals(1,results.size());
+    }
+
+    @Test
+    public void TestFindBikeTripsByGenderWrongGender() throws IOException, CsvParserException {
+        ArrayList<BikeTrip> testData = CSVLoader.populateBikeTrips(RES_DIR + "bikeTripTestData.csv");
+        ArrayList<BikeTrip> results = DataAnalyser.findTripsByGender(testData, 'x');
+        assertEquals(0,results.size());
     }
 }

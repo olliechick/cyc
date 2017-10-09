@@ -715,11 +715,11 @@ public final class DataAnalyser {
      * @param bikeId Bike to look for
      * @return Indexes of the relevant trips
      */
-    public static ArrayList<Integer> findTripsByBikeId(ArrayList<BikeTrip> trips, int bikeId){
-        ArrayList<Integer> results = new ArrayList<>();
-        for(int i =0; i < trips.size(); i++){
-            if (trips.get(i).getBikeId() == bikeId){
-                results.add(i);
+    public static ArrayList<BikeTrip> findTripsByBikeId(ArrayList<BikeTrip> trips, int bikeId){
+        ArrayList<BikeTrip> results = new ArrayList<>();
+        for(BikeTrip trip : trips){
+            if (trip.getBikeId() == bikeId){
+                results.add(trip);
             }
         }
         return results;
@@ -731,14 +731,14 @@ public final class DataAnalyser {
      * @param gender Gender to look for
      * @return A list of the indexes of the matching trips
      */
-    public static ArrayList<Integer> findTripsByGender(ArrayList<BikeTrip> trips, char gender){
-        ArrayList<Integer> results = new ArrayList<>();
-        if (gender != 'u' || gender != 'f' || gender != 'm') {
+    public static ArrayList<BikeTrip> findTripsByGender(ArrayList<BikeTrip> trips, char gender){
+        ArrayList<BikeTrip> results = new ArrayList<>();
+        if (gender != 'u' && gender != 'f' && gender != 'm') {
             return results;
         } else {
-            for (int i = 0; i < trips.size(); i++) {
-                if (trips.get(i).getGender() == gender){
-                    results.add(i);
+            for (BikeTrip trip : trips) {
+                if (trip.getGender() == gender){
+                    results.add(trip);
                 }
             }
         }
