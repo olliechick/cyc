@@ -1218,6 +1218,7 @@ public class MapController {
                 if (showWIFINearRoute) {
                     ArrayList<Integer> indexes = searchWifiPointsOnRoute(dir.getPoints(), wifiPoints, wifiSearchDistance);
                     ArrayList<WIFIPointDistance> pointDistances = new ArrayList<>();
+                    webView.getEngine().executeScript("document.hideWIFICluster()");
                     for (int i = 0; i < indexes.size(); i++) {
                         WIFIPointDistance pointDistance = new WIFIPointDistance(wifiPoints.get(indexes.get(i)), indexes.get(i));
                         pointDistances.add(pointDistance);
@@ -1228,12 +1229,8 @@ public class MapController {
                     for (int i = 0; i < indexes.size(); i++) {
 
                              pointDistance = sortedPointDistances.get(i);
-                        String scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", '" + WIFI_ICON_SELECTED_FILENAME3 + "')";
-                        if (pointDistance.getDistance() <= (wifiSearchDistance * 0.33)){
-                            scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", '" + WIFI_ICON_SELECTED_FILENAME + "')";
-                        } else if (pointDistance.getDistance() <= (wifiSearchDistance * 0.66)) {
-                            scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", '" + WIFI_ICON_SELECTED_FILENAME2 + "')";
-                        }
+                        String scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", '" + WIFI_ICON_SELECTED_FILENAME + "')";
+
 
                         webView.getEngine().executeScript(scriptStr);
 

@@ -346,7 +346,7 @@ function initialise(){
             {imagePath: icons,
                 ignoreHiddenMarkers: true,
                 zoomOnClick: false,
-                maxZoom: 10});
+                maxZoom: 16});
     };
 
 
@@ -372,7 +372,9 @@ function initialise(){
     document.changeWIFIIcon = function changeWIFIIcon(index, icon) {
 
         wifiMarkerArray[index].setVisible(true);
+
         wifiMarkerArray[index].setIcon(icon);
+        wifiMarkerArray[index].setMap(map);
     };
 
     document.showRetailerInFocus = function showRetailerInFocus(index, icon)
@@ -481,6 +483,17 @@ function initialise(){
         return marker;
     };
 
+
+    document.addMarkerDefault = function addMarkerDefault(latlng, setlabel)
+    {
+        var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            label: setlabel
+        });
+        return marker;
+    };
+
     /* Creates a wifiMarker using addMarker.Takes LatLng literal, icon path and title.
        Adds the created marker to wifiMarkerArray.
     */
@@ -523,6 +536,10 @@ function initialise(){
         wifiMarkerCluster.redraw();
     };
 
+    document.hideWIFICluster = function hideWIFICluster() {
+        wifiMarkerCluster.clearMarkers();
+        wifiMarkerCluster.redraw();
+    }
 
     /* UpdatesRetailerMarkerCluster to include only markers that getVisible returns
        true for. Note this must iterate through entire retailerMarkerArray.
