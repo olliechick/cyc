@@ -196,7 +196,7 @@ public class UserAccountModel implements java.io.Serializable {
         try {
             DatabaseManager.open();
             result = DatabaseManager.getWifiPoints(userName, listName);
-            System.out.println(String.format("%d custom trips retrieved.", result.size()));
+            System.out.println(String.format("%d custom wifis retrieved.", result.size()));
             DatabaseManager.close();
         } catch (SQLException e) {
             e.printStackTrace();

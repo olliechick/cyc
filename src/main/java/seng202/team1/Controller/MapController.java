@@ -959,7 +959,7 @@ public class MapController {
 
         if (!windowManager.getStagesOpen().isEmpty()) {
             close = AlertGenerator.createChoiceDialog("Close?", "You still have some windows open.",
-                    "\nYour data might not be saved\n\nAre you sure you want to exit?");
+                    "\nYour data might not be saved.\nAre you sure you want to exit?");
         }
 
         if (close) {
@@ -972,7 +972,7 @@ public class MapController {
 
         if (!windowManager.getStagesOpen().isEmpty()) {
             close = AlertGenerator.createChoiceDialog("Close?", "You still have some windows open.",
-                    "\nYour data might not be saved\n\nAre you sure you want to exit?");
+                    "\nYour data might not be saved.\nAre you sure you want to exit?");
         }
 
         if (close) {

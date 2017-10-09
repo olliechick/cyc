@@ -42,6 +42,7 @@ public class Main extends Application {
             //scene.getStylesheets().add("/css/loginStyle.css");
 
             primaryStage.setScene(scene);
+            primaryStage.setTitle("CYC: Your Cycling");
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
