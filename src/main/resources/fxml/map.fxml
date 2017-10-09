@@ -199,11 +199,11 @@
                                         <Label fx:id="resultsLabel" prefHeight="96.0" prefWidth="190.0" text="Current Bike Trip" textAlignment="CENTER" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="12" GridPane.rowSpan="1" GridPane.valignment="TOP" />
                                         <Label prefHeight="77.0" prefWidth="185.0" text="Enter Co-ordinates to search from" wrapText="true" GridPane.rowIndex="2" />
 
-                              <GridPane GridPane.rowIndex="9">
+                              <GridPane prefHeight="42.0" prefWidth="194.0" GridPane.rowIndex="11">
                                 <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="89.0" minWidth="10.0" prefWidth="85.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="70.0" minWidth="10.0" prefWidth="55.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="82.0" minWidth="10.0" prefWidth="45.0" />
                                 </columnConstraints>
                                 <rowConstraints>
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -211,7 +211,7 @@
                                  <children>
                                     <Button fx:id="previousButton" mnemonicParsing="false" onAction="#previousTrip" text="Previous" />
                                     <Button fx:id="nextButton" mnemonicParsing="false" onAction="#nextTrip" text="Next" GridPane.columnIndex="1" />
-                                     <Button fx:id="searchForRouteButton" mnemonicParsing="false" onAction="#findResults" text="Search" GridPane.columnIndex="2" />
+                                     <Button fx:id="searchForRouteButton" mnemonicParsing="false" onAction="#findResults" text="Go" GridPane.columnIndex="2" />
                                  </children>
                               </GridPane>
                               <Button fx:id="genderBikeIDSeachButton" mnemonicParsing="false" onAction="#SearchByGenderOrBikeID" text="Search" GridPane.halignment="CENTER" GridPane.rowIndex="16" />
