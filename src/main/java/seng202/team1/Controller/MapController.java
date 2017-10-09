@@ -1475,11 +1475,7 @@ public class MapController {
             char gender;
             String genderS;
                 genderS = genderBikeIdTextField.getText().toLowerCase();
-                if (genderS.length() != 1) {
-                    return;
-                } else {
-                    gender = genderS.charAt(0);
-                }
+                gender = genderS.charAt(0);
                 results = DataAnalyser.findTripsByGender(bikeTrips, gender);
                 if(results.size() == 0 ){
                     resultsLabel.setText("No trips found.");
