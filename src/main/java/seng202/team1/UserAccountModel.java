@@ -43,6 +43,8 @@ public class UserAccountModel implements java.io.Serializable {
     private ArrayList<RetailerLocationList> retailerLocationLists = new ArrayList<>();
     private ArrayList<WifiPointList> wifiPointLists = new ArrayList<>();
 
+    public final static int MIN_PASSWORD_LENGTH = 0;
+
     /**
      * Constructor with account type set to "User".
      */
@@ -145,8 +147,8 @@ public class UserAccountModel implements java.io.Serializable {
      * @return True if Changed false if not
      */
     public boolean changePassword(String currentPassword, String newPassword, String confirmPassword, UserAccountModel model) {
-        if( newPassword.length() < 8){
-            AlertGenerator.createAlert("Passwords Must be at least 8 characters long");
+        if( newPassword.length() < MIN_PASSWORD_LENGTH){
+            AlertGenerator.createAlert("Password must contain at least " + MIN_PASSWORD_LENGTH + " characters.");
             return false;
         }
         if (PasswordManager.isExpectedPassword(currentPassword, salt, password)) {

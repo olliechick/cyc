@@ -27,6 +27,8 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 
+import static seng202.team1.UserAccountModel.MIN_PASSWORD_LENGTH;
+
 /**
  * Logic for the login GUI
  * Created on 22/08/17.
@@ -92,7 +94,6 @@ public class LoginController {
     private CheckBox acceptTermsOfService;
 
 
-    private final static int MIN_PASSWORD_LENGTH = 8;
 
     @FXML
     private TabPane loginOrSignup;
