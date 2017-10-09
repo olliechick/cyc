@@ -1145,10 +1145,19 @@ public class MapController {
      * If so, delete it. Otherwise do nothing.
      */
     public void deleteAccount() {
-        boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Account", "Are you sure you want to delete your account?",
-                "This cannot be undone.");
-        if (confirmDelete) {
-            SerializerImplementation.deleteUserAccountModel(model.getUserName());
+        FXMLLoader confirmDeletion = new FXMLLoader(getClass().getResource("/fxml/confirmDeletion.fxml"));
+        Parent root  = null;
+        try {
+            root = confirmDeletion.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Stage stage = new Stage();
+        ConfirmDeletionController confirmDeletionController = confirmDeletion.getController();
+        confirmDeletionController.init(model, stage);
+        stage.setScene(new Scene(root));
+        stage.showAndWait();
+        if(model.isToDelete()){
             logout();
         }
     }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.ConfirmDeletionController">
+   <children>
+      <Button fx:id="cancelButton" layoutX="159.0" layoutY="290.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+      <Button fx:id="confirmButton" layoutX="417.0" layoutY="290.0" mnemonicParsing="false" onAction="#confirm" text="Confirm" />
+      <Label layoutX="202.0" layoutY="37.0" text="Delete Account">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <Label layoutX="100.0" layoutY="72.0" text="Are you sure you wish to delete your account? This cannot be undone" />
+      <Label layoutX="159.0" layoutY="99.0" text="Please enter password to confirm or cancel to go back" />
+      <Label layoutX="100.0" layoutY="180.0" text="Confirm Password" />
+      <PasswordField fx:id="passwordField" layoutX="300.0" layoutY="175.0" />
+   </children>
+</Pane>
