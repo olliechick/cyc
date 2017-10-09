@@ -169,7 +169,7 @@ public class BikeTripTest extends TestCase {
         String expectedString = "Started at 11:50 pm 30 December 2015 and ended 10 seconds later " +
                 "at 11:50 pm\nFrom: (-43.52261, 172.58115)\n" +
                 "To: (-43.52074, 172.57274)\n" +
-                "Distance: 12.0 m\nBike ID: 1\nCyclist: female, born in 2000";
+                "Distance: 12 m\nBike ID: 1\nCyclist: female, born in 2000";
         assertEquals(expectedString, bikeTrip.getDescription());
     }
 
@@ -181,7 +181,7 @@ public class BikeTripTest extends TestCase {
         String expectedString = "Started at 11:50 pm 30 December 2015 and ended 20 minutes later " +
                 "at 12:10 am 31 December\nFrom: (-43.52261, 172.58115)\n" +
                 "To: (-43.52074, 172.57274)\n" +
-                "Distance: 12.0 m\nBike ID: 1\nCyclist: female, born in 2000";
+                "Distance: 12 m\nBike ID: 1\nCyclist: female, born in 2000";
         assertEquals(expectedString, bikeTrip1.getDescription());
     }
 
@@ -193,7 +193,7 @@ public class BikeTripTest extends TestCase {
         String expectedString = "Started at 11:50 pm 30 December 2015 and ended 1 day later at " +
                 "12:10 am 1 January 2016\nFrom: (-43.52261, 172.58115)\n" +
                 "To: (-43.52074, 172.57274)\n" +
-                "Distance: 12.0 m\nBike ID: 1\nCyclist: female, born in 2000";
+                "Distance: 12 m\nBike ID: 1\nCyclist: female, born in 2000";
         assertEquals(expectedString, bikeTrip1.getDescription());
     }
 
@@ -306,7 +306,7 @@ public class BikeTripTest extends TestCase {
                 bikeID, gender,
                 birthYear, tripDistance);
 
-        startTime = LocalDateTime.of(2015, Month.DECEMBER, 31, 23, 50, 0);
+        gender  ='m';
         BikeTrip biketrip2 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, tripDistance);
@@ -330,7 +330,7 @@ public class BikeTripTest extends TestCase {
                 bikeID, gender,
                 birthYear, tripDistance);
 
-        startTime = LocalDateTime.of(2015, Month.DECEMBER, 31, 23, 50, 0);
+        gender  ='m';
         BikeTrip biketrip2 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, tripDistance);

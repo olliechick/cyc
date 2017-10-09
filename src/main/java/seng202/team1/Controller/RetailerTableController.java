@@ -558,7 +558,7 @@ public class RetailerTableController extends TableController {
         addressCol.setCellValueFactory(new PropertyValueFactory<>("addressLine1"));
         primaryCol.setCellValueFactory(new PropertyValueFactory<>("primaryFunction"));
         secondaryCol.setCellValueFactory(new PropertyValueFactory<>("secondaryFunction"));
-        zipCol.setCellValueFactory(new PropertyValueFactory<>("zipcode"));
+        zipCol.setCellValueFactory(new PropertyValueFactory<>("zipcodeString"));
 
         ArrayList<TableColumn<RetailerLocation, ?>> columns = new ArrayList<>();
         //nameCol, addressCol, primaryCol, secondaryCol, zipCol

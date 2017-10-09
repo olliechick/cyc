@@ -1,8 +1,6 @@
 package seng202.team1.Model;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.awt.*;
+import java.awt.Point;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeEcmaScript;
 
@@ -29,16 +27,16 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     /**
      * Constructor for RetailerLocation
      *
-     * @param name               Name of retailer
-     * @param addressLine1       First line of address
-     * @param addressLine2       Pre-line of address (e.g. Floor 2)
-     * @param city               City retailer is in
-     * @param state              State retailer is in
-     * @param zipcode            ZIP code retailer is in
-     * @param blockLot           block-lot of retailer
-     * @param primaryFunction    primary function of retailer
-     * @param secondaryFunction  secondary function of retailer
-     * @param coords             co-ordinates of retailer in the form (longitude, latitude)
+     * @param name              Name of retailer
+     * @param addressLine1      First line of address
+     * @param addressLine2      Pre-line of address (e.g. Floor 2)
+     * @param city              City retailer is in
+     * @param state             State retailer is in
+     * @param zipcode           ZIP code retailer is in
+     * @param blockLot          block-lot of retailer
+     * @param primaryFunction   primary function of retailer
+     * @param secondaryFunction secondary function of retailer
+     * @param coords            co-ordinates of retailer in the form (longitude, latitude)
      */
     public RetailerLocation(String name, String addressLine1, String addressLine2,
                             String city, String state, int zipcode, String blockLot, String primaryFunction,
@@ -55,9 +53,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
         } else {
             this.secondaryFunction = secondaryFunction;
         }
-        if (addressLine1 != null) {
-            this.addressLine1 = addressLine1;
-        }
+        this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
         this.city = city;
         this.state = state;
@@ -69,15 +65,15 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     /**
      * Constructor for RetailerLocation without co-ordinates.
      *
-     * @param name               Name of retailer
-     * @param addressLine1       First line of address
-     * @param addressLine2       Pre-line of address (e.g. Floor 2)
-     * @param city               City retailer is in
-     * @param state              State retailer is in
-     * @param zipcode            ZIP code retailer is in
-     * @param blockLot           block-lot of retailer
-     * @param primaryFunction    primary function of retailer
-     * @param secondaryFunction  secondary function of retailer
+     * @param name              Name of retailer
+     * @param addressLine1      First line of address
+     * @param addressLine2      Pre-line of address (e.g. Floor 2)
+     * @param city              City retailer is in
+     * @param state             State retailer is in
+     * @param zipcode           ZIP code retailer is in
+     * @param blockLot          block-lot of retailer
+     * @param primaryFunction   primary function of retailer
+     * @param secondaryFunction secondary function of retailer
      */
     public RetailerLocation(String name, String addressLine1, String addressLine2, String city, String state,
                             int zipcode, String blockLot, String primaryFunction, String secondaryFunction) {
@@ -127,6 +123,19 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
 
     public int getZipcode() {
         return zipcode;
+    }
+
+
+    /**
+     * Used in the table view to display ZIP codes, while treating -1 as null.
+     * @return the ZIP code of the retailer. If it is -1, then null is returned.
+     */
+    public String getZipcodeString() {
+        if (zipcode == -1) {
+            return null;
+        } else {
+            return "" + zipcode;
+        }
     }
 
     public void setZipcode(int zipcode) {
@@ -183,7 +192,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
 
     public float getLongitude() {
         if (coords == null) {
-            return -1;
+            return -100;
         }
         return coords.x;
     }
@@ -194,7 +203,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
 
     public float getLatitude() {
         if (coords == null) {
-            return -1;
+            return -100;
         }
         return coords.y;
     }
@@ -268,23 +277,31 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if ( obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (this == obj) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        RetailerLocation that = (RetailerLocation) obj;
-        return this.name.equalsIgnoreCase(that.name) && this.primaryFunction.equalsIgnoreCase(that.primaryFunction);
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        RetailerLocation that = (RetailerLocation) o;
+
+        if (!name.equals(that.name)) return false;
+        if (!addressLine1.equals(that.addressLine1)) return false;
+        if (addressLine2 != null ? !addressLine2.equals(that.addressLine2) : that.addressLine2 != null) return false;
+        if (!primaryFunction.equals(that.primaryFunction)) return false;
+        return secondaryFunction.equals(that.secondaryFunction);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 31).
-                append(name).
-                append(primaryFunction).
-                toHashCode();
+        int result = name.hashCode();
+        result = 31 * result + addressLine1.hashCode();
+        result = 31 * result + (addressLine2 != null ? addressLine2.hashCode() : 0);
+        result = 31 * result + primaryFunction.hashCode();
+        result = 31 * result + secondaryFunction.hashCode();
+        return result;
     }
 
     @Override

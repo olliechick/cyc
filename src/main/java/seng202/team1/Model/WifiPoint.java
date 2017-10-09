@@ -1,7 +1,5 @@
 package seng202.team1.Model;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.awt.Point;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -219,8 +217,7 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
     }
 
     /**
-     * Returns the name of the WiFi point (SSID chosen as this is what will appear on the user's device
-     * for them to connect to). If the point is user defined, this will be appended by " (user-defined)".
+     * @return the name of the WiFi point (SSID chosen as this is what appears on the user's device for them to connect to).
      */
     public String getName() {
         return ssid;
@@ -302,24 +299,25 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (this == obj) {
-            return true;
-        }
-        WifiPoint that = (WifiPoint) obj;
-        return this.coords.equals(that.coords) && this.ssid.equalsIgnoreCase(that.ssid);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WifiPoint wifiPoint = (WifiPoint) o;
+
+        if (coords != null ? !coords.equals(wifiPoint.coords) : wifiPoint.coords != null) return false;
+        if (cost != null ? !cost.equals(wifiPoint.cost) : wifiPoint.cost != null) return false;
+        if (provider != null ? !provider.equals(wifiPoint.provider) : wifiPoint.provider != null) return false;
+        return ssid != null ? ssid.equals(wifiPoint.ssid) : wifiPoint.ssid == null;
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 31).
-                append(coords).
-                append(ssid).
-                toHashCode();
-
+        int result = coords != null ? coords.hashCode() : 0;
+        result = 31 * result + (cost != null ? cost.hashCode() : 0);
+        result = 31 * result + (provider != null ? provider.hashCode() : 0);
+        result = 31 * result + (ssid != null ? ssid.hashCode() : 0);
+        return result;
     }
 
     @Override
