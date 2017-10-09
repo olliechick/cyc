@@ -1,15 +1,18 @@
 package seng202.team1;
 
 
+import javafx.scene.control.*;
 import org.junit.Test;
 import seng202.team1.Model.CsvHandling.CSVLoader;
 import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.RetailerLocation;
 import seng202.team1.Model.WifiPoint;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -208,5 +211,19 @@ public class DataAnalyserTest {
         assertEquals(retailers.get(3), originalList.get(1));
         assertEquals(retailers.get(4), originalList.get(0));
 
+    }
+
+    @Test
+    public void TestFindTripsByBikeId() throws IOException, CsvParserException {
+        ArrayList<BikeTrip> testData = CSVLoader.populateBikeTrips(RES_DIR + "bikeTripTestData.csv");
+        ArrayList<Integer> results = DataAnalyser.findTripsByBikeId(testData, 16281);
+        assertEquals(2,results.size());
+    }
+
+    @Test
+    public void TestFindBikeTripsByGender(){
+        ArrayList<BikeTrip> testData = CSVLoader.populateBikeTrips(RES_DIR + "bikeTripTestData.csv");
+        ArrayList<Integer> results = DataAnalyser.findTripsByBikeId(testData, 16281);
+        assertEquals(2,results.size());
     }
 }
