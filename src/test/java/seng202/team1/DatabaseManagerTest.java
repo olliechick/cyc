@@ -2,11 +2,14 @@ package seng202.team1;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.BikeTripList;
 import seng202.team1.Model.DatabaseManager;
 import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.RetailerLocationList;
 import seng202.team1.Model.WifiPoint;
 import seng202.team1.Model.WifiPointList;
 
@@ -143,14 +146,9 @@ public class DatabaseManagerTest {
         String secondaryFunction = "Spa";
         RetailerLocation retailer = new RetailerLocation(name, addressLine1, addressLine2, city, state,
                         zipcode, blockLot, primaryFunction, secondaryFunction, null);
-        try {
-            DatabaseManager.addRecord(retailer, model.getUserName(), "myRetailers");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        DatabaseManager.open();
+
+        DatabaseManager.addRecord(retailer, model.getUserName(), "myRetailers");
         assertEquals(retailer, DatabaseManager.getRetailers(model.getUserName(), "myRetailers").get(0));
-        DatabaseManager.close();
     }
 
     @Test
