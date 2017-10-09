@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.web.WebView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="0.0" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="0.0" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
     <top>
         <MenuBar minWidth="0.0" BorderPane.alignment="CENTER">
             <menus>
@@ -64,7 +64,7 @@
         <WebView fx:id="webView" minWidth="100.0" prefHeight="383.0" prefWidth="659.0" BorderPane.alignment="TOP_RIGHT" />
     </center>
     <left>
-        <GridPane alignment="BOTTOM_CENTER" minWidth="0.0" prefHeight="696.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <GridPane alignment="BOTTOM_CENTER" minWidth="0.0" prefHeight="696.0" prefWidth="225.0" BorderPane.alignment="CENTER">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
             </columnConstraints>

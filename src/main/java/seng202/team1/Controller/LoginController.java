@@ -131,7 +131,10 @@ public class LoginController {
 
             Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Map can take over
             mapController.setUp(model, stage);
-            stage.setScene(new Scene(mapView));
+            Scene scene = new Scene(mapView);
+            String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+            scene.getStylesheets().add(css);
+            stage.setScene(scene);
             stage.sizeToScene();
             stage.show();
 

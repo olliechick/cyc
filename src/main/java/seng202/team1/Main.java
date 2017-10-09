@@ -39,6 +39,8 @@ public class Main extends Application {
             Parent root = loginLoader.load();
 
             Scene scene = new Scene(root);
+            String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+            scene.getStylesheets().add(css);
             //scene.getStylesheets().add("/css/loginStyle.css");
 
             primaryStage.setScene(scene);
