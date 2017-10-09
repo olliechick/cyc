@@ -32,7 +32,6 @@ import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
 import org.codefx.libfx.control.webview.WebViews;
 import seng202.team1.Model.BikeTrip;
 import seng202.team1.Model.BikeTripList;
-import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.GenerateFields;
 import seng202.team1.Model.Google.BikeDirections;
@@ -52,10 +51,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
 import static seng202.team1.Model.DataAnalyser.findClosestRetailerToBikeTrip;
 import static seng202.team1.Model.DataAnalyser.findClosestWifiPointToRetailer;
 import static seng202.team1.Model.DataAnalyser.findClosestWifiToRoute;
@@ -1459,7 +1454,7 @@ public class MapController {
         } else {
             results = DataAnalyser.findTripsByBikeId(bikeTrips, bikeId);
             if(results.size() == 0 ){
-                resultsLabel.setText("No trips Found");
+                resultsLabel.setText("No trips found.");
                 return;
             }
             tripsNearPoint = results;
