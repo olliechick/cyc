@@ -107,7 +107,6 @@ public class AlertGenerator {
         dialog.setTitle("Import CSV");
         dialog.setHeaderText(entriesLoaded + " entries loaded.\nHow do you want to import?");
         dialog.setContentText(null);
-        dialog.initModality(Modality.APPLICATION_MODAL);
 
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {

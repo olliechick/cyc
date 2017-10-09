@@ -39,10 +39,7 @@ public class WindowManager {
     public Stage createTrackedStage() {
         Stage stage = new Stage();
         addOpenStage(stage);
-        stage.setOnCloseRequest(event -> {
-            System.out.println(event);
-            stagesOpen.remove(stage);
-        });
+        stage.setOnCloseRequest(event -> stagesOpen.remove(stage));
 
         return stage;
     }
