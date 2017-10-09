@@ -286,10 +286,11 @@ public class MapController {
         initializeWIFICluster();
         loadAllRetailers(); // loads all the retailerPoints
         initializeRetailerCluster();
+        initializePOICluster();
         setFilters();       // sets the filters based on wifi and retailer points loaded
         win.setMember("app", clickListner);
         WebViews.addHyperlinkListener(webView, eventPrintingListener);
-        initializePOICluster();
+
 
     }
 
@@ -309,9 +310,10 @@ public class MapController {
         initializeWIFICluster();
         loadAllRetailers(); // loads all the retailerPoints
         initializeRetailerCluster();
+        initializePOICluster();
         setFilters();
         win.setMember("app", clickListner);
-        initializePOICluster();
+
     }
 
     @FXML
