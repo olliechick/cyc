@@ -226,8 +226,10 @@ public class CSVExporter {
             line += retailer.getBlockLot() + "\",\"";
             line += retailer.getPrimaryFunction() + "\",\"";
             line += retailer.getSecondaryFunction() + "\",";
-            line += retailer.getLatitude() + ",";
-            line += retailer.getLongitude() + ",";
+            if (retailer.getCoords() != null) {
+                line += retailer.getLatitude() + ",";
+                line += retailer.getLongitude() + ",";
+            }
             lines.add(line);
         }
 

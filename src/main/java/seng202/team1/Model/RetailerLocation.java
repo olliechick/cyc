@@ -63,7 +63,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     }
 
     /**
-     * Constructor for RetailerLocation without co-ordinates.
+     * Constructor for RetailerLocation without co-ordinates. Sets coords to null.
      *
      * @param name              Name of retailer
      * @param addressLine1      First line of address
@@ -192,7 +192,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
 
     public float getLongitude() {
         if (coords == null) {
-            return -100;
+            return Float.NEGATIVE_INFINITY; // proxy for null
         }
         return coords.x;
     }
@@ -203,7 +203,7 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
 
     public float getLatitude() {
         if (coords == null) {
-            return -100;
+            return Float.NEGATIVE_INFINITY; // proxy for null
         }
         return coords.y;
     }

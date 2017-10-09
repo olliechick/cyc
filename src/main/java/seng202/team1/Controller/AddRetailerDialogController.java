@@ -201,8 +201,10 @@ public class AddRetailerDialogController {
         primaryField.setText(retailerLocation.getPrimaryFunction());
         secondaryField.setText(retailerLocation.getSecondaryFunction());
         zipField.setText(String.valueOf(retailerLocation.getZipcode()));
-        latField.setText(String.valueOf(retailerLocation.getLatitude()));
-        longField.setText(String.valueOf(retailerLocation.getLongitude()));
+        if (retailerLocation.getCoords() != null) {
+            latField.setText(String.valueOf(retailerLocation.getLatitude()));
+            longField.setText(String.valueOf(retailerLocation.getLongitude()));
+        }
 
         for (TextField textField : fields) {
             textField.textProperty().addListener((((observable, oldValue, newValue) -> {
