@@ -717,8 +717,8 @@ public class MapController {
                     webView.getEngine().executeScript("document.wifiCluster()");
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 
@@ -749,8 +749,8 @@ public class MapController {
                     updateRetailers();
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 
@@ -776,8 +776,8 @@ public class MapController {
                 }
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 
@@ -920,8 +920,8 @@ public class MapController {
             AboutController aboutController = showAbout.getController();
             aboutController.setStage(stage, root);
             stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
 
     }
@@ -990,8 +990,8 @@ public class MapController {
             stage1.setTitle("Lists");
             stage1.show();
 
-        } catch (IOException e) {
-            e.printStackTrace(); //File not found
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);//File not found
         }
     }
 
@@ -1033,8 +1033,8 @@ public class MapController {
             stage.setHeight(loginView.getScene().getHeight());
             stage.setWidth(loginView.getScene().getWidth());
             stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 
@@ -1053,9 +1053,16 @@ public class MapController {
     }
 
     @FXML
-    public void startPasswordChange() throws IOException {
+    public void startPasswordChange() {
         FXMLLoader passwordLoader = new FXMLLoader(getClass().getResource("/fxml/changePassword.fxml"));
-        Parent passwordView = passwordLoader.load();
+        Parent passwordView = null;
+
+        try {
+            passwordView = passwordLoader.load();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
+        }
+
         ChangePasswordController changePasswordController = passwordLoader.getController();
 
         Stage stage1 = new Stage();

@@ -179,8 +179,8 @@ public class WifiTableController extends TableController {
                     table.refresh();
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 
@@ -233,8 +233,8 @@ public class WifiTableController extends TableController {
                     model.addCustomWifiLocation(newWifiPoint);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 

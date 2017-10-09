@@ -238,8 +238,8 @@ public class ListViewerController {
             stage.setWidth(1000);
             stage.setHeight(800);
             stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 
@@ -267,8 +267,8 @@ public class ListViewerController {
             stage.setWidth(1000);
             stage.setHeight(800);
             stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 
@@ -296,8 +296,8 @@ public class ListViewerController {
             stage.setWidth(1000);
             stage.setHeight(800);
             stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 }

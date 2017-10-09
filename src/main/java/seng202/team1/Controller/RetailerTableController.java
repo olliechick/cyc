@@ -180,8 +180,8 @@ public class RetailerTableController extends TableController {
                     model.addCustomRetailerLocation(retailerLocation);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 
@@ -213,8 +213,8 @@ public class RetailerTableController extends TableController {
                     table.refresh();
                 }
             }
-        } catch (IOException e) {
-            AlertGenerator.createAlert("Oops, something went wrong");
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 

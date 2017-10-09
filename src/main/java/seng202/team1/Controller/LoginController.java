@@ -133,8 +133,8 @@ public class LoginController {
             stage.sizeToScene();
             stage.show();
 
-        } catch (Exception e) {
-            e.printStackTrace(); //File not found
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e); //File not found
         }
     }
 
@@ -156,26 +156,30 @@ public class LoginController {
             stage.setScene(new Scene(landingView));
             stage.show();
 
-        } catch (IOException e) {
-            e.printStackTrace(); //File not found
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e); //File not found
         }
     }
 
     /**
      * Opens a pop up to view the TOS
      */
-    public void showTOS() throws IOException {
-        System.out.println("TOS button pressed");
+    public void showTOS() {
+        try {
+            System.out.println("TOS button pressed");
 
-        FXMLLoader tosLoader = new FXMLLoader(getClass().getResource("/fxml/TOSviewer.fxml"));
-        Parent tosView = tosLoader.load();
-        TOSController tosController = tosLoader.getController();
+            FXMLLoader tosLoader = new FXMLLoader(getClass().getResource("/fxml/TOSviewer.fxml"));
+            Parent tosView = tosLoader.load();
+            TOSController tosController = tosLoader.getController();
 
-        Stage tosStage = new Stage();
-        tosStage.setScene(new Scene(tosView));
-        tosController.initialize(tosStage);
-        tosStage.initModality(Modality.APPLICATION_MODAL);
-        tosStage.show();
+            Stage tosStage = new Stage();
+            tosStage.setScene(new Scene(tosView));
+            tosController.initialize(tosStage);
+            tosStage.initModality(Modality.APPLICATION_MODAL);
+            tosStage.show();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
+        }
     }
 
     /**

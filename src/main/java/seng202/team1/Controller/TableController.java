@@ -195,8 +195,8 @@ public abstract class TableController {
             AboutController aboutController = showAbout.getController();
             aboutController.setStage(stage, root);
             stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
 
     }
