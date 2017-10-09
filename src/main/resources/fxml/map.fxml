@@ -115,7 +115,7 @@
                                                 <Button mnemonicParsing="false" onAction="#updateRetailers" prefWidth="75.0" text="Search" />
                                             </children>
                                         </HBox>
-                              <ComboBox fx:id="listRetailerComboBox" onAction="#updateRetailersPrimary" prefWidth="300.0" GridPane.rowIndex="1" />
+                              <ComboBox fx:id="listRetailerComboBox" onAction="#updateRetailerList" prefWidth="300.0" GridPane.rowIndex="1" />
                               <Label text="Current Retailer List" wrapText="true" />
                                     </children>
                                     <padding>
@@ -150,7 +150,7 @@
                                         <ComboBox fx:id="filterProviderComboBox" onAction="#updateWIFI" prefWidth="300.0" GridPane.rowIndex="7" />
                                         <Button mnemonicParsing="false" onAction="#clearFiltersWIFI" prefWidth="75.0" text="Clear" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
                               <Label text="Current WiFi List" />
-                              <ComboBox fx:id="listWifiComboBox" onAction="#updateWIFI" prefWidth="300.0" GridPane.rowIndex="1" />
+                              <ComboBox fx:id="listWifiComboBox" onAction="#updateWIFIList" prefWidth="300.0" GridPane.rowIndex="1" />
                                     </children>
                                     <padding>
                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -217,7 +217,7 @@
                               <Button fx:id="genderBikeIDSeachButton" mnemonicParsing="false" onAction="#SearchByGenderOrBikeID" text="Search" GridPane.halignment="CENTER" GridPane.rowIndex="16" />
                               <TextField fx:id="genderBikeIdTextField" GridPane.rowIndex="15" />
                               <Label prefHeight="15.0" prefWidth="158.0" text="Gender/Bike Id" GridPane.rowIndex="14" />
-                              <ComboBox fx:id="listBikeTripComboBox" onAction="#updateWIFI" prefWidth="300.0" GridPane.rowIndex="1" />
+                              <ComboBox fx:id="listBikeTripComboBox" onAction="#updateBikeTripList" prefWidth="300.0" GridPane.rowIndex="1" />
                               <Label text="Current Bike Trip List" />
                            </children>
                         </GridPane>

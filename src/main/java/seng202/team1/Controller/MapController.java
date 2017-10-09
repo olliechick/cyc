@@ -32,7 +32,6 @@ import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
 import org.codefx.libfx.control.webview.WebViews;
 import seng202.team1.Model.BikeTrip;
 import seng202.team1.Model.BikeTripList;
-import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.GenerateFields;
 import seng202.team1.Model.Google.BikeDirections;
@@ -107,9 +106,9 @@ public class MapController {
     private ArrayList<String> retailerListNames = null;
     private ArrayList<String> bikeTripListNames = null;
     private ArrayList<String> wifiListNames = null;
-    private String currentBikeTripList  = "Default";
-    private String currentWifiPointList = "Default";
-    private String currentRetailerList  = "Default";
+    private String currentBikeTripListName = "Default";
+    private String currentWifiPointListName = "Default";
+    private String currentRetailerListName = "Default";
     private boolean isMapLoaded = false;
     private WindowManager windowManager = new WindowManager();
     // Some control booleans
@@ -279,13 +278,14 @@ public class MapController {
         JSObject win = (JSObject) webEngine.executeScript("window");
         win.setMember("retailerListner", retailerListner);
 
-        loadAllWifi();      // loads all the wifiPoints
-        loadAllRetailers(); // loads all the retailerPoints
+
         setFilters();       // sets the filters based on wifi and retailer points loaded
         updateBikeTripLists();
         updateRetailerLists();
         updateWifiLists();
         loadAllBikeTrips(); // currently only dynamic, requested routes are shown
+        loadAllWifi();      // loads all the wifiPoints
+        loadAllRetailers(); // loads all the retailerPoints
         win.setMember("app", clickListner);
         WebViews.addHyperlinkListener(webView, eventPrintingListener);
         webView.getEngine().executeScript("document.POICluster('"+ POI_CLUSTER_ICON_FILENAME + "')");
@@ -306,6 +306,31 @@ public class MapController {
         setFilters();       // sets the filters based on wifi and retailer points loaded
         //reloadAllBikeTrips(); // currently only dynamic, requested routes are shown
         win.setMember("app", clickListner);
+
+    }
+
+    @FXML
+    private void updateWIFIList() {
+        currentWifiPointListName = listWifiComboBox.getValue().toString();
+        WifiPointList wifiPointList = model.getWifiPointsFromList(currentWifiPointListName);
+        wifiPoints = wifiPointList.getWifiPoints();
+        resetMap();
+
+    }
+    @FXML
+    private void updateRetailerList() {
+        currentRetailerListName = listRetailerComboBox.getValue().toString();
+        RetailerLocationList retailerList  = model.getRetailerPointsFromList(currentRetailerListName);
+        retailerPoints = retailerList.getRetailerLocations();
+        resetMap();
+
+    }
+    @FXML
+    private void updateBikeTripList() {
+        currentBikeTripListName = listBikeTripComboBox.getValue().toString();
+        BikeTripList bikeTripList  = model.getBikeTripsFromList(currentBikeTripListName);
+        bikeTrips = bikeTripList.getBikeTrips();
+
 
     }
 
@@ -464,7 +489,7 @@ public class MapController {
 
            // bikeTrips = populateBikeTrips();
             bikeTrips = new ArrayList<BikeTrip>();
-            bikeTrips.addAll(model.getBikeTripsFromList(currentBikeTripList).getBikeTrips());
+            bikeTrips.addAll(model.getBikeTripsFromList(currentBikeTripListName).getBikeTrips());
 
 
 
@@ -475,7 +500,7 @@ public class MapController {
 
            // wifiPoints = populateWifiHotspots();
             wifiPoints = new ArrayList<WifiPoint>();
-            wifiPoints.addAll(model.getWifiPointsFromList(currentWifiPointList).getWifiPoints());
+            wifiPoints.addAll(model.getWifiPointsFromList(currentWifiPointListName).getWifiPoints());
 
         reloadAllWifi();
     }
@@ -496,7 +521,7 @@ public class MapController {
 
            //retailerPoints = populateRetailers();
             retailerPoints = new ArrayList<RetailerLocation>();
-            retailerPoints.addAll(model.getRetailerPointsFromList(currentRetailerList).getRetailerLocations());
+            retailerPoints.addAll(model.getRetailerPointsFromList(currentRetailerListName).getRetailerLocations());
 
         reloadAllRetailers();
 
@@ -750,7 +775,7 @@ public class MapController {
         filterZipComboBox.getItems().addAll("All");
         filterZipComboBox.getSelectionModel().selectFirst();
 
-        listRetailerComboBox.getSelectionModel().selectFirst();
+
 
         // WIFI
         filterBoroughComboBox.getItems().addAll("All");
@@ -762,10 +787,7 @@ public class MapController {
         filterProviderComboBox.getItems().addAll("All");
         filterProviderComboBox.getSelectionModel().selectFirst();
 
-        listWifiComboBox.getSelectionModel().selectFirst();
 
-        // BIKE TRIP
-        listBikeTripComboBox.getSelectionModel().selectFirst();
 
 
     }
@@ -799,7 +821,7 @@ public class MapController {
                     System.out.println(wifiPoints.size());
                     addWifi(newWifiPoint.getLatitude(), newWifiPoint.getLongitude(), newWifiPoint.toInfoString());
                     //System.out.print(newWifiPoint);
-                    model.addPoint(newWifiPoint, currentWifiPointList);
+                    model.addPoint(newWifiPoint, currentWifiPointListName);
                     updateWIFI();
                     webView.getEngine().executeScript("document.wifiCluster()");
                 }
@@ -833,7 +855,7 @@ public class MapController {
                     retailerLocation.setId(retailerPoints.size());
                     retailerPoints.add(retailerLocation);
                     addRetailer(retailerLocation.getLatitude(), retailerLocation.getLongitude(), retailerLocation.toInfoString());
-                    model.addPoint(retailerLocation, currentRetailerList);
+                    model.addPoint(retailerLocation, currentRetailerListName);
                     updateRetailers();
                 }
             }
@@ -865,7 +887,7 @@ public class MapController {
                     AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
                 } else {
                     bikeTrips.add(addBikeDialog.getBikeTrip());
-                    model.addPoint(addBikeDialog.getBikeTrip(), currentBikeTripList); // Adds to database
+                    model.addPoint(addBikeDialog.getBikeTrip(), currentBikeTripListName); // Adds to database
                 }
             }
 
@@ -907,6 +929,9 @@ public class MapController {
         filterProviderComboBox.getItems().addAll(uniqueProviders);
         filterProviderComboBox.getSelectionModel().selectFirst();
 
+        updateBikeTripLists();
+        updateRetailerLists();
+        updateWifiLists();
     }
 
     @FXML
@@ -918,10 +943,8 @@ public class MapController {
         filterSecondaryComboBox.getSelectionModel().selectFirst();
         filterZipComboBox.getSelectionModel().selectFirst();
         streetSearchField.clear();
-        listRetailerComboBox.getItems().clear();
-        listRetailerComboBox.getSelectionModel().selectFirst();
         updateRetailers();
-        updateRetailerLists();
+
     }
 
     @FXML
@@ -932,9 +955,8 @@ public class MapController {
         filterCostComboBox.getSelectionModel().selectFirst();
         filterProviderComboBox.getSelectionModel().selectFirst();
         filterBoroughComboBox.getSelectionModel().selectFirst();
-        listWifiComboBox.getSelectionModel().selectFirst();
         updateWIFI();
-        updateWifiLists();
+
     }
 
     @FXML
@@ -954,7 +976,7 @@ public class MapController {
         filterProviderComboBox.getItems().remove(1, filterProviderComboBox.getItems().size());
         filterBoroughComboBox.getItems().remove(1, filterBoroughComboBox.getItems().size());
 
-        listRetailerComboBox.getItems().remove(1, listRetailerComboBox.getItems().size());
+
 
     }
 
