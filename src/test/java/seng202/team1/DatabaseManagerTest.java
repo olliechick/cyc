@@ -222,4 +222,28 @@ public class DatabaseManagerTest {
         assertEquals(1, retailerLocationList.getRetailerLocations().size());
         assertEquals(retailer2, retailerLocationList.getRetailerLocations().get(0));
     }
+
+    @Test
+    public void deleteRetailer() throws Exception {
+        DatabaseManager.addRecord(retailer, model.getUserName(), "delete");
+        DatabaseManager.deletePoint(model.getUserName(), "delete", retailer);
+        RetailerLocationList retailerLocationList = new RetailerLocationList("delete", DatabaseManager.getRetailers(model.getUserName(), "delete"));
+        assertEquals(0, retailerLocationList.getRetailerLocations().size());
+    }
+
+    @Test
+    public void deleteWifi() throws Exception {
+        DatabaseManager.addRecord(wifi, model.getUserName(), "delete");
+        DatabaseManager.deletePoint(model.getUserName(), "delete", wifi);
+        WifiPointList wifiPointList = new WifiPointList("delete", DatabaseManager.getWifiPoints(model.getUserName(), "delete"));
+        assertEquals(0, wifiPointList.getWifiPoints().size());
+    }
+
+    @Test
+    public void deleteBikeTrip() throws Exception {
+        DatabaseManager.addRecord(trip, model.getUserName(), "delete");
+        DatabaseManager.deletePoint(model.getUserName(), "delete", trip);
+        BikeTripList bikeTripList = new BikeTripList("delete", DatabaseManager.getBikeTrips(model.getUserName(), "delete"));
+        assertEquals(0, bikeTripList.getBikeTrips().size());
+    }
 }

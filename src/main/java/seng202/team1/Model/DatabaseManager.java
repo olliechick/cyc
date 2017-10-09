@@ -920,4 +920,65 @@ public class DatabaseManager {
             }
         }
     }
+
+    /**
+     * Deletes a point from the database
+     * @param username Owner of the list to delete the point from
+     * @param listName Name of the list to delete the point from
+     * @param point Point to delete
+     */
+    public static void deletePoint(String username, String listName, DataPoint point) {
+        String statement;
+        PreparedStatement preparedStatement;
+        int listid;
+        try {
+            if (point instanceof WifiPoint) {
+                statement = "DELETE FROM wifi WHERE listid=? AND latitude=? AND longitude=? AND ssid=?";
+                listid = getListID(username, listName, WifiPointList.class);
+                WifiPoint wifiPoint = (WifiPoint) point;
+
+                preparedStatement = connection.prepareStatement(statement);
+
+                preparedStatement.setInt(1, listid);
+                preparedStatement.setFloat(2, wifiPoint.getLatitude());
+                preparedStatement.setFloat(3, wifiPoint.getLongitude());
+                preparedStatement.setString(4, wifiPoint.getSsid());
+
+                preparedStatement.execute();
+
+            } else if (point instanceof RetailerLocation) {
+                statement = "DELETE FROM retailer WHERE listid=? AND name=? AND primaryFunction=?";
+                listid = getListID(username, listName, RetailerLocationList.class);
+
+                RetailerLocation retailerLocation= (RetailerLocation) point;
+
+                preparedStatement = connection.prepareStatement(statement);
+
+                preparedStatement.setInt(1, listid);
+                preparedStatement.setString(2, retailerLocation.getName());
+                preparedStatement.setString(3, retailerLocation.getPrimaryFunction());
+
+                preparedStatement.execute();
+
+            } else if (point instanceof BikeTrip) {
+                statement = "DELETE FROM trip WHERE listid=? AND startLongitude=? AND startLatitude=? AND endLongitude=? AND endLatitude=? AND bikeid=?";
+                listid = getListID(username, listName, BikeTripList.class);
+                BikeTrip bikeTrip = (BikeTrip) point;
+
+                preparedStatement = connection.prepareStatement(statement);
+
+                preparedStatement.setInt(1, listid);
+                preparedStatement.setFloat(2, bikeTrip.getStartLongitude());
+                preparedStatement.setFloat(3, bikeTrip.getStartLatitude());
+                preparedStatement.setFloat(4, bikeTrip.getEndLongitude());
+                preparedStatement.setFloat(5, bikeTrip.getEndLatitude());
+                preparedStatement.setInt(6, bikeTrip.getBikeId());
+
+                preparedStatement.execute();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
