@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.input.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -13,6 +8,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -25,7 +21,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.BikeTableController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.BikeTableController">
    <top>
       <MenuBar minWidth="0.0" BorderPane.alignment="CENTER">
         <menus>
@@ -44,11 +40,11 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#addBikeTrip" text="Add Bike Trip">
+              <MenuItem mnemonicParsing="false" onAction="#addBikeTrip" text="Add bike trip">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#deleteAllBikeTrips" text="Delete all" />
+                  <MenuItem mnemonicParsing="false" onAction="#deleteAllBikeTrips" text="Delete list" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -92,7 +88,7 @@
                               <Label minWidth="0.0" text="Bike ID" />
                               <Label minWidth="0.0" text="Gender" GridPane.columnIndex="1" />
                               <TextField fx:id="bikeSearchField" minWidth="0.0" prefWidth="250.0" promptText="12345" GridPane.rowIndex="1" />
-                              <ComboBox fx:id="filterGenderComboBox" maxWidth="9000.0" minWidth="0.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <ComboBox fx:id="filterGenderComboBox" maxWidth="1.7976931348623157E308" minWidth="0.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Button maxHeight="-Infinity" maxWidth="100.0" minWidth="0.0" mnemonicParsing="false" onAction="#clearFilters" prefWidth="100.0" text="Clear filters" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                            </children>
                            <padding>
@@ -103,11 +99,12 @@
                   </Tab>
                   <Tab text="Search">
                      <content>
-                        <GridPane hgap="5.0" vgap="5.0">
+                        <GridPane hgap="10.0" vgap="5.0">
                           <columnConstraints>
                             <ColumnConstraints maxWidth="100.0" minWidth="0.0" prefWidth="100.0" />
                               <ColumnConstraints minWidth="10.0" prefWidth="200.0" />
-                              <ColumnConstraints maxWidth="100.0" minWidth="0.0" prefWidth="100.0" />
+                              <ColumnConstraints maxWidth="100.0" minWidth="0.0" prefWidth="0.0" />
+                              <ColumnConstraints maxWidth="200.0" minWidth="0.0" prefWidth="100.0" />
                               <ColumnConstraints minWidth="10.0" prefWidth="200.0" />
                             <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="100.0" />
                           </columnConstraints>
@@ -118,14 +115,15 @@
                            <children>
                               <Label text="Start latitude" />
                               <Label text="Start longitude" GridPane.rowIndex="1" />
-                              <Label text="End latitude" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
-                              <Label text="End longitude" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                              <TextField fx:id="startLatTextField" prefHeight="26.0" prefWidth="327.0" GridPane.columnIndex="1" />
-                              <TextField fx:id="startLongTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField fx:id="endLatTextField" minWidth="10.0" prefWidth="100.0" GridPane.columnIndex="3" />
-                              <TextField fx:id="endLongTextField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                              <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchBikeTrips" prefWidth="100.0" text="Search" GridPane.columnIndex="4" />
-                              <Button fx:id="clearSearchesButton" mnemonicParsing="false" onAction="#clearFilters" prefWidth="100.0" text="Clear search" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                              <Label text="End latitude" GridPane.columnIndex="3" />
+                              <Label text="End longitude" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <TextField fx:id="startLatTextField" prefHeight="26.0" prefWidth="327.0" promptText="41.12345" GridPane.columnIndex="1" />
+                              <TextField fx:id="startLongTextField" promptText="-73.12345" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="endLatTextField" minWidth="10.0" prefWidth="100.0" promptText="41.12346" GridPane.columnIndex="4" />
+                              <TextField fx:id="endLongTextField" promptText="-73.12346" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                              <Button fx:id="clearSearchesButton" mnemonicParsing="false" onAction="#clearFilters" prefWidth="100.0" text="Clear search" GridPane.columnIndex="5" />
+                              <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchBikeTrips" prefWidth="100.0" text="Search" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                              <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.rowSpan="2147483647" />
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

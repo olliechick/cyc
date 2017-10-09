@@ -7,7 +7,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -69,16 +68,13 @@ public class WifiTableController extends TableController {
     private TextField endLatitudeTextField;
 
     @FXML
-    private  TextField endLongitudeTextField;
+    private TextField endLongitudeTextField;
 
     @FXML
     private Button searchButton;
 
     @FXML
     private Button clearSearchFilters;
-
-    @FXML
-    private Label warningLabel;
 
     @FXML
     private Button clearSearchesButton;
@@ -92,6 +88,7 @@ public class WifiTableController extends TableController {
     private String currentListName;
 
     //region SETUP
+
     /**
      * Displays the currently logged in user's name at the bottom of the table.
      */
@@ -115,7 +112,7 @@ public class WifiTableController extends TableController {
         super.showOnMap.setOnAction(event -> {
             cm.hide();
             if (table.getSelectionModel().getSelectedItem() != null) {
-                showHotspostOnmap(table.getSelectionModel().getSelectedItem());
+                showHotspotsOnMap(table.getSelectionModel().getSelectedItem());
             }
         });
 
@@ -137,17 +134,18 @@ public class WifiTableController extends TableController {
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
         //importWifiCsv(DEFAULT_WIFI_HOTSPOTS_FILENAME, false);
-        warningLabel.setText("");
     }
     //endregion
 
 
     //region USER INTERACTION
+
     /**
-     *Takes a seleted wifi point and shows it in the map view.
+     * Takes a seleted wifi point and shows it in the map view.
+     *
      * @param selectedHotspot point to show.
      */
-    public void showHotspostOnmap(WifiPoint selectedHotspot){
+    public void showHotspotsOnMap(WifiPoint selectedHotspot) {
         super.mapController.showGivenWifi(selectedHotspot);
     }
 
@@ -172,7 +170,7 @@ public class WifiTableController extends TableController {
             WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
             if (newWifiPoint != null) {
                 if (dataPoints.contains(newWifiPoint)) {
-                    AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
+                    AlertGenerator.createAlert("Duplicate WiFi hotspot", "That WiFi hotspot already exists!");
                 } else {
 
                     DatabaseManager.open();
@@ -196,7 +194,7 @@ public class WifiTableController extends TableController {
      */
     private void deleteWifi(WifiPoint selectedWifi) {
         //TODO Use database to delete point
-        boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Point", "Are you sure you want to delete this point",
+        boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete WiFi hotspot", "Are you sure you want to delete this WiFi hotspot?",
                 selectedWifi.getName() + ", at " + selectedWifi.getLocation());
         if (confirmDelete) {
             dataPoints.removeAll(selectedWifi);
@@ -206,7 +204,7 @@ public class WifiTableController extends TableController {
                 DatabaseManager.deletePoint(model.getUserName(), currentListName, selectedWifi);
                 DatabaseManager.close();
             } catch (SQLException e) {
-                AlertGenerator.createExceptionDialog(e, "Database error", "Could not delete point.");
+                AlertGenerator.createExceptionDialog(e, "Database error", "Could not delete WiFi hotspot.");
             }
         }
     }
@@ -216,7 +214,7 @@ public class WifiTableController extends TableController {
      * Delete all points from the current list
      */
     public void deleteAllWifiPoints() {
-        boolean delete = AlertGenerator.createChoiceDialog("Delete List", "Delete list", "Are you sure you want to delete this list, and all the points in this list?");
+        boolean delete = AlertGenerator.createChoiceDialog("Delete list", "Delete list", "Are you sure you want to delete this list, and all the points in this list?");
         if (delete) {
             try {
                 DatabaseManager.open();
@@ -248,7 +246,7 @@ public class WifiTableController extends TableController {
             WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
             if (newWifiPoint != null) {
                 if (dataPoints.contains(newWifiPoint)) {
-                    AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
+                    AlertGenerator.createAlert("Duplicate WiFi hotspot", "That WiFi hotspot already exists!");
                 } else {
                     dataPoints.add(newWifiPoint);
                     originalData.addAll(newWifiPoint);
@@ -266,37 +264,33 @@ public class WifiTableController extends TableController {
 
         Double startLat;
         Double startLong;
-        Double endLat = 0.00; ///To test if they have good Doubles
-        Double endLong = 0.00;
+        Double endLat = null;
+        Double endLong = null;
         double delta = 1000;
+        boolean validEndPoint;
+
         try {
             startLat = Double.parseDouble(startLatitudeTextField.getText());
             startLong = Double.parseDouble(startLongitudeTextField.getText());
         } catch (NumberFormatException e) {
-            System.out.println("Bad Starting Lat and Long");
-            warningLabel.setText("Starting latitude and Longitude must be provided as Decimal Co-Ordinants");
+            AlertGenerator.createAlert("Start latitude and longitude must be co-ordinates in decimal form.");
             return;
         }
         try {
             endLat = Double.parseDouble(endLatitudeTextField.getText());
             endLong = Double.parseDouble(endLongitudeTextField.getText());
+            validEndPoint = true;
         } catch (NumberFormatException e) {
-            System.out.println("Bad end lat and long using default distance");
+            AlertGenerator.createAlert("Warning", "Invalid end latitude or longitude. Search will find retailers within 100 m of the start point.");
+            validEndPoint = false;
         }
+
         ObservableList results;
-        if (endLat.equals(0.00) || endLong.equals(0.00)) {
-            System.out.println("Searching For Points");
-            results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints);
-            System.out.println(results.size());
-        }else if (endLat != 0.00 && endLong != 0.00) {
+        if (validEndPoint) {
             System.out.println("Searching For Points - search in range delta");
-            delta = DataAnalyser.calculateDistance(startLat,startLong,endLat,endLong);
-            results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints); // Goes from the start point to the end Point
-            results = DataAnalyser.searchWifiPoints(endLat,endLong,delta,results ); // Takes the list of points from the start point and then
-            // Runs through them from the endpoint finding points in range
+            delta = DataAnalyser.calculateDistance(startLat, startLong, endLat, endLong);
+            results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints); // Goes from the start point to the end point
         } else {
-            System.out.println("Searching For Points - custom delta");
-            delta = DataAnalyser.calculateDistance(startLat,startLong,endLat,endLong);
             results = DataAnalyser.searchWifiPoints(startLat, startLong, delta, dataPoints);
         }
 
@@ -308,13 +302,12 @@ public class WifiTableController extends TableController {
 
 
     @FXML
-    public void clearSearchFilters () {
+    public void clearSearchFilters() {
         startLatitudeTextField.setText("");
         startLongitudeTextField.setText("");
         endLatitudeTextField.setText("");
         endLongitudeTextField.setText("");
-        warningLabel.setText("");
-        for(Object data : originalData){
+        for (Object data : originalData) {
             dataPoints.add((WifiPoint) data);
         }
 
@@ -323,6 +316,7 @@ public class WifiTableController extends TableController {
 
 
     //region FILTERING
+
     /**
      * Checks each wifi point against the filters,
      * setting them displayed or not depending on matching or not.
@@ -397,12 +391,13 @@ public class WifiTableController extends TableController {
 
 
     //region IMPORT/EXPORT
+
     /**
      * Creates a task to run on another thread to open the file,
      * to stop GUI hangs.
      * Also sets the loading animation going and stops when finished.
      *
-     * @param filename the absolute path to the csv file.
+     * @param filename the absolute path to the CSV file.
      */
     private void importWifiCsv(final String filename, final boolean isCustomCsv) {
 
@@ -410,7 +405,7 @@ public class WifiTableController extends TableController {
             /**
              * Defines the task to be run on another thread.
              * runLater is then invoked on the UI thread once the code above it,
-             * ie the loading of the csv, has completed.
+             * ie the loading of the CSV, has completed.
              */
             //@Override
             protected ArrayList<WifiPoint> call() {
@@ -440,7 +435,7 @@ public class WifiTableController extends TableController {
                     model.addPointList(new WifiPointList(currentListName, loadWifiCsv.getValue()));
                     handleImport(loadWifiCsv.getValue());
                 } else {
-                    AlertGenerator.createAlert("Error", "Error loading wifis. Is your csv correct?");
+                    AlertGenerator.createAlert("Error loading WiFi hotspots. Is your CSV correct?");
                     stopLoadingAni();
                 }
             }
@@ -449,7 +444,7 @@ public class WifiTableController extends TableController {
         loadWifiCsv.setOnFailed(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
-                AlertGenerator.createAlert("Error", "Error generating wifis, please try again");
+                AlertGenerator.createAlert("Error generating WiFi hotspots. Please try again.");
                 stopLoadingAni();
             }
         });
@@ -503,7 +498,7 @@ public class WifiTableController extends TableController {
         if (count != importedData.size()) {
             addedMessage = addedMessage + "\n" + (importedData.size() - count) + " duplicates not added.";
         }
-        AlertGenerator.createAlert("Entries Added", addedMessage);
+        AlertGenerator.createAlert("Entries added", addedMessage);
     }
 
     private void appendToNewList(ArrayList<WifiPoint> importedData) {
@@ -524,7 +519,7 @@ public class WifiTableController extends TableController {
     }
 
     /**
-     * Gets an absolute filepath to a chosen csv.
+     * Gets an absolute filepath to a chosen CSV.
      */
     public void importWifi() {
 
@@ -536,7 +531,7 @@ public class WifiTableController extends TableController {
 
 
     /**
-     * Get the path for a csv to export to, export to it if given.
+     * Get the path for a CSV to export to, export to it if given.
      */
     public void exportWifi() {
 
@@ -559,6 +554,7 @@ public class WifiTableController extends TableController {
 
 
     //region SETUP TABLE
+
     /**
      * Creates the columns of the table.
      * Sets their value factories so that the data is displayed correctly.
@@ -595,6 +591,7 @@ public class WifiTableController extends TableController {
 
     /**
      * Initialises the various data lists to the given ArrayList
+     *
      * @param data The data to use in this instance.
      */
     private void setUpData(ArrayList<WifiPoint> data) {
@@ -607,10 +604,10 @@ public class WifiTableController extends TableController {
 
 
     /**
-     * Set up the table to use the given list of points instead of a csv.
+     * Set up the table to use the given list of points instead of a CSV.
      *
-     * @param listName  The name of the list loaded.
-     * @param points    The list of WifiPoints to display in the table.
+     * @param listName The name of the list loaded.
+     * @param points   The list of WifiPoints to display in the table.
      */
     public void setupWithList(String listName, ArrayList<WifiPoint> points) {
         setFilters(points);
@@ -645,4 +642,4 @@ public class WifiTableController extends TableController {
     }
     //endregion
 
-    }
+}

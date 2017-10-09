@@ -80,9 +80,9 @@ public abstract class TableController {
 
     /**
      * Opens a FileChooser popup, allowing the user to choose a file.
-     * Only allows for opening of .csv files
+     * Only allows for opening of CSV files
      *
-     * @return String the absolute path to the designated csv file, null if cancelled.
+     * @return String the absolute path to the designated CSV file, null if cancelled.
      */
     String getCsvFilename() {
 
@@ -105,9 +105,9 @@ public abstract class TableController {
 
     /**
      * Opens a FileChooser popup, allowing the user to choose where to save a file.
-     * Only allows for saving of .csv files
+     * Only allows for saving of CSV files
      *
-     * @return String the absolute path to the designated csv file, null if cancelled.
+     * @return String the absolute path to the designated CSV file, null if cancelled.
      */
     String getCsvFilenameSave() {
 

@@ -131,7 +131,7 @@ public class ListViewerController {
         BikeTripList selectedBikeList = bikeListView.getSelectionModel().getSelectedItem();
         //BikeTripList selectedBikeList = DatabaseManager.getLists(user.getUserName(), BikeTrip.class);
         if (selectedBikeList != null) {
-            System.out.println(selectedBikeList.getBikeTrips().size() + " trips in list");
+            System.out.println(selectedBikeList.getBikeTrips().size() + " trips in list, in List ");
 
             switchToBikeTable(selectedBikeList);
         }

@@ -42,10 +42,10 @@ public class Main extends Application {
             //scene.getStylesheets().add("/css/loginStyle.css");
 
             primaryStage.setScene(scene);
+            primaryStage.setTitle("CYC: Your Cycling");
             primaryStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
-            AlertGenerator.createAlert("Error loading Application");
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 
@@ -64,7 +64,6 @@ public class Main extends Application {
             File file = new File(directoryString);
             if (!(file.mkdirs()) && !file.isDirectory()) {
                 AlertGenerator.createAlert("Error creating directory " + directoryString);
-                //System.out.println("Error creating directory " + directoryString);
             }
         }
     }

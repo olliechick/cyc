@@ -86,6 +86,7 @@ public class RetailerTableController extends TableController {
     private String currentListName;
 
     //region SETUP
+
     /**
      * Display the user name at the bottom of the table
      */
@@ -120,7 +121,7 @@ public class RetailerTableController extends TableController {
         });
         super.showOnMap.setOnAction(event -> {
             cm.hide();
-            if(table.getSelectionModel().getSelectedItem() != null){
+            if (table.getSelectionModel().getSelectedItem() != null) {
                 showRetailerOnMap(table.getSelectionModel().getSelectedItem());
             }
         });
@@ -134,10 +135,10 @@ public class RetailerTableController extends TableController {
 
 
     /**
-     * Set up the table to use the given list of points instead of a csv.
+     * Set up the table to use the given list of points instead of a CSV.
      *
      * @param listName The name of the list loaded.
-     * @param points the list of RetailerLocations to display in the table.
+     * @param points   the list of RetailerLocations to display in the table.
      */
     public void setupWithList(String listName, ArrayList<RetailerLocation> points) {
         setFilters(points);
@@ -151,6 +152,7 @@ public class RetailerTableController extends TableController {
 
 
     //region USER INTERACTION
+
     /**
      * Creates a pop up to get the data for a new Retailer Location.
      * If valid data is entered the Retailer is added, if it is not a duplicate.
@@ -268,7 +270,7 @@ public class RetailerTableController extends TableController {
         try {
             startLat = Double.parseDouble(startLatTextField.getText());
             startLong = Double.parseDouble(startLongTextField.getText());
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             AlertGenerator.createAlert("Start latitude and longitude must be co-ordinates in decimal form.");
             return;
         }
@@ -276,8 +278,8 @@ public class RetailerTableController extends TableController {
             endLat = Double.parseDouble(endLatTextField.getText());
             endLong = Double.parseDouble(endLongTextField.getText());
             validEndPoint = true;
-        } catch (NumberFormatException e){
-            AlertGenerator.createAlert("Invalid end latitude or longitude. Search will find retailers within 100 m of the start point.");
+        } catch (NumberFormatException e) {
+            AlertGenerator.createAlert("Warning", "Invalid end latitude or longitude. Search will find retailers within 100 m of the start point.");
             validEndPoint = false;
         }
 
@@ -287,7 +289,7 @@ public class RetailerTableController extends TableController {
             results = DataAnalyser.searchRetailerLocations(startLat, startLong, delta, dataPoints);
             results = DataAnalyser.searchRetailerLocations(endLat, endLong, delta, results);
         } else {
-            results = DataAnalyser.searchRetailerLocations(startLat,startLong,delta,dataPoints);
+            results = DataAnalyser.searchRetailerLocations(startLat, startLong, delta, dataPoints);
         }
 
         System.out.println("Found: " + results.size() + " results");
@@ -296,13 +298,14 @@ public class RetailerTableController extends TableController {
     }
 
 
-    public void showRetailerOnMap(RetailerLocation selectedShop){
+    public void showRetailerOnMap(RetailerLocation selectedShop) {
         super.mapController.showGivenShop(selectedShop);
     }
     //endregion
 
 
     //region FILTERING
+
     /**
      * Checks the combo boxes and street field for data and filters the displayed
      * data accordingly.
@@ -378,8 +381,9 @@ public class RetailerTableController extends TableController {
 
 
     //region IMPORT/EXPORT
+
     /**
-     * Creates a task to load the csv data, runs it on another thread.
+     * Creates a task to load the CSV data, runs it on another thread.
      * The loading animations are shown until load completes, then the UI is updated.
      *
      * @param filename The filename of the CSV to load.
@@ -391,7 +395,7 @@ public class RetailerTableController extends TableController {
             /**
              * Defines the task to be run on another thread.
              * runLater is then invoked on the UI thread once the code above it,
-             * ie the loading of the csv, has completed.
+             * ie the loading of the CSV, has completed.
              */
             @Override
             protected ArrayList<RetailerLocation> call() {
@@ -421,7 +425,7 @@ public class RetailerTableController extends TableController {
                     model.addPointList(new RetailerLocationList(currentListName, loadRetailerCsv.getValue()));
                     handleImport(loadRetailerCsv.getValue());
                 } else {
-                    AlertGenerator.createAlert("Error", "Error loading retailers. Is your csv correct?");
+                    AlertGenerator.createAlert("Error loading retailers. Is your CSV correct?");
                     stopLoadingAni();
                 }
 
@@ -432,7 +436,7 @@ public class RetailerTableController extends TableController {
         loadRetailerCsv.setOnFailed(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
-                AlertGenerator.createAlert("Error", "Error loading retailers. Please try again");
+                AlertGenerator.createAlert("Error loading retailers. Please try again");
                 stopLoadingAni();
             }
         });
@@ -442,7 +446,7 @@ public class RetailerTableController extends TableController {
 
 
     /**
-     * Get the path for a csv to load, open one if given
+     * Get the path for a CSV to load, open one if given
      */
     public void importRetailer() {
 
@@ -454,7 +458,7 @@ public class RetailerTableController extends TableController {
 
 
     /**
-     * Get the path for a csv to export to, export to it if given.
+     * Get the path for a CSV to export to, export to it if given.
      */
     public void exportRetailer() {
 
@@ -508,19 +512,30 @@ public class RetailerTableController extends TableController {
     }
 
     private void appendToData(ArrayList<RetailerLocation> importedData) {
-        int count = 0;
+        int count = 0; // count of unique retailers
+        int countCoordless = 0; // count of unique, co-ordless retailers
         for (RetailerLocation retailerLocation : importedData) {
             if (!dataPoints.contains(retailerLocation)) {
                 dataPoints.add(retailerLocation);
                 originalData.add(retailerLocation);
                 count++;
+                if (retailerLocation.getCoords() == null) {
+                    countCoordless++;
+                }
             }
         }
+
         String addedMessage = count + " unique entries successfully added.";
         if (count != importedData.size()) {
-            addedMessage = addedMessage + "\n" + (importedData.size() - count) + " duplicates not added.";
+            addedMessage += "\n" + (importedData.size() - count) + " duplicates not added.";
         }
-        AlertGenerator.createAlert("Entries Added", addedMessage);
+
+        if (countCoordless < count) {
+            // There are some co-ordless retailers being added
+            addedMessage += "\n" + countCoordless + " entries did not have co-ordinates. " +
+                    "These can be manually added by editing the relevant retailers.";
+        }
+        AlertGenerator.createAlert("Entries added", addedMessage);
     }
 
     private void appendToNewList(ArrayList<RetailerLocation> importedData) {
@@ -543,8 +558,10 @@ public class RetailerTableController extends TableController {
 
 
     //region SETUP TABLE
+
     /**
      * Create the columns for use in the table
+     *
      * @return An ObservableList of TableColumn<RetailerLocation, ?>
      */
     private ObservableList<TableColumn<RetailerLocation, ?>> createColumns() {
@@ -595,6 +612,7 @@ public class RetailerTableController extends TableController {
 
     /**
      * Initialise the lists used throughout the table.
+     *
      * @param data The ArrayList of data the table uses.
      */
     private void setUpData(ArrayList<RetailerLocation> data) {
@@ -644,7 +662,7 @@ public class RetailerTableController extends TableController {
         startLongTextField.setText("");
         endLatTextField.setText("");
         endLongTextField.setText("");
-        for (Object data : originalData){
+        for (Object data : originalData) {
             dataPoints.add((RetailerLocation) data);
         }
     }

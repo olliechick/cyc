@@ -9,7 +9,6 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.stage.Modality;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.PrintWriter;
@@ -122,11 +121,26 @@ public class AlertGenerator {
         }
     }
 
+    /**
+     * Creates a popup informing the user of an error and to contact "us".
+     * Displays a stacktrace of the exception.
+     *
+     * @param e The exception that occurred
+     */
     public static void createExceptionDialog(Exception e) {
         createExceptionDialog(e, "Oops, something went wrong loading that screen.\n",
                 "Please contact us about this error and we will get you back on your bike in no time.");
     }
 
+
+    /**
+     * Creates a popup informing the user of an error.
+     * Displays a stacktrace of the exception.
+     *
+     * @param exception The exception that occurred
+     * @param header The header of the popup
+     * @param content The content of the popup
+     */
     public static void createExceptionDialog(Exception exception, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Exception");

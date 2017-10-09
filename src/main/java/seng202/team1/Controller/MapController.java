@@ -32,7 +32,6 @@ import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
 import org.codefx.libfx.control.webview.WebViews;
 import seng202.team1.Model.BikeTrip;
 import seng202.team1.Model.BikeTripList;
-import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.GenerateFields;
 import seng202.team1.Model.Google.BikeDirections;
@@ -52,10 +51,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
 import static seng202.team1.Model.DataAnalyser.findClosestRetailerToBikeTrip;
 import static seng202.team1.Model.DataAnalyser.findClosestWifiPointToRetailer;
 import static seng202.team1.Model.DataAnalyser.findClosestWifiToRoute;
@@ -107,9 +102,9 @@ public class MapController {
     private ArrayList<String> retailerListNames = null;
     private ArrayList<String> bikeTripListNames = null;
     private ArrayList<String> wifiListNames = null;
-    private String currentBikeTripList  = "Default";
-    private String currentWifiPointList = "Default";
-    private String currentRetailerList  = "Default";
+    private String currentBikeTripListName = "Default";
+    private String currentWifiPointListName = "Default";
+    private String currentRetailerListName = "Default";
     private boolean isMapLoaded = false;
     private WindowManager windowManager = new WindowManager();
     // Some control booleans
@@ -208,7 +203,7 @@ public class MapController {
     }
     //private SingleSelectionModel<Tab> typeViewSelectionModel = typeSelectorTabPane.getSelectionModel();
 
-    void setUp(UserAccountModel model, Stage stage) {
+    public void setUp(UserAccountModel model, Stage stage) {
         this.model = model;
         this.stage = stage;
 
@@ -219,8 +214,8 @@ public class MapController {
             }
         });
         resultsLabel.setText("");
-
     }
+
 
     @FXML
     /**
@@ -228,16 +223,21 @@ public class MapController {
      * confirmation that the map has loaded before calling the loadData method to populate the map.
      */
     private void initialize() {
+
         webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
         webEngine.load(getClass().getResource("/html/map.html").toString());
         initializeFilters();
+
 
         // Check the map has been loaded before attempting to add markers to it.
         webEngine.getLoadWorker().stateProperty().addListener(
                 new ChangeListener<Worker.State>() {
                     public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
                         if (newState == Worker.State.SUCCEEDED) {
+                            updateBikeTripLists();
+                            updateRetailerLists();
+                            updateWifiLists();
                             loadData();
                             isMapLoaded = true;
                             System.out.println("Map loaded");
@@ -279,16 +279,18 @@ public class MapController {
         JSObject win = (JSObject) webEngine.executeScript("window");
         win.setMember("retailerListner", retailerListner);
 
-        loadAllWifi();      // loads all the wifiPoints
-        loadAllRetailers(); // loads all the retailerPoints
-        setFilters();       // sets the filters based on wifi and retailer points loaded
-        updateBikeTripLists();
-        updateRetailerLists();
-        updateWifiLists();
+
+
         loadAllBikeTrips(); // currently only dynamic, requested routes are shown
+        loadAllWifi();      // loads all the wifiPoints
+        initializeWIFICluster();
+        loadAllRetailers(); // loads all the retailerPoints
+        initializeRetailerCluster();
+        initializePOICluster();
+        setFilters();       // sets the filters based on wifi and retailer points loaded
         win.setMember("app", clickListner);
         WebViews.addHyperlinkListener(webView, eventPrintingListener);
-        webView.getEngine().executeScript("document.POICluster('"+ POI_CLUSTER_ICON_FILENAME + "')");
+
 
     }
 
@@ -301,14 +303,71 @@ public class MapController {
         JSObject win = (JSObject) webEngine.executeScript("window");
         win.setMember("retailerListner", retailerListner);
 
-        reloadAllWifi();      // loads all the wifiPoints
-        reloadAllRetailers(); // loads all the retailerPoints
-        setFilters();       // sets the filters based on wifi and retailer points loaded
-        //reloadAllBikeTrips(); // currently only dynamic, requested routes are shown
+
+                          // sets the filters based on wifi and retailer points loaded
+        loadAllBikeTrips(); // currently only dynamic, requested routes are shown
+        loadAllWifi();      // loads all the wifiPoints
+        initializeWIFICluster();
+        loadAllRetailers(); // loads all the retailerPoints
+        initializeRetailerCluster();
+        initializePOICluster();
+        setFilters();
         win.setMember("app", clickListner);
 
     }
 
+    @FXML
+    private void updateWIFIList() {
+        if (!(listWifiComboBox.getValue().toString().equals(currentWifiPointListName))) {
+            currentWifiPointListName = listWifiComboBox.getValue().toString();
+            WifiPointList wifiPointList = model.getWifiPointsFromList(currentWifiPointListName);
+            wifiPoints = wifiPointList.getWifiPoints();
+            reloadAllWifi();
+        }
+
+    }
+    @FXML
+    private void updateRetailerList() {
+        if (!(listRetailerComboBox.getValue().toString().equals(currentRetailerListName))) {
+            currentRetailerListName = listRetailerComboBox.getValue().toString();
+            RetailerLocationList retailerList = model.getRetailerPointsFromList(currentRetailerListName);
+            retailerPoints = retailerList.getRetailerLocations();
+            reloadAllRetailers();
+        }
+
+
+    }
+    @FXML
+    private void updateBikeTripList() {
+        if (!(listBikeTripComboBox.getValue().toString().equals(currentBikeTripListName))) {
+            currentBikeTripListName = listBikeTripComboBox.getValue().toString();
+            BikeTripList bikeTripList = model.getBikeTripsFromList(currentBikeTripListName);
+            bikeTrips = bikeTripList.getBikeTrips();
+        }
+    }
+
+    private void initializePOICluster(){
+        webView.getEngine().executeScript("document.POICluster('"+ POI_CLUSTER_ICON_FILENAME + "')");
+    }
+    private void initializeWIFICluster(){
+        webView.getEngine().executeScript("document.wifiCluster('" + WIFI_CLUSTER_ICON_FILENAME + "')");
+    }
+    private void updateWIFICluster() {
+        webView.getEngine().executeScript("document.updateWIFIMarkerCluster()");
+    }
+    private void initializeRetailerCluster() {
+        webView.getEngine().executeScript("document.retailerCluster('" + RETAILER_CLUSTER_ICON_FILENAME + "')");
+    }
+    private void updateRetailerCluster() {
+        webView.getEngine().executeScript("document.updateRetailerMarkerCluster()");
+    }
+    private void removeAllWIFI() {
+        webView.getEngine().executeScript("document.removeAllWIFI()");
+    }
+
+    private void removeAllRetailers() {
+        webView.getEngine().executeScript("document.removeAllRetailers()");
+    }
 
     private void showRetailer(int index) {
         webView.getEngine().executeScript("document.showRetailerMarker(" + index + ")");
@@ -410,7 +469,7 @@ public class MapController {
         }
         System.out.println("Results Found");
         if (results.size() == 0) {
-            resultsLabel.setText("No results were found");
+            resultsLabel.setText("No results were found.");
             results = null;
         } else {
             resultsLabel.setText(results.get(0).nicerDescription());
@@ -432,9 +491,9 @@ public class MapController {
             route1.add(tripsNearPoint.get(currentTripCounter).getEndPoint());
             generateRoute(route1);
         } else if (tripsNearPoint == null) {
-            resultsLabel.setText("No points have been found or you have not yet searched please try again");
+            resultsLabel.setText("No points have been found or you have not yet searched. Please try again.");
         } else if (currentTripCounter >= tripsNearPoint.size()) {
-            resultsLabel.setText("You have reached the end of the list");
+            resultsLabel.setText("You have reached the end of the list.");
             currentTripCounter = tripsNearPoint.size(); // stops someone running the value very high
         }
 
@@ -450,10 +509,10 @@ public class MapController {
             route1.add(tripsNearPoint.get(currentTripCounter).getEndPoint());
             generateRoute(route1);
         } else if (tripsNearPoint == null) {
-            resultsLabel.setText("No points have been found or you have not yet searched please try again");
+            resultsLabel.setText("No points have been found or you have not yet searched. Please try again.");
         } else {
             // currentTripCounter < 0
-            resultsLabel.setText("You have reached the start of the list");
+            resultsLabel.setText("You have reached the start of the list.");
             currentTripCounter = 0; // stops someone running the value very low
         }
 
@@ -461,10 +520,8 @@ public class MapController {
 
     @FXML
     private void loadAllBikeTrips() {
-
-           // bikeTrips = populateBikeTrips();
             bikeTrips = new ArrayList<BikeTrip>();
-            bikeTrips.addAll(model.getBikeTripsFromList(currentBikeTripList).getBikeTrips());
+            bikeTrips.addAll(model.getBikeTripsFromList(currentBikeTripListName).getBikeTrips());
 
 
 
@@ -472,15 +529,8 @@ public class MapController {
 
     @FXML
     private void loadAllWifi() {
-
-           // wifiPoints = populateWifiHotspots();
-            wifiPoints = new ArrayList<WifiPoint>();
-            wifiPoints.addAll(model.getWifiPointsFromList(currentWifiPointList).getWifiPoints());
-
-        reloadAllWifi();
-    }
-
-    private void reloadAllWifi() {
+        wifiPoints = new ArrayList<WifiPoint>();
+        wifiPoints.addAll(model.getWifiPointsFromList(currentWifiPointListName).getWifiPoints());
         WifiPoint point;
         for (int i = 0; i < wifiPoints.size(); i++) {
             point = wifiPoints.get(i);
@@ -489,20 +539,18 @@ public class MapController {
             addWifi(point.getLatitude(), point.getLongitude(), point.toInfoString());
 
         }
-        webView.getEngine().executeScript("document.wifiCluster('" + WIFI_CLUSTER_ICON_FILENAME + "')");
+
+    }
+
+    private void reloadAllWifi() {
+        removeAllWIFI();
+        loadAllWifi();
+        updateWIFICluster();
     }
 
     private void loadAllRetailers() {
-
-           //retailerPoints = populateRetailers();
-            retailerPoints = new ArrayList<RetailerLocation>();
-            retailerPoints.addAll(model.getRetailerPointsFromList(currentRetailerList).getRetailerLocations());
-
-        reloadAllRetailers();
-
-    }
-
-    private void reloadAllRetailers() {
+        retailerPoints = new ArrayList<RetailerLocation>();
+        retailerPoints.addAll(model.getRetailerPointsFromList(currentRetailerListName).getRetailerLocations());
         RetailerLocation point;
         for (int i = 0; i < retailerPoints.size(); i++) {
             point = retailerPoints.get(i);
@@ -510,19 +558,15 @@ public class MapController {
             point.setVisible(true);
             addRetailer(point.getLatitude(), point.getLongitude(), point.toInfoString());
         }
-        webView.getEngine().executeScript("document.retailerCluster('" + RETAILER_CLUSTER_ICON_FILENAME + "')");
-
     }
 
-    private void redrawWIFICluster() {
-        String scriptStr = "document.updatewifiMarkerCluster()";
-        webView.getEngine().executeScript(scriptStr);
+    private void reloadAllRetailers() {
+        removeAllRetailers();
+        loadAllRetailers();
+        updateRetailerCluster();
     }
 
-    private void redrawRetailerCluster() {
-        String scriptStr = "document.updateRetailerMarkerCluster()";
-        webView.getEngine().executeScript(scriptStr);
-    }
+
 
     @FXML
     private void updateRetailersPrimary() {
@@ -545,23 +589,9 @@ public class MapController {
                 retailers.add(retailerLocation);
             }
         }
-        redrawRetailerCluster();
+        updateRetailerCluster();
         updateSecondaryFunctions(retailers);
 
-
-    }
-
-    private void updateRetailerMapList(String listName) {
-        retailerPoints = model.getRetailerPointsFromList(listName).getRetailerLocations();
-        reloadAllRetailers();
-    }
-
-    private void updateBikeTripMapList(String listName) {
-        bikeTrips = model.getBikeTripsFromList(listName).getBikeTrips();
-    }
-
-    private void updateWifiMapList(String listName) {
-        wifiPoints = model.getWifiPointsFromList(listName).getWifiPoints();
 
     }
 
@@ -615,7 +645,7 @@ public class MapController {
                 }
             }
         }
-        redrawRetailerCluster();
+        updateRetailerCluster();
 
     }
 
@@ -633,7 +663,7 @@ public class MapController {
                 }
             }
         }
-        redrawWIFICluster();
+        updateWIFICluster();
     }
 
     /**
@@ -750,7 +780,7 @@ public class MapController {
         filterZipComboBox.getItems().addAll("All");
         filterZipComboBox.getSelectionModel().selectFirst();
 
-        listRetailerComboBox.getSelectionModel().selectFirst();
+
 
         // WIFI
         filterBoroughComboBox.getItems().addAll("All");
@@ -762,10 +792,7 @@ public class MapController {
         filterProviderComboBox.getItems().addAll("All");
         filterProviderComboBox.getSelectionModel().selectFirst();
 
-        listWifiComboBox.getSelectionModel().selectFirst();
 
-        // BIKE TRIP
-        listBikeTripComboBox.getSelectionModel().selectFirst();
 
 
     }
@@ -790,7 +817,7 @@ public class MapController {
             WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
             if (newWifiPoint != null) {
                 if (wifiPoints.contains(newWifiPoint)) {
-                    AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
+                    AlertGenerator.createAlert("Duplicate WiFi hotspot", "That WiFi hotspot already exists!");
                 } else {
                     System.out.println(wifiPoints.size());
                     newWifiPoint.setVisible(true);
@@ -799,7 +826,7 @@ public class MapController {
                     System.out.println(wifiPoints.size());
                     addWifi(newWifiPoint.getLatitude(), newWifiPoint.getLongitude(), newWifiPoint.toInfoString());
                     //System.out.print(newWifiPoint);
-                    model.addPoint(newWifiPoint, currentWifiPointList);
+                    model.addPoint(newWifiPoint, currentWifiPointListName);
                     updateWIFI();
                     webView.getEngine().executeScript("document.wifiCluster()");
                 }
@@ -827,13 +854,13 @@ public class MapController {
             RetailerLocation retailerLocation = addRetailerDialog.getRetailerLocation();
             if (retailerLocation != null) {
                 if (retailerPoints.contains(retailerLocation)) {
-                    AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
+                    AlertGenerator.createAlert("Duplicate retailer", "That retailer already exists!");
                 } else {
                     retailerLocation.setVisible(true);
                     retailerLocation.setId(retailerPoints.size());
                     retailerPoints.add(retailerLocation);
                     addRetailer(retailerLocation.getLatitude(), retailerLocation.getLongitude(), retailerLocation.toInfoString());
-                    model.addPoint(retailerLocation, currentRetailerList);
+                    model.addPoint(retailerLocation, currentRetailerListName);
                     updateRetailers();
                 }
             }
@@ -862,10 +889,10 @@ public class MapController {
             BikeTrip test = addBikeDialog.getBikeTrip();
             if (test != null) {
                 if (bikeTrips.contains(test)) {
-                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
+                    AlertGenerator.createAlert("Duplicate bike trip", "That bike trip already exists!");
                 } else {
                     bikeTrips.add(addBikeDialog.getBikeTrip());
-                    model.addPoint(addBikeDialog.getBikeTrip(), currentBikeTripList); // Adds to database
+                    model.addPoint(addBikeDialog.getBikeTrip(), currentBikeTripListName); // Adds to database
                 }
             }
 
@@ -907,6 +934,7 @@ public class MapController {
         filterProviderComboBox.getItems().addAll(uniqueProviders);
         filterProviderComboBox.getSelectionModel().selectFirst();
 
+
     }
 
     @FXML
@@ -918,10 +946,8 @@ public class MapController {
         filterSecondaryComboBox.getSelectionModel().selectFirst();
         filterZipComboBox.getSelectionModel().selectFirst();
         streetSearchField.clear();
-        listRetailerComboBox.getItems().clear();
-        listRetailerComboBox.getSelectionModel().selectFirst();
         updateRetailers();
-        updateRetailerLists();
+
     }
 
     @FXML
@@ -932,9 +958,8 @@ public class MapController {
         filterCostComboBox.getSelectionModel().selectFirst();
         filterProviderComboBox.getSelectionModel().selectFirst();
         filterBoroughComboBox.getSelectionModel().selectFirst();
-        listWifiComboBox.getSelectionModel().selectFirst();
         updateWIFI();
-        updateWifiLists();
+
     }
 
     @FXML
@@ -954,7 +979,7 @@ public class MapController {
         filterProviderComboBox.getItems().remove(1, filterProviderComboBox.getItems().size());
         filterBoroughComboBox.getItems().remove(1, filterBoroughComboBox.getItems().size());
 
-        listRetailerComboBox.getItems().remove(1, listRetailerComboBox.getItems().size());
+
 
     }
 
@@ -964,7 +989,7 @@ public class MapController {
 
         if (!windowManager.getStagesOpen().isEmpty()) {
             close = AlertGenerator.createChoiceDialog("Close?", "You still have some windows open.",
-                    "\nYour data might not be saved\n\nAre you sure you want to exit?");
+                    "\nYour data might not be saved.\nAre you sure you want to exit?");
         }
 
         if (close) {
@@ -977,7 +1002,7 @@ public class MapController {
 
         if (!windowManager.getStagesOpen().isEmpty()) {
             close = AlertGenerator.createChoiceDialog("Close?", "You still have some windows open.",
-                    "\nYour data might not be saved\n\nAre you sure you want to exit?");
+                    "\nYour data might not be saved.\nAre you sure you want to exit?");
         }
 
         if (close) {
@@ -1145,10 +1170,19 @@ public class MapController {
      * If so, delete it. Otherwise do nothing.
      */
     public void deleteAccount() {
-        boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Account", "Are you sure you want to delete your account?",
-                "This cannot be undone.");
-        if (confirmDelete) {
-            SerializerImplementation.deleteUserAccountModel(model.getUserName());
+        FXMLLoader confirmDeletion = new FXMLLoader(getClass().getResource("/fxml/confirmDeletion.fxml"));
+        Parent root  = null;
+        try {
+            root = confirmDeletion.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Stage stage = new Stage();
+        ConfirmDeletionController confirmDeletionController = confirmDeletion.getController();
+        confirmDeletionController.init(model, stage);
+        stage.setScene(new Scene(root));
+        stage.showAndWait();
+        if(model.isToDelete()){
             logout();
         }
     }
@@ -1430,13 +1464,17 @@ public class MapController {
         if (!correct) {
             char gender;
             String genderS;
-                genderS = genderBikeIdTextField.getText();
+                genderS = genderBikeIdTextField.getText().toLowerCase();
                 if (genderS.length() != 1) {
                     return;
                 } else {
                     gender = genderS.charAt(0);
                 }
                 results = DataAnalyser.findTripsByGender(bikeTrips, gender);
+                if(results.size() == 0 ){
+                    resultsLabel.setText("No trips found.");
+                    return;
+            }
                 tripsNearPoint = results;
                 ArrayList<Point.Float> points = new ArrayList<>();
                 points.add(tripsNearPoint.get(0).getStartPoint());
@@ -1445,6 +1483,10 @@ public class MapController {
                 generateRoute(points);
         } else {
             results = DataAnalyser.findTripsByBikeId(bikeTrips, bikeId);
+            if(results.size() == 0 ){
+                resultsLabel.setText("No trips found.");
+                return;
+            }
             tripsNearPoint = results;
             ArrayList<Point.Float> points = new ArrayList<>();
             points.add(tripsNearPoint.get(0).getStartPoint());
