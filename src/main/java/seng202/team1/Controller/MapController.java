@@ -308,7 +308,7 @@ public class MapController {
         win.setMember("retailerListner", retailerListner);
 
 
-                          // sets the filters based on wifi and retailer points loaded
+        // sets the filters based on wifi and retailer points loaded
         loadAllBikeTrips(); // currently only dynamic, requested routes are shown
         loadAllWifi();      // loads all the wifiPoints
         initializeWIFICluster();
@@ -527,8 +527,8 @@ public class MapController {
 
     @FXML
     private void loadAllBikeTrips() {
-            bikeTrips = new ArrayList<BikeTrip>();
-            bikeTrips.addAll(model.getBikeTripsFromList(currentBikeTripListName).getBikeTrips());
+        bikeTrips = new ArrayList<BikeTrip>();
+        bikeTrips.addAll(model.getBikeTripsFromList(currentBikeTripListName).getBikeTrips());
 
 
 
@@ -1474,19 +1474,23 @@ public class MapController {
         if (!correct) {
             char gender;
             String genderS;
-                genderS = genderBikeIdTextField.getText().toLowerCase();
-                gender = genderS.charAt(0);
-                results = DataAnalyser.findTripsByGender(bikeTrips, gender);
-                if(results.size() == 0 ){
-                    resultsLabel.setText("No trips found.");
-                    return;
+            genderS = genderBikeIdTextField.getText().toLowerCase();
+            if (genderS.length() >= 1) {
+                //0-length string
+                return;
             }
-                tripsNearPoint = results;
-                ArrayList<Point.Float> points = new ArrayList<>();
-                points.add(tripsNearPoint.get(0).getStartPoint());
-                points.add(tripsNearPoint.get(0).getEndPoint());
-                resultsLabel.setText(tripsNearPoint.get(0).nicerDescription());
-                generateRoute(points);
+            gender = genderS.charAt(0);
+            results = DataAnalyser.findTripsByGender(bikeTrips, gender);
+            if(results.size() == 0 ){
+                resultsLabel.setText("No trips found.");
+                return;
+            }
+            tripsNearPoint = results;
+            ArrayList<Point.Float> points = new ArrayList<>();
+            points.add(tripsNearPoint.get(0).getStartPoint());
+            points.add(tripsNearPoint.get(0).getEndPoint());
+            resultsLabel.setText(tripsNearPoint.get(0).nicerDescription());
+            generateRoute(points);
         } else {
             results = DataAnalyser.findTripsByBikeId(bikeTrips, bikeId);
             if(results.size() == 0 ){

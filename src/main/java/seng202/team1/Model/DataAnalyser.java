@@ -190,6 +190,8 @@ public final class DataAnalyser {
         points.sort(Comparator.comparing(WIFIPointDistance::getDistance));
         return points;
     }
+
+
     /**
      * Takes an Arraylist of RetailerPointDistances and an Arraylist of points(a route) and returns an ArrayList of RetailerPointDistances
      * sorted by each points minimum distance to the route.

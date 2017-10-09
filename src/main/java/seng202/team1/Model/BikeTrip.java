@@ -1,7 +1,5 @@
 package seng202.team1.Model;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.awt.Point;
 import java.text.DecimalFormat;
 import java.time.Duration;
@@ -453,7 +451,8 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
      * @return A nicer description of the trip for the map
      */
     public String nicerDescription() {
-        return "This trip takes about  " + getDuration() + " and goes to (" + getEndLatitude() + "," + getEndLongitude() + "), a distance of " + String.format("%.0f", tripDistance) + "m away";
+        return "This trip took " + getDuration() +
+                " and ends " + getDistance() + " away at (" + getEndLatitude() + ", " + getEndLongitude() + ").";
     }
 
 
