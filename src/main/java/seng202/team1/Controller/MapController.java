@@ -106,6 +106,7 @@ public class MapController {
     private String currentWifiPointListName = "Default";
     private String currentRetailerListName = "Default";
     private boolean isMapLoaded = false;
+    boolean tripShown = false;
     private WindowManager windowManager = new WindowManager();
     // Some control booleans
     private boolean showRetailersNearRoute = true;
@@ -1073,6 +1074,7 @@ public class MapController {
             resultsLabel.setText(selectedTrip.nicerDescription());
             typeSelectorTabPane.getSelectionModel().select(2);
             stage.toFront();
+            tripShown = true;
         }
     }
 
@@ -1360,7 +1362,7 @@ public class MapController {
             observableRetailerDistances.clear();
             wifiDistanceTable.refresh();
             retailerDistanceTable.refresh();
-
+            tripShown = false;
         }
 
 

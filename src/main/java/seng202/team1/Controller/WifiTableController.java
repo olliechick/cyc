@@ -179,7 +179,9 @@ public class WifiTableController extends TableController {
                     DatabaseManager.close();
 
                     table.refresh();
-                    mapController.reloadAllWifi();
+                    if (!mapController.tripShown) {
+                        mapController.reloadAllWifi();
+                    }
                 }
             }
         } catch (IOException | IllegalStateException | SQLException e) {
@@ -207,7 +209,9 @@ public class WifiTableController extends TableController {
             } catch (SQLException e) {
                 AlertGenerator.createExceptionDialog(e, "Database error", "Could not delete WiFi hotspot.");
             }
-            mapController.reloadAllWifi();
+            if (!mapController.tripShown) {
+                mapController.reloadAllWifi();
+            }
         }
     }
 
@@ -254,7 +258,9 @@ public class WifiTableController extends TableController {
                     dataPoints.add(newWifiPoint);
                     originalData.addAll(newWifiPoint);
                     model.addPoint(newWifiPoint, currentListName);
-                    mapController.reloadAllWifi();
+                    if (!mapController.tripShown) {
+                        mapController.reloadAllWifi();
+                    }
                 }
             }
         } catch (IOException | IllegalStateException e) {
@@ -457,36 +463,14 @@ public class WifiTableController extends TableController {
     }
 
     private void handleImport(ArrayList<WifiPoint> importedData) {
-        int userChoice = checkAndAddToList(importedData.size());
+        boolean userChoice = checkAndAddToList(importedData.size());
 
-        switch (userChoice) {
-            case 0: //Append to table and list
-                System.out.println("Append to table and list");
-                appendToDataAndList(importedData);
-                break;
-            case 1: //Append to table, not to list
-                System.out.println("Append to table, not to list");
-                appendToData(importedData);
-                break;
-            case 2: //Create new list of loaded points
-                appendToNewList(importedData);
-                System.out.println("Nothing yet 2");
-                break;
-            case -1: //Canceled load.
-                System.out.println("Canceled");
-                break;
-            default:
-                AlertGenerator.createAlert("Default reached");
-                break;
+        if (userChoice) {
+            appendToData(importedData);
         }
         stopLoadingAni();
         setPredicate();
         resetFilters();
-    }
-
-    private void appendToDataAndList(ArrayList<WifiPoint> importedData) {
-        appendToData(importedData);
-        //TODO add to current list
     }
 
     private void appendToData(ArrayList<WifiPoint> importedData) {
@@ -503,23 +487,6 @@ public class WifiTableController extends TableController {
             addedMessage = addedMessage + "\n" + (importedData.size() - count) + " duplicates not added.";
         }
         AlertGenerator.createAlert("Entries added", addedMessage);
-    }
-
-    private void appendToNewList(ArrayList<WifiPoint> importedData) {
-        String listName;
-        if (!dataPoints.isEmpty()) {
-            listName = AlertGenerator.createAddListDialog();
-        } else {
-            listName = currentListName;
-        }
-        if (listName != null) {
-            dataPoints.clear();
-            originalData.clear();
-            WifiPointList newList = new WifiPointList(listName, importedData);
-            setupWithList(newList.getListName(), newList.getWifiPoints());
-            //TODO push new list to user
-            setName();
-        }
     }
 
     /**
@@ -551,8 +518,9 @@ public class WifiTableController extends TableController {
         }
     }
 
-    private int checkAndAddToList(int entriesLoaded) {
-        return AlertGenerator.createImportChoiceDialog(entriesLoaded);
+    private boolean checkAndAddToList(int entriesLoaded) {
+        boolean confirm = AlertGenerator.createChoiceDialog("Import", entriesLoaded + " entries loaded.", "Do you want to import?");
+        return confirm;
     }
     //endregion
 
