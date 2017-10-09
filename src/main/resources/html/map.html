@@ -543,7 +543,7 @@ function initialise(){
     /* UpdateswifiMarkerCluster to include only markers that getVisible returns
        true for. Note this must iterate through entire wifiMarkerArray.
     */
-    document.updatewifiMarkerCluster = function updatewifiMarkerCluster()
+    document.updateWIFIMarkerCluster = function updateWIFIMarkerCluster()
     {
 
         var newCluster = [];
@@ -625,6 +625,28 @@ function initialise(){
     {
         retailerMarkerArray[index].setVisible(true);
     }
+
+    document.removeAllRetailers = function removeAllRetailers()
+    {
+        for(var i=0; i < retailerMarkerArray.length; i++){
+            retailerMarkerArray[i].setMap(null);
+        }
+        retailerMarkerArray = new Array();
+    };
+    document.removeAllWIFI = function removeAllWIFI()
+    {
+        for(var i=0; i < wifiMarkerArray.length; i++){
+            wifiMarkerArray[i].setMap(null);
+        }
+        wifiMarkerArray = new Array();
+    };
+    document.removeAllPOI = function removeAllPOI()
+    {
+        for(var i=0; i < POIMarkerArray.length; i++){
+            POIMarkerArray[i].setMap(null);
+        }
+        POIMarkerArray = new Array();
+    };
 
 
 }
