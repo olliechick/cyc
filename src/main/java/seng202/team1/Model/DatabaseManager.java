@@ -1017,7 +1017,7 @@ public class DatabaseManager {
                 preparedStatement.execute();
 
             } else if (point instanceof RetailerLocation) {
-                statement = "DELETE FROM retailer WHERE listid=? AND name=? AND primaryFunction=?";
+                statement = "DELETE FROM retailer WHERE listid=? AND name=? AND primaryFunction=? AND latitude=? AND longitude=?";
                 listid = getListID(username, listName, RetailerLocationList.class);
 
                 RetailerLocation retailerLocation= (RetailerLocation) point;
@@ -1027,11 +1027,13 @@ public class DatabaseManager {
                 preparedStatement.setInt(1, listid);
                 preparedStatement.setString(2, retailerLocation.getName());
                 preparedStatement.setString(3, retailerLocation.getPrimaryFunction());
+                preparedStatement.setFloat(4, retailerLocation.getLatitude());
+                preparedStatement.setFloat(5, retailerLocation.getLongitude());
 
                 preparedStatement.execute();
 
             } else if (point instanceof BikeTrip) {
-                statement = "DELETE FROM trip WHERE listid=? AND startLongitude=? AND startLatitude=? AND endLongitude=? AND endLatitude=? AND bikeid=?";
+                statement = "DELETE FROM trip WHERE listid=? AND startLongitude=? AND startLatitude=? AND endLongitude=? AND endLatitude=? AND bikeid=? AND starttime=?";
                 listid = getListID(username, listName, BikeTripList.class);
                 BikeTrip bikeTrip = (BikeTrip) point;
 
@@ -1043,6 +1045,7 @@ public class DatabaseManager {
                 preparedStatement.setFloat(4, bikeTrip.getEndLongitude());
                 preparedStatement.setFloat(5, bikeTrip.getEndLatitude());
                 preparedStatement.setInt(6, bikeTrip.getBikeId());
+                preparedStatement.setString(7, bikeTrip.getStartTime().toString());
 
                 preparedStatement.execute();
             }

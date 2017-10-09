@@ -96,32 +96,6 @@ public class AlertGenerator {
 
 
     /**
-     * Creates a popup asking the user what they want to do with a newly imported
-     * set of data.
-     *
-     * @param entriesLoaded The number of entries successfully loaded.
-     * @return The index of the string they selected, or -1 if canceled
-     */
-    public static int createImportChoiceDialog(int entriesLoaded) {
-        List<String> choices = new ArrayList<>();
-        choices.add("Append the data into the table and to the current list");
-        choices.add("Just append the data into the table");
-        choices.add("Create a new list with this data");
-
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
-        dialog.setTitle("Import CSV");
-        dialog.setHeaderText(entriesLoaded + " entries loaded.\nHow do you want to import?");
-        dialog.setContentText(null);
-
-        Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()) {
-            return choices.indexOf(result.get());
-        } else {
-            return -1;
-        }
-    }
-
-    /**
      * Creates a popup informing the user of an error and to contact "us".
      * Displays a stacktrace of the exception.
      *

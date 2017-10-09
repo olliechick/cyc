@@ -292,8 +292,8 @@ public class BikeTableController extends TableController {
         boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Point", "Are you sure you want to delete this point",
                 selectedBikeTrip.getName());
         if (confirmDelete) {
-            dataPoints.removeAll(selectedBikeTrip);
-            originalData.removeAll(selectedBikeTrip);
+            dataPoints.remove(selectedBikeTrip);
+            originalData.remove(selectedBikeTrip);
             try {
                 DatabaseManager.open();
                 DatabaseManager.deletePoint(model.getUserName(), currentListName, selectedBikeTrip);
@@ -500,36 +500,15 @@ public class BikeTableController extends TableController {
 
 
     private void handleImport(ArrayList<BikeTrip> importedData) {
-        int userChoice = checkAndAddToList(importedData.size());
+        boolean confirmImport = checkAndAddToList(importedData.size());
 
-        switch (userChoice) {
-            case 0: //Append to table and list
-                System.out.println("Append to table and list");
-                appendToDataAndList(importedData);
-                break;
-            case 1: //Append to table, not to list
-                System.out.println("Append to table, not to list");
-                appendToData(importedData);
-                break;
-            case 2: //Create new list of loaded points
-                appendToNewList(importedData);
-                System.out.println("Nothing yet 2");
-                break;
-            case -1: //Canceled load.
-                System.out.println("Canceled");
-                break;
-            default:
-                AlertGenerator.createAlert("Default reached");
-                break;
+        if (confirmImport) {
+            appendToData(importedData);
         }
+
         stopLoadingAni();
         setPredicate();
         clearFilters();
-    }
-
-    private void appendToDataAndList(ArrayList<BikeTrip> importedData) {
-        appendToData(importedData);
-        //TODO add to current list
     }
 
     private void appendToData(ArrayList<BikeTrip> importedData) {
@@ -549,23 +528,6 @@ public class BikeTableController extends TableController {
         }
 
         AlertGenerator.createAlert("Entries added", addedMessage);
-    }
-
-    private void appendToNewList(ArrayList<BikeTrip> importedData) {
-        String listName;
-        if (!dataPoints.isEmpty()) {
-            listName = AlertGenerator.createAddListDialog();
-        } else {
-            listName = currentListName;
-        }
-        if (listName != null) {
-            dataPoints.clear();
-            originalData.clear();
-            BikeTripList newList = new BikeTripList(listName, importedData);
-            setupWithList(newList.getListName(), newList.getBikeTrips());
-            //TODO push new list to user
-            setName();
-        }
     }
 
 
@@ -698,8 +660,9 @@ public class BikeTableController extends TableController {
      *
      * @param entriesLoaded TODO explain what this is
      */
-    private int checkAndAddToList(int entriesLoaded) {
-        return AlertGenerator.createImportChoiceDialog(entriesLoaded);
+    private boolean checkAndAddToList(int entriesLoaded) {
+        boolean confirm = AlertGenerator.createChoiceDialog("Import", entriesLoaded + " entries loaded.", "Do you want to import?");
+        return confirm;
     }
 
 

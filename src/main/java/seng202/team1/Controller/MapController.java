@@ -106,6 +106,7 @@ public class MapController {
     private String currentWifiPointListName = "Default";
     private String currentRetailerListName = "Default";
     private boolean isMapLoaded = false;
+    boolean tripShown = false;
     private WindowManager windowManager = new WindowManager();
     // Some control booleans
     private boolean showRetailersNearRoute = true;
@@ -126,19 +127,19 @@ public class MapController {
     private WebView webView;
 
     @FXML
-    private ComboBox filterPrimaryComboBox;
+    private ComboBox<String> filterPrimaryComboBox;
 
     @FXML
-    private ComboBox filterSecondaryComboBox;
+    private ComboBox<String> filterSecondaryComboBox;
 
     @FXML
-    private ComboBox listBikeTripComboBox;
+    private ComboBox<String> listBikeTripComboBox;
 
     @FXML
-    private ComboBox listWifiComboBox;
+    private ComboBox<String> listWifiComboBox;
 
     @FXML
-    private ComboBox listRetailerComboBox;
+    private ComboBox<String> listRetailerComboBox;
 
     @FXML
     private TextField streetSearchField;
@@ -217,13 +218,15 @@ public class MapController {
     }
 
 
-    @FXML
+
     /**
      * Initializes the webView, sets options, loads the map html, initializes filters then awaits
      * confirmation that the map has loaded before calling the loadData method to populate the map.
      */
-    private void initialize() {
-
+    @FXML
+    public void initialize() {
+        nextButton.setVisible(false);
+        previousButton.setVisible(false);
         webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
         webEngine.load(getClass().getResource("/html/map.html").toString());
@@ -249,10 +252,11 @@ public class MapController {
                 });
     }
 
-    @FXML
+
     /**
      * If the map is loaded this method resets the map. Reloading wifi and retailer markers.
      */
+    @FXML
     private void resetMap() {
         webView.getEngine().loadContent("");
         webEngine.load(getClass().getResource("/html/map.html").toString());
@@ -317,9 +321,9 @@ public class MapController {
     }
 
     @FXML
-    private void updateWIFIList() {
-        if (!(listWifiComboBox.getValue().toString().equals(currentWifiPointListName))) {
-            currentWifiPointListName = listWifiComboBox.getValue().toString();
+    void updateWIFIList() {
+        if (listWifiComboBox.getValue() != null && !(listWifiComboBox.getValue().equals(currentWifiPointListName))) {
+            currentWifiPointListName = listWifiComboBox.getValue();
             WifiPointList wifiPointList = model.getWifiPointsFromList(currentWifiPointListName);
             wifiPoints = wifiPointList.getWifiPoints();
             reloadAllWifi();
@@ -327,9 +331,9 @@ public class MapController {
 
     }
     @FXML
-    private void updateRetailerList() {
-        if (!(listRetailerComboBox.getValue().toString().equals(currentRetailerListName))) {
-            currentRetailerListName = listRetailerComboBox.getValue().toString();
+    void updateRetailerList() {
+        if (listRetailerComboBox.getValue() != null && !(listRetailerComboBox.getValue().equals(currentRetailerListName))) {
+            currentRetailerListName = listRetailerComboBox.getValue();
             RetailerLocationList retailerList = model.getRetailerPointsFromList(currentRetailerListName);
             retailerPoints = retailerList.getRetailerLocations();
             reloadAllRetailers();
@@ -338,9 +342,9 @@ public class MapController {
 
     }
     @FXML
-    private void updateBikeTripList() {
-        if (!(listBikeTripComboBox.getValue().toString().equals(currentBikeTripListName))) {
-            currentBikeTripListName = listBikeTripComboBox.getValue().toString();
+    void updateBikeTripList() {
+        if (listBikeTripComboBox.getValue() != null && !(listBikeTripComboBox.getValue().equals(currentBikeTripListName))) {
+            currentBikeTripListName = listBikeTripComboBox.getValue();
             BikeTripList bikeTripList = model.getBikeTripsFromList(currentBikeTripListName);
             bikeTrips = bikeTripList.getBikeTrips();
         }
@@ -432,6 +436,8 @@ public class MapController {
     }
 
     public void findResults() {
+        previousButton.setVisible(true);
+        nextButton.setVisible(true);
         tripsNearPoint = null; // reset the list
         currentTripCounter = 0; // reset the counter
         System.out.println("Search Button Pressed");
@@ -467,11 +473,12 @@ public class MapController {
             results = DataAnalyser.searchBikeTrips(endingLat, endingLong, delta, results, false); // takes the list of trips that start at one point and then finds those that end at another point
 
         }
-        System.out.println("Results Found");
+
         if (results.size() == 0) {
             resultsLabel.setText("No results were found.");
             results = null;
         } else {
+            System.out.println("Results Found");
             resultsLabel.setText(results.get(0).nicerDescription());
             ArrayList<Point.Float> route1 = new ArrayList<>();
             route1.add(results.get(0).getStartPoint());
@@ -542,7 +549,7 @@ public class MapController {
 
     }
 
-    private void reloadAllWifi() {
+    void reloadAllWifi() {
         removeAllWIFI();
         loadAllWifi();
         updateWIFICluster();
@@ -560,7 +567,7 @@ public class MapController {
         }
     }
 
-    private void reloadAllRetailers() {
+    void reloadAllRetailers() {
         removeAllRetailers();
         loadAllRetailers();
         updateRetailerCluster();
@@ -604,7 +611,7 @@ public class MapController {
     }
 
     @FXML
-    private void updateBikeTripLists() {
+    void updateBikeTripLists() {
         bikeTripListNames = model.getListNamesOfType(BikeTripList.class);
         listBikeTripComboBox.getItems().clear();
         listBikeTripComboBox.getItems().addAll(bikeTripListNames);
@@ -612,7 +619,7 @@ public class MapController {
     }
 
     @FXML
-    private void updateWifiLists() {
+    void updateWifiLists() {
         wifiListNames = model.getListNamesOfType(WifiPointList.class);
         for (String wifiPointListName : wifiListNames) {
             System.out.println(wifiPointListName);
@@ -623,7 +630,7 @@ public class MapController {
     }
 
     @FXML
-    private void updateRetailerLists() {
+    void updateRetailerLists() {
         retailerListNames = model.getListNamesOfType(RetailerLocationList.class);
         listRetailerComboBox.getItems().clear();
         listRetailerComboBox.getItems().addAll(retailerListNames);
@@ -1073,6 +1080,7 @@ public class MapController {
             resultsLabel.setText(selectedTrip.nicerDescription());
             typeSelectorTabPane.getSelectionModel().select(2);
             stage.toFront();
+            tripShown = true;
         }
     }
 
@@ -1360,7 +1368,7 @@ public class MapController {
             observableRetailerDistances.clear();
             wifiDistanceTable.refresh();
             retailerDistanceTable.refresh();
-
+            tripShown = false;
         }
 
 
@@ -1451,6 +1459,8 @@ public class MapController {
      * the given conditions.
      */
     public void SearchByGenderOrBikeID(){
+        nextButton.setVisible(true);
+        previousButton.setVisible(true);
         currentTripCounter = 0;
         ArrayList<BikeTrip> results;
         int bikeId = -1;
@@ -1465,11 +1475,7 @@ public class MapController {
             char gender;
             String genderS;
                 genderS = genderBikeIdTextField.getText().toLowerCase();
-                if (genderS.length() != 1) {
-                    return;
-                } else {
-                    gender = genderS.charAt(0);
-                }
+                gender = genderS.charAt(0);
                 results = DataAnalyser.findTripsByGender(bikeTrips, gender);
                 if(results.size() == 0 ){
                     resultsLabel.setText("No trips found.");
@@ -1495,6 +1501,17 @@ public class MapController {
             generateRoute(points);
         }
 
+    }
+
+    public void clearBikeSearches() {
+        startingLatTextField.setText("");
+        startingLongTextField.setText("");
+        endingLatTextField.setText("");
+        endingLongTextField.setText("");
+        genderBikeIdTextField.setText("");
+        resultsLabel.setText("");
+        nextButton.setVisible(false);
+        previousButton.setVisible(false);
     }
 
 }

@@ -175,6 +175,9 @@ public class RetailerTableController extends TableController {
                     dataPoints.add(retailerLocation);
                     originalData.add(retailerLocation);
                     model.addPoint(retailerLocation, currentListName);
+                    if (!mapController.tripShown) {
+                        mapController.reloadAllRetailers();
+                    }
                 }
             }
         } catch (IOException | IllegalStateException e) {
@@ -210,6 +213,9 @@ public class RetailerTableController extends TableController {
                     selectedRetailerLocation.setAllProperties(newRetailerLocation);
                     DatabaseManager.close();
                     table.refresh();
+                    if (!mapController.tripShown) {
+                        mapController.reloadAllRetailers();
+                    }
                 }
             }
         } catch (IOException | IllegalStateException | SQLException e) {
@@ -227,14 +233,17 @@ public class RetailerTableController extends TableController {
         boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Point", "Are you sure you want to delete this point",
                 selectedRetailer.getDescription());
         if (confirmDelete) {
-            dataPoints.removeAll(selectedRetailer);
-            originalData.removeAll(selectedRetailer);
+            dataPoints.remove(selectedRetailer);
+            originalData.remove(selectedRetailer);
             try {
                 DatabaseManager.open();
                 DatabaseManager.deletePoint(model.getUserName(), currentListName, selectedRetailer);
                 DatabaseManager.close();
             } catch (SQLException e) {
                 AlertGenerator.createExceptionDialog(e, "Database error", "Could not delete point.");
+            }
+            if (!mapController.tripShown) {
+                mapController.reloadAllRetailers();
             }
         }
     }
@@ -253,6 +262,7 @@ public class RetailerTableController extends TableController {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            mapController.updateRetailerLists();
         }
     }
 
@@ -421,7 +431,7 @@ public class RetailerTableController extends TableController {
 
                 if (loadRetailerCsv.getValue() != null) {
                     // Initialise the values in the filter combo boxes now that we have data to work with
-                    setFilters(loadRetailerCsv.getValue());
+                    //setFilters(loadRetailerCsv.getValue());
                     model.addPointList(new RetailerLocationList(currentListName, loadRetailerCsv.getValue()));
                     handleImport(loadRetailerCsv.getValue());
                 } else {
@@ -475,40 +485,19 @@ public class RetailerTableController extends TableController {
     }
 
     private void handleImport(ArrayList<RetailerLocation> importedData) {
-        int userChoice = checkAndAddToList(importedData.size());
-
-        switch (userChoice) {
-            case 0: //Append to table and list
-                System.out.println("Append to table and list");
-                appendToDataAndList(importedData);
-                break;
-            case 1: //Append to table, not to list
-                System.out.println("Append to table, not to list");
-                appendToData(importedData);
-                break;
-            case 2: //Create new list of loaded points
-                appendToNewList(importedData);
-                System.out.println("Nothing yet 2");
-                break;
-            case -1: //Canceled load.
-                System.out.println("Canceled");
-                break;
-            default:
-                AlertGenerator.createAlert("Default reached");
-                break;
+        boolean userChoice = checkAndAddToList(importedData.size());
+        if (userChoice) {
+            appendToData(importedData);
         }
         stopLoadingAni();
         setPredicate();
         clearFilters();
+        mapController.reloadAllRetailers();
     }
 
-    private int checkAndAddToList(int entriesLoaded) {
-        return AlertGenerator.createImportChoiceDialog(entriesLoaded);
-    }
-
-    private void appendToDataAndList(ArrayList<RetailerLocation> importedData) {
-        appendToData(importedData);
-        //TODO add to current list
+    private boolean checkAndAddToList(int entriesLoaded) {
+        boolean confirm = AlertGenerator.createChoiceDialog("Import", entriesLoaded + " entries loaded.", "Do you want to import?");
+        return confirm;
     }
 
     private void appendToData(ArrayList<RetailerLocation> importedData) {
@@ -530,29 +519,12 @@ public class RetailerTableController extends TableController {
             addedMessage += "\n" + (importedData.size() - count) + " duplicates not added.";
         }
 
-        if (countCoordless < count) {
+        if (countCoordless > 0) {
             // There are some co-ordless retailers being added
             addedMessage += "\n" + countCoordless + " entries did not have co-ordinates. " +
                     "These can be manually added by editing the relevant retailers.";
         }
         AlertGenerator.createAlert("Entries added", addedMessage);
-    }
-
-    private void appendToNewList(ArrayList<RetailerLocation> importedData) {
-        String listName;
-        if (!dataPoints.isEmpty()) {
-            listName = AlertGenerator.createAddListDialog();
-        } else {
-            listName = currentListName;
-        }
-        if (listName != null) {
-            dataPoints.clear();
-            originalData.clear();
-            RetailerLocationList newList = new RetailerLocationList(listName, importedData);
-            setupWithList(newList.getListName(), newList.getRetailerLocations());
-            //TODO push new list to user
-            setName();
-        }
     }
     //endregion
 
