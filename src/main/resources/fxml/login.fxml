@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -18,16 +24,16 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane hgap="10.0" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.LoginController">
+<GridPane hgap="10.0" prefHeight="800.0" prefWidth="1200.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.LoginController">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="300.0" />
   </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="40.0" minHeight="0.0" prefHeight="40.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="331.0" minHeight="10.0" prefHeight="331.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="40.0" minHeight="0.0" prefHeight="40.0" valignment="CENTER" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="331.0" minHeight="10.0" prefHeight="331.0" valignment="CENTER" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <TabPane blendMode="MULTIPLY" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefWidth="300.0" scaleShape="false" snapToPixel="false" tabClosingPolicy="UNAVAILABLE" tabMinWidth="125.0" GridPane.rowIndex="1">
+        <TabPane blendMode="MULTIPLY" maxHeight="1.7976931348623157E308" maxWidth="300.0" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefWidth="300.0" scaleShape="false" snapToPixel="false" tabClosingPolicy="UNAVAILABLE" tabMinWidth="120.0" GridPane.halignment="CENTER" GridPane.rowIndex="1">
             <tabs>
             <Tab text="Log in">
                <content>
@@ -114,6 +120,6 @@
       </Text>
    </children>
    <padding>
-      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+      <Insets bottom="25.0" left="25.0" right="25.0" top="150.0" />
    </padding>
 </GridPane>
