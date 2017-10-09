@@ -170,13 +170,16 @@ public class WifiTableController extends TableController {
                 if (dataPoints.contains(newWifiPoint)) {
                     AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
                 } else {
+
+                    DatabaseManager.open();
+                    DatabaseManager.updatePoint(model.getUserName(), currentListName, selectedWifiPoint, newWifiPoint);
                     selectedWifiPoint.setAllProperties(newWifiPoint);
-                    SerializerImplementation.serializeUser(model); // TODO: Use database to edit point
+                    DatabaseManager.close();
 
                     table.refresh();
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
     }

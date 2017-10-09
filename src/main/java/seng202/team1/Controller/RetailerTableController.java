@@ -208,12 +208,14 @@ public class RetailerTableController extends TableController {
                 if (dataPoints.contains(newRetailerLocation)) {
                     AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
                 } else {
+                    DatabaseManager.open();
+                    DatabaseManager.updatePoint(model.getUserName(), currentListName, selectedRetailerLocation, newRetailerLocation);
                     selectedRetailerLocation.setAllProperties(newRetailerLocation);
-                    SerializerImplementation.serializeUser(model); // TODO: Use database to store edited point
+                    DatabaseManager.close();
                     table.refresh();
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             AlertGenerator.createAlert("Oops, something went wrong");
         }
     }

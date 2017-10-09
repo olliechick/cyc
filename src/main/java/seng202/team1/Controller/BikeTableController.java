@@ -264,13 +264,15 @@ public class BikeTableController extends TableController {
                 if (dataPoints.contains(newBikeTrip)) {
                     AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
                 } else {
+                    DatabaseManager.open();
+                    DatabaseManager.updatePoint(model.getUserName(), currentListName, selectedBikeTrip, newBikeTrip);
                     selectedBikeTrip.setAllProperties(newBikeTrip);
-                    SerializerImplementation.serializeUser(model); // TODO: Use database to store edited trip
+                    DatabaseManager.close();
                     table.refresh();
                 }
             }
 
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
     }
