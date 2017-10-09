@@ -268,23 +268,27 @@ public class RetailerLocation extends DataPoint implements java.io.Serializable 
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if ( obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (this == obj) {
-            return true;
-        }
-        RetailerLocation that = (RetailerLocation) obj;
-        return this.name.equalsIgnoreCase(that.name) && this.primaryFunction.equalsIgnoreCase(that.primaryFunction);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RetailerLocation that = (RetailerLocation) o;
+
+        if (!name.equals(that.name)) return false;
+        if (!addressLine1.equals(that.addressLine1)) return false;
+        if (addressLine2 != null ? !addressLine2.equals(that.addressLine2) : that.addressLine2 != null) return false;
+        if (!primaryFunction.equals(that.primaryFunction)) return false;
+        return secondaryFunction.equals(that.secondaryFunction);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 31).
-                append(name).
-                append(primaryFunction).
-                toHashCode();
+        int result = name.hashCode();
+        result = 31 * result + addressLine1.hashCode();
+        result = 31 * result + (addressLine2 != null ? addressLine2.hashCode() : 0);
+        result = 31 * result + primaryFunction.hashCode();
+        result = 31 * result + secondaryFunction.hashCode();
+        return result;
     }
 
     @Override

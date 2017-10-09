@@ -133,9 +133,9 @@ public class WifiPointTest {
         locationType = "Outdoor Kiosk";
         hood = "Midtown-Midtown South";
         borough = "Manhattan";
-        city = "New York";
+        city = "New Yrk";
         zipcode = 10001;
-        cost = "Limited Free";
+        cost = "Free";
         provider = "LinkNYC - Citybridge";
         remarks = "Tablet Internet -phone , Free 1 GB Wi-FI Service";
         ssid = "LinkNYC Free Wi-Fi";
@@ -220,9 +220,9 @@ public class WifiPointTest {
         locationType = "Outdoor Kiosk";
         hood = "Midtown-Midtown South";
         borough = "Manhattan";
-        city = "New York";
+        city = "New Yok";
         zipcode = 10001;
-        cost = "Limited Free";
+        cost = "Free";
         provider = "LinkNYC - Citybridge";
         remarks = "Tablet Internet -phone , Free 1 GB Wi-FI Service";
         ssid = "LinkNYC Free Wi-Fi";

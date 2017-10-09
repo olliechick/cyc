@@ -306,7 +306,7 @@ public class BikeTripTest extends TestCase {
                 bikeID, gender,
                 birthYear, tripDistance);
 
-        startTime = LocalDateTime.of(2015, Month.DECEMBER, 31, 23, 50, 0);
+        gender  ='m';
         BikeTrip biketrip2 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, tripDistance);
@@ -330,7 +330,7 @@ public class BikeTripTest extends TestCase {
                 bikeID, gender,
                 birthYear, tripDistance);
 
-        startTime = LocalDateTime.of(2015, Month.DECEMBER, 31, 23, 50, 0);
+        gender  ='m';
         BikeTrip biketrip2 = new BikeTrip(duration, startTime, stopTime, startPoint, endPoint,
                 bikeID, gender,
                 birthYear, tripDistance);

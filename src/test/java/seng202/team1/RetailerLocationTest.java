@@ -94,10 +94,10 @@ public class RetailerLocationTest extends TestCase {
     public void testEqualsSameButDifferent(){
         name = "Pearl Bodywork";
         addressLine1 = "60 Pearl Street";
-        addressLine2 = "Floor 3";
-        city = "New York";
+        addressLine2 = "Floor 2";
+        city = "New Yrk";
         state = "NY";
-        zipcode = 10004;
+        zipcode = 104;
         blockLot = "7-38";
         primaryFunction = "Personal and Professional Services";
         secondaryFunction = "Spa";
@@ -159,10 +159,10 @@ public class RetailerLocationTest extends TestCase {
     public void testHashCodeSameButDifferent(){
         name = "Pearl Bodywork";
         addressLine1 = "60 Pearl Street";
-        addressLine2 = "Floor 3";
+        addressLine2 = "Floor 2";
         city = "New York";
         state = "NY";
-        zipcode = 10004;
+        zipcode = 104;
         blockLot = "7-38";
         primaryFunction = "Personal and Professional Services";
         secondaryFunction = "Spa";
@@ -190,7 +190,8 @@ public class RetailerLocationTest extends TestCase {
                 zipcode, blockLot, primaryFunction, secondaryFunction, coords);
         int hash1 = retailerLocation.hashCode();
         int hash2 = retailerLocation1.hashCode();
-        assertNotEquals(hash1,hash2);
+        boolean isSame = hash1 == hash2;
+        assertFalse(isSame);
     }
 
 

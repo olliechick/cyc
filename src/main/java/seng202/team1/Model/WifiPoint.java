@@ -302,24 +302,25 @@ public class WifiPoint extends DataPoint implements java.io.Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (this == obj) {
-            return true;
-        }
-        WifiPoint that = (WifiPoint) obj;
-        return this.coords.equals(that.coords) && this.ssid.equalsIgnoreCase(that.ssid);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WifiPoint wifiPoint = (WifiPoint) o;
+
+        if (coords != null ? !coords.equals(wifiPoint.coords) : wifiPoint.coords != null) return false;
+        if (cost != null ? !cost.equals(wifiPoint.cost) : wifiPoint.cost != null) return false;
+        if (provider != null ? !provider.equals(wifiPoint.provider) : wifiPoint.provider != null) return false;
+        return ssid != null ? ssid.equals(wifiPoint.ssid) : wifiPoint.ssid == null;
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 31).
-                append(coords).
-                append(ssid).
-                toHashCode();
-
+        int result = coords != null ? coords.hashCode() : 0;
+        result = 31 * result + (cost != null ? cost.hashCode() : 0);
+        result = 31 * result + (provider != null ? provider.hashCode() : 0);
+        result = 31 * result + (ssid != null ? ssid.hashCode() : 0);
+        return result;
     }
 
     @Override

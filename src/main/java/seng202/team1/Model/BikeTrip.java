@@ -424,30 +424,28 @@ public class BikeTrip extends DataPoint implements java.io.Serializable {
 
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (this == obj) { // same obj is passed
-            return true;
-        }
-        BikeTrip that = (BikeTrip) obj;
+        BikeTrip bikeTrip = (BikeTrip) o;
 
-        return this.getStartPoint().equals(that.getStartPoint())
-                && this.getEndPoint().equals(that.getEndPoint());
+        if (bikeId != bikeTrip.bikeId) return false;
+        if (!startTime.equals(bikeTrip.startTime)) return false;
+        if (!stopTime.equals(bikeTrip.stopTime)) return false;
+        if (!startPoint.equals(bikeTrip.startPoint)) return false;
+        return endPoint.equals(bikeTrip.endPoint);
     }
-
 
     @Override
-    public int hashCode() { // must override hashcode when overriding equality
-        return new HashCodeBuilder(17, 31)
-                .append(startPoint)
-                .append(endPoint)
-                .toHashCode();
-
+    public int hashCode() {
+        int result = startTime.hashCode();
+        result = 31 * result + stopTime.hashCode();
+        result = 31 * result + startPoint.hashCode();
+        result = 31 * result + endPoint.hashCode();
+        result = 31 * result + bikeId;
+        return result;
     }
-
 
     @Override
     public String toString() {
