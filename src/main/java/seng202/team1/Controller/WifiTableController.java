@@ -20,7 +20,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import seng202.team1.Model.*;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.UserAccountModel;
 
@@ -179,8 +178,8 @@ public class WifiTableController extends TableController {
                     table.refresh();
                 }
             }
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException | SQLException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 
@@ -239,8 +238,8 @@ public class WifiTableController extends TableController {
                     model.addPoint(newWifiPoint, currentListName);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 

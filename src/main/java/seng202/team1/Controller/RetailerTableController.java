@@ -35,6 +35,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static seng202.team1.Model.CsvHandling.CSVExporter.exportRetailers;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
+
 /**
  * Logic for the retailer table GUI
  * Created on 7/09/17.
@@ -180,8 +183,8 @@ public class RetailerTableController extends TableController {
                     model.addPoint(retailerLocation, currentListName);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 
@@ -215,8 +218,8 @@ public class RetailerTableController extends TableController {
                     table.refresh();
                 }
             }
-        } catch (IOException | SQLException e) {
-            AlertGenerator.createAlert("Oops, something went wrong");
+        } catch (IOException | IllegalStateException | SQLException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 

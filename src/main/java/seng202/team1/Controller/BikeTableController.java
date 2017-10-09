@@ -235,8 +235,8 @@ public class BikeTableController extends TableController {
                 }
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 
@@ -272,8 +272,9 @@ public class BikeTableController extends TableController {
                 }
             }
 
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalStateException | SQLException e) {
+            //e.printStackTrace();
+            AlertGenerator.createExceptionDialog(e);
         }
     }
 

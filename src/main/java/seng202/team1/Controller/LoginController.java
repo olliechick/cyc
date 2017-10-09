@@ -94,6 +94,7 @@ public class LoginController {
     private CheckBox acceptTermsOfService;
 
 
+    private final static int MIN_PASSWORD_LENGTH = 0;
 
     @FXML
     private TabPane loginOrSignup;
@@ -134,26 +135,53 @@ public class LoginController {
             stage.sizeToScene();
             stage.show();
 
-        } catch (Exception e) {
-            e.printStackTrace(); //File not found
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e); //File not found
+        }
+    }
+
+    /**
+     * Changes the scene to display the landing screen for analyst/admin users.
+     */
+    private void launchLandingScreen() {
+
+        try {
+            // Changes to the table choosing GUI
+            FXMLLoader landingLoader = new FXMLLoader(getClass().getResource("/fxml/landingView.fxml"));
+            Parent landingView = landingLoader.load();
+            LandingController landingController = landingLoader.getController();
+
+
+            Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Table can take over
+
+            landingController.initModel(model, stage);
+            stage.setScene(new Scene(landingView));
+            stage.show();
+
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e); //File not found
         }
     }
 
     /**
      * Opens a pop up to view the TOS
      */
-    public void showTOS() throws IOException {
-        System.out.println("TOS button pressed");
+    public void showTOS() {
+        try {
+            System.out.println("TOS button pressed");
 
-        FXMLLoader tosLoader = new FXMLLoader(getClass().getResource("/fxml/TOSviewer.fxml"));
-        Parent tosView = tosLoader.load();
-        TOSController tosController = tosLoader.getController();
+            FXMLLoader tosLoader = new FXMLLoader(getClass().getResource("/fxml/TOSviewer.fxml"));
+            Parent tosView = tosLoader.load();
+            TOSController tosController = tosLoader.getController();
 
-        Stage tosStage = new Stage();
-        tosStage.setScene(new Scene(tosView));
-        tosController.initialize(tosStage);
-        tosStage.initModality(Modality.APPLICATION_MODAL);
-        tosStage.show();
+            Stage tosStage = new Stage();
+            tosStage.setScene(new Scene(tosView));
+            tosController.initialize(tosStage);
+            tosStage.initModality(Modality.APPLICATION_MODAL);
+            tosStage.show();
+        } catch (IOException | IllegalStateException e) {
+            AlertGenerator.createExceptionDialog(e);
+        }
     }
 
     /**
