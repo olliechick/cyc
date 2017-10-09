@@ -104,16 +104,16 @@
                      <content>
                         <GridPane hgap="10.0" vgap="5.0" BorderPane.alignment="CENTER">
                            <children>
-                              <TextField fx:id="startLatitudeTextField" GridPane.columnIndex="1" />
-                              <TextField fx:id="startLongitudeTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField fx:id="endLatitudeTextField" GridPane.columnIndex="4" />
-                              <TextField fx:id="endLongitudeTextField" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                              <TextField fx:id="startLatitudeTextField" promptText="41.12345" GridPane.columnIndex="1" />
+                              <TextField fx:id="startLongitudeTextField" promptText="-73.12345" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="endLatitudeTextField" promptText="41.12346" GridPane.columnIndex="4" />
+                              <TextField fx:id="endLongitudeTextField" promptText="-73.12346" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                               <Label text="Start latitude" />
                               <Label text="Start longitude" GridPane.rowIndex="1" />
                               <Label text="End latitude" GridPane.columnIndex="3" />
                               <Label text="End longitude" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                              <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchWifi" prefWidth="100.0" text="Search" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                               <Button fx:id="clearSearchFilters" mnemonicParsing="false" onAction="#clearSearchFilters" prefWidth="100.0" text="Clear search" GridPane.columnIndex="5" />
+                              <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchWifi" prefWidth="100.0" text="Search" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                               <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.rowSpan="2147483647" />
                            </children>
                            <columnConstraints>

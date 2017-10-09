@@ -36,7 +36,7 @@
          <font>
             <Font size="20.0" />
          </font></Label>
-      <Button mnemonicParsing="false" onAction="#createNewBikeList" text="New Bike trip list" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+      <Button mnemonicParsing="false" onAction="#createNewBikeList" text="New bike trip list" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
       <Button mnemonicParsing="false" onAction="#createNewRetailerList" text="New retailer list" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
       <Button mnemonicParsing="false" onAction="#createNewWifiList" text="New WiFi hotspot list" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
    </children>

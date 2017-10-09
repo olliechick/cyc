@@ -117,12 +117,12 @@
                               <Label text="Start longitude" GridPane.rowIndex="1" />
                               <Label text="End latitude" GridPane.columnIndex="3" />
                               <Label text="End longitude" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                              <TextField fx:id="startLatTextField" prefHeight="26.0" prefWidth="327.0" GridPane.columnIndex="1" />
-                              <TextField fx:id="startLongTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField fx:id="endLatTextField" minWidth="10.0" prefWidth="100.0" GridPane.columnIndex="4" />
-                              <TextField fx:id="endLongTextField" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                              <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchBikeTrips" prefWidth="100.0" text="Search" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                              <TextField fx:id="startLatTextField" prefHeight="26.0" prefWidth="327.0" promptText="41.12345" GridPane.columnIndex="1" />
+                              <TextField fx:id="startLongTextField" promptText="-73.12345" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="endLatTextField" minWidth="10.0" prefWidth="100.0" promptText="41.12346" GridPane.columnIndex="4" />
+                              <TextField fx:id="endLongTextField" promptText="-73.12346" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                               <Button fx:id="clearSearchesButton" mnemonicParsing="false" onAction="#clearFilters" prefWidth="100.0" text="Clear search" GridPane.columnIndex="5" />
+                              <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchBikeTrips" prefWidth="100.0" text="Search" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                               <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.rowSpan="2147483647" />
                            </children>
                            <padding>

@@ -124,20 +124,20 @@
                               </Label>
                               <Label text="End latitude" GridPane.columnIndex="3" />
                               <Label text="End longitude" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                              <TextField fx:id="startLatTextField" GridPane.columnIndex="1">
+                              <TextField fx:id="startLatTextField" promptText="41.12345" GridPane.columnIndex="1">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
                               </TextField>
-                              <TextField fx:id="startLongTextField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <TextField fx:id="startLongTextField" promptText="-73.12345" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
                               </TextField>
-                              <TextField fx:id="endLatTextField" layoutX="210.0" layoutY="115.0" GridPane.columnIndex="4" />
-                              <TextField fx:id="endLongTextField" layoutX="610.0" layoutY="68.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                              <Button fx:id="searchButton" maxWidth="-Infinity" mnemonicParsing="false" onAction="#searchRetailersbyLatLong" prefWidth="100.0" text="Search" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                              <TextField fx:id="endLatTextField" layoutX="210.0" layoutY="115.0" promptText="41.12346" GridPane.columnIndex="4" />
+                              <TextField fx:id="endLongTextField" layoutX="610.0" layoutY="68.0" promptText="-73.12346" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                               <Button fx:id="clearSearchesButton" maxWidth="-Infinity" mnemonicParsing="false" onAction="#clearSearches" prefWidth="100.0" text="Clear search" GridPane.columnIndex="5" />
+                              <Button fx:id="searchButton" maxWidth="-Infinity" mnemonicParsing="false" onAction="#searchRetailersbyLatLong" prefWidth="100.0" text="Search" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                               <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.rowSpan="2147483647" />
                            </children>
                            <padding>

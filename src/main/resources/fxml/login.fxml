@@ -46,7 +46,7 @@
                         <TextField fx:id="usernameTextField" onAction="#login" GridPane.columnIndex="1" />
                         <Label fx:id="passwordLabel" text="Password" GridPane.rowIndex="1" />
                         <PasswordField fx:id="passwordField" onAction="#login" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" text="Log in" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" prefWidth="100.0" text="Log in" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -81,17 +81,17 @@
                         <PasswordField fx:id="newConfirmPasswordTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <DatePicker fx:id="birthdayEntryField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <ChoiceBox fx:id="genderBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <CheckBox fx:id="acceptTermsOfService" alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="18.0" prefWidth="72.0" text="Accept " textOverrun="WORD_ELLIPSIS" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                           <font>
-                              <Font size="12.0" />
-                           </font>
-                        </CheckBox>
                         <Hyperlink alignment="TOP_LEFT" onAction="#showTOS" text="Terms of Service" textOverrun="WORD_ELLIPSIS" underline="true" GridPane.rowIndex="5">
                            <font>
                               <Font size="12.0" />
                            </font>
                         </Hyperlink>
-                        <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUp" text="Sign up" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                        <CheckBox fx:id="acceptTermsOfService" alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="18.0" prefWidth="72.0" text="Accept " textOverrun="WORD_ELLIPSIS" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </CheckBox>
+                        <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUp" prefWidth="100.0" text="Sign up" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
