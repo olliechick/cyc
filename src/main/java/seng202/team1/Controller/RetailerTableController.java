@@ -18,22 +18,21 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import static seng202.team1.Model.CsvHandling.CSVExporter.exportRetailers;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.DatabaseManager;
 import seng202.team1.Model.GenerateFields;
 import seng202.team1.Model.RetailerLocation;
 import seng202.team1.Model.RetailerLocationList;
-import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import static seng202.team1.Model.CsvHandling.CSVExporter.exportRetailers;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 
 /**
  * Logic for the retailer table GUI
@@ -76,9 +75,6 @@ public class RetailerTableController extends TableController {
 
     @FXML
     private Button searchButton;
-
-    @FXML
-    private Label warningLabel;
     //endregion
 
     private UserAccountModel model;
@@ -108,7 +104,6 @@ public class RetailerTableController extends TableController {
     void initModel(UserAccountModel userAccountModel) {
         this.model = userAccountModel;
         //importRetailerCsv(DEFAULT_RETAILER_LOCATIONS_FILENAME, false);
-        warningLabel.setText("");
     }
 
 
@@ -258,21 +253,18 @@ public class RetailerTableController extends TableController {
         Double endLat;
         Double endLong;
         Double delta = 100.0;
-        warningLabel.setTextFill(Color.BLACK);
-        warningLabel.setText("");
         try {
             startLat = Double.parseDouble(startLatTextField.getText());
             startLong = Double.parseDouble(startLongTextField.getText());
         } catch (NumberFormatException e){
-            warningLabel.setText("Starting Latitude and Longitude must be Co-ordinates in Decimal Form");
-            warningLabel.setTextFill(Color.RED);
+            AlertGenerator.createAlert("Starting Latitude and Longitude must be Co-ordinates in Decimal Form");
             return;
         }
         try {
             endLat = Double.parseDouble(endLatTextField.getText());
             endLong = Double.parseDouble(endLongTextField.getText());
         } catch (NumberFormatException e){
-            warningLabel.setText("Invaild End Latitude or Longitude, Using start points only");
+            AlertGenerator.createAlert("Invaild End Latitude or Longitude, Using start points only");
             endLat = 0.00;
             endLong = 0.00;
         }
@@ -286,7 +278,7 @@ public class RetailerTableController extends TableController {
             results = DataAnalyser.searchRetailerLocations(endLat,endLong,delta,results);
             System.out.println("Searched based on start and end");
         } else {
-            warningLabel.setText("Invaild End Latitude or Longitude, Using start points only");
+            AlertGenerator.createAlert("Invaild End Latitude or Longitude, Using start points only");
             results = DataAnalyser.searchRetailerLocations(startLat,startLong,delta,dataPoints);
             System.out.println("Searched on start bad start and end");
         }
