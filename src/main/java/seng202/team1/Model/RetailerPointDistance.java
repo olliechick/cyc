@@ -1,6 +1,5 @@
 package seng202.team1.Model;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
 
@@ -85,8 +84,50 @@ public class RetailerPointDistance {
     /**
      * @return trip distance to decimal places
      */
-    public Double getTripDistanceTwoD() {
-        return Double.parseDouble(new DecimalFormat("0.").format(distance));
+    public String getTripDistanceTwoD() {
+        String distanceString;
+
+        if (distance < 10) {
+            //single digit metres (and below)
+            distanceString = "" + Double.parseDouble(new DecimalFormat("#.##").format(distance));
+            if (distanceString.endsWith(".0")) {
+                // Trim the .0
+                distanceString = distanceString.substring(0, distanceString.length() - 2);
+            }
+            distanceString += " m";
+        } else if (distance < 100) {
+            //double digit metres
+            distanceString = "" + Double.parseDouble(new DecimalFormat("##.#").format(distance));
+            if (distanceString.endsWith(".0")) {
+                // Trim the .0
+                distanceString = distanceString.substring(0, distanceString.length() - 2);
+            }
+            distanceString += " m";
+        } else if (distance < 1e3) {
+            //three digit metres
+            distanceString = Math.round(distance) + " m";
+        } else if (distance < 1e4) {
+            //single digit km
+            distanceString = "" + Double.parseDouble(new DecimalFormat("#.##").format(distance / 1e3));
+            if (distanceString.endsWith(".0")) {
+                // Trim the .0
+                distanceString = distanceString.substring(0, distanceString.length() - 2);
+            }
+            distanceString += " km";
+        } else if (distance < 1e5) {
+            //double digit km
+            distanceString = "" + Double.parseDouble(new DecimalFormat("##.#").format(distance / 1e3));
+            if (distanceString.endsWith(".0")) {
+                // Trim the .0
+                distanceString = distanceString.substring(0, distanceString.length() - 2);
+            }
+            distanceString += " km";
+        } else {
+            //triple digit km (and above)
+            distanceString = Math.round(distance / 1e3) + " km";
+        }
+
+        return distanceString;
     }
 
     public void setDistance(Double distance) {
