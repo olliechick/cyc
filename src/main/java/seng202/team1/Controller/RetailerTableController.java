@@ -201,7 +201,7 @@ public class RetailerTableController extends TableController {
             RetailerLocation newRetailerLocation = addRetailerDialog.getRetailerLocation();
             if (newRetailerLocation != null) {
                 if (dataPoints.contains(newRetailerLocation)) {
-                    AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
+                    AlertGenerator.createAlert("Duplicate retailer", "That retailer already exists!");
                 } else {
                     DatabaseManager.open();
                     DatabaseManager.updatePoint(model.getUserName(), currentListName, selectedRetailerLocation, newRetailerLocation);
@@ -211,7 +211,7 @@ public class RetailerTableController extends TableController {
                 }
             }
         } catch (IOException | SQLException e) {
-            AlertGenerator.createAlert("Oops, something went wrong");
+            AlertGenerator.createAlert("Oops, something went wrong.");
         }
     }
 
@@ -231,7 +231,7 @@ public class RetailerTableController extends TableController {
      * Delete all the retailers from the current list
      */
     public void deleteAllRetailers() {
-        boolean delete = AlertGenerator.createChoiceDialog("Delete List", "Delete list", "Are you sure you want to delete this list, and all the points in this list?");
+        boolean delete = AlertGenerator.createChoiceDialog("Delete list", null, "Are you sure you want to delete this list, and all the points in this list?");
         if (delete) {
             try {
                 DatabaseManager.open();
@@ -250,38 +250,36 @@ public class RetailerTableController extends TableController {
      */
     public void searchRetailersbyLatLong() {
         Double startLat, startLong;
-        Double endLat;
-        Double endLong;
+        Double endLat = null;
+        Double endLong = null;
         Double delta = 100.0;
+        boolean validEndPoint;
+
         try {
             startLat = Double.parseDouble(startLatTextField.getText());
             startLong = Double.parseDouble(startLongTextField.getText());
         } catch (NumberFormatException e){
-            AlertGenerator.createAlert("Starting Latitude and Longitude must be Co-ordinates in Decimal Form");
+            AlertGenerator.createAlert("Start latitude and longitude must be co-ordinates in decimal form.");
             return;
         }
         try {
             endLat = Double.parseDouble(endLatTextField.getText());
             endLong = Double.parseDouble(endLongTextField.getText());
+            validEndPoint = true;
         } catch (NumberFormatException e){
-            AlertGenerator.createAlert("Invaild End Latitude or Longitude, Using start points only");
-            endLat = 0.00;
-            endLong = 0.00;
+            AlertGenerator.createAlert("Invalid end latitude or longitude. Search will find retailers within 100 m of the start point.");
+            validEndPoint = false;
         }
+
         ArrayList<RetailerLocation> results;
-        if (endLat.equals(0.00) || endLong.equals(0.00)) {
-            results = DataAnalyser.searchRetailerLocations(startLat,startLong,delta,dataPoints);
-            System.out.println("Searched on start");
-        } else if(endLat != 0.00 && endLong != 0.00){
-            delta = DataAnalyser.calculateDistance(startLat,startLong,endLat,endLong);
-            results = DataAnalyser.searchRetailerLocations(startLat,startLong,delta,dataPoints);
-            results = DataAnalyser.searchRetailerLocations(endLat,endLong,delta,results);
-            System.out.println("Searched based on start and end");
+        if (validEndPoint) {
+            delta = DataAnalyser.calculateDistance(startLat, startLong, endLat, endLong);
+            results = DataAnalyser.searchRetailerLocations(startLat, startLong, delta, dataPoints);
+            results = DataAnalyser.searchRetailerLocations(endLat, endLong, delta, results);
         } else {
-            AlertGenerator.createAlert("Invaild End Latitude or Longitude, Using start points only");
             results = DataAnalyser.searchRetailerLocations(startLat,startLong,delta,dataPoints);
-            System.out.println("Searched on start bad start and end");
         }
+
         System.out.println("Found: " + results.size() + " results");
         dataPoints.clear();
         dataPoints.addAll(results);
