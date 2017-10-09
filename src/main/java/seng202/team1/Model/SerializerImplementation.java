@@ -8,6 +8,7 @@ import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -74,12 +75,19 @@ public final class SerializerImplementation {
         List<Class> classes = Arrays.asList(BikeTripList.class,
                                              WifiPointList.class,
                                              RetailerLocationList.class);
-        for (Class classType : classes) {
-            System.out.println(String.format("Deleting lists of type %s", classType.toGenericString()));
-            for (String listName : DatabaseManager.getLists(userName, classType)) {
-                System.out.println(String.format("Deleting list %s", listName));
-                DatabaseManager.deleteList(userName, listName, classType);
+
+        try {
+            DatabaseManager.open();
+            for (Class classType : classes) {
+                System.out.println(String.format("Deleting lists of type %s", classType.toGenericString()));
+                for (String listName : DatabaseManager.getLists(userName, classType)) {
+                    System.out.println(String.format("Deleting list %s", listName));
+                    DatabaseManager.deleteList(userName, listName, classType);
+                }
             }
+            DatabaseManager.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         Path userPath = FileSystems.getDefault().getPath(Directory.USERS.directory() + userName + USER_EXT); //Directory.USERS.directory() + userName + USER_EXT;
