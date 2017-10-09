@@ -145,6 +145,10 @@ public class UserAccountModel implements java.io.Serializable {
      * @return True if Changed false if not
      */
     public boolean changePassword(String currentPassword, String newPassword, String confirmPassword, UserAccountModel model) {
+        if( newPassword.length() < 8){
+            AlertGenerator.createAlert("Passwords Must be at least 8 characters long");
+            return false;
+        }
         if (PasswordManager.isExpectedPassword(currentPassword, salt, password)) {
             if (!PasswordManager.isExpectedPassword(newPassword, salt, password)) {
                 if (newPassword.equals(confirmPassword)) {

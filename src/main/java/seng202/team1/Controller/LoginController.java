@@ -92,7 +92,7 @@ public class LoginController {
     private CheckBox acceptTermsOfService;
 
 
-    private final static int MIN_PASSWORD_LENGTH = 0;
+    private final static int MIN_PASSWORD_LENGTH = 8;
 
     @FXML
     private TabPane loginOrSignup;
