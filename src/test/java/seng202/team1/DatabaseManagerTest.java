@@ -210,6 +210,12 @@ public class DatabaseManagerTest {
     }
 
     @Test
+    public void addLargestDataSet() throws Exception {
+        System.out.println("Test not implemented.");
+    }
+
+
+    @Test
     public void getLists() throws Exception {
 
         DatabaseManager.addRecord(trip, model.getUserName(), "testList0"); // Wrong type

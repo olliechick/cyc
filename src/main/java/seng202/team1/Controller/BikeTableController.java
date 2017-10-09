@@ -24,6 +24,8 @@ import seng202.team1.Model.BikeTripList;
 import seng202.team1.Model.ContextualLength;
 import static seng202.team1.Model.CsvHandling.CSVExporter.exportBikeTrips;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTripsIntoDatabase;
+
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.DatabaseManager;
@@ -384,10 +386,49 @@ public class BikeTableController extends TableController {
 
         String filename = getCsvFilename();
         if (filename != null) {
-            importBikeCsv(filename, true);
+            System.out.println("Loading...");
+            importBikeCsvToDatabase(filename, true);
         }
     }
 
+    private void importBikeCsvToDatabase(final String filename, final boolean isCustomCsv) {
+        try {
+            populateBikeTripsIntoDatabase(filename, model.getUserName(), currentListName, isCustomCsv);
+        } catch (CsvParserException | IOException e) {
+            e.printStackTrace();
+    }
+
+        /*
+        final Task<Integer> loadBikeCsv = new Task<Integer>() {
+            protected Integer call() {
+                try {
+                    populateBikeTripsIntoDatabase(filename, model.getUserName(), currentListName, isCustomCsv);
+                    return 0;
+                } catch (CsvParserException | IOException e) {
+                    e.printStackTrace();
+                    return 1;
+                }
+            }
+        };
+
+        startLoadingAni();
+
+        loadBikeCsv.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            public void handle(WorkerStateEvent event) {
+                if (loadBikeCsv.getValue() == 0) {
+                    //model.addPointList(new BikeTripList(currentListName, loadBikeCsv.getValue()));
+                    //handleImport(loadBikeCsv.getValue());
+                    System.out.println("Succeeded?");
+                } else {
+                    AlertGenerator.createAlert("Error", "Error loading bike trips. Is your csv correct?");
+                    stopLoadingAni();
+                }
+            }
+        });
+
+
+        new Thread(loadBikeCsv).start(); */
+    }
 
     /**
      * Creates a task to run on another thread to open the file, to stop GUI hangs.
@@ -405,15 +446,18 @@ public class BikeTableController extends TableController {
             protected ArrayList<BikeTrip> call() {
                 try {
                     if (isCustomCsv) {
-                        return populateBikeTrips(filename);
+                        populateBikeTrips(filename, model.getUserName(), "Test");
                     } else {
                         return populateBikeTrips();
                     }
                 } catch (CsvParserException | IOException e) {
+                    e.printStackTrace();
                     super.failed();
                     return null;
                 }
+            return null;
             }
+
         };
 
         startLoadingAni();

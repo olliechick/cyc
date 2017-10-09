@@ -5,11 +5,7 @@ import javax.xml.transform.Result;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -265,16 +261,19 @@ public class DatabaseManager {
 
     }
 
+    public static Connection getConnection() {
+        return connection;
+    }
+
     /**
      * Adds a single record to the database.
      * The type of the record is identified and is stored in its respective table.
-     * Note that it assumes the database is already open - it doesn't open it.
      *
      * @param point A point to be added to the database.
      * @throws SQLException when record cannot be added.
      * @author Ridge Nairn
      */
-    private static void addRecordExistingConnection(DataPoint point, String username, String listName) throws SQLException {
+    public static void addRecord(DataPoint point, String username, String listName) throws SQLException {
         PreparedStatement preparedStatement;
         String statement;
         int numOfQs; //number of question marks to put in the statement
@@ -377,15 +376,39 @@ public class DatabaseManager {
 
 
     /**
-     * Adds one record to the database.
-     * This opens and closes the database, so should not be called in a loop (use addRecords() for this).
+     * Adds one record to the database, using raw values instead of an object.
+     * Commit after bulk inserts.
      *
-     * @param point    The point to be added to the database
-     * @param username The username of the user whose point is being added
      * @throws SQLException
      */
-    public static void addRecord(DataPoint point, String username, String listName) throws SQLException {
-        addRecordExistingConnection(point, username, listName);
+    public static void addRawBikeTrip(int listid, Long duration, String startTime, String endTime,
+                                  Float startLatitude, Float startLongitude, Float endLatitude, Float endLongitude,
+                                  int bikeid, char gender, int birthYear, Double tripDistance) throws SQLException {
+        PreparedStatement preparedStatement;
+        String statement = "INSERT INTO trip (listid, duration, startTime, stopTime, startLatitude, " +
+                "startLongitude, endLatitude, endLongitude, bikeID, gender, birthYear, tripDistance) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+        preparedStatement = connection.prepareStatement(statement);
+
+        preparedStatement.setInt(1, listid);
+        if (duration != null) {
+            preparedStatement.setLong(2, duration);
+        } else {
+            preparedStatement.setObject(2, null);
+        }
+        preparedStatement.setString(3, startTime);
+        preparedStatement.setString(4, endTime);
+        preparedStatement.setFloat(5, startLatitude);
+        preparedStatement.setFloat(6, startLongitude);
+        preparedStatement.setFloat(7, endLatitude);
+        preparedStatement.setFloat(8, endLongitude);
+        preparedStatement.setInt(9, bikeid);
+        preparedStatement.setString(10, String.valueOf(gender));
+        preparedStatement.setInt(11, birthYear);
+        preparedStatement.setDouble(12, tripDistance);
+
+        preparedStatement.execute();
     }
 
 
@@ -399,7 +422,7 @@ public class DatabaseManager {
     public static void addRecords(ArrayList<? extends DataPoint> points, String username, String listName) throws SQLException {
         for (DataPoint point : points) {
             try {
-                addRecordExistingConnection(point, username, listName);
+                addRecord(point, username, listName);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -616,16 +639,16 @@ public class DatabaseManager {
         try {
             if (pointList instanceof RetailerLocationList) {
                 for (RetailerLocation retailerLocation : ((RetailerLocationList) pointList).getRetailerLocations()) {
-                    addRecordExistingConnection(retailerLocation, username, pointList.getListName());
+                    addRecord(retailerLocation, username, pointList.getListName());
                 }
 
             } else if (pointList instanceof WifiPointList) {
                 for (WifiPoint wifiPoint : ((WifiPointList) pointList).getWifiPoints()) {
-                    addRecordExistingConnection(wifiPoint, username, pointList.getListName());
+                    addRecord(wifiPoint, username, pointList.getListName());
                 }
             } else if (pointList instanceof BikeTripList) {
                 for (BikeTrip bikeTrip : ((BikeTripList) pointList).getBikeTrips()) {
-                    addRecordExistingConnection(bikeTrip, username, pointList.getListName());
+                    addRecord(bikeTrip, username, pointList.getListName());
                 }
             }
         } catch (SQLException e) {

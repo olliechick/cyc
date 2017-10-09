@@ -3,9 +3,7 @@ package seng202.team1.Model.CsvHandling;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import seng202.team1.Model.BikeTrip;
-import seng202.team1.Model.RetailerLocation;
-import seng202.team1.Model.WifiPoint;
+import seng202.team1.Model.*;
 
 import java.awt.*;
 import java.io.File;
@@ -13,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -150,6 +149,10 @@ public class CSVLoader {
         return populateBikeTrips(DEFAULT_BIKE_TRIPS_FILENAME, false);
     }
 
+    public static ArrayList<BikeTrip> populateBikeTrips(String filename) throws IOException, CsvParserException {
+        return populateBikeTrips(filename, true);
+    }
+
 
     /**
      * Calls the load CSV method and populates an ArrayList with a set of BikeTrip objects from a
@@ -161,9 +164,9 @@ public class CSVLoader {
      * @throws IOException        If an IO error occurs.
      * @throws CsvParserException if it can't find a single valid bike trip
      */
-    public static ArrayList<BikeTrip> populateBikeTrips(String filename) throws
+    public static void populateBikeTrips(String filename, String username, String listName) throws
             IOException, CsvParserException {
-        return populateBikeTrips(filename, true);
+        populateBikeTripsIntoDatabase(filename, username, listName, true);
     }
 
 
@@ -287,6 +290,136 @@ public class CSVLoader {
         return trips;
     }
 
+
+    public static ArrayList<BikeTrip> populateBikeTripsIntoDatabase(String filename, String username,
+                                                     String listName, boolean isCustomCsv)
+            throws IOException, CsvParserException {
+        boolean isValidCsv = false; // assume false unless proven otherwise
+        ArrayList<CSVRecord> tripData = loadCSV(filename, isCustomCsv);
+        int i = 0;
+        ArrayList<BikeTrip> trips = new ArrayList<>();
+
+        try {
+            DatabaseManager.open();
+            int listid = DatabaseManager.getListID(username, listName, BikeTripList.class);
+
+            System.out.println("Starting csv loading...");
+            for (CSVRecord record : tripData) {
+                // Process all the attributes - from most to least likely to fail
+                try {
+                    // Set start time
+                    LocalDateTime startTime;
+                    try {
+                        startTime = LocalDateTime.parse(record.get
+                                (1), DateTimeFormatter.ofPattern
+                                ("M/d/yyyy HH:mm:ss"));
+                    } catch (DateTimeParseException e) {
+                        startTime = LocalDateTime.parse(record.get(1),
+                                DateTimeFormatter.ofPattern
+                                        ("yyyy-MM-dd HH:mm:ss"));
+                    }
+
+                    // Set stop time
+                    LocalDateTime stopTime;
+                    try {
+                        stopTime = LocalDateTime.parse(record.get
+                                (2), DateTimeFormatter.ofPattern
+                                ("M/d/yyyy HH:mm:ss"));
+                    } catch (DateTimeParseException e) {
+                        stopTime = LocalDateTime.parse(record.get(2),
+                                DateTimeFormatter.ofPattern
+                                        ("yyyy-MM-dd HH:mm:ss"));
+                    }
+
+                    // Bike ID
+                    int bikeId;
+                    String bikeIdString = record.get(11);
+                    if (bikeIdString.isEmpty()) {
+                        //unknown bike id flag
+                        bikeId = -1;
+                    } else {
+                        bikeId = Integer.parseInt(bikeIdString);
+                    }
+
+                    //Birth year
+                    int birthYear;
+                    String birthYearString = record.get(13);
+                    if (birthYearString.isEmpty()) {
+                        //unknown birth year flag
+                        birthYear = -1;
+                    } else {
+                        birthYear = Integer.parseInt(birthYearString);
+                    }
+
+                    // Gender
+                    char gender;
+                    if (record.get(14).equals("1")) {
+                        gender = 'm';
+                    } else if (record.get(14).equals("2")) {
+                        gender = 'f';
+                    } else {
+                        gender = 'u';
+                    }
+
+                    // Start and end point
+                    Float startLat = Float.parseFloat(record.get(5));
+                    if (startLat < -90 || startLat > 90) {
+                        throw new NumberFormatException("Latitude must be between -90 and 90.");
+                    }
+                    Float startLong = Float.parseFloat(record.get(6));
+                    if (startLong < -180 || startLong > 180) {
+                        throw new NumberFormatException("Longitude must be between -180 and 180.");
+                    }
+                    Point.Float startPoint = new Point.Float(startLong, startLat);
+
+                    Float endLat = Float.parseFloat(record.get(9));
+                    if (endLat < -90 || endLat > 90) {
+                        throw new NumberFormatException("Latitude must be between -90 and 90.");
+                    }
+                    Float endLong = Float.parseFloat(record.get(10));
+                    if (endLong < -180 || endLong > 180) {
+                        throw new NumberFormatException("Longitude must be between -180 and 180.");
+                    }
+                    Point.Float endPoint = new Point.Float(endLong, endLat);
+
+                    double distance = DataAnalyser.calculateDistance(startLat, startLong, endLat, endLong);
+
+                    // Trip duration and creating the bike trip
+                    long tripDuration = new Long(record.get(0).trim());
+                    if (tripDuration < 0) {
+                        trips.add(new BikeTrip(startTime, stopTime, startPoint,// startStationId, endStationId,
+                                endPoint, bikeId, gender, birthYear));
+                        DatabaseManager.addRawBikeTrip(listid, tripDuration, startTime.toString(), stopTime.toString(), startLat, startLong, endLat, endLong, bikeId, gender, birthYear, distance);
+                    } else {
+                        trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,// startStationId, endStationId,
+                                endPoint, bikeId, gender, birthYear));
+                        DatabaseManager.addRawBikeTrip(listid, null, startTime.toString(), stopTime.toString(), startLat, startLong, endLat, endLong, bikeId, gender, birthYear, distance);
+
+                    }
+
+                    isValidCsv = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("Error processing: " + record.toString());
+                    // Some error processing the line - it's either a header field or the CSV is invalid.
+                    // If this occurs for all lines in the CSV, a CsvParserException is thrown.
+                }
+                i++;
+                if (i % 100 == 0) {
+                    System.out.println(String.format("processed %d", i));
+                }
+            }
+            if (!isValidCsv) {
+                throw new CsvParserException(filename);
+            }
+            DatabaseManager.getConnection().commit();
+
+            DatabaseManager.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return trips;
+    }
 
     /**
      * Calls the load CSV method and populates an ArrayList with a set of
