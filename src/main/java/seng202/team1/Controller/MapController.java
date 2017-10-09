@@ -219,7 +219,7 @@ public class MapController {
         });
         resultsLabel.setText("");
     }
-    
+
 
     @FXML
     /**
