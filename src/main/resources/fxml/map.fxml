@@ -198,7 +198,6 @@
                                         <TextField fx:id="endingLatTextField" GridPane.rowIndex="7" />
                                         <TextField fx:id="endingLongTextField" GridPane.rowIndex="9" />
                                         <Label fx:id="resultsLabel" prefHeight="96.0" prefWidth="190.0" text="[bike trip placeholder]" textAlignment="CENTER" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="16" GridPane.rowSpan="2" GridPane.valignment="TOP" />
-                              <Button fx:id="genderBikeIDSeachButton" maxWidth="-Infinity" mnemonicParsing="false" onAction="#SearchByGenderOrBikeID" prefWidth="100.0" text="Search" GridPane.halignment="RIGHT" GridPane.rowIndex="15" />
                               <TextField fx:id="genderBikeIdTextField" promptText="12345" GridPane.rowIndex="14" />
                               <Label prefHeight="15.0" prefWidth="158.0" text="Gender or bike ID" GridPane.rowIndex="13" GridPane.valignment="BOTTOM" />
                               <ComboBox fx:id="listBikeTripComboBox" onAction="#updateBikeTripList" prefWidth="300.0" GridPane.rowIndex="1" />
@@ -210,7 +209,12 @@
                                  </children>
                               </HBox>
                                <Button fx:id="searchForRouteButton" maxWidth="-Infinity" mnemonicParsing="false" onAction="#findResults" prefWidth="100.0" text="Search" GridPane.halignment="RIGHT" GridPane.rowIndex="10" />
-                              <Button maxWidth="100.0" mnemonicParsing="false" opacity="0.0" prefWidth="100.0" text="Clear trips" GridPane.halignment="RIGHT" GridPane.rowIndex="18" GridPane.valignment="BOTTOM" />
+                              <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="15">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#clearBikeSearches" prefWidth="75.0" text="Clear" />
+                                    <Button fx:id="genderBikeIDSeachButton" maxWidth="-Infinity" mnemonicParsing="false" onAction="#SearchByGenderOrBikeID" prefHeight="25.0" prefWidth="75.0" text="Search" />
+                                 </children>
+                              </HBox>
                            </children>
                         </GridPane>
                      </content>

@@ -291,8 +291,8 @@ public class BikeTableController extends TableController {
         boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Point", "Are you sure you want to delete this point",
                 selectedBikeTrip.getName());
         if (confirmDelete) {
-            dataPoints.removeAll(selectedBikeTrip);
-            originalData.removeAll(selectedBikeTrip);
+            dataPoints.remove(selectedBikeTrip);
+            originalData.remove(selectedBikeTrip);
             try {
                 DatabaseManager.open();
                 DatabaseManager.deletePoint(model.getUserName(), currentListName, selectedBikeTrip);

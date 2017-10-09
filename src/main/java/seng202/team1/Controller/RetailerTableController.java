@@ -233,8 +233,8 @@ public class RetailerTableController extends TableController {
         boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Point", "Are you sure you want to delete this point",
                 selectedRetailer.getDescription());
         if (confirmDelete) {
-            dataPoints.removeAll(selectedRetailer);
-            originalData.removeAll(selectedRetailer);
+            dataPoints.remove(selectedRetailer);
+            originalData.remove(selectedRetailer);
             try {
                 DatabaseManager.open();
                 DatabaseManager.deletePoint(model.getUserName(), currentListName, selectedRetailer);
@@ -519,7 +519,7 @@ public class RetailerTableController extends TableController {
             addedMessage += "\n" + (importedData.size() - count) + " duplicates not added.";
         }
 
-        if (countCoordless < count) {
+        if (countCoordless > 0) {
             // There are some co-ordless retailers being added
             addedMessage += "\n" + countCoordless + " entries did not have co-ordinates. " +
                     "These can be manually added by editing the relevant retailers.";

@@ -218,13 +218,15 @@ public class MapController {
     }
 
 
-    @FXML
+
     /**
      * Initializes the webView, sets options, loads the map html, initializes filters then awaits
      * confirmation that the map has loaded before calling the loadData method to populate the map.
      */
-    private void initialize() {
-
+    @FXML
+    public void initialize() {
+        nextButton.setVisible(false);
+        previousButton.setVisible(false);
         webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
         webEngine.load(getClass().getResource("/html/map.html").toString());
@@ -250,10 +252,11 @@ public class MapController {
                 });
     }
 
-    @FXML
+
     /**
      * If the map is loaded this method resets the map. Reloading wifi and retailer markers.
      */
+    @FXML
     private void resetMap() {
         webView.getEngine().loadContent("");
         webEngine.load(getClass().getResource("/html/map.html").toString());
@@ -433,6 +436,8 @@ public class MapController {
     }
 
     public void findResults() {
+        previousButton.setVisible(true);
+        nextButton.setVisible(true);
         tripsNearPoint = null; // reset the list
         currentTripCounter = 0; // reset the counter
         System.out.println("Search Button Pressed");
@@ -1454,6 +1459,8 @@ public class MapController {
      * the given conditions.
      */
     public void SearchByGenderOrBikeID(){
+        nextButton.setVisible(true);
+        previousButton.setVisible(true);
         currentTripCounter = 0;
         ArrayList<BikeTrip> results;
         int bikeId = -1;
@@ -1498,6 +1505,17 @@ public class MapController {
             generateRoute(points);
         }
 
+    }
+
+    public void clearBikeSearches() {
+        startingLatTextField.setText("");
+        startingLongTextField.setText("");
+        endingLatTextField.setText("");
+        endingLongTextField.setText("");
+        genderBikeIdTextField.setText("");
+        resultsLabel.setText("");
+        nextButton.setVisible(false);
+        previousButton.setVisible(false);
     }
 
 }
