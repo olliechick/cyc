@@ -52,6 +52,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
 import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
@@ -78,6 +79,7 @@ public class MapController {
 
     private final static String WIFI_ICON_FILENAME = "icons/wifi.png";
     private final static String WIFI_ICON_SELECTED_FILENAME = "icons/wifiSelected.png";
+    private final static String POI_CLUSTER_ICON_FILENAME = "icons/POICluster";
     private final static String RETAILER_ICON_FILENAME = "icons/retailer.png";
     private final static String RETAILER_ICON_SELECTED_FILENAME = "icons/retailerSelected.png";
 
@@ -85,25 +87,16 @@ public class MapController {
     private final static String WIFI_CLUSTER_ICON_FILENAME = "icons/wifiCluster";
 
     static ArrayList<Point.Double> userClicks = new ArrayList<>();
-    public ArrayList<String> uniqueSecondaryFunctions = null;
-    public ArrayList<String> uniquePrimaryFunctions = null;
-    public ArrayList<String> uniqueProviders = null;
-    public ArrayList<BikeTrip> tripsNearPoint = null;
-    public int currentTripCounter = 0;
-
-    private boolean isMapLoaded = false;
-
-    private WindowManager windowManager = new WindowManager();
-
-    ArrayList<RetailerLocation> retailerPoints = null;
-    ArrayList<WifiPoint> wifiPoints = null;
-    ArrayList<BikeTrip> bikeTrips = null;
-
-
-    ObservableList<WIFIPointDistance> observableWIFIDistances = null;
-
-
-    ObservableList<RetailerPointDistance> observableRetailerDistances = null;
+    private ArrayList<String> uniqueSecondaryFunctions = null;
+    private ArrayList<String> uniquePrimaryFunctions = null;
+    private ArrayList<String> uniqueProviders = null;
+    private ArrayList<BikeTrip> tripsNearPoint = null;
+    private int currentTripCounter = 0;
+    private ArrayList<RetailerLocation> retailerPoints = null;
+    private ArrayList<WifiPoint> wifiPoints = null;
+    private ArrayList<BikeTrip> bikeTrips = null;
+    private ObservableList<WIFIPointDistance> observableWIFIDistances = null;
+    private ObservableList<RetailerPointDistance> observableRetailerDistances = null;
     JavascriptBridge clickListner;
     JavascriptBridge retailerListner;
     WebViewHyperlinkListener eventPrintingListener = event -> {
@@ -117,6 +110,8 @@ public class MapController {
     private String currentBikeTripList  = "Default";
     private String currentWifiPointList = "Default";
     private String currentRetailerList  = "Default";
+    private boolean isMapLoaded = false;
+    private WindowManager windowManager = new WindowManager();
     // Some control booleans
     private boolean showRetailersNearRoute = true;
     private boolean showOnlyNearestRetailerToRoute = false;
@@ -124,7 +119,7 @@ public class MapController {
     private boolean showOnlyNearestWIFIToRoute = false;
     private boolean showWIFINearRetailer = true;
     private boolean showOnlyNearestWIFIToRetailer = false;
-    private int wifiSearchDistance = 100;
+    private int wifiSearchDistance = 200;
     private int retailerSearchDistance = 50;
     private int retailerToWIFISearchDistance = 200;
     private boolean drawRouteUsingPolyLines = false;
@@ -228,6 +223,10 @@ public class MapController {
     }
 
     @FXML
+    /**
+     * Initializes the webView, sets options, loads the map html, initializes filters then awaits
+     * confirmation that the map has loaded before calling the loadData method to populate the map.
+     */
     private void initialize() {
         webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
@@ -251,6 +250,9 @@ public class MapController {
     }
 
     @FXML
+    /**
+     * If the map is loaded this method resets the map. Reloading wifi and retailer markers.
+     */
     private void resetMap() {
         webView.getEngine().loadContent("");
         webEngine.load(getClass().getResource("/html/map.html").toString());
@@ -264,7 +266,10 @@ public class MapController {
 
     }
 
-
+    /**
+     * Creates the JavascriptBridges and adds them to the DOM, loads wifi and retailer markers
+     * and sets filters.
+     */
     private void loadData() {
 
         clickListner = new JavascriptBridge();
@@ -304,23 +309,6 @@ public class MapController {
 
     }
 
-    @FXML
-    private void zoomIn() {
-        webView.getEngine().executeScript("document.zoomIn()");
-
-    }
-
-    @FXML
-    private void zoomOut() {
-        webView.getEngine().executeScript("document.zoomOut()");
-
-    }
-
-
-    @FXML
-    private void switchView() {
-        stage.close();
-    }
 
     private void showRetailer(int index) {
         webView.getEngine().executeScript("document.showRetailerMarker(" + index + ")");
@@ -649,7 +637,10 @@ public class MapController {
     }
 
     /**
-     * checks the given retailerLocation against the filter in the primary function ComboBox.
+     * Checks the given retailerLocation against the filter in the primary function ComboBox.
+     *
+     * @param retailerLocation The retailer Location to check against the filter
+     * @return True if "All" is selected, or the primary function of the retailer matches the current filter. False otherwise.
      */
     private boolean checkPrimary(RetailerLocation retailerLocation) {
         if ("All".equals(filterPrimaryComboBox.getValue())) {
@@ -660,7 +651,10 @@ public class MapController {
     }
 
     /**
-     * checks the given retailerLocation against the filter in the primary function ComboBox.
+     * Checks the given retailerLocation against the filter in the secondary function ComboBox.
+     *
+     * @param retailerLocation The retailer Location to check against the filter
+     * @return True if "All" is selected, or the secondary function of the retailer matches the current filter. False otherwise.
      */
     private boolean checkSecondary(RetailerLocation retailerLocation) {
         if ("All".equals(filterSecondaryComboBox.getValue())) {
@@ -673,6 +667,9 @@ public class MapController {
     /**
      * Checks the address line 1 of the given retailerLocation against the text in the street
      * search field.
+     *
+     * @param retailerLocation The retailer Location to check against the filter
+     * @return True is the search box is empty or the retailer address contains the text in the field. False otherwise.
      */
     private boolean checkStreet(RetailerLocation retailerLocation) {
         if (streetSearchField.getText().isEmpty()) {
@@ -683,6 +680,12 @@ public class MapController {
         }
     }
 
+    /**
+     * Check the zip code of the given RetailerLocation against the selected zip code.
+     *
+     * @param retailerLocation The retailer Location to check against the filter
+     * @return True if zip matches or "All" is selected, false otherwise.
+     */
     private boolean checkZip(RetailerLocation retailerLocation) {
         if (filterZipComboBox.getValue().equals("All")) {
             return true;
@@ -691,6 +694,12 @@ public class MapController {
         }
     }
 
+    /**
+     * Check the cost of the given wifi point matches the cost selected in the filter box.
+     *
+     * @param wifiPoint The wifi point to check against
+     * @return True if matches or "All", False otherwise
+     */
     private boolean checkCost(WifiPoint wifiPoint) {
         if (filterCostComboBox.getValue().equals("All")) {
             return true;
@@ -699,6 +708,12 @@ public class MapController {
         }
     }
 
+    /**
+     * Check the borough of the given WifiPoint matches the borough selected in the ComboBox
+     *
+     * @param wifiPoint The WifiPoint to check against
+     * @return True if matches or "All", False otherwise
+     */
     private boolean checkBorough(WifiPoint wifiPoint) {
         if (filterBoroughComboBox.getValue().equals("All")) {
             return true;
@@ -707,6 +722,12 @@ public class MapController {
         }
     }
 
+    /**
+     * Check the provider of the given WifiPoint against the provider selected in the ComboBox
+     *
+     * @param wifiPoint The WifiPoint to check against
+     * @return True if matches or "All", False otherwise
+     */
     private boolean checkProvider(WifiPoint wifiPoint) {
         if (filterProviderComboBox.getValue().equals("All")) {
             return true;
@@ -789,8 +810,9 @@ public class MapController {
     }
 
     /**
-     * Creates a pop up to get the data for a new Retailer Location.
-     * If valid data is entered the Retailer is added, if it is not a duplicate.
+     * Opens a dialog for the user to enter data for a new Retailer Point.
+     * If valid, checks it doesn't match any existing points and adds it to the table,
+     * as well as the user's list of custom points.
      */
     public void addCustomRetailer() {
         try {
@@ -820,6 +842,11 @@ public class MapController {
         }
     }
 
+    /**
+     * Opens a dialog for the user to enter data for a new Bike Trip.
+     * If valid, checks it doesn't match any existing trips and adds it to the table,
+     * as well as the user's list of custom trips.
+     */
     public void addCustomBikeTrip() {
 
         try {
@@ -883,6 +910,9 @@ public class MapController {
     }
 
     @FXML
+    /**
+     *  Clears the filters for retailers
+     */
     private void clearFiltersRetailers() {
         filterPrimaryComboBox.getSelectionModel().selectFirst();
         filterSecondaryComboBox.getSelectionModel().selectFirst();
@@ -895,6 +925,9 @@ public class MapController {
     }
 
     @FXML
+    /**
+     *  Clears the filters for WIFI
+     */
     private void clearFiltersWIFI() {
         filterCostComboBox.getSelectionModel().selectFirst();
         filterProviderComboBox.getSelectionModel().selectFirst();
@@ -905,6 +938,9 @@ public class MapController {
     }
 
     @FXML
+    /**
+     *  Removes all filters, required for map reset to avoid duplicate options
+     */
     private void removeAllFilters() {
         uniqueSecondaryFunctions = null;
         uniquePrimaryFunctions = null;
@@ -1040,8 +1076,8 @@ public class MapController {
         }
     }
 
-
-    public void openListViewer() {
+    @FXML
+    private void openListViewer() {
         try {
             // Changes to the table GUI
             FXMLLoader listViewLoader = new FXMLLoader(getClass().getResource("/fxml/ListViewer.fxml"));
@@ -1082,7 +1118,7 @@ public class MapController {
     /**
      * Reset the current user and switch back to the login screen.
      */
-    public void logout() {
+    private void logout() {
         System.out.println("Logout");
         model = null;
 
@@ -1236,6 +1272,104 @@ public class MapController {
     }
 
     /**
+     * Creates the columns of the table.
+     * Sets their value factories so that the data is displayed correctly.
+     * Sets up the lists of data for filtering
+     * Displays the columns
+     */
+    private void setTableViewRetailer(ArrayList<RetailerPointDistance> data) {
+
+        observableRetailerDistances = FXCollections.observableArrayList(data);
+
+        // Create the columns
+        TableColumn<RetailerPointDistance, String> nameCol = new TableColumn<>("Name");
+        TableColumn<RetailerPointDistance, String> distanceCol = new TableColumn<>("Distance");
+        TableColumn<RetailerPointDistance, String> primaryFunctionCol = new TableColumn<>("Primary Function");
+
+
+        //Set the IDs of the columns, not used yet
+        nameCol.setId("name");
+        distanceCol.setId("distance");
+        primaryFunctionCol.setId("primaryfunction");
+
+
+        //Clear the default columns, or any columns in the table.
+        retailerDistanceTable.getColumns().clear();
+
+        //Sets up each column to get the correct entry in each dataPoint
+
+        distanceCol.setCellValueFactory(new PropertyValueFactory<>("TripDistanceTwoD"));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        primaryFunctionCol.setCellValueFactory(new PropertyValueFactory<>("primaryFunction"));
+
+        // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
+        //filteredData = new FilteredList<>(dataPoints, p -> true);
+
+        SortedList<RetailerPointDistance> sortedData = new SortedList<>(observableRetailerDistances);
+        sortedData.comparatorProperty().bind(retailerDistanceTable.comparatorProperty());
+
+        // Add the sorted and filtered data to the table.
+        retailerDistanceTable.setItems(sortedData);
+        retailerDistanceTable.getColumns().addAll(distanceCol, nameCol, primaryFunctionCol);
+    }
+
+    private void resetWIFIIcons(String icon) {
+        String scriptStr = "document.resetWIFIIcon('" + icon + "')";
+        webView.getEngine().executeScript(scriptStr);
+    }
+
+    private void resetRetailerIcons(String icon) {
+        String scriptStr = "document.resetRetailerIcon('" + icon + "')";
+        webView.getEngine().executeScript(scriptStr);
+    }
+
+    /**
+     * Creates the columns of the table.
+     * Sets their value factories so that the data is displayed correctly.
+     * Sets up the lists of data for filtering
+     * Displays the columns
+     */
+    private void setTableViewWIFI(ArrayList<WIFIPointDistance> data) {
+
+        observableWIFIDistances = FXCollections.observableArrayList(data);
+
+        // Create the columns
+        TableColumn<WIFIPointDistance, String> ssidCol = new TableColumn<>("SSID");
+        TableColumn<WIFIPointDistance, String> distanceCol = new TableColumn<>("Distance");
+        TableColumn<WIFIPointDistance, String> costCol = new TableColumn<>("Cost");
+        TableColumn<WIFIPointDistance, String> providerCol = new TableColumn<>("Provider");
+
+
+        //Set the IDs of the columns, not used yet
+        ssidCol.setId("ssid");
+        distanceCol.setId("distance");
+        costCol.setId("cost");
+        providerCol.setId("provider");
+
+
+        //Clear the default columns, or any columns in the table.
+        wifiDistanceTable.getColumns().clear();
+
+        //Sets up each column to get the correct entry in each dataPoint
+
+        distanceCol.setCellValueFactory(new PropertyValueFactory<>("TripDistanceTwoD"));
+        ssidCol.setCellValueFactory(new PropertyValueFactory<>("SSID"));
+        costCol.setCellValueFactory(new PropertyValueFactory<>("Cost"));
+        providerCol.setCellValueFactory(new PropertyValueFactory<>("Provider"));
+
+        // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
+        //filteredData = new FilteredList<>(dataPoints, p -> true);
+
+        SortedList<WIFIPointDistance> sortedData = new SortedList<>(observableWIFIDistances);
+        sortedData.comparatorProperty().bind(wifiDistanceTable.comparatorProperty());
+
+        // Add the sorted and filtered data to the table.
+        wifiDistanceTable.setItems(sortedData);
+        wifiDistanceTable.getColumns().addAll(distanceCol, ssidCol, costCol, providerCol);
+
+    }
+
+    /**
      * JavaScript interface object. Can be used to pass
      */
 
@@ -1294,16 +1428,19 @@ public class MapController {
         public void directions(String route) {
             try {
                 BikeDirections dir = new BikeDirections(route, true);
+                webView.getEngine().executeScript("document.hideWIFICluster()");
+                webView.getEngine().executeScript("document.hideRetailerCluster()");
                 if (showWIFINearRoute) {
                     ArrayList<Integer> indexes = searchWifiPointsOnRoute(dir.getPoints(), wifiPoints, wifiSearchDistance);
                     ArrayList<WIFIPointDistance> pointDistances = new ArrayList<>();
-                    resetWIFIIcons(WIFI_ICON_FILENAME);
+
                     for (int i = 0; i < indexes.size(); i++) {
                         String scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", '" + WIFI_ICON_SELECTED_FILENAME + "')";
                         webView.getEngine().executeScript(scriptStr);
                         WIFIPointDistance pointDistance = new WIFIPointDistance(wifiPoints.get(indexes.get(i)), indexes.get(i));
                         pointDistances.add(pointDistance);
                     }
+                    WIFIPointDistance pointDistance;
                     ArrayList<WIFIPointDistance> sortedPointDistances = sortedWIFIPointsByMinimumDistanceToRoute(pointDistances, dir.getPoints());
                     setTableViewWIFI(sortedPointDistances);
                 } else if (showOnlyNearestWIFIToRoute) {
@@ -1316,7 +1453,7 @@ public class MapController {
                 if (showRetailersNearRoute) {
                     ArrayList<Integer> indexes = searchRetailerLocationsOnRoute(dir.getPoints(), retailerPoints, retailerSearchDistance);
                     ArrayList<RetailerPointDistance> pointDistances = new ArrayList<>();
-                    resetRetailerIcons(RETAILER_ICON_FILENAME);
+
                     for (int i = 0; i < indexes.size(); i++) {
                         String scriptStr = "document.changeRetailerIcon(" + indexes.get(i) + ", '" + RETAILER_ICON_SELECTED_FILENAME + "')";
                         webView.getEngine().executeScript(scriptStr);
@@ -1333,7 +1470,7 @@ public class MapController {
                 if (drawRouteUsingPolyLines) {
                     drawRoute(dir.getPoints());
                 }
-
+                webView.getEngine().executeScript("document.POICluster('" + POI_CLUSTER_ICON_FILENAME +"')");
             } catch (Exception e) {
                 System.out.print(e);
             }

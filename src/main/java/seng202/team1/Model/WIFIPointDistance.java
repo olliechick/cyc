@@ -51,6 +51,7 @@ public class WIFIPointDistance {
         this.otherPoint = otherPoint;
     }
 
+
     public Double getDistance() {
         return distance;
     }

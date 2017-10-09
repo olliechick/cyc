@@ -67,9 +67,9 @@ body{
 }
 </style>
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBrALsvaGRKhQxRw6X5VvydPqA5wMfwDN8&"></script>
-    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    <script src="markerclusterer.js">
     </script>
-<script type="text/javascript" src="http://code.martinpearman.co.uk/googlemapsapi/contextmenu/1.0/src/ContextMenu.js"></script>
+<script type="text/javascript" src="ContextMenu.js"></script>
 <script type="text/javascript">
 //<![CDATA[
 function initialise(){
@@ -221,6 +221,7 @@ function initialise(){
                 directionsRenderer.setMap(null);
                 destinationMarker.setMap(null);
                 originMarker.setMap(null);
+                document.hidePOICluster();
                 document.getElementById('right-panel').style.display='none';
                 app.clearRoute();
 				//	set CSS styles to defaults
@@ -295,10 +296,12 @@ function initialise(){
     // WIFI and retailer marker arrays
     var wifiMarkerArray = [];
     var retailerMarkerArray = [];
+    var POIMarkerArray = [];
 
     // WIFI and retailer clusters
     var wifiMarkerCluster;
     var retailerMarkerCluster;
+    var POIMarkerCluster;
 
 
     /* Requests a route using start and end LatLng coordinates and renders it using
@@ -346,7 +349,15 @@ function initialise(){
             {imagePath: icons,
                 ignoreHiddenMarkers: true,
                 zoomOnClick: false,
-                maxZoom: 15});
+                maxZoom: 16});
+    };
+    document.POICluster = function POICluster(icons)
+    {
+        POIMarkerCluster = new MarkerClusterer(map, POIMarkerArray,
+            {imagePath: icons,
+                ignoreHiddenMarkers: true,
+                zoomOnClick: false,
+                maxZoom: 16});
     };
 
 
@@ -367,12 +378,17 @@ function initialise(){
 
         retailerMarkerArray[index].setVisible(true);
         retailerMarkerArray[index].setIcon(icon);
+        retailerMarkerArray[index].setMap(map);
+        POIMarkerArray.push(retailerMarkerArray[index]);
     };
+
 
     document.changeWIFIIcon = function changeWIFIIcon(index, icon) {
 
         wifiMarkerArray[index].setVisible(true);
         wifiMarkerArray[index].setIcon(icon);
+        wifiMarkerArray[index].setMap(map);
+        POIMarkerArray.push(wifiMarkerArray[index]);
     };
 
     document.showRetailerInFocus = function showRetailerInFocus(index, icon)
@@ -416,13 +432,20 @@ function initialise(){
     document.resetWIFIIcon = function resetWIFIIcon(icon) {
         for (i = 0; i < wifiMarkerArray.length; i++) {
             wifiMarkerArray[i].setIcon(icon);
+            wifiMarkerArray[i].setVisible(true);
+            wifiMarkerArray[i].setMap(map);
+
         }
+        document.wifiCluster('icons/wifiCluster');
     };
 
     document.resetRetailerIcon = function resetRetailerIcon(icon) {
         for (i = 0; i < retailerMarkerArray.length; i++) {
             retailerMarkerArray[i].setIcon(icon);
+            retailerMarkerArray[i].setVisible(true);
+            retailerMarkerArray[i].setMap(map);
         }
+        document.retailerCluster('icons/retailerCluster');
     };
 
     document.circleAndNumberWIFI = function circleAndNumberWIFI(index, icon, number) {
@@ -481,6 +504,17 @@ function initialise(){
         return marker;
     };
 
+
+    document.addMarkerDefault = function addMarkerDefault(latlng, setlabel)
+    {
+        var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            label: setlabel
+        });
+        return marker;
+    };
+
     /* Creates a wifiMarker using addMarker.Takes LatLng literal, icon path and title.
        Adds the created marker to wifiMarkerArray.
     */
@@ -522,6 +556,19 @@ function initialise(){
         wifiMarkerCluster.addMarkers(newCluster, false);
         wifiMarkerCluster.redraw();
     };
+
+    document.hideWIFICluster = function hideWIFICluster() {
+        wifiMarkerCluster.clearMarkers();
+        wifiMarkerCluster.redraw();
+    }
+    document.hideRetailerCluster = function hideRetailerCluster() {
+        retailerMarkerCluster.clearMarkers();
+        retailerMarkerCluster.redraw();
+    }
+    document.hidePOICluster = function hidePOICluster() {
+        POIMarkerCluster.clearMarkers();
+        POIMarkerCluster.redraw();
+    }
 
 
     /* UpdatesRetailerMarkerCluster to include only markers that getVisible returns
