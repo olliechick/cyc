@@ -186,7 +186,7 @@
                                         <TextField fx:id="startingLongTextField" GridPane.rowIndex="4" />
                                         <TextField fx:id="endingLatTextField" GridPane.rowIndex="6" />
                                         <TextField fx:id="endingLongTextField" GridPane.rowIndex="8" />
-                                        <Label fx:id="resultsLabel" prefHeight="96.0" prefWidth="190.0" text="Current Bike Trip" textAlignment="CENTER" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="10" GridPane.rowSpan="1" GridPane.valignment="TOP" />
+                                        <Label fx:id="resultsLabel" prefHeight="96.0" prefWidth="190.0" text="Current Bike Trip" textAlignment="CENTER" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="10" GridPane.rowSpan="2" GridPane.valignment="TOP" />
                                         <Label prefHeight="77.0" prefWidth="185.0" text="Enter Co-ordinates to search from" wrapText="true" GridPane.columnIndex="0" />
 
                               <GridPane GridPane.rowIndex="9">
