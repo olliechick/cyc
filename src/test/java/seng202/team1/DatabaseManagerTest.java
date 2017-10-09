@@ -4,9 +4,12 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import seng202.team1.Model.*;
+import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.DatabaseManager;
+import seng202.team1.Model.RetailerLocation;
+import seng202.team1.Model.WifiPoint;
+import seng202.team1.Model.WifiPointList;
 
-import javax.xml.crypto.Data;
 import java.awt.Point;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -117,6 +120,29 @@ public class DatabaseManagerTest {
 
     @Test
     public void addRetailerPoint() throws Exception {
+        try {
+            DatabaseManager.addRecord(retailer, model.getUserName(), "myRetailers");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        DatabaseManager.open();
+        assertEquals(retailer, DatabaseManager.getRetailers(model.getUserName(), "myRetailers").get(0));
+        DatabaseManager.close();
+    }
+
+    @Test
+    public void addRetailerPointNullCoords() throws Exception {
+        String name = "Pearl Bodywork";
+        String addressLine1 = "60 Pearl Street";
+        String addressLine2 = "Floor 2";
+        String city = "New York";
+        String state = "NY";
+        int zipcode = 10004;
+        String blockLot = "7-38";
+        String primaryFunction = "Personal and Professional Services";
+        String secondaryFunction = "Spa";
+        RetailerLocation retailer = new RetailerLocation(name, addressLine1, addressLine2, city, state,
+                        zipcode, blockLot, primaryFunction, secondaryFunction, null);
         try {
             DatabaseManager.addRecord(retailer, model.getUserName(), "myRetailers");
         } catch (SQLException e) {
