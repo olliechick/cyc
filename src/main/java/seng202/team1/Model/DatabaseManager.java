@@ -776,20 +776,41 @@ public class DatabaseManager {
 
 
         if (oldPoint instanceof WifiPoint) {
-            statement1 = "SELECT id FROM wifi WHERE listid=? AND latitude=? AND longitude=? AND ssid=?";
+            statement1 = "SELECT id FROM wifi WHERE listid=? AND objectID=? AND latitude=? AND longitude=? AND placeName=? AND location=? AND locationType=? AND " +
+                    "hood=? AND borough=? AND city=? AND zipcode=? AND cost=? AND provider=? AND remarks=? AND SSID=? AND sourceId=? AND datetimeactivated=?";
             try {
                 int listid = getListID(username, listName, WifiPointList.class);
 
+                WifiPoint wifiPoint = (WifiPoint) oldPoint; 
                 preparedStatement1 = connection.prepareStatement(statement1);
 
                 preparedStatement1.setInt(1, listid);
-                preparedStatement1.setFloat(2, ((WifiPoint) oldPoint).getLatitude());
-                preparedStatement1.setFloat(3, ((WifiPoint) oldPoint).getLongitude());
-                preparedStatement1.setString(4, ((WifiPoint) oldPoint).getSsid());
+                preparedStatement1.setInt(2, wifiPoint.getObjectId());
+                preparedStatement1.setFloat(3, wifiPoint.getLatitude());
+                preparedStatement1.setFloat(4, wifiPoint.getLongitude());
+                preparedStatement1.setString(5, wifiPoint.getPlaceName());
+                preparedStatement1.setString(6, wifiPoint.getLocation());
+                preparedStatement1.setString(7, wifiPoint.getLocationType());
+                preparedStatement1.setString(8, wifiPoint.getHood());
+                preparedStatement1.setString(9, wifiPoint.getBorough());
+                preparedStatement1.setString(10, wifiPoint.getCity());
+                preparedStatement1.setString(11, Integer.toString(wifiPoint.getZipcode()));
+                preparedStatement1.setString(12, wifiPoint.getCost());
+                preparedStatement1.setString(13, wifiPoint.getProvider());
+                preparedStatement1.setString(14, wifiPoint.getRemarks());
+                preparedStatement1.setString(15, wifiPoint.getSsid());
+                preparedStatement1.setString(16, wifiPoint.getSourceId());
+                if (wifiPoint.getDatetimeActivated() == null) {
+                    preparedStatement1.setString(17, null);
+                } else {
+                    preparedStatement1.setString(17, wifiPoint.getDatetimeActivated().toString());
+                }
+
 
                 ResultSet rs = preparedStatement1.executeQuery();
 
                 if (rs.next()) {
+                    System.out.println("NEXT");
                     idToUpdate = rs.getInt(1);
 
                     statement2 = "UPDATE wifi SET listid=?, objectID=?, latitude=?, longitude=?, placeName=?, location=?, locationType=?, " +
@@ -797,7 +818,7 @@ public class DatabaseManager {
 
                     preparedStatement2 = connection.prepareStatement(statement2);
 
-                    WifiPoint wifiPoint = (WifiPoint) newPoint;
+                    wifiPoint = (WifiPoint) newPoint;
 
                     preparedStatement2.setInt(1, listid);
                     preparedStatement2.setInt(2, wifiPoint.getObjectId());
@@ -831,15 +852,26 @@ public class DatabaseManager {
             }
 
         } else if (oldPoint instanceof RetailerLocation) {
-            statement1 = "SELECT id FROM retailer WHERE listid=? AND primaryFunction=? AND name=?";
+            statement1 = "SELECT id FROM retailer WHERE listid=? AND name=? AND addressLine1=? AND addressLine2=? AND city=? AND state=? AND " +
+                    "zipcode=? AND blockLot=? AND primaryFunction=? AND secondaryFunction=? AND latitude=? AND longitude=?";
             try {
                 int listid = getListID(username, listName, RetailerLocationList.class);
 
+                RetailerLocation retailerLocation = (RetailerLocation) oldPoint; 
                 preparedStatement1 = connection.prepareStatement(statement1);
 
                 preparedStatement1.setInt(1, listid);
-                preparedStatement1.setString(2, ((RetailerLocation) oldPoint).getPrimaryFunction());
-                preparedStatement1.setString(3, oldPoint.getName());
+                preparedStatement1.setString(2, retailerLocation.getName());
+                preparedStatement1.setString(3, retailerLocation.getAddressLine1());
+                preparedStatement1.setString(4, retailerLocation.getAddressLine2());
+                preparedStatement1.setString(5, retailerLocation.getCity());
+                preparedStatement1.setString(6, retailerLocation.getState());
+                preparedStatement1.setString(7, Integer.toString(retailerLocation.getZipcode()));
+                preparedStatement1.setString(8, retailerLocation.getBlockLot());
+                preparedStatement1.setString(9, retailerLocation.getPrimaryFunction());
+                preparedStatement1.setString(10, retailerLocation.getSecondaryFunction());
+                preparedStatement1.setFloat(11, retailerLocation.getLatitude());
+                preparedStatement1.setFloat(12, retailerLocation.getLongitude());
 
                 ResultSet rs = preparedStatement1.executeQuery();
 
@@ -875,7 +907,9 @@ public class DatabaseManager {
                 e.printStackTrace();
             }
         } else if (oldPoint instanceof BikeTrip) {
-            statement1 = "SELECT id FROM trip WHERE listid=? AND startLongitude=? AND startLatitude=? AND endLongitude=? AND endLatitude=? AND bikeid=?";
+            statement1 = "SELECT id FROM trip WHERE listid=? AND duration=? AND startTime=? AND stopTime=? AND startLatitude=? AND " +
+                    "startLongitude=? AND endLatitude=? AND endLongitude=? AND " +
+                    "bikeID=? AND gender=? AND birthYear=? AND tripDistance=?";
             try {
                 int listid = getListID(username, listName, BikeTripList.class);
 
@@ -884,11 +918,17 @@ public class DatabaseManager {
                 BikeTrip oldTrip = (BikeTrip) oldPoint;
 
                 preparedStatement1.setInt(1, listid);
-                preparedStatement1.setFloat(2, oldTrip.getStartLongitude());
-                preparedStatement1.setFloat(3, oldTrip.getStartLatitude());
-                preparedStatement1.setFloat(4, oldTrip.getEndLongitude());
-                preparedStatement1.setFloat(5, oldTrip.getEndLatitude());
-                preparedStatement1.setInt(6, ((BikeTrip) oldPoint).getBikeId());
+                preparedStatement1.setLong(2, oldTrip.getTripDuration());
+                preparedStatement1.setString(3, oldTrip.getStartTime().toString());
+                preparedStatement1.setString(4, oldTrip.getStopTime().toString());
+                preparedStatement1.setFloat(5, oldTrip.getStartLatitude());
+                preparedStatement1.setFloat(6, oldTrip.getStartLongitude());
+                preparedStatement1.setFloat(7, oldTrip.getEndLatitude());
+                preparedStatement1.setFloat(8, oldTrip.getEndLongitude());
+                preparedStatement1.setInt(9, oldTrip.getBikeId());
+                preparedStatement1.setString(10, Character.toString(oldTrip.getGender()));
+                preparedStatement1.setInt(11, oldTrip.getBirthYear());
+                preparedStatement1.setDouble(12, oldTrip.getTripDistance());
 
                 
                 ResultSet rs = preparedStatement1.executeQuery();

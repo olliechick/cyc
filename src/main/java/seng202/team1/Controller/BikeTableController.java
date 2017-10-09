@@ -248,7 +248,7 @@ public class BikeTableController extends TableController {
      *
      * @param selectedBikeTrip The currently selected bike trip.
      */
-    private void editBikeTrip(BikeTrip selectedBikeTrip) { //TODO: Implement via database
+    private void editBikeTrip(BikeTrip selectedBikeTrip) {
         try {
             FXMLLoader addBikeLoader = new FXMLLoader(getClass().getResource("/fxml/AddBikeDialog.fxml"));
             Parent root = addBikeLoader.load();
