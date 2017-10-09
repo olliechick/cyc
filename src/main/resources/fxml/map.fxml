@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
@@ -9,6 +14,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TabPane?>
@@ -20,6 +26,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.web.WebView?>
+
+
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="0.0" prefHeight="800.0"
             prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="seng202.team1.Controller.MapController">
@@ -41,22 +49,22 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#addCustomBikeTrip" text="Add bike trip"/>
-                        <MenuItem mnemonicParsing="false" onAction="#addCustomRetailer" text="Add retailer"/>
-                        <MenuItem mnemonicParsing="false" onAction="#addCustomWIFI" text="Add WiFi hotspot"/>
+                        <MenuItem mnemonicParsing="false" onAction="#addCustomBikeTrip" text="Add bike trip" />
+                  <MenuItem mnemonicParsing="false" onAction="#addCustomRetailer" text="Add retailer" />
+                  <MenuItem mnemonicParsing="false" onAction="#addCustomWIFI" text="Add WiFi hotspot" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="View">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#openListViewer" text="Open a list"/>
-                        <MenuItem mnemonicParsing="false" onAction="#resetMap" text="Reset map"/>
+            <Menu mnemonicParsing="false" text="View">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#openListViewer" text="Open a list" />
+                          <MenuItem mnemonicParsing="false" onAction="#resetMap" text="Reset map" />
 
-                    </items>
-                </Menu>
+              </items>
+            </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#openUserManual" text="User manual"/>
-                        <MenuItem mnemonicParsing="false" onAction="#openAbout" text="About"/>
+                        <MenuItem mnemonicParsing="false" onAction="#openUserManual" text="User manual" />
+                  <MenuItem mnemonicParsing="false" onAction="#openAbout" text="About" />
                     </items>
                 </Menu>
             </menus>
@@ -207,77 +215,76 @@
                                                text="Enter Co-ordinates to search from" wrapText="true"
                                                GridPane.columnIndex="0"/>
 
-                                        <GridPane GridPane.rowIndex="9">
-                                            <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                            </rowConstraints>
-                                            <children>
-                                                <Button fx:id="previousButton" mnemonicParsing="false"
-                                                        onAction="#previousTrip" text="Previous"/>
-                                                <Button fx:id="nextButton" mnemonicParsing="false" onAction="#nextTrip"
-                                                        text="Next" GridPane.columnIndex="1"/>
-                                                <Button fx:id="searchForRouteButton" mnemonicParsing="false"
-                                                        onAction="#findResults" text="Search" GridPane.columnIndex="2"/>
-                                            </children>
-                                        </GridPane>
-                                    </children>
-                                </GridPane>
-                            </content>
-                        </Tab>
-
-
-                    </tabs>
-                </TabPane>
-            </children>
-        </GridPane>
-    </left>
-    <bottom>
-
-        <Accordion minWidth="0.0" BorderPane.alignment="CENTER">
-            <panes>
-                <TitledPane animated="false" minWidth="0.0" text="WiFi and retailer distances from route">
-                    <content>
-
-                        <GridPane prefHeight="163.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                            </rowConstraints>
-                            <children>
-                                <TableView fx:id="wifiDistanceTable" prefHeight="163.0" prefWidth="467.0">
-                                    <columns>
-                                        <TableColumn prefWidth="100.0" text="Distance (m)"/>
-                                        <TableColumn prefWidth="100.0" text="SSID"/>
-                                        <TableColumn prefWidth="100.0" text="Cost"/>
-                                        <TableColumn prefWidth="100.0" text="Provider"/>
-
-                                    </columns>
-                                </TableView>
-                                <TableView fx:id="retailerDistanceTable" prefHeight="200.0" prefWidth="200.0"
-                                           GridPane.columnIndex="1">
-                                    <columns>
-                                        <TableColumn prefWidth="100.0" text="Distance (m)"/>
-                                        <TableColumn prefWidth="100.0" text="Name"/>
-                                        <TableColumn prefWidth="100.0" text="Primary function"/>
-
-
-                                    </columns>
-                                </TableView>
-                            </children>
+                              <GridPane GridPane.rowIndex="9">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Button fx:id="previousButton" mnemonicParsing="false" onAction="#previousTrip" text="Previous" />
+                                    <Button fx:id="nextButton" mnemonicParsing="false" onAction="#nextTrip" text="Next" GridPane.columnIndex="1" />
+                                     <Button fx:id="searchForRouteButton" mnemonicParsing="false" onAction="#findResults" text="Search" GridPane.columnIndex="2" />
+                                 </children>
+                              </GridPane>
+                              <Button fx:id="genderBikeIDSeachButton" mnemonicParsing="false" onAction="#SearchByGenderOrBikeID" text="Search" GridPane.halignment="CENTER" GridPane.rowIndex="14" />
+                              <Label prefHeight="15.0" prefWidth="158.0" text="Gender/Bike Id" GridPane.rowIndex="12" />
+                              <TextField fx:id="genderBikeIdTextField" GridPane.rowIndex="13" />
+                           </children>
                         </GridPane>
+                     </content>
+                  </Tab>
+      
+      
+               </tabs>
+            </TabPane>
+         </children>
+      </GridPane>
+   </left>
+   <bottom>
 
-                    </content>
-                </TitledPane>
-            </panes>
-        </Accordion>
+       <Accordion BorderPane.alignment="CENTER">
+       <panes>
+       <TitledPane animated="false" text="WiFi and retailer distances from route">
+       <content>
 
-    </bottom>
+       <GridPane prefHeight="163.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+             <TableView fx:id="wifiDistanceTable" prefHeight="163.0" prefWidth="467.0">
+                 <columns>
+                     <TableColumn prefWidth="100.0" text="Distance (m)" />
+                     <TableColumn prefWidth="100.0" text="SSID" />
+                     <TableColumn prefWidth="100.0" text="Cost" />
+                     <TableColumn prefWidth="100.0" text="Provider" />
+
+                 </columns>
+             </TableView>
+            <TableView fx:id="retailerDistanceTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+              <columns>
+                  <TableColumn prefWidth="100.0" text="Distance (m)" />
+                    <TableColumn prefWidth="100.0" text="Name" />
+                  <TableColumn prefWidth="100.0" text="Primary function" />
+
+
+                                </columns>
+            </TableView>
+         </children>
+      </GridPane>
+
+       </content>
+       </TitledPane>
+       </panes>
+       </Accordion>
+
+   </bottom>
 </BorderPane>

@@ -181,6 +181,10 @@ public class MapController {
     private TableView<WIFIPointDistance> wifiDistanceTable;
     @FXML
     private TabPane typeSelectorTabPane;
+    @FXML
+    private TextField genderBikeIdTextField;
+    @FXML
+    private Button genderBikeIDSeachButton;
 
 
     @FXML
@@ -1289,6 +1293,49 @@ public class MapController {
         // Add the sorted and filtered data to the table.
         wifiDistanceTable.setItems(sortedData);
         wifiDistanceTable.getColumns().addAll(distanceCol, ssidCol, costCol, providerCol);
+
+    }
+
+    /**
+     * Takes input form the gui and searches either by bike ID and gender to find all bike trips that match
+     * the given conditions.
+     */
+    public void SearchByGenderOrBikeID(){
+        currentTripCounter = 0;
+        ArrayList<BikeTrip> results;
+        int bikeId = -1;
+        boolean correct = false;
+        try {
+            bikeId = Integer.parseInt(genderBikeIdTextField.getText());
+            correct = true;
+        } catch (NumberFormatException NullPointerException){
+            System.out.println("Not by BikeID");
+        }
+        if (!correct) {
+            char gender;
+            String genderS;
+                genderS = genderBikeIdTextField.getText();
+                if (genderS.length() != 1) {
+                    return;
+                } else {
+                    gender = genderS.charAt(0);
+                }
+                results = DataAnalyser.findTripsByGender(bikeTrips, gender);
+                tripsNearPoint = results;
+                ArrayList<Point.Float> points = new ArrayList<>();
+                points.add(tripsNearPoint.get(0).getStartPoint());
+                points.add(tripsNearPoint.get(0).getEndPoint());
+                resultsLabel.setText(tripsNearPoint.get(0).nicerDescription());
+                generateRoute(points);
+        } else {
+            results = DataAnalyser.findTripsByBikeId(bikeTrips, bikeId);
+            tripsNearPoint = results;
+            ArrayList<Point.Float> points = new ArrayList<>();
+            points.add(tripsNearPoint.get(0).getStartPoint());
+            points.add(tripsNearPoint.get(0).getEndPoint());
+            resultsLabel.setText(tripsNearPoint.get(0).nicerDescription());
+            generateRoute(points);
+        }
 
     }
 
