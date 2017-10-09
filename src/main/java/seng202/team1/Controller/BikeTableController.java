@@ -285,8 +285,19 @@ public class BikeTableController extends TableController {
      * @param selectedBikeTrip The currently selected bike trip.
      */
     private void deleteBikeTrip(BikeTrip selectedBikeTrip) {
-        dataPoints.remove(selectedBikeTrip);
-        originalData.remove(selectedBikeTrip);
+        boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Point", "Are you sure you want to delete this point",
+                                                                selectedBikeTrip.getName());
+        if (confirmDelete) {
+            dataPoints.removeAll(selectedBikeTrip);
+            originalData.removeAll(selectedBikeTrip);
+            try {
+                DatabaseManager.open();
+                DatabaseManager.deletePoint(model.getUserName(), currentListName, selectedBikeTrip);
+                DatabaseManager.close();
+            } catch (SQLException e) {
+                AlertGenerator.createExceptionDialog(e, "Database error", "Could not delete point.");
+            }
+        }
     }
 
 

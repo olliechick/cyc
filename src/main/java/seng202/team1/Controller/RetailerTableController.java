@@ -219,12 +219,22 @@ public class RetailerTableController extends TableController {
     /**
      * Delete the selected retailer from the list of currently displayed retailers
      *
-     * @param selectedItem the selected Retailer Location to delete.
+     * @param selectedRetailer the selected Retailer Location to delete.
      */
-    private void deleteRetailer(RetailerLocation selectedItem) {
-        //TODO add a removedRetailers list to userAccountModel and add to there, then remove all those on load.
-        dataPoints.remove(selectedItem);
-        originalData.remove(selectedItem);
+    private void deleteRetailer(RetailerLocation selectedRetailer) {
+        boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Point", "Are you sure you want to delete this point",
+                selectedRetailer.getDescription());
+        if (confirmDelete) {
+            dataPoints.removeAll(selectedRetailer);
+            originalData.removeAll(selectedRetailer);
+            try {
+                DatabaseManager.open();
+                DatabaseManager.deletePoint(model.getUserName(), currentListName, selectedRetailer);
+                DatabaseManager.close();
+            } catch (SQLException e) {
+                AlertGenerator.createExceptionDialog(e, "Database error", "Could not delete point.");
+            }
+        }
     }
 
     /**

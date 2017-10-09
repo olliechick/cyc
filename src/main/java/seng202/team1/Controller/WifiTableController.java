@@ -86,8 +86,8 @@ public class WifiTableController extends TableController {
 
     private UserAccountModel model;
     private ObservableList<WifiPoint> dataPoints;
-    private FilteredList<WifiPoint> filteredData;
     private ObservableList<WifiPoint> originalData;
+    private FilteredList<WifiPoint> filteredData;
     private SortedList<WifiPoint> sortedData;
     private String currentListName;
 
@@ -196,7 +196,19 @@ public class WifiTableController extends TableController {
      */
     private void deleteWifi(WifiPoint selectedWifi) {
         //TODO Use database to delete point
-        dataPoints.removeAll(selectedWifi);
+        boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Point", "Are you sure you want to delete this point",
+                selectedWifi.getName() + ", at " + selectedWifi.getLocation());
+        if (confirmDelete) {
+            dataPoints.removeAll(selectedWifi);
+            originalData.removeAll(selectedWifi);
+            try {
+                DatabaseManager.open();
+                DatabaseManager.deletePoint(model.getUserName(), currentListName, selectedWifi);
+                DatabaseManager.close();
+            } catch (SQLException e) {
+                AlertGenerator.createExceptionDialog(e, "Database error", "Could not delete point.");
+            }
+        }
     }
 
 
@@ -426,7 +438,6 @@ public class WifiTableController extends TableController {
 
                 if (loadWifiCsv.getValue() != null) {
                     model.addPointList(new WifiPointList(currentListName, loadWifiCsv.getValue()));
-                    setTableViewWifi(loadWifiCsv.getValue());
                     handleImport(loadWifiCsv.getValue());
                 } else {
                     AlertGenerator.createAlert("Error", "Error loading wifis. Is your csv correct?");
@@ -470,7 +481,6 @@ public class WifiTableController extends TableController {
                 break;
         }
         stopLoadingAni();
-        populateCustomWifiPoints();
         setPredicate();
         resetFilters();
     }
@@ -593,17 +603,6 @@ public class WifiTableController extends TableController {
         filteredData = new FilteredList<>(dataPoints, p -> true);
         sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(table.comparatorProperty());
-    }
-
-
-    /**
-     * Add the user's custom Wifi points to the current data
-     */
-    private void populateCustomWifiPoints() {
-        WifiPointList customWifi = model.getWifiPointsFromList(currentListName);
-
-        dataPoints.addAll(customWifi.getWifiPoints());
-        originalData.addAll(customWifi.getWifiPoints());
     }
 
 
