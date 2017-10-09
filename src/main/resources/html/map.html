@@ -391,6 +391,7 @@ function initialise(){
         POIMarkerArray.push(wifiMarkerArray[index]);
     };
 
+
     document.showRetailerInFocus = function showRetailerInFocus(index, icon)
     {
         retailerMarkerArray[index].setVisible(true);
@@ -566,6 +567,7 @@ function initialise(){
         retailerMarkerCluster.redraw();
     }
     document.hidePOICluster = function hidePOICluster() {
+        POIMarkerArray = [];
         POIMarkerCluster.clearMarkers();
         POIMarkerCluster.redraw();
     }
