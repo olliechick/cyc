@@ -179,6 +179,7 @@ public class WifiTableController extends TableController {
                     DatabaseManager.close();
 
                     table.refresh();
+                    mapController.reloadAllWifi();
                 }
             }
         } catch (IOException | IllegalStateException | SQLException e) {
@@ -206,6 +207,7 @@ public class WifiTableController extends TableController {
             } catch (SQLException e) {
                 AlertGenerator.createExceptionDialog(e, "Database error", "Could not delete WiFi hotspot.");
             }
+            mapController.reloadAllWifi();
         }
     }
 
@@ -224,6 +226,7 @@ public class WifiTableController extends TableController {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            mapController.updateWifiLists();
         }
     }
 
@@ -251,6 +254,7 @@ public class WifiTableController extends TableController {
                     dataPoints.add(newWifiPoint);
                     originalData.addAll(newWifiPoint);
                     model.addPoint(newWifiPoint, currentListName);
+                    mapController.reloadAllWifi();
                 }
             }
         } catch (IOException | IllegalStateException e) {

@@ -175,6 +175,7 @@ public class RetailerTableController extends TableController {
                     dataPoints.add(retailerLocation);
                     originalData.add(retailerLocation);
                     model.addPoint(retailerLocation, currentListName);
+                    mapController.reloadAllRetailers();
                 }
             }
         } catch (IOException | IllegalStateException e) {
@@ -210,6 +211,7 @@ public class RetailerTableController extends TableController {
                     selectedRetailerLocation.setAllProperties(newRetailerLocation);
                     DatabaseManager.close();
                     table.refresh();
+                    mapController.reloadAllRetailers();
                 }
             }
         } catch (IOException | IllegalStateException | SQLException e) {
@@ -236,6 +238,7 @@ public class RetailerTableController extends TableController {
             } catch (SQLException e) {
                 AlertGenerator.createExceptionDialog(e, "Database error", "Could not delete point.");
             }
+            mapController.reloadAllRetailers();
         }
     }
 
@@ -253,6 +256,7 @@ public class RetailerTableController extends TableController {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            mapController.updateRetailerLists();
         }
     }
 
@@ -500,6 +504,7 @@ public class RetailerTableController extends TableController {
         stopLoadingAni();
         setPredicate();
         clearFilters();
+        mapController.reloadAllRetailers();
     }
 
     private int checkAndAddToList(int entriesLoaded) {

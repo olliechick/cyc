@@ -126,19 +126,19 @@ public class MapController {
     private WebView webView;
 
     @FXML
-    private ComboBox filterPrimaryComboBox;
+    private ComboBox<String> filterPrimaryComboBox;
 
     @FXML
-    private ComboBox filterSecondaryComboBox;
+    private ComboBox<String> filterSecondaryComboBox;
 
     @FXML
-    private ComboBox listBikeTripComboBox;
+    private ComboBox<String> listBikeTripComboBox;
 
     @FXML
-    private ComboBox listWifiComboBox;
+    private ComboBox<String> listWifiComboBox;
 
     @FXML
-    private ComboBox listRetailerComboBox;
+    private ComboBox<String> listRetailerComboBox;
 
     @FXML
     private TextField streetSearchField;
@@ -317,9 +317,9 @@ public class MapController {
     }
 
     @FXML
-    private void updateWIFIList() {
-        if (!(listWifiComboBox.getValue().toString().equals(currentWifiPointListName))) {
-            currentWifiPointListName = listWifiComboBox.getValue().toString();
+    void updateWIFIList() {
+        if (listWifiComboBox.getValue() != null && !(listWifiComboBox.getValue().equals(currentWifiPointListName))) {
+            currentWifiPointListName = listWifiComboBox.getValue();
             WifiPointList wifiPointList = model.getWifiPointsFromList(currentWifiPointListName);
             wifiPoints = wifiPointList.getWifiPoints();
             reloadAllWifi();
@@ -327,9 +327,9 @@ public class MapController {
 
     }
     @FXML
-    private void updateRetailerList() {
-        if (!(listRetailerComboBox.getValue().toString().equals(currentRetailerListName))) {
-            currentRetailerListName = listRetailerComboBox.getValue().toString();
+    void updateRetailerList() {
+        if (listRetailerComboBox.getValue() != null && !(listRetailerComboBox.getValue().equals(currentRetailerListName))) {
+            currentRetailerListName = listRetailerComboBox.getValue();
             RetailerLocationList retailerList = model.getRetailerPointsFromList(currentRetailerListName);
             retailerPoints = retailerList.getRetailerLocations();
             reloadAllRetailers();
@@ -338,9 +338,9 @@ public class MapController {
 
     }
     @FXML
-    private void updateBikeTripList() {
-        if (!(listBikeTripComboBox.getValue().toString().equals(currentBikeTripListName))) {
-            currentBikeTripListName = listBikeTripComboBox.getValue().toString();
+    void updateBikeTripList() {
+        if (listBikeTripComboBox.getValue() != null && !(listBikeTripComboBox.getValue().equals(currentBikeTripListName))) {
+            currentBikeTripListName = listBikeTripComboBox.getValue();
             BikeTripList bikeTripList = model.getBikeTripsFromList(currentBikeTripListName);
             bikeTrips = bikeTripList.getBikeTrips();
         }
@@ -542,7 +542,7 @@ public class MapController {
 
     }
 
-    private void reloadAllWifi() {
+    void reloadAllWifi() {
         removeAllWIFI();
         loadAllWifi();
         updateWIFICluster();
@@ -560,7 +560,7 @@ public class MapController {
         }
     }
 
-    private void reloadAllRetailers() {
+    void reloadAllRetailers() {
         removeAllRetailers();
         loadAllRetailers();
         updateRetailerCluster();
@@ -604,7 +604,7 @@ public class MapController {
     }
 
     @FXML
-    private void updateBikeTripLists() {
+    void updateBikeTripLists() {
         bikeTripListNames = model.getListNamesOfType(BikeTripList.class);
         listBikeTripComboBox.getItems().clear();
         listBikeTripComboBox.getItems().addAll(bikeTripListNames);
@@ -612,7 +612,7 @@ public class MapController {
     }
 
     @FXML
-    private void updateWifiLists() {
+    void updateWifiLists() {
         wifiListNames = model.getListNamesOfType(WifiPointList.class);
         for (String wifiPointListName : wifiListNames) {
             System.out.println(wifiPointListName);
@@ -623,7 +623,7 @@ public class MapController {
     }
 
     @FXML
-    private void updateRetailerLists() {
+    void updateRetailerLists() {
         retailerListNames = model.getListNamesOfType(RetailerLocationList.class);
         listRetailerComboBox.getItems().clear();
         listRetailerComboBox.getItems().addAll(retailerListNames);

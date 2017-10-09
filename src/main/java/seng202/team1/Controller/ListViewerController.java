@@ -182,8 +182,9 @@ public class ListViewerController {
 
             user.addPointList(bikeTripList);
             switchToBikeTable(bikeTripList);
-            // TODO: call MapController.updateBikeTripLists()?
+            mapController.updateBikeTripLists();
         }
+
     }
 
 
@@ -199,6 +200,7 @@ public class ListViewerController {
             user.addPointList(retailerLocationList);
 
             switchToRetailerTable(retailerLocationList);
+            mapController.updateRetailerLists();
         }
     }
 
@@ -214,6 +216,7 @@ public class ListViewerController {
             WifiPointList wifiPointList = new WifiPointList(listName, new ArrayList<>());
             user.addPointList(wifiPointList);
             switchToWifiTable(wifiPointList);
+            mapController.updateWifiLists();
         }
     }
 
