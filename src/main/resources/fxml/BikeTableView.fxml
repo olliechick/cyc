@@ -44,7 +44,7 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#deleteAllBikeTrips" text="Delete all" />
+                  <MenuItem mnemonicParsing="false" onAction="#deleteAllBikeTrips" text="Delete list" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
