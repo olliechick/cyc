@@ -524,7 +524,6 @@ public class DatabaseManager {
 
             if (rs.next()) {
                 listid = rs.getInt(1);
-                System.out.println(String.format("listid for %s of user %s is %d", listName, username, listid));
             } else {
                 createNewList(username, listName, type);
                 return getListIDInternally(username, listName, type);
