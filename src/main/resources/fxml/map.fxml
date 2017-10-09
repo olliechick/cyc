@@ -27,10 +27,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.web.WebView?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="0.0" prefHeight="800.0"
-            prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="seng202.team1.Controller.MapController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="0.0" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
     <top>
         <MenuBar minWidth="0.0" BorderPane.alignment="CENTER">
             <menus>
@@ -38,13 +35,12 @@
                     <items>
                         <Menu mnemonicParsing="false" text="Account">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#startPasswordChange"
-                                          text="Change password"/>
-                                <MenuItem mnemonicParsing="false" onAction="#deleteAccount" text="Delete account"/>
+                                <MenuItem mnemonicParsing="false" onAction="#startPasswordChange" text="Change password" />
+                                <MenuItem mnemonicParsing="false" onAction="#deleteAccount" text="Delete account" />
                             </items>
                         </Menu>
-                        <MenuItem mnemonicParsing="false" onAction="#saveAndLogout" text="Log out"/>
-                        <MenuItem mnemonicParsing="false" onAction="#close" text="Close"/>
+                        <MenuItem mnemonicParsing="false" onAction="#saveAndLogout" text="Log out" />
+                        <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
@@ -71,67 +67,55 @@
         </MenuBar>
     </top>
     <center>
-        <WebView fx:id="webView" minWidth="100.0" prefHeight="383.0" prefWidth="659.0"
-                 BorderPane.alignment="TOP_RIGHT"/>
+        <WebView fx:id="webView" minWidth="100.0" prefHeight="383.0" prefWidth="659.0" BorderPane.alignment="TOP_RIGHT" />
     </center>
     <left>
-        <GridPane alignment="BOTTOM_CENTER" minWidth="0.0" prefHeight="696.0" prefWidth="200.0"
-                  BorderPane.alignment="CENTER">
+        <GridPane alignment="BOTTOM_CENTER" minWidth="0.0" prefHeight="696.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
                 <TabPane fx:id="typeSelectorTabPane" minWidth="0.0" prefHeight="612.0" prefWidth="100.0">
                     <tabs>
                         <Tab closable="false" text="Retailers">
                             <content>
-                                <GridPane hgap="5.0" prefHeight="583.0" prefWidth="100.0" vgap="2.0"
-                                          BorderPane.alignment="CENTER">
+                                <GridPane hgap="5.0" prefHeight="583.0" prefWidth="100.0" vgap="2.0" BorderPane.alignment="CENTER">
                                     <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                     </columnConstraints>
                                     <rowConstraints>
-                                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0"
-                                                        valignment="BOTTOM" vgrow="SOMETIMES"/>
-                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0"
-                                                        vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="40.0" valignment="BOTTOM"/>
+                                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                        <RowConstraints minHeight="10.0" prefHeight="40.0" valignment="BOTTOM" />
                                     </rowConstraints>
                                     <children>
-                                        <Label text="Primary function" wrapText="true"/>
-                                        <Label text="Secondary Function" wrapText="true" GridPane.rowIndex="2"/>
-                                        <Label text="ZIP code" GridPane.rowIndex="4"/>
-                                        <Label text="Address" GridPane.rowIndex="6"/>
-                                        <ComboBox fx:id="filterPrimaryComboBox" onAction="#updateRetailersPrimary"
-                                                  prefWidth="300.0" GridPane.rowIndex="1"/>
-                                        <ComboBox fx:id="filterSecondaryComboBox" onAction="#updateRetailers"
-                                                  prefWidth="300.0" GridPane.rowIndex="3"/>
-                                        <ComboBox fx:id="filterZipComboBox" onAction="#updateRetailers"
-                                                  prefWidth="300.0" GridPane.rowIndex="5"/>
-                                        <Label fx:id="nameLabel" text="Name placeholder" visible="false"
-                                               GridPane.columnSpan="1" GridPane.rowIndex="3"/>
-                                        <TextField fx:id="streetSearchField" GridPane.rowIndex="7"/>
-                                        <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0"
-                                              spacing="10.0" GridPane.halignment="RIGHT" GridPane.rowIndex="8">
+                                        <Label text="Primary function" wrapText="true" />
+                                        <Label text="Secondary Function" wrapText="true" GridPane.rowIndex="2" />
+                                        <Label text="ZIP code" GridPane.rowIndex="4" />
+                                        <Label text="Address" GridPane.rowIndex="6" />
+                                        <ComboBox fx:id="filterPrimaryComboBox" onAction="#updateRetailersPrimary" prefWidth="300.0" GridPane.rowIndex="1" />
+                                        <ComboBox fx:id="filterSecondaryComboBox" onAction="#updateRetailers" prefWidth="300.0" GridPane.rowIndex="3" />
+                                        <ComboBox fx:id="filterZipComboBox" onAction="#updateRetailers" prefWidth="300.0" GridPane.rowIndex="5" />
+                                        <Label fx:id="nameLabel" text="Name placeholder" visible="false" GridPane.columnSpan="1" GridPane.rowIndex="3" />
+                                        <TextField fx:id="streetSearchField" GridPane.rowIndex="7" />
+                                        <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.halignment="RIGHT" GridPane.rowIndex="8">
                                             <children>
-                                                <Button mnemonicParsing="false" onAction="#clearFiltersRetailers"
-                                                        prefWidth="75.0" text="Clear"/>
-                                                <Button mnemonicParsing="false" onAction="#updateRetailers"
-                                                        prefWidth="75.0" text="Search"/>
+                                                <Button mnemonicParsing="false" onAction="#clearFiltersRetailers" prefWidth="75.0" text="Clear" />
+                                                <Button mnemonicParsing="false" onAction="#updateRetailers" prefWidth="75.0" text="Search" />
                                             </children>
                                         </HBox>
                                     </children>
                                     <padding>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </padding>
                                 </GridPane>
                             </content>
@@ -140,36 +124,28 @@
                             <content>
                                 <GridPane hgap="5.0" vgap="2.0" BorderPane.alignment="CENTER">
                                     <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                     </columnConstraints>
                                     <rowConstraints>
-                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0"
-                                                        valignment="BOTTOM"/>
-                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0"/>
-                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0"
-                                                        valignment="BOTTOM"/>
-                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0"/>
-                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0"
-                                                        valignment="BOTTOM"/>
-                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0"/>
-                                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0"
-                                                        valignment="BOTTOM"/>
+                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" />
+                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" />
+                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" />
+                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" />
+                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" />
+                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" />
+                                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" valignment="BOTTOM" />
                                     </rowConstraints>
                                     <children>
-                                        <Label text="Borough"/>
-                                        <Label text="Provider" GridPane.rowIndex="4"/>
-                                        <Label text="Cost" GridPane.rowIndex="2"/>
-                                        <ComboBox fx:id="filterBoroughComboBox" onAction="#updateWIFI" prefWidth="300.0"
-                                                  GridPane.rowIndex="1"/>
-                                        <ComboBox fx:id="filterCostComboBox" onAction="#updateWIFI" prefWidth="300.0"
-                                                  GridPane.rowIndex="3"/>
-                                        <ComboBox fx:id="filterProviderComboBox" onAction="#updateWIFI"
-                                                  prefWidth="300.0" GridPane.rowIndex="5"/>
-                                        <Button mnemonicParsing="false" onAction="#clearFiltersWIFI" prefWidth="75.0"
-                                                text="Clear" GridPane.halignment="RIGHT" GridPane.rowIndex="6"/>
+                                        <Label text="Borough" />
+                                        <Label text="Provider" GridPane.rowIndex="4" />
+                                        <Label text="Cost" GridPane.rowIndex="2" />
+                                        <ComboBox fx:id="filterBoroughComboBox" onAction="#updateWIFI" prefWidth="300.0" GridPane.rowIndex="1" />
+                                        <ComboBox fx:id="filterCostComboBox" onAction="#updateWIFI" prefWidth="300.0" GridPane.rowIndex="3" />
+                                        <ComboBox fx:id="filterProviderComboBox" onAction="#updateWIFI" prefWidth="300.0" GridPane.rowIndex="5" />
+                                        <Button mnemonicParsing="false" onAction="#clearFiltersWIFI" prefWidth="75.0" text="Clear" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
                                     </children>
                                     <padding>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </padding>
                                 </GridPane>
                             </content>
@@ -178,42 +154,40 @@
                             <content>
                                 <GridPane hgap="5.0" vgap="2.0">
                                     <columnConstraints>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
                                     </columnConstraints>
                                     <rowConstraints>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
                                     </rowConstraints>
                                     <padding>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </padding>
                                     <children>
-                                        <Label text="Starting Lat" GridPane.rowIndex="1"/>
-                                        <Label text="Staring Long" GridPane.rowIndex="3"/>
-                                        <Label text="Ending Lat" GridPane.rowIndex="5"/>
-                                        <Label text="Ending Long" GridPane.rowIndex="7"/>
-                                        <TextField fx:id="startingLatTextField" GridPane.rowIndex="2"/>
-                                        <TextField fx:id="startingLongTextField" GridPane.rowIndex="4"/>
-                                        <TextField fx:id="endingLatTextField" GridPane.rowIndex="6"/>
-                                        <TextField fx:id="endingLongTextField" GridPane.rowIndex="8"/>
-                                        <Label fx:id="resultsLabel" prefHeight="96.0" prefWidth="190.0"
-                                               text="Current Bike Trip" textAlignment="CENTER" wrapText="true"
-                                               GridPane.columnSpan="2" GridPane.rowIndex="10" GridPane.rowSpan="1"
-                                               GridPane.valignment="TOP"/>
-                                        <Label prefHeight="77.0" prefWidth="185.0"
-                                               text="Enter Co-ordinates to search from" wrapText="true"
-                                               GridPane.columnIndex="0"/>
+                                        <Label text="Starting Lat" GridPane.rowIndex="1" />
+                                        <Label text="Staring Long" GridPane.rowIndex="3" />
+                                        <Label text="Ending Lat" GridPane.rowIndex="5" />
+                                        <Label text="Ending Long" GridPane.rowIndex="7" />
+                                        <TextField fx:id="startingLatTextField" GridPane.rowIndex="2" />
+                                        <TextField fx:id="startingLongTextField" GridPane.rowIndex="4" />
+                                        <TextField fx:id="endingLatTextField" GridPane.rowIndex="6" />
+                                        <TextField fx:id="endingLongTextField" GridPane.rowIndex="8" />
+                                        <Label fx:id="resultsLabel" prefHeight="96.0" prefWidth="190.0" text="Current Bike Trip" textAlignment="CENTER" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="10" GridPane.rowSpan="1" GridPane.valignment="TOP" />
+                                        <Label prefHeight="77.0" prefWidth="185.0" text="Enter Co-ordinates to search from" wrapText="true" GridPane.columnIndex="0" />
 
                               <GridPane GridPane.rowIndex="9">
                                 <columnConstraints>
@@ -231,8 +205,8 @@
                                  </children>
                               </GridPane>
                               <Button fx:id="genderBikeIDSeachButton" mnemonicParsing="false" onAction="#SearchByGenderOrBikeID" text="Search" GridPane.halignment="CENTER" GridPane.rowIndex="14" />
-                              <Label prefHeight="15.0" prefWidth="158.0" text="Gender/Bike Id" GridPane.rowIndex="12" />
                               <TextField fx:id="genderBikeIdTextField" GridPane.rowIndex="13" />
+                              <Label prefHeight="15.0" prefWidth="158.0" text="Gender/Bike Id" GridPane.rowIndex="12" />
                            </children>
                         </GridPane>
                      </content>
