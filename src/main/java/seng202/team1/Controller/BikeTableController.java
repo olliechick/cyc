@@ -22,18 +22,18 @@ import javafx.stage.Stage;
 import seng202.team1.Model.BikeTrip;
 import seng202.team1.Model.BikeTripList;
 import seng202.team1.Model.ContextualLength;
-import static seng202.team1.Model.CsvHandling.CSVExporter.exportBikeTrips;
-import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.DatabaseManager;
-import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.UserAccountModel;
 
 import java.awt.Point;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import static seng202.team1.Model.CsvHandling.CSVExporter.exportBikeTrips;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
 
 
 /**
@@ -86,6 +86,7 @@ public class BikeTableController extends TableController {
     private String currentListName;
 
     //region SETUP
+
     /**
      * Display the currently logged in user's name and the current list at the bottom of the table
      */
@@ -121,7 +122,7 @@ public class BikeTableController extends TableController {
 
         super.showOnMap.setOnAction(event -> {
             cm.hide();
-            if (table.getSelectionModel().getSelectedItem() != null){
+            if (table.getSelectionModel().getSelectedItem() != null) {
                 showTripOnMap(table.getSelectionModel().getSelectedItem());
             }
         });
@@ -140,7 +141,7 @@ public class BikeTableController extends TableController {
      * Set up the table to use the given list of points instead of a csv.
      *
      * @param listName The name of the list loaded.
-     * @param points the list of BikeTrips to display in the table.
+     * @param points   the list of BikeTrips to display in the table.
      */
     public void setupWithList(String listName, ArrayList<BikeTrip> points) {
         setFilters();
@@ -154,6 +155,7 @@ public class BikeTableController extends TableController {
 
 
     //region FILTERING
+
     /**
      * Checks the combo boxes and bike ID field for data and filters the displayed
      * data accordingly.
@@ -209,6 +211,7 @@ public class BikeTableController extends TableController {
 
 
     //region USER INTERACTION
+
     /**
      * Opens a dialog to add a bike trip, adds the trip if valid, otherwise does nothing.
      */
@@ -286,7 +289,7 @@ public class BikeTableController extends TableController {
      */
     private void deleteBikeTrip(BikeTrip selectedBikeTrip) {
         boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Point", "Are you sure you want to delete this point",
-                                                                selectedBikeTrip.getName());
+                selectedBikeTrip.getName());
         if (confirmDelete) {
             dataPoints.removeAll(selectedBikeTrip);
             originalData.removeAll(selectedBikeTrip);
@@ -303,6 +306,7 @@ public class BikeTableController extends TableController {
 
     /**
      * Takes a given bike trip from a context menu and then adds it too the map.
+     *
      * @param selectedBikeTrip passed by onclick listener
      */
     private void showTripOnMap(BikeTrip selectedBikeTrip) {
@@ -341,7 +345,7 @@ public class BikeTableController extends TableController {
             startLat = Double.parseDouble(startLatTextField.getText());
             startLong = Double.parseDouble(startLongTextField.getText());
             startPointsGood = true;
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.out.println("Bad Start lat or Long");
         }
 
@@ -349,23 +353,23 @@ public class BikeTableController extends TableController {
             endLat = Double.parseDouble(endLatTextField.getText());
             endLong = Double.parseDouble(endLongTextField.getText());
             endPointsGood = true;
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.out.println("Bad End Lat Long");
         }
 
         ArrayList<BikeTrip> results;
         ArrayList<BikeTrip> searcher = new ArrayList<>();
-        for (Object trip : dataPoints){
+        for (Object trip : dataPoints) {
             searcher.add((BikeTrip) trip); // remove this block if it gets slow
         }
-        if (startPointsGood && endPointsGood){
-            results = DataAnalyser.searchBikeTrips(startLat,startLong,delta,searcher,true);
-            results = DataAnalyser.searchBikeTrips(endLat,endLong,delta,results,false);
-        } else if(startPointsGood){
-            results = DataAnalyser.searchBikeTrips(startLat,startLong,delta,searcher,true);
-        } else if(endPointsGood){
-            results = DataAnalyser.searchBikeTrips(endLat,endLong,delta,searcher,false);
-        } else{
+        if (startPointsGood && endPointsGood) {
+            results = DataAnalyser.searchBikeTrips(startLat, startLong, delta, searcher, true);
+            results = DataAnalyser.searchBikeTrips(endLat, endLong, delta, results, false);
+        } else if (startPointsGood) {
+            results = DataAnalyser.searchBikeTrips(startLat, startLong, delta, searcher, true);
+        } else if (endPointsGood) {
+            results = DataAnalyser.searchBikeTrips(endLat, endLong, delta, searcher, false);
+        } else {
             AlertGenerator.createAlert("You must enter a valid start location and/or a valid end location.");
             return;
         }
@@ -377,6 +381,7 @@ public class BikeTableController extends TableController {
 
 
     //region IMPORT/EXPORT
+
     /**
      * Get the path for a csv to load, open one if given.
      */
@@ -539,6 +544,7 @@ public class BikeTableController extends TableController {
 
 
     //region SETUP TABLE
+
     /**
      * Create the columns for the bike table.
      *
@@ -555,7 +561,7 @@ public class BikeTableController extends TableController {
         TableColumn<BikeTrip, Point.Float> endLocCol = new TableColumn<>("End location");
         TableColumn<BikeTrip, Point.Float> endLatitudeCol = new TableColumn<>("Latitude");
         TableColumn<BikeTrip, Point.Float> endLongitudeCol = new TableColumn<>("Longitude");
-        TableColumn<BikeTrip, ContextualLength> distCol = new TableColumn<>("Distance (m)");
+        TableColumn<BikeTrip, ContextualLength> distCol = new TableColumn<>("Distance");
 
         // Attempts to access public properties of name "Property", falls back to get<property>() methods if no property available
         bikeIdCol.setCellValueFactory(new PropertyValueFactory<>("bikeId"));
@@ -602,6 +608,7 @@ public class BikeTableController extends TableController {
 
     /**
      * Initialise the lists used throughout the table.
+     *
      * @param data The ArrayList of data the table uses.
      */
     private void setUpData(ArrayList<BikeTrip> data) {
@@ -643,7 +650,8 @@ public class BikeTableController extends TableController {
 
     /**
      * WIP TODO use and potentially move to super class
-     * @param entriesLoaded
+     *
+     * @param entriesLoaded TODO explain what this is
      */
     private int checkAndAddToList(int entriesLoaded) {
         return AlertGenerator.createImportChoiceDialog(entriesLoaded);
