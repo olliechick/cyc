@@ -21,6 +21,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import seng202.team1.Model.CsvHandling.CsvParserException;
+import seng202.team1.Model.DataAnalyser;
+import seng202.team1.Model.DatabaseManager;
+import seng202.team1.Model.GenerateFields;
+import seng202.team1.Model.WifiPoint;
+import seng202.team1.Model.WifiPointList;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
