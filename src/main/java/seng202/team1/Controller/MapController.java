@@ -57,8 +57,7 @@ public class MapController {
 
     private final static String WIFI_ICON_FILENAME = "icons/wifi.png";
     private final static String WIFI_ICON_SELECTED_FILENAME = "icons/wifiSelected.png";
-    private final static String WIFI_ICON_SELECTED_FILENAME2 = "icons/wifiSelected2.png";
-    private final static String WIFI_ICON_SELECTED_FILENAME3 = "icons/wifiSelected3.png";
+    private final static String POI_CLUSTER_ICON_FILENAME = "icons/POICluster";
     private final static String RETAILER_ICON_FILENAME = "icons/retailer.png";
     private final static String RETAILER_ICON_SELECTED_FILENAME = "icons/retailerSelected.png";
 
@@ -92,7 +91,7 @@ public class MapController {
     private boolean showOnlyNearestWIFIToRoute = false;
     private boolean showWIFINearRetailer = true;
     private boolean showOnlyNearestWIFIToRetailer = false;
-    private int wifiSearchDistance = 450;
+    private int wifiSearchDistance = 200;
     private int retailerSearchDistance = 50;
     private int retailerToWIFISearchDistance = 200;
     private boolean drawRouteUsingPolyLines = false;
@@ -1215,28 +1214,20 @@ public class MapController {
         public void directions(String route) {
             try {
                 BikeDirections dir = new BikeDirections(route, true);
+                webView.getEngine().executeScript("document.hideWIFICluster()");
+                webView.getEngine().executeScript("document.hideRetailerCluster()");
                 if (showWIFINearRoute) {
                     ArrayList<Integer> indexes = searchWifiPointsOnRoute(dir.getPoints(), wifiPoints, wifiSearchDistance);
                     ArrayList<WIFIPointDistance> pointDistances = new ArrayList<>();
-                    webView.getEngine().executeScript("document.hideWIFICluster()");
+
                     for (int i = 0; i < indexes.size(); i++) {
+                        String scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", '" + WIFI_ICON_SELECTED_FILENAME + "')";
+                        webView.getEngine().executeScript(scriptStr);
                         WIFIPointDistance pointDistance = new WIFIPointDistance(wifiPoints.get(indexes.get(i)), indexes.get(i));
                         pointDistances.add(pointDistance);
                     }
                     WIFIPointDistance pointDistance;
                     ArrayList<WIFIPointDistance> sortedPointDistances = sortedWIFIPointsByMinimumDistanceToRoute(pointDistances, dir.getPoints());
-                    resetWIFIIcons(WIFI_ICON_FILENAME);
-                    for (int i = 0; i < indexes.size(); i++) {
-
-                             pointDistance = sortedPointDistances.get(i);
-                        String scriptStr = "document.changeWIFIIcon(" + indexes.get(i) + ", '" + WIFI_ICON_SELECTED_FILENAME + "')";
-
-
-                        webView.getEngine().executeScript(scriptStr);
-
-
-                    }
-
                     setTableViewWIFI(sortedPointDistances);
                 } else if (showOnlyNearestWIFIToRoute) {
                     WifiPoint wifiPoint = findClosestWifiToRoute(dir.getPoints(), wifiPoints);
@@ -1248,7 +1239,7 @@ public class MapController {
                 if (showRetailersNearRoute) {
                     ArrayList<Integer> indexes = searchRetailerLocationsOnRoute(dir.getPoints(), retailerPoints, retailerSearchDistance);
                     ArrayList<RetailerPointDistance> pointDistances = new ArrayList<>();
-                    resetRetailerIcons(RETAILER_ICON_FILENAME);
+
                     for (int i = 0; i < indexes.size(); i++) {
                         String scriptStr = "document.changeRetailerIcon(" + indexes.get(i) + ", '" + RETAILER_ICON_SELECTED_FILENAME + "')";
                         webView.getEngine().executeScript(scriptStr);
@@ -1265,7 +1256,7 @@ public class MapController {
                 if (drawRouteUsingPolyLines) {
                     drawRoute(dir.getPoints());
                 }
-
+                webView.getEngine().executeScript("document.POICluster('" + POI_CLUSTER_ICON_FILENAME +"')");
             } catch (Exception e) {
                 System.out.print(e);
             }
