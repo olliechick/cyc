@@ -140,29 +140,6 @@ public class LoginController {
     }
 
     /**
-     * Changes the scene to display the landing screen for analyst/admin users.
-     */
-    private void launchLandingScreen() {
-
-        try {
-            // Changes to the table choosing GUI
-            FXMLLoader landingLoader = new FXMLLoader(getClass().getResource("/fxml/landingView.fxml"));
-            Parent landingView = landingLoader.load();
-            LandingController landingController = landingLoader.getController();
-
-
-            Stage stage = (Stage) loginButton.getScene().getWindow(); //gets the current stage so that Table can take over
-
-            landingController.initModel(model, stage);
-            stage.setScene(new Scene(landingView));
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace(); //File not found
-        }
-    }
-
-    /**
      * Opens a pop up to view the TOS
      */
     public void showTOS() throws IOException {
