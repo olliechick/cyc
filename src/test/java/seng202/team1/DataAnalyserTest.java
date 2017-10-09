@@ -48,14 +48,14 @@ public class DataAnalyserTest {
     }
 
     @Test
-    public void TestSearchBikeTripsMatching() throws Exception { //Needs better data to be checked with #TODO
+    public void TestSearchBikeTripsMatching() throws Exception {
         ArrayList<BikeTrip> trips = CSVLoader.populateBikeTrips(RES_DIR + "bikeTripTestData.csv");
         ArrayList<BikeTrip> results = DataAnalyser.searchBikeTrips(40.732, -73.9925, 600, trips, true); // should be in the middle of the test data
         assertEquals(2, results.size());
     }
 
     @Test
-    public void TestSearchWifiPoints() throws Exception { //Needs better data to be checked with #TODO
+    public void TestSearchWifiPoints() throws Exception {
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots(RES_DIR + "wifiTester.csv");
         ArrayList<WifiPoint> results = DataAnalyser.searchWifiPoints(40.755, -73.985, 600, hotspots);
         assertEquals(3, results.size());
@@ -73,7 +73,7 @@ public class DataAnalyserTest {
         ArrayList<BikeTrip> oldData = CSVLoader.populateBikeTrips(RES_DIR + "bikeTripTestData.csv");
         Collections.shuffle(testData, new Random(2132154541));
         Collections.shuffle(oldData, new Random(2132154541));
-        System.out.println(testData.size() + "" + testData); //TODO debug print statement
+        System.out.println(testData.size() + "" + testData);
         DataAnalyser.sortTripsByDistance(testData); // sorts in place
         assertEquals(testData.get(0), oldData.get(0));
         assertEquals(testData.get(1), oldData.get(3));

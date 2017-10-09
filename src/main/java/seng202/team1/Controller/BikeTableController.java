@@ -277,7 +277,6 @@ public class BikeTableController extends TableController {
     }
 
 
-    //TODO fix this v
     /**
      * Delete the currently selected bike trip from the list of trips
      *
