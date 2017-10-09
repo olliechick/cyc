@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
@@ -21,7 +26,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.web.WebView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="0.0" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="0.0" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team1.Controller.MapController">
     <top>
         <MenuBar minWidth="0.0" BorderPane.alignment="CENTER">
             <menus>
@@ -192,13 +197,13 @@
                                         <TextField fx:id="startingLongTextField" GridPane.rowIndex="5" />
                                         <TextField fx:id="endingLatTextField" GridPane.rowIndex="7" />
                                         <TextField fx:id="endingLongTextField" GridPane.rowIndex="9" />
-                                        <Label fx:id="resultsLabel" prefHeight="96.0" prefWidth="190.0" text="[bike trip placeholder]" textAlignment="CENTER" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="16" GridPane.rowSpan="1" GridPane.valignment="TOP" />
+                                        <Label fx:id="resultsLabel" prefHeight="96.0" prefWidth="190.0" text="[bike trip placeholder]" textAlignment="CENTER" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="16" GridPane.rowSpan="2" GridPane.valignment="TOP" />
                               <Button fx:id="genderBikeIDSeachButton" maxWidth="-Infinity" mnemonicParsing="false" onAction="#SearchByGenderOrBikeID" prefWidth="100.0" text="Search" GridPane.halignment="RIGHT" GridPane.rowIndex="15" />
                               <TextField fx:id="genderBikeIdTextField" promptText="12345" GridPane.rowIndex="14" />
                               <Label prefHeight="15.0" prefWidth="158.0" text="Gender or bike ID" GridPane.rowIndex="13" GridPane.valignment="BOTTOM" />
                               <ComboBox fx:id="listBikeTripComboBox" onAction="#updateBikeTripList" prefWidth="300.0" GridPane.rowIndex="1" />
                               <Label text="Bike trip list" />
-                              <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.halignment="RIGHT" GridPane.rowIndex="17">
+                              <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.halignment="RIGHT" GridPane.rowIndex="18">
                                  <children>
                                     <Button fx:id="previousButton" maxWidth="75.0" mnemonicParsing="false" onAction="#previousTrip" prefWidth="75.0" text="Previous" />
                                     <Button fx:id="nextButton" maxWidth="75.0" mnemonicParsing="false" onAction="#nextTrip" prefWidth="75.0" text="Next" />

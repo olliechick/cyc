@@ -468,11 +468,12 @@ public class MapController {
             results = DataAnalyser.searchBikeTrips(endingLat, endingLong, delta, results, false); // takes the list of trips that start at one point and then finds those that end at another point
 
         }
-        System.out.println("Results Found");
+
         if (results.size() == 0) {
             resultsLabel.setText("No results were found.");
             results = null;
         } else {
+            System.out.println("Results Found");
             resultsLabel.setText(results.get(0).nicerDescription());
             ArrayList<Point.Float> route1 = new ArrayList<>();
             route1.add(results.get(0).getStartPoint());
