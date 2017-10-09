@@ -31,27 +31,15 @@ import netscape.javascript.JSObject;
 import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
 import org.codefx.libfx.control.webview.WebViews;
 import seng202.team1.Model.BikeTrip;
-import seng202.team1.Model.BikeTripList;
+import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
-import static seng202.team1.Model.DataAnalyser.findClosestRetailerToBikeTrip;
-import static seng202.team1.Model.DataAnalyser.findClosestWifiPointToRetailer;
-import static seng202.team1.Model.DataAnalyser.findClosestWifiToRoute;
-import static seng202.team1.Model.DataAnalyser.searchRetailerLocationsOnRoute;
-import static seng202.team1.Model.DataAnalyser.searchWifiPoints;
-import static seng202.team1.Model.DataAnalyser.searchWifiPointsOnRoute;
-import static seng202.team1.Model.DataAnalyser.sortedRetailerPointsByMinimumDistanceToRoute;
-import static seng202.team1.Model.DataAnalyser.sortedWIFIPointsByMinimumDistanceToRoute;
 import seng202.team1.Model.GenerateFields;
-import static seng202.team1.Model.GenerateFields.generateSecondaryFunctionsList;
-import static seng202.team1.Model.GenerateFields.generateWifiProviders;
 import seng202.team1.Model.Google.BikeDirections;
 import seng202.team1.Model.RetailerLocation;
-import seng202.team1.Model.RetailerLocationList;
 import seng202.team1.Model.RetailerPointDistance;
 import seng202.team1.Model.SerializerImplementation;
 import seng202.team1.Model.WIFIPointDistance;
 import seng202.team1.Model.WifiPoint;
-import seng202.team1.Model.WifiPointList;
 import seng202.team1.UserAccountModel;
 
 import java.awt.Point;
@@ -60,6 +48,20 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateBikeTrips;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateRetailers;
+import static seng202.team1.Model.CsvHandling.CSVLoader.populateWifiHotspots;
+import static seng202.team1.Model.DataAnalyser.findClosestRetailerToBikeTrip;
+import static seng202.team1.Model.DataAnalyser.findClosestWifiPointToRetailer;
+import static seng202.team1.Model.DataAnalyser.findClosestWifiToRoute;
+import static seng202.team1.Model.DataAnalyser.searchRetailerLocationsOnRoute;
+import static seng202.team1.Model.DataAnalyser.searchWifiPoints;
+import static seng202.team1.Model.DataAnalyser.searchWifiPointsOnRoute;
+import static seng202.team1.Model.DataAnalyser.sortedRetailerPointsByMinimumDistanceToRoute;
+import static seng202.team1.Model.DataAnalyser.sortedWIFIPointsByMinimumDistanceToRoute;
+import static seng202.team1.Model.GenerateFields.generateSecondaryFunctionsList;
+import static seng202.team1.Model.GenerateFields.generateWifiProviders;
 
 
 /**
@@ -85,10 +87,19 @@ public class MapController {
     public ArrayList<String> uniqueProviders = null;
     public ArrayList<BikeTrip> tripsNearPoint = null;
     public int currentTripCounter = 0;
+
+    private boolean isMapLoaded = false;
+
+    private WindowManager windowManager = new WindowManager();
+
     ArrayList<RetailerLocation> retailerPoints = null;
     ArrayList<WifiPoint> wifiPoints = null;
     ArrayList<BikeTrip> bikeTrips = null;
+
+
     ObservableList<WIFIPointDistance> observableWIFIDistances = null;
+
+
     ObservableList<RetailerPointDistance> observableRetailerDistances = null;
     JavascriptBridge clickListner;
     JavascriptBridge retailerListner;
@@ -187,6 +198,10 @@ public class MapController {
     private TableView<WIFIPointDistance> wifiDistanceTable;
     @FXML
     private TabPane typeSelectorTabPane;
+    @FXML
+    private TextField genderBikeIdTextField;
+    @FXML
+    private Button genderBikeIDSeachButton;
 
 
     @FXML
@@ -701,7 +716,6 @@ public class MapController {
 
     /**
      * Sets the filter options
-     * TODO don't hard code
      */
     private void initializeFilters() {
         // RETAILERS
@@ -1343,6 +1357,136 @@ public class MapController {
             }
 
         }
+    }
+
+
+    /**
+     * Creates the columns of the table.
+     * Sets their value factories so that the data is displayed correctly.
+     * Sets up the lists of data for filtering
+     * Displays the columns
+     */
+    private void setTableViewRetailer(ArrayList<RetailerPointDistance> data) {
+
+        observableRetailerDistances = FXCollections.observableArrayList(data);
+
+        // Create the columns
+        TableColumn<RetailerPointDistance, String> nameCol = new TableColumn<>("Name");
+        TableColumn<RetailerPointDistance, String> distanceCol = new TableColumn<>("Distance");
+        TableColumn<RetailerPointDistance, String> primaryFunctionCol = new TableColumn<>("Primary Function");
+
+
+        //Clear the default columns, or any columns in the table.
+        retailerDistanceTable.getColumns().clear();
+
+        //Sets up each column to get the correct entry in each dataPoint
+
+        distanceCol.setCellValueFactory(new PropertyValueFactory<>("TripDistanceTwoD"));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        primaryFunctionCol.setCellValueFactory(new PropertyValueFactory<>("primaryFunction"));
+
+        // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
+        //filteredData = new FilteredList<>(dataPoints, p -> true);
+
+        SortedList<RetailerPointDistance> sortedData = new SortedList<>(observableRetailerDistances);
+        sortedData.comparatorProperty().bind(retailerDistanceTable.comparatorProperty());
+
+        // Add the sorted and filtered data to the table.
+        retailerDistanceTable.setItems(sortedData);
+        retailerDistanceTable.getColumns().addAll(distanceCol, nameCol, primaryFunctionCol);
+    }
+
+    private void resetWIFIIcons(String icon) {
+        String scriptStr = "document.resetWIFIIcon('" + icon + "')";
+        webView.getEngine().executeScript(scriptStr);
+    }
+
+    private void resetRetailerIcons(String icon) {
+        String scriptStr = "document.resetRetailerIcon('" + icon + "')";
+        webView.getEngine().executeScript(scriptStr);
+    }
+
+    /**
+     * Creates the columns of the table.
+     * Sets their value factories so that the data is displayed correctly.
+     * Sets up the lists of data for filtering
+     * Displays the columns
+     */
+    private void setTableViewWIFI(ArrayList<WIFIPointDistance> data) {
+
+        observableWIFIDistances = FXCollections.observableArrayList(data);
+
+        // Create the columns
+        TableColumn<WIFIPointDistance, String> ssidCol = new TableColumn<>("SSID");
+        TableColumn<WIFIPointDistance, String> distanceCol = new TableColumn<>("Distance");
+        TableColumn<WIFIPointDistance, String> costCol = new TableColumn<>("Cost");
+        TableColumn<WIFIPointDistance, String> providerCol = new TableColumn<>("Provider");
+
+
+
+        //Clear the default columns, or any columns in the table.
+        wifiDistanceTable.getColumns().clear();
+
+        //Sets up each column to get the correct entry in each dataPoint
+
+        distanceCol.setCellValueFactory(new PropertyValueFactory<>("TripDistanceTwoD"));
+        ssidCol.setCellValueFactory(new PropertyValueFactory<>("SSID"));
+        costCol.setCellValueFactory(new PropertyValueFactory<>("Cost"));
+        providerCol.setCellValueFactory(new PropertyValueFactory<>("Provider"));
+
+        // Next few lines allow for easy filtering of the data using a FilteredList and SortedList
+        //filteredData = new FilteredList<>(dataPoints, p -> true);
+
+        SortedList<WIFIPointDistance> sortedData = new SortedList<>(observableWIFIDistances);
+        sortedData.comparatorProperty().bind(wifiDistanceTable.comparatorProperty());
+
+        // Add the sorted and filtered data to the table.
+        wifiDistanceTable.setItems(sortedData);
+        wifiDistanceTable.getColumns().addAll(distanceCol, ssidCol, costCol, providerCol);
+
+    }
+
+    /**
+     * Takes input form the gui and searches either by bike ID and gender to find all bike trips that match
+     * the given conditions.
+     */
+    public void SearchByGenderOrBikeID(){
+        currentTripCounter = 0;
+        ArrayList<BikeTrip> results;
+        int bikeId = -1;
+        boolean correct = false;
+        try {
+            bikeId = Integer.parseInt(genderBikeIdTextField.getText());
+            correct = true;
+        } catch (NumberFormatException NullPointerException){
+            System.out.println("Not by BikeID");
+        }
+        if (!correct) {
+            char gender;
+            String genderS;
+                genderS = genderBikeIdTextField.getText();
+                if (genderS.length() != 1) {
+                    return;
+                } else {
+                    gender = genderS.charAt(0);
+                }
+                results = DataAnalyser.findTripsByGender(bikeTrips, gender);
+                tripsNearPoint = results;
+                ArrayList<Point.Float> points = new ArrayList<>();
+                points.add(tripsNearPoint.get(0).getStartPoint());
+                points.add(tripsNearPoint.get(0).getEndPoint());
+                resultsLabel.setText(tripsNearPoint.get(0).nicerDescription());
+                generateRoute(points);
+        } else {
+            results = DataAnalyser.findTripsByBikeId(bikeTrips, bikeId);
+            tripsNearPoint = results;
+            ArrayList<Point.Float> points = new ArrayList<>();
+            points.add(tripsNearPoint.get(0).getStartPoint());
+            points.add(tripsNearPoint.get(0).getEndPoint());
+            resultsLabel.setText(tripsNearPoint.get(0).nicerDescription());
+            generateRoute(points);
+        }
+
     }
 
 }

@@ -708,6 +708,42 @@ public final class DataAnalyser {
 
     }
 
+    /**
+     * Takes an ArrayList of bike trips and returns the index of all bike trips the have the
+     * same bikeID
+     * @param trips List of trips to search through
+     * @param bikeId Bike to look for
+     * @return Indexes of the relevant trips
+     */
+    public static ArrayList<BikeTrip> findTripsByBikeId(ArrayList<BikeTrip> trips, int bikeId){
+        ArrayList<BikeTrip> results = new ArrayList<>();
+        for(BikeTrip trip : trips){
+            if (trip.getBikeId() == bikeId){
+                results.add(trip);
+            }
+        }
+        return results;
+    }
+
+    /**
+     * Takes an Arraylist of trips and searches through them by gender
+     * @param trips List to search through
+     * @param gender Gender to look for
+     * @return A list of the indexes of the matching trips
+     */
+    public static ArrayList<BikeTrip> findTripsByGender(ArrayList<BikeTrip> trips, char gender){
+        ArrayList<BikeTrip> results = new ArrayList<>();
+        if (gender != 'u' && gender != 'f' && gender != 'm') {
+            return results;
+        } else {
+            for (BikeTrip trip : trips) {
+                if (trip.getGender() == gender){
+                    results.add(trip);
+                }
+            }
+        }
+        return results;
+    }
 
     /**
      * Takes an angle in radian and returns the haversine function of it.

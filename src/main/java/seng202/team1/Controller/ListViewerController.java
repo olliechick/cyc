@@ -238,7 +238,8 @@ public class ListViewerController {
             bikeTableController.setStage(stage);
             stage.setScene(new Scene(bikeTableView));
             stage.setTitle("Bike Trips");
-            stage.sizeToScene();
+            stage.setWidth(1000);
+            stage.setHeight(800);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -266,7 +267,8 @@ public class ListViewerController {
             retailerTableController.setStage(stage);
             stage.setScene(new Scene(retailerTableView));
             stage.setTitle("Retailers");
-            stage.sizeToScene();
+            stage.setWidth(1000);
+            stage.setHeight(800);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -294,7 +296,8 @@ public class ListViewerController {
             wifiTableController.setStage(stage);
             stage.setScene(new Scene(wifiTableView));
             stage.setTitle("Wifi");
-            stage.sizeToScene();
+            stage.setWidth(1000);
+            stage.setHeight(800);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

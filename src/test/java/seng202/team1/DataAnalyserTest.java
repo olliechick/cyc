@@ -1,15 +1,18 @@
 package seng202.team1;
 
 
+import javafx.scene.control.*;
 import org.junit.Test;
 import seng202.team1.Model.CsvHandling.CSVLoader;
 import seng202.team1.Model.BikeTrip;
+import seng202.team1.Model.CsvHandling.CsvParserException;
 import seng202.team1.Model.DataAnalyser;
 import seng202.team1.Model.RetailerLocation;
 import seng202.team1.Model.WifiPoint;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -45,14 +48,14 @@ public class DataAnalyserTest {
     }
 
     @Test
-    public void TestSearchBikeTripsMatching() throws Exception { //Needs better data to be checked with #TODO
+    public void TestSearchBikeTripsMatching() throws Exception {
         ArrayList<BikeTrip> trips = CSVLoader.populateBikeTrips(RES_DIR + "bikeTripTestData.csv");
         ArrayList<BikeTrip> results = DataAnalyser.searchBikeTrips(40.732, -73.9925, 600, trips, true); // should be in the middle of the test data
         assertEquals(2, results.size());
     }
 
     @Test
-    public void TestSearchWifiPoints() throws Exception { //Needs better data to be checked with #TODO
+    public void TestSearchWifiPoints() throws Exception {
         ArrayList<WifiPoint> hotspots = CSVLoader.populateWifiHotspots(RES_DIR + "wifiTester.csv");
         ArrayList<WifiPoint> results = DataAnalyser.searchWifiPoints(40.755, -73.985, 600, hotspots);
         assertEquals(3, results.size());
@@ -70,7 +73,7 @@ public class DataAnalyserTest {
         ArrayList<BikeTrip> oldData = CSVLoader.populateBikeTrips(RES_DIR + "bikeTripTestData.csv");
         Collections.shuffle(testData, new Random(2132154541));
         Collections.shuffle(oldData, new Random(2132154541));
-        System.out.println(testData.size() + "" + testData); //TODO debug print statement
+        System.out.println(testData.size() + "" + testData);
         DataAnalyser.sortTripsByDistance(testData); // sorts in place
         assertEquals(testData.get(0), oldData.get(0));
         assertEquals(testData.get(1), oldData.get(3));
@@ -208,5 +211,26 @@ public class DataAnalyserTest {
         assertEquals(retailers.get(3), originalList.get(1));
         assertEquals(retailers.get(4), originalList.get(0));
 
+    }
+
+    @Test
+    public void TestFindTripsByBikeId() throws IOException, CsvParserException {
+        ArrayList<BikeTrip> testData = CSVLoader.populateBikeTrips(RES_DIR + "bikeTripTestData.csv");
+        ArrayList<BikeTrip> results = DataAnalyser.findTripsByBikeId(testData, 16281);
+        assertEquals(2,results.size());
+    }
+
+    @Test
+    public void TestFindBikeTripsByGender() throws IOException, CsvParserException {
+        ArrayList<BikeTrip> testData = CSVLoader.populateBikeTrips(RES_DIR + "bikeTripTestData.csv");
+        ArrayList<BikeTrip> results = DataAnalyser.findTripsByGender(testData, 'm');
+        assertEquals(1,results.size());
+    }
+
+    @Test
+    public void TestFindBikeTripsByGenderWrongGender() throws IOException, CsvParserException {
+        ArrayList<BikeTrip> testData = CSVLoader.populateBikeTrips(RES_DIR + "bikeTripTestData.csv");
+        ArrayList<BikeTrip> results = DataAnalyser.findTripsByGender(testData, 'x');
+        assertEquals(0,results.size());
     }
 }

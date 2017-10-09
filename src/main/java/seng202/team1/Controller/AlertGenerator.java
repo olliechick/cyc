@@ -95,7 +95,7 @@ public class AlertGenerator {
      * set of data.
      *
      * @param entriesLoaded The number of entries successfully loaded.
-     * @return The index of the string they selected, or -1 if canceled TODO return an int for each choice
+     * @return The index of the string they selected, or -1 if canceled
      */
     public static int createImportChoiceDialog(int entriesLoaded) {
         List<String> choices = new ArrayList<>();
