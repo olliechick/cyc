@@ -71,11 +71,9 @@ public class UserAccountModel implements java.io.Serializable {
         createDefaultLists();
     }
 
-    //TODO test this
-
     /**
      * Create the default lists of points for a user, so that they start with something to
-     * display in a table.
+     * display in a table. Stored into database.
      */
     private void createDefaultLists() {
         try {

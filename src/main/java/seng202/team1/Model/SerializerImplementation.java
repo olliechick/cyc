@@ -8,6 +8,9 @@ import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Static class to serialize and deserialize the users.
@@ -68,6 +71,17 @@ public final class SerializerImplementation {
      * @param userName The userName of the account to delete.
      */
     public static void deleteUserAccountModel(String userName){
+        List<Class> classes = Arrays.asList(BikeTripList.class,
+                                             WifiPointList.class,
+                                             RetailerLocationList.class);
+        for (Class classType : classes) {
+            System.out.println(String.format("Deleting lists of type %s", classType.toGenericString()));
+            for (String listName : DatabaseManager.getLists(userName, classType)) {
+                System.out.println(String.format("Deleting list %s", listName));
+                DatabaseManager.deleteList(userName, listName, classType);
+            }
+        }
+
         Path userPath = FileSystems.getDefault().getPath(Directory.USERS.directory() + userName + USER_EXT); //Directory.USERS.directory() + userName + USER_EXT;
         try {
             Files.delete(userPath);

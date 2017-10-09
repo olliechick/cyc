@@ -257,6 +257,13 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Populates the database with default data from .csv files.
+     * @param username username of the user to which the data should be associated to
+     */
+    public static void populateDatabaseWithDefaultValues(String username) {
+
+    }
 
     /**
      * Adds a single record to the database.

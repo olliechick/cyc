@@ -592,7 +592,6 @@ public class MapController {
     private void updateRetailerLists() {
         retailerListNames = model.getListNamesOfType(RetailerLocationList.class);
         listRetailerComboBox.getItems().clear();
-        System.out.println("Adding to retailer.");
         listRetailerComboBox.getItems().addAll(retailerListNames);
         listRetailerComboBox.getSelectionModel().selectFirst();
     }
@@ -730,7 +729,7 @@ public class MapController {
         listWifiComboBox.getSelectionModel().selectFirst();
 
         // BIKE TRIP
-        //bikeTripListComboBox.getSelectionModel().selectFirst();
+        listBikeTripComboBox.getSelectionModel().selectFirst();
 
 
     }
@@ -824,21 +823,13 @@ public class MapController {
                     AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
                 } else {
                     bikeTrips.add(addBikeDialog.getBikeTrip());
-                    model.addPoint(addBikeDialog.getBikeTrip(), currentBikeTripList);
+                    model.addPoint(addBikeDialog.getBikeTrip(), currentBikeTripList); // Adds to database
                 }
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Add the user's custom Wifi points to the current data
-     */
-    private void populateCustomWifiPoints() {
-        WifiPointList customWifi = model.getWifiPointsFromList(currentWifiPointList);
-        wifiPoints.addAll(customWifi.getWifiPoints());
     }
 
     /**
@@ -913,8 +904,6 @@ public class MapController {
         filterBoroughComboBox.getItems().remove(1, filterBoroughComboBox.getItems().size());
 
         listRetailerComboBox.getItems().remove(1, listRetailerComboBox.getItems().size());
-
-
 
     }
 
