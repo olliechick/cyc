@@ -40,6 +40,9 @@ public class UserAccountModel implements java.io.Serializable {
     private String userName;
     private byte[] password;
     private byte[] salt;
+    private boolean toDelete = false;
+
+
 
     public final static int MIN_PASSWORD_LENGTH = 0;
 
@@ -130,6 +133,14 @@ public class UserAccountModel implements java.io.Serializable {
 
     public byte[] getSalt() {
         return this.salt;
+    }
+
+    public boolean isToDelete() {
+        return toDelete;
+    }
+
+    public void setToDelete(boolean toDelete) {
+        this.toDelete = toDelete;
     }
 
     /**
