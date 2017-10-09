@@ -1446,6 +1446,10 @@ public class MapController {
                     gender = genderS.charAt(0);
                 }
                 results = DataAnalyser.findTripsByGender(bikeTrips, gender);
+                if(results.size() == 0 ){
+                    resultsLabel.setText("No trips Found");
+                    return;
+            }
                 tripsNearPoint = results;
                 ArrayList<Point.Float> points = new ArrayList<>();
                 points.add(tripsNearPoint.get(0).getStartPoint());
@@ -1454,6 +1458,10 @@ public class MapController {
                 generateRoute(points);
         } else {
             results = DataAnalyser.findTripsByBikeId(bikeTrips, bikeId);
+            if(results.size() == 0 ){
+                resultsLabel.setText("No trips Found");
+                return;
+            }
             tripsNearPoint = results;
             ArrayList<Point.Float> points = new ArrayList<>();
             points.add(tripsNearPoint.get(0).getStartPoint());
