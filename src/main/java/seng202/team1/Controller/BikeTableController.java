@@ -230,7 +230,7 @@ public class BikeTableController extends TableController {
             BikeTrip test = addBikeDialog.getBikeTrip();
             if (test != null) {
                 if (dataPoints.contains(test)) {
-                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
+                    AlertGenerator.createAlert("Duplicate bike trip", "That bike trip already exists!");
                 } else {
                     dataPoints.add(addBikeDialog.getBikeTrip());
                     originalData.add(addBikeDialog.getBikeTrip());
@@ -265,7 +265,7 @@ public class BikeTableController extends TableController {
             BikeTrip newBikeTrip = addBikeDialog.getBikeTrip();
             if (newBikeTrip != null) {
                 if (dataPoints.contains(newBikeTrip)) {
-                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
+                    AlertGenerator.createAlert("Duplicate bike trip", "That bike trip already exists!");
                 } else {
                     DatabaseManager.open();
                     DatabaseManager.updatePoint(model.getUserName(), currentListName, selectedBikeTrip, newBikeTrip);
@@ -435,7 +435,7 @@ public class BikeTableController extends TableController {
                     model.addPointList(new BikeTripList(currentListName, loadBikeCsv.getValue()));
                     handleImport(loadBikeCsv.getValue());
                 } else {
-                    AlertGenerator.createAlert("Error", "Error loading bike trips. Is your CSV correct?");
+                    AlertGenerator.createAlert("Error loading bike trips. Is your CSV correct?");
                     stopLoadingAni();
                 }
             }
@@ -448,7 +448,7 @@ public class BikeTableController extends TableController {
             @Override
             public void handle(WorkerStateEvent event) {
 
-                AlertGenerator.createAlert("Error", "Error loading bike trips. Please try again");
+                AlertGenerator.createAlert("Error loading bike trips. Please try again.");
                 stopLoadingAni();
             }
         });
@@ -491,19 +491,22 @@ public class BikeTableController extends TableController {
     }
 
     private void appendToData(ArrayList<BikeTrip> importedData) {
-        int count = 0;
+        int count = 0; // count of unique bike trips
         for (BikeTrip bikeTrip : importedData) {
             if (!dataPoints.contains(bikeTrip)) {
+                // New bike trip
                 dataPoints.add(bikeTrip);
                 originalData.add(bikeTrip);
                 count++;
             }
         }
         String addedMessage = count + " unique entries successfully added.";
+
         if (count != importedData.size()) {
-            addedMessage = addedMessage + "\n" + (importedData.size() - count) + " duplicates not added.";
+            addedMessage += "\n" + (importedData.size() - count) + " duplicates not added.";
         }
-        AlertGenerator.createAlert("Entries Added", addedMessage);
+
+        AlertGenerator.createAlert("Entries added", addedMessage);
     }
 
     private void appendToNewList(ArrayList<BikeTrip> importedData) {

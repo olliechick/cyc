@@ -469,7 +469,7 @@ public class MapController {
         }
         System.out.println("Results Found");
         if (results.size() == 0) {
-            resultsLabel.setText("No results were found");
+            resultsLabel.setText("No results were found.");
             results = null;
         } else {
             resultsLabel.setText(results.get(0).nicerDescription());
@@ -491,9 +491,9 @@ public class MapController {
             route1.add(tripsNearPoint.get(currentTripCounter).getEndPoint());
             generateRoute(route1);
         } else if (tripsNearPoint == null) {
-            resultsLabel.setText("No points have been found or you have not yet searched please try again");
+            resultsLabel.setText("No points have been found or you have not yet searched. Please try again.");
         } else if (currentTripCounter >= tripsNearPoint.size()) {
-            resultsLabel.setText("You have reached the end of the list");
+            resultsLabel.setText("You have reached the end of the list.");
             currentTripCounter = tripsNearPoint.size(); // stops someone running the value very high
         }
 
@@ -509,10 +509,10 @@ public class MapController {
             route1.add(tripsNearPoint.get(currentTripCounter).getEndPoint());
             generateRoute(route1);
         } else if (tripsNearPoint == null) {
-            resultsLabel.setText("No points have been found or you have not yet searched please try again");
+            resultsLabel.setText("No points have been found or you have not yet searched. Please try again.");
         } else {
             // currentTripCounter < 0
-            resultsLabel.setText("You have reached the start of the list");
+            resultsLabel.setText("You have reached the start of the list.");
             currentTripCounter = 0; // stops someone running the value very low
         }
 
@@ -817,7 +817,7 @@ public class MapController {
             WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
             if (newWifiPoint != null) {
                 if (wifiPoints.contains(newWifiPoint)) {
-                    AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
+                    AlertGenerator.createAlert("Duplicate WiFi hotspot", "That WiFi hotspot already exists!");
                 } else {
                     System.out.println(wifiPoints.size());
                     newWifiPoint.setVisible(true);
@@ -854,7 +854,7 @@ public class MapController {
             RetailerLocation retailerLocation = addRetailerDialog.getRetailerLocation();
             if (retailerLocation != null) {
                 if (retailerPoints.contains(retailerLocation)) {
-                    AlertGenerator.createAlert("Duplicate Retailer", "That Retailer already exists!");
+                    AlertGenerator.createAlert("Duplicate retailer", "That retailer already exists!");
                 } else {
                     retailerLocation.setVisible(true);
                     retailerLocation.setId(retailerPoints.size());
@@ -889,7 +889,7 @@ public class MapController {
             BikeTrip test = addBikeDialog.getBikeTrip();
             if (test != null) {
                 if (bikeTrips.contains(test)) {
-                    AlertGenerator.createAlert("Duplicate Bike Trip", "That bike trip already exists!");
+                    AlertGenerator.createAlert("Duplicate bike trip", "That bike trip already exists!");
                 } else {
                     bikeTrips.add(addBikeDialog.getBikeTrip());
                     model.addPoint(addBikeDialog.getBikeTrip(), currentBikeTripListName); // Adds to database
@@ -1472,7 +1472,7 @@ public class MapController {
                 }
                 results = DataAnalyser.findTripsByGender(bikeTrips, gender);
                 if(results.size() == 0 ){
-                    resultsLabel.setText("No trips Found");
+                    resultsLabel.setText("No trips found.");
                     return;
             }
                 tripsNearPoint = results;

@@ -170,7 +170,7 @@ public class WifiTableController extends TableController {
             WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
             if (newWifiPoint != null) {
                 if (dataPoints.contains(newWifiPoint)) {
-                    AlertGenerator.createAlert("Duplicate Wifi Point", "That Wifi point already exists!");
+                    AlertGenerator.createAlert("Duplicate WiFi hotspot", "That WiFi hotspot already exists!");
                 } else {
 
                     DatabaseManager.open();
@@ -194,7 +194,7 @@ public class WifiTableController extends TableController {
      */
     private void deleteWifi(WifiPoint selectedWifi) {
         //TODO Use database to delete point
-        boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete Point", "Are you sure you want to delete this point",
+        boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete WiFi hotspot", "Are you sure you want to delete this WiFi hotspot?",
                 selectedWifi.getName() + ", at " + selectedWifi.getLocation());
         if (confirmDelete) {
             dataPoints.removeAll(selectedWifi);
@@ -204,7 +204,7 @@ public class WifiTableController extends TableController {
                 DatabaseManager.deletePoint(model.getUserName(), currentListName, selectedWifi);
                 DatabaseManager.close();
             } catch (SQLException e) {
-                AlertGenerator.createExceptionDialog(e, "Database error", "Could not delete point.");
+                AlertGenerator.createExceptionDialog(e, "Database error", "Could not delete WiFi hotspot.");
             }
         }
     }
@@ -214,7 +214,7 @@ public class WifiTableController extends TableController {
      * Delete all points from the current list
      */
     public void deleteAllWifiPoints() {
-        boolean delete = AlertGenerator.createChoiceDialog("Delete List", "Delete list", "Are you sure you want to delete this list, and all the points in this list?");
+        boolean delete = AlertGenerator.createChoiceDialog("Delete list", "Delete list", "Are you sure you want to delete this list, and all the points in this list?");
         if (delete) {
             try {
                 DatabaseManager.open();
@@ -246,7 +246,7 @@ public class WifiTableController extends TableController {
             WifiPoint newWifiPoint = addWifiDialog.getWifiPoint();
             if (newWifiPoint != null) {
                 if (dataPoints.contains(newWifiPoint)) {
-                    AlertGenerator.createAlert("Duplicate WiFi Point", "That Wifi point already exists!");
+                    AlertGenerator.createAlert("Duplicate WiFi hotspot", "That WiFi hotspot already exists!");
                 } else {
                     dataPoints.add(newWifiPoint);
                     originalData.addAll(newWifiPoint);
@@ -498,7 +498,7 @@ public class WifiTableController extends TableController {
         if (count != importedData.size()) {
             addedMessage = addedMessage + "\n" + (importedData.size() - count) + " duplicates not added.";
         }
-        AlertGenerator.createAlert("Entries Added", addedMessage);
+        AlertGenerator.createAlert("Entries added", addedMessage);
     }
 
     private void appendToNewList(ArrayList<WifiPoint> importedData) {

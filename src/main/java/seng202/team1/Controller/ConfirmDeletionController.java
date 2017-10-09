@@ -39,7 +39,7 @@ public class ConfirmDeletionController {
             user.setToDelete(true);
             stage.close();
         } else {
-            AlertGenerator.createAlert("Password was incorrect please try again");
+            AlertGenerator.createAlert("Incorrect password. Please try again.");
             user.setToDelete(false);
         }
     }

@@ -512,19 +512,30 @@ public class RetailerTableController extends TableController {
     }
 
     private void appendToData(ArrayList<RetailerLocation> importedData) {
-        int count = 0;
+        int count = 0; // count of unique retailers
+        int countCoordless = 0; // count of unique, co-ordless retailers
         for (RetailerLocation retailerLocation : importedData) {
             if (!dataPoints.contains(retailerLocation)) {
                 dataPoints.add(retailerLocation);
                 originalData.add(retailerLocation);
                 count++;
+                if (retailerLocation.getCoords() == null) {
+                    countCoordless++;
+                }
             }
         }
+
         String addedMessage = count + " unique entries successfully added.";
         if (count != importedData.size()) {
-            addedMessage = addedMessage + "\n" + (importedData.size() - count) + " duplicates not added.";
+            addedMessage += "\n" + (importedData.size() - count) + " duplicates not added.";
         }
-        AlertGenerator.createAlert("Entries Added", addedMessage);
+
+        if (countCoordless < count) {
+            // There are some co-ordless retailers being added
+            addedMessage += "\n" + countCoordless + " entries did not have co-ordinates. " +
+                    "These can be manually added by editing the relevant retailers.";
+        }
+        AlertGenerator.createAlert("Entries added", addedMessage);
     }
 
     private void appendToNewList(ArrayList<RetailerLocation> importedData) {
