@@ -1439,7 +1439,7 @@ public class MapController {
         if (!correct) {
             char gender;
             String genderS;
-                genderS = genderBikeIdTextField.getText();
+                genderS = genderBikeIdTextField.getText().toLowerCase();
                 if (genderS.length() != 1) {
                     return;
                 } else {
