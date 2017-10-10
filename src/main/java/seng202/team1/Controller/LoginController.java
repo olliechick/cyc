@@ -155,7 +155,10 @@ public class LoginController {
             TOSController tosController = tosLoader.getController();
 
             Stage tosStage = new Stage();
-            tosStage.setScene(new Scene(tosView));
+            Scene scene = new Scene(tosView);
+            String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+            scene.getStylesheets().add(css);
+            tosStage.setScene(scene);
             tosController.initialize(tosStage);
             tosStage.initModality(Modality.APPLICATION_MODAL);
             tosStage.show();

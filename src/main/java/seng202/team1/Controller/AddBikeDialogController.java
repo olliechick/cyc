@@ -138,7 +138,12 @@ public class AddBikeDialogController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
         stage.setTitle("Add a bike trip");
-        stage.setScene(new Scene(root));
+
+        Scene scene = new Scene(root);
+        String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+        scene.getStylesheets().add(css);
+
+        stage.setScene(scene);
         startAM.setToggleGroup(startToggleGroup);
         startPM.setToggleGroup(startToggleGroup);
         stopPM.setToggleGroup(stopToggleGroup);

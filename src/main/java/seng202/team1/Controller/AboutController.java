@@ -31,8 +31,10 @@ public class AboutController {
 
     void setStage(Stage curStage, Parent root) {
         stage = curStage;
-        stage.setScene(new Scene(root));
-
+        Scene scene = new Scene(root);
+        String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        stage.setScene(scene);
     }
 
 

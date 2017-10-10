@@ -253,7 +253,12 @@ public class ListViewerController {
             bikeTableController.initContextMenu();
 
             bikeTableController.setStage(stage);
-            stage.setScene(new Scene(bikeTableView));
+
+            Scene scene = new Scene(bikeTableView);
+            String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+            scene.getStylesheets().add(css);
+
+            stage.setScene(scene);
             stage.setTitle("Bike Trips");
             stage.setWidth(1000);
             stage.setHeight(800);
@@ -291,7 +296,12 @@ public class ListViewerController {
             retailerTableController.initContextMenu();
 
             retailerTableController.setStage(stage);
-            stage.setScene(new Scene(retailerTableView));
+
+            Scene scene = new Scene(retailerTableView);
+            String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+            scene.getStylesheets().add(css);
+
+            stage.setScene(scene);
             stage.setTitle("Retailers");
             stage.setWidth(1000);
             stage.setHeight(800);
@@ -329,7 +339,11 @@ public class ListViewerController {
             wifiTableController.initContextMenu();
 
             wifiTableController.setStage(stage);
-            stage.setScene(new Scene(wifiTableView));
+            Scene scene = new Scene(wifiTableView);
+            String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+            scene.getStylesheets().add(css);
+
+            stage.setScene(scene);
             stage.setTitle("Wifi");
             stage.setWidth(1000);
             stage.setHeight(800);
