@@ -278,6 +278,8 @@ function initialise(){
             case 'clear_selected_click':
                 app.resetMarkers();
                 document.getElementById('clearSelectedItem').style.display='none';
+                document.getElementById('directionsDestinationItem').style.display='block';
+                document.getElementById('directionsOriginItem').style.display='block';
                 break;
             case 'add_WIFI_click':
                 map.panTo(latLng);
@@ -337,6 +339,7 @@ function initialise(){
                 document.getElementById('directionsDestinationItem').style.display='none';
                 document.getElementById('directionsOriginItem').style.display='none';
                 document.getElementById('getDirectionsItem').style.display='none';
+                document.getElementById('clearSelectedItem').style.display='none';
 
             }
             else {
@@ -426,6 +429,9 @@ function initialise(){
         map.panTo(wifiMarkerArray[index].getPosition());
         map.setZoom(17);
         document.getElementById('clearSelectedItem').style.display='block';
+        document.getElementById('clearDirectionsItem').style.display='none';
+        document.getElementById('directionsDestinationItem').style.display='none';
+        document.getElementById('directionsOriginItem').style.display='none';
     };
 
     document.circleRetailer = function circleRetailer(index, icon)
@@ -435,6 +441,9 @@ function initialise(){
         map.panTo(retailerMarkerArray[index].getPosition());
         map.setZoom(17);
         document.getElementById('clearSelectedItem').style.display='block';
+        document.getElementById('clearDirectionsItem').style.display='none';
+        document.getElementById('directionsDestinationItem').style.display='none';
+        document.getElementById('directionsOriginItem').style.display='none';
     }
 
     document.resetWIFIIcon = function resetWIFIIcon(icon) {
@@ -541,6 +550,9 @@ function initialise(){
         marker.addListener('click', function() {
             retailerListner.wifiToRetailer(marker.position.lat(), marker.position.lng());
             document.getElementById('clearSelectedItem').style.display='block';
+            document.getElementById('clearDirectionsItem').style.display='none';
+            document.getElementById('directionsDestinationItem').style.display='none';
+            document.getElementById('directionsOriginItem').style.display='none';
 
         });
         retailerMarkerArray.push(marker);
