@@ -106,9 +106,9 @@ public class MapController {
     private String currentWifiPointListName = "Default";
     private String currentRetailerListName = "Default";
     private boolean isMapLoaded = false;
-    boolean tripShown = false;
     private WindowManager windowManager = new WindowManager();
     // Some control booleans
+    public boolean tripShown = false;
     private boolean showRetailersNearRoute = true;
     private boolean showOnlyNearestRetailerToRoute = false;
     private boolean showWIFINearRoute = true;
@@ -590,7 +590,10 @@ public class MapController {
     private void updateRetailersPrimary() {
         ArrayList<RetailerLocation> retailers = new ArrayList<>();
         for (int i = 0; i < retailerPoints.size(); i++) {
-
+            if (tripShown){
+                webView.getEngine().executeScript("document.clearRouteSearch()");
+                tripShown = false;
+            }
             RetailerLocation retailerLocation = retailerPoints.get(i);
             if (retailerLocation.isUpdated((checkStreet(retailerLocation)
                     && checkPrimary(retailerLocation)
@@ -650,6 +653,10 @@ public class MapController {
 
     @FXML
     private void updateRetailers() {
+        if (tripShown){
+            webView.getEngine().executeScript("document.clearRouteSearch()");
+            tripShown = false;
+        }
         for (int i = 0; i < retailerPoints.size(); i++) {
             RetailerLocation retailerLocation = retailerPoints.get(i);
             if (retailerLocation.isUpdated((checkStreet(retailerLocation)
@@ -669,6 +676,10 @@ public class MapController {
 
     @FXML
     private void updateWIFI() {
+        if (tripShown){
+            webView.getEngine().executeScript("document.clearRouteSearch()");
+            tripShown = false;
+        }
         for (int i = 0; i < wifiPoints.size(); i++) {
             WifiPoint wifiPoint = wifiPoints.get(i);
             if (wifiPoint.isUpdated((checkCost(wifiPoint)
@@ -1356,7 +1367,10 @@ public class MapController {
             userClicks.add(destinationPoint);
             addCustomBikeTrip();
         }
-
+        public void resetMarkers() {
+            resetRetailerIcons(RETAILER_ICON_FILENAME);
+            resetWIFIIcons(WIFI_ICON_FILENAME);
+        }
         public void clearRoute() {
             resetRetailerIcons(RETAILER_ICON_FILENAME);
             resetWIFIIcons(WIFI_ICON_FILENAME);
@@ -1365,6 +1379,7 @@ public class MapController {
             wifiDistanceTable.refresh();
             retailerDistanceTable.refresh();
             tripShown = false;
+
         }
 
 
@@ -1374,7 +1389,7 @@ public class MapController {
                 webView.getEngine().executeScript("document.hidePOICluster()");
                 webView.getEngine().executeScript("document.hideWIFICluster()");
                 webView.getEngine().executeScript("document.hideRetailerCluster()");
-
+                tripShown = true;
                 if (showWIFINearRoute) {
                     ArrayList<Integer> indexes = searchWifiPointsOnRoute(dir.getPoints(), wifiPoints, wifiSearchDistance);
                     ArrayList<WIFIPointDistance> pointDistances = new ArrayList<>();
