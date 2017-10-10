@@ -424,8 +424,8 @@ function initialise(){
         wifiMarkerArray[index].setVisible(true);
         wifiMarkerArray[index].setIcon(icon);
         map.panTo(wifiMarkerArray[index].getPosition());
-        map.setZoom(16);
-
+        map.setZoom(17);
+        document.getElementById('clearSelectedItem').style.display='block';
     };
 
     document.circleRetailer = function circleRetailer(index, icon)
@@ -434,6 +434,7 @@ function initialise(){
         retailerMarkerArray[index].setIcon(icon);
         map.panTo(retailerMarkerArray[index].getPosition());
         map.setZoom(17);
+        document.getElementById('clearSelectedItem').style.display='block';
     }
 
     document.resetWIFIIcon = function resetWIFIIcon(icon) {
