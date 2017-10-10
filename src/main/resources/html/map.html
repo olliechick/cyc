@@ -146,6 +146,7 @@ function initialise(){
 	menuItems.push({className:'context_menu_item', eventName:'directions_origin_click', id:'directionsOriginItem', label:'Directions from here'});
 	menuItems.push({className:'context_menu_item', eventName:'directions_destination_click', id:'directionsDestinationItem', label:'Directions to here'});
 	menuItems.push({className:'context_menu_item', eventName:'clear_directions_click', id:'clearDirectionsItem', label:'Clear directions'});
+    menuItems.push({className:'context_menu_item', eventName:'clear_selected_click', id:'clearSelectedItem', label:'Clear Selected'});
     menuItems.push({className:'context_menu_item', eventName:'save_directions_click', id:'saveDirectionsItem', label:'Save route'});
 	menuItems.push({className:'context_menu_item', eventName:'get_directions_click', id:'getDirectionsItem', label:'Get directions'});
 
@@ -273,6 +274,10 @@ function initialise(){
             case 'add_retailer_click':
                 map.panTo(latLng);
                 app.addRetailer(latLng.lat(), latLng.lng());
+                break;
+            case 'clear_selected_click':
+                app.resetMarkers();
+                document.getElementById('clearSelectedItem').style.display='none';
                 break;
             case 'add_WIFI_click':
                 map.panTo(latLng);
@@ -438,7 +443,7 @@ function initialise(){
             wifiMarkerArray[i].setMap(map);
 
         }
-        document.wifiCluster('icons/wifiCluster');
+        document.updateWIFIMarkerCluster();
     };
 
     document.resetRetailerIcon = function resetRetailerIcon(icon) {
@@ -447,7 +452,7 @@ function initialise(){
             retailerMarkerArray[i].setVisible(true);
             retailerMarkerArray[i].setMap(map);
         }
-        document.retailerCluster('icons/retailerCluster');
+        document.updateRetailerMarkerCluster();
     };
 
     document.circleAndNumberWIFI = function circleAndNumberWIFI(index, icon, number) {
@@ -534,6 +539,7 @@ function initialise(){
         var marker = document.addMarker(latlng, icon, title);
         marker.addListener('click', function() {
             retailerListner.wifiToRetailer(marker.position.lat(), marker.position.lng());
+            document.getElementById('clearSelectedItem').style.display='block';
 
         });
         retailerMarkerArray.push(marker);
