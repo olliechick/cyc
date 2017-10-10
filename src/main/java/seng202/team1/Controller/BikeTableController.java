@@ -147,7 +147,7 @@ public class BikeTableController extends TableController {
     public void setupWithList(String listName, ArrayList<BikeTrip> points) {
         setFilters();
         currentListName = listName;
-        setTableViewBike(model.getBikeTripsFromList(listName).getBikeTrips());
+        setTableViewBike(points);
         stopLoadingAni();
         setPredicate();
         clearFilters();

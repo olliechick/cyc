@@ -229,6 +229,30 @@ public class UserAccountModel implements java.io.Serializable {
         }
     }
 
+    public ArrayList<String> getBikeTripListNames() {
+        return getPointListNames(BikeTripList.class);
+    }
+
+    public ArrayList<String> getRetailerListNames() {
+        return getPointListNames(RetailerLocationList.class);
+    }
+
+    public ArrayList<String> getWifiListNames() {
+        return getPointListNames(WifiPointList.class);
+    }
+
+    private ArrayList<String> getPointListNames(Class type) {
+        try {
+            DatabaseManager.open();
+            ArrayList<String> result = DatabaseManager.getLists(userName, type);
+            DatabaseManager.close();
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public void addPointList(PointList pointList) {
         Class pointListClass = null;

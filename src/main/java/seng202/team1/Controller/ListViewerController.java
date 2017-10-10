@@ -8,12 +8,17 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
+import seng202.team1.Model.BikeTrip;
 import seng202.team1.Model.BikeTripList;
+import seng202.team1.Model.DatabaseManager;
+import seng202.team1.Model.RetailerLocation;
 import seng202.team1.Model.RetailerLocationList;
+import seng202.team1.Model.WifiPoint;
 import seng202.team1.Model.WifiPointList;
 import seng202.team1.UserAccountModel;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -24,13 +29,13 @@ import java.util.ArrayList;
 public class ListViewerController {
 
     @FXML
-    private ListView<BikeTripList> bikeListView;
+    private ListView<String> bikeListView;
 
     @FXML
-    private ListView<RetailerLocationList> retailerListView;
+    private ListView<String> retailerListView;
 
     @FXML
-    private ListView<WifiPointList> wifiListView;
+    private ListView<String> wifiListView;
 
     private UserAccountModel user;
     private MapController mapController;
@@ -42,41 +47,41 @@ public class ListViewerController {
      */
     public void initialize() {
 
-        bikeListView.setCellFactory(param -> new ListCell<BikeTripList>() {
+        bikeListView.setCellFactory(param -> new ListCell<String>() {
             @Override
-            protected void updateItem(BikeTripList bikeTripList, boolean empty) {
-                super.updateItem(bikeTripList, empty);
+            protected void updateItem(String bikeTripListName, boolean empty) {
+                super.updateItem(bikeTripListName, empty);
 
-                if (empty || bikeTripList == null || bikeTripList.getListName() == null) {
+                if (empty || bikeTripListName == null) {
                     setText(null);
                 } else {
-                    setText(bikeTripList.getListName());
+                    setText(bikeTripListName);
                 }
             }
         });
 
-        retailerListView.setCellFactory(param -> new ListCell<RetailerLocationList>() {
+        retailerListView.setCellFactory(param -> new ListCell<String>() {
             @Override
-            protected void updateItem(RetailerLocationList retailerLocationList, boolean empty) {
-                super.updateItem(retailerLocationList, empty);
+            protected void updateItem(String retailerLocationListName, boolean empty) {
+                super.updateItem(retailerLocationListName, empty);
 
-                if (empty || retailerLocationList == null || retailerLocationList.getListName() == null) {
+                if (empty || retailerLocationListName == null) {
                     setText(null);
                 } else {
-                    setText(retailerLocationList.getListName());
+                    setText(retailerLocationListName);
                 }
             }
         });
 
-        wifiListView.setCellFactory(param -> new ListCell<WifiPointList>() {
+        wifiListView.setCellFactory(param -> new ListCell<String>() {
             @Override
-            protected void updateItem(WifiPointList wifiPointList, boolean empty) {
-                super.updateItem(wifiPointList, empty);
+            protected void updateItem(String wifiPointListName, boolean empty) {
+                super.updateItem(wifiPointListName, empty);
 
-                if (empty || wifiPointList == null || wifiPointList.getListName() == null) {
+                if (empty || wifiPointListName == null) {
                     setText(null);
                 } else {
-                    setText(wifiPointList.getListName());
+                    setText(wifiPointListName);
                 }
             }
         });
@@ -117,9 +122,9 @@ public class ListViewerController {
      */
     public void setUser(UserAccountModel user) {
         this.user = user;
-        bikeListView.getItems().addAll(user.getBikeTripLists());
-        retailerListView.getItems().addAll(user.getRetailerLocationLists());
-        wifiListView.getItems().addAll(user.getWifiPointLists());
+        bikeListView.getItems().addAll(user.getBikeTripListNames());
+        retailerListView.getItems().addAll(user.getRetailerListNames());
+        wifiListView.getItems().addAll(user.getWifiListNames());
     }
 
 
@@ -128,12 +133,12 @@ public class ListViewerController {
      */
     @FXML
     void chooseBikeList() {
-        BikeTripList selectedBikeList = bikeListView.getSelectionModel().getSelectedItem();
+        String selectedBikeListName = bikeListView.getSelectionModel().getSelectedItem();
         //BikeTripList selectedBikeList = DatabaseManager.getLists(user.getUserName(), BikeTrip.class);
-        if (selectedBikeList != null) {
-            System.out.println(selectedBikeList.getBikeTrips().size() + " trips in list, in List ");
+        if (selectedBikeListName != null) {
+            //System.out.println(selectedBikeList.getBikeTrips().size() + " trips in list, in List ");
 
-            switchToBikeTable(selectedBikeList);
+            switchToBikeTable(selectedBikeListName);
         }
     }
 
@@ -143,11 +148,11 @@ public class ListViewerController {
      */
     @FXML
     void chooseRetailerList() {
-        RetailerLocationList selectedRetailerList = retailerListView.getSelectionModel().getSelectedItem();
-        if (selectedRetailerList != null) {
-            System.out.println(selectedRetailerList.getRetailerLocations().size() + " retailers in list");
+        String selectedRetailerListName = retailerListView.getSelectionModel().getSelectedItem();
+        if (selectedRetailerListName != null) {
+            //System.out.println(selectedRetailerList.getRetailerLocations().size() + " retailers in list");
 
-            switchToRetailerTable(selectedRetailerList);
+            switchToRetailerTable(selectedRetailerListName);
         }
 
     }
@@ -158,11 +163,11 @@ public class ListViewerController {
      */
     @FXML
     void chooseWifiList() {
-        WifiPointList selectedWifiList = wifiListView.getSelectionModel().getSelectedItem();
-        if (selectedWifiList != null) {
-            System.out.println(selectedWifiList.getWifiPoints().size() + " wifis in list");
+        String selectedWifiListName = wifiListView.getSelectionModel().getSelectedItem();
+        if (selectedWifiListName != null) {
+            //System.out.println(selectedWifiList.getWifiPoints().size() + " wifis in list");
 
-            switchToWifiTable(selectedWifiList);
+            switchToWifiTable(selectedWifiListName);
 
         }
 
@@ -181,7 +186,7 @@ public class ListViewerController {
             BikeTripList bikeTripList = new BikeTripList(listName, new ArrayList<>());
 
             user.addPointList(bikeTripList);
-            switchToBikeTable(bikeTripList);
+            switchToBikeTable(bikeTripList.getListName());
             mapController.updateBikeTripLists();
         }
 
@@ -199,7 +204,7 @@ public class ListViewerController {
             RetailerLocationList retailerLocationList = new RetailerLocationList(listName, new ArrayList<>());
             user.addPointList(retailerLocationList);
 
-            switchToRetailerTable(retailerLocationList);
+            switchToRetailerTable(retailerLocationList.getListName());
             mapController.updateRetailerLists();
         }
     }
@@ -215,7 +220,7 @@ public class ListViewerController {
         if (listName != null) {
             WifiPointList wifiPointList = new WifiPointList(listName, new ArrayList<>());
             user.addPointList(wifiPointList);
-            switchToWifiTable(wifiPointList);
+            switchToWifiTable(wifiPointList.getListName());
             mapController.updateWifiLists();
         }
     }
@@ -224,16 +229,25 @@ public class ListViewerController {
     /**
      * Switch from this view to a bike trip table.
      *
-     * @param bikeTripList The list to initialise the table with.
+     * @param bikeTripListName The list to initialise the table with.
      */
-    private void switchToBikeTable(BikeTripList bikeTripList) {
+    private void switchToBikeTable(String bikeTripListName) {
         try {
             FXMLLoader bikeTableLoder = new FXMLLoader(getClass().getResource("/fxml/BikeTableView.fxml"));
             Parent bikeTableView = bikeTableLoder.load();
             BikeTableController bikeTableController = bikeTableLoder.getController();
 
+            ArrayList<BikeTrip> result = null;
+            try {
+                DatabaseManager.open();
+                result = DatabaseManager.getBikeTrips(user.getUserName(), bikeTripListName);
+                DatabaseManager.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             bikeTableController.initModel(user);
-            bikeTableController.setupWithList(bikeTripList.getListName(), bikeTripList.getBikeTrips());
+            bikeTableController.setupWithList(bikeTripListName, result);
             bikeTableController.setName();
             bikeTableController.setMapController(mapController);
             bikeTableController.initContextMenu();
@@ -253,16 +267,25 @@ public class ListViewerController {
     /**
      * Switch from this view to a retailer table.
      *
-     * @param retailerLocationList The list to initialise the table with.
+     * @param retailerLocationListName The list to initialise the table with.
      */
-    private void switchToRetailerTable(RetailerLocationList retailerLocationList) {
+    private void switchToRetailerTable(String retailerLocationListName) {
         try {
             FXMLLoader retailerTableLoder = new FXMLLoader(getClass().getResource("/fxml/RetailerTableView.fxml"));
             Parent retailerTableView = retailerTableLoder.load();
             RetailerTableController retailerTableController = retailerTableLoder.getController();
 
+            ArrayList<RetailerLocation> result = null;
+            try {
+                DatabaseManager.open();
+                result = DatabaseManager.getRetailers(user.getUserName(), retailerLocationListName);
+                DatabaseManager.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             retailerTableController.initModel(user);
-            retailerTableController.setupWithList(retailerLocationList.getListName(), retailerLocationList.getRetailerLocations());
+            retailerTableController.setupWithList(retailerLocationListName, result);
             retailerTableController.setName();
             retailerTableController.setMapController(mapController);
             retailerTableController.initContextMenu();
@@ -282,16 +305,25 @@ public class ListViewerController {
     /**
      * Switch from this view to a wifi point table.
      *
-     * @param wifiPointList The list to initialise the table with.
+     * @param wifiPointListName The list to initialise the table with.
      */
-    private void switchToWifiTable(WifiPointList wifiPointList) {
+    private void switchToWifiTable(String wifiPointListName) {
         try {
             FXMLLoader wifiTableLoder = new FXMLLoader(getClass().getResource("/fxml/WifiTableView.fxml"));
             Parent wifiTableView = wifiTableLoder.load();
             WifiTableController wifiTableController = wifiTableLoder.getController();
 
+            ArrayList<WifiPoint> result = null;
+            try {
+                DatabaseManager.open();
+                result = DatabaseManager.getWifiPoints(user.getUserName(), wifiPointListName);
+                DatabaseManager.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             wifiTableController.initModel(user);
-            wifiTableController.setupWithList(wifiPointList.getListName(), wifiPointList.getWifiPoints());
+            wifiTableController.setupWithList(wifiPointListName, result);
             wifiTableController.setName();
             wifiTableController.setMapController(mapController);
             wifiTableController.initContextMenu();
