@@ -44,7 +44,7 @@ public class UserAccountModel implements java.io.Serializable {
 
 
 
-    public final static int MIN_PASSWORD_LENGTH = 0;
+    public final static int MIN_PASSWORD_LENGTH = 8;
 
     /**
      * Constructor with account type set to "User".
