@@ -395,11 +395,22 @@ public class BikeTableController extends TableController {
     }
 
     private void importBikeCsvToDatabase(final String filename, final boolean isCustomCsv) {
+        startLoadingAni();
         try {
             populateBikeTripsIntoDatabase(filename, model.getUserName(), currentListName, isCustomCsv);
         } catch (CsvParserException | IOException e) {
             e.printStackTrace();
-    }
+        }
+        try {
+            DatabaseManager.open();
+            setupWithList(currentListName, DatabaseManager.getBikeTrips(model.getUserName(), currentListName));
+            DatabaseManager.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        stopLoadingAni();
+
+
 
         /*
         final Task<Integer> loadBikeCsv = new Task<Integer>() {
@@ -602,7 +613,7 @@ public class BikeTableController extends TableController {
      */
     private void setTableViewBike(ArrayList<BikeTrip> data) {
 
-        setUpData(model.getBikeTripsFromList(currentListName).getBikeTrips());
+        setUpData(data);
 
         table.getColumns().clear();
         table.getColumns().addAll(createColumns());

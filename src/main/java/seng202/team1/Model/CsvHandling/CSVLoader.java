@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -291,7 +292,7 @@ public class CSVLoader {
     }
 
 
-    public static ArrayList<BikeTrip> populateBikeTripsIntoDatabase(String filename, String username,
+    public static void populateBikeTripsIntoDatabase(String filename, String username,
                                                      String listName, boolean isCustomCsv)
             throws IOException, CsvParserException {
         boolean isValidCsv = false; // assume false unless proven otherwise
@@ -385,21 +386,26 @@ public class CSVLoader {
                     double distance = DataAnalyser.calculateDistance(startLat, startLong, endLat, endLong);
 
                     // Trip duration and creating the bike trip
+                    String tripDurationString = record.get(0).trim();
+                    if (tripDurationString.isEmpty()) {
+                        // Unknown trip duration
+                        long tripDuration = Duration.between(startTime, stopTime).getSeconds();
+                        DatabaseManager.addRawBikeTrip(listid, tripDuration, startTime.toString(), stopTime.toString(),
+                                startLat, startLong, endLat, endLong, bikeId, gender, birthYear, distance);
+
+                    } else {
+                        long tripDuration = new Long(tripDurationString);
+                        DatabaseManager.addRawBikeTrip(listid, tripDuration, startTime.toString(), stopTime.toString(),
+                                startLat, startLong, endLat, endLong, bikeId, gender, birthYear, distance);
+                    }
+
                     long tripDuration = new Long(record.get(0).trim());
                     if (tripDuration < 0) {
-                        trips.add(new BikeTrip(startTime, stopTime, startPoint,// startStationId, endStationId,
-                                endPoint, bikeId, gender, birthYear));
-                        DatabaseManager.addRawBikeTrip(listid, tripDuration, startTime.toString(), stopTime.toString(), startLat, startLong, endLat, endLong, bikeId, gender, birthYear, distance);
                     } else {
-                        trips.add(new BikeTrip(tripDuration, startTime, stopTime, startPoint,// startStationId, endStationId,
-                                endPoint, bikeId, gender, birthYear));
-                        DatabaseManager.addRawBikeTrip(listid, null, startTime.toString(), stopTime.toString(), startLat, startLong, endLat, endLong, bikeId, gender, birthYear, distance);
-
                     }
 
                     isValidCsv = true;
                 } catch (Exception e) {
-                    e.printStackTrace();
                     System.out.println("Error processing: " + record.toString());
                     // Some error processing the line - it's either a header field or the CSV is invalid.
                     // If this occurs for all lines in the CSV, a CsvParserException is thrown.
@@ -418,7 +424,6 @@ public class CSVLoader {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return trips;
     }
 
     /**
