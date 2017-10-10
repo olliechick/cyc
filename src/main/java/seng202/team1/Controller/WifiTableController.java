@@ -196,7 +196,6 @@ public class WifiTableController extends TableController {
      * @param selectedWifi The currently selected wifi.
      */
     private void deleteWifi(WifiPoint selectedWifi) {
-        //TODO Use database to delete point
         boolean confirmDelete = AlertGenerator.createChoiceDialog("Delete WiFi hotspot", "Are you sure you want to delete this WiFi hotspot?",
                 selectedWifi.getName() + ", at " + selectedWifi.getLocation());
         if (confirmDelete) {
@@ -519,8 +518,7 @@ public class WifiTableController extends TableController {
     }
 
     private boolean checkAndAddToList(int entriesLoaded) {
-        boolean confirm = AlertGenerator.createChoiceDialog("Import", entriesLoaded + " entries loaded.", "Do you want to import?");
-        return confirm;
+        return AlertGenerator.createChoiceDialog("Import", entriesLoaded + " entries loaded.", "Do you want to import?");
     }
     //endregion
 

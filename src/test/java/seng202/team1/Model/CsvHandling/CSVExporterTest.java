@@ -51,11 +51,6 @@ public class CSVExporterTest {
         }
     }
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
 
     @Test
     public void testExportCSV() throws Exception {

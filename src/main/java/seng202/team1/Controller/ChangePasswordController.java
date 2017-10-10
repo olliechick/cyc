@@ -1,14 +1,18 @@
 package seng202.team1.Controller;
 
-/**
- * Created by jbu71 on 2/10/17.
- */
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
 import seng202.team1.UserAccountModel;
 
+/**
+ * Controls the basic logic of changing the user's password.
+ *
+ * Created by jbu71 on 2/10/17.
+ * @author Josh Burt
+ */
 public class ChangePasswordController {
 
     private UserAccountModel model;

@@ -154,13 +154,13 @@ public class MapController {
     private ProgressIndicator progressSpinner;
 
     @FXML
-    private ComboBox filterBoroughComboBox;
+    private ComboBox<String> filterBoroughComboBox;
 
     @FXML
-    private ComboBox filterCostComboBox;
+    private ComboBox<String> filterCostComboBox;
 
     @FXML
-    private ComboBox filterProviderComboBox;
+    private ComboBox<String> filterProviderComboBox;
 
     @FXML
     private Button switchViewButton;
@@ -257,17 +257,28 @@ public class MapController {
      * If the map is loaded this method resets the map. Reloading wifi and retailer markers.
      */
     @FXML
-    private void resetMap() {
-        webView.getEngine().loadContent("");
-        webEngine.load(getClass().getResource("/html/map.html").toString());
-
-
-
-        // Check the map has been loaded before attempting to add markers to it.
-        if (isMapLoaded) {
-            reloadData();
+    void resetMap() {
+        boolean confirm = true;
+        if (!windowManager.getStagesOpen().isEmpty()) {
+            confirm = AlertGenerator.createChoiceDialog("Reset map", "This will close all tables", "Are you sure?");
         }
+        if (confirm) {
+            try {
+                // Changes to the map GUI
+                windowManager.closeAllTrackedStages();
+                FXMLLoader mapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+                Parent mapView = mapLoader.load();
+                MapController mapController = mapLoader.getController();
 
+                mapController.setUp(model, stage);
+                stage.setScene(new Scene(mapView));
+                stage.sizeToScene();
+                stage.show();
+
+            } catch (IOException | IllegalStateException e) {
+                AlertGenerator.createExceptionDialog(e); //File not found
+            }
+        }
     }
 
     /**
@@ -308,7 +319,7 @@ public class MapController {
         win.setMember("retailerListner", retailerListner);
 
 
-                          // sets the filters based on wifi and retailer points loaded
+        // sets the filters based on wifi and retailer points loaded
         loadAllBikeTrips(); // currently only dynamic, requested routes are shown
         loadAllWifi();      // loads all the wifiPoints
         initializeWIFICluster();
@@ -527,8 +538,8 @@ public class MapController {
 
     @FXML
     private void loadAllBikeTrips() {
-            bikeTrips = new ArrayList<BikeTrip>();
-            bikeTrips.addAll(model.getBikeTripsFromList(currentBikeTripListName).getBikeTrips());
+        bikeTrips = new ArrayList<BikeTrip>();
+        bikeTrips.addAll(model.getBikeTripsFromList(currentBikeTripListName).getBikeTrips());
 
 
 
@@ -1183,7 +1194,7 @@ public class MapController {
         try {
             root = confirmDeletion.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            AlertGenerator.createExceptionDialog(e);
         }
         Stage stage = new Stage();
         ConfirmDeletionController confirmDeletionController = confirmDeletion.getController();
@@ -1218,7 +1229,7 @@ public class MapController {
     /**
      * Creates the columns of the table.
      * Sets their value factories so that the data is displayed correctly.
-     * Sets up the lists of data for filtering TODO move out
+     * Sets up the lists of data for filtering
      * Displays the columns
      */
     private void setTableViewRetailer(ArrayList<RetailerPointDistance> data) {
@@ -1229,13 +1240,6 @@ public class MapController {
         TableColumn<RetailerPointDistance, String> nameCol = new TableColumn<>("Name");
         TableColumn<RetailerPointDistance, String> distanceCol = new TableColumn<>("Distance");
         TableColumn<RetailerPointDistance, String> primaryFunctionCol = new TableColumn<>("Primary Function");
-
-
-        //Set the IDs of the columns, not used yet TODO remove if never use
-        nameCol.setId("name");
-        distanceCol.setId("distance");
-        primaryFunctionCol.setId("primaryfunction");
-
 
         //Clear the default columns, or any columns in the table.
         retailerDistanceTable.getColumns().clear();
@@ -1270,7 +1274,7 @@ public class MapController {
     /**
      * Creates the columns of the table.
      * Sets their value factories so that the data is displayed correctly.
-     * Sets up the lists of data for filtering TODO move out
+     * Sets up the lists of data for filtering
      * Displays the columns
      */
     private void setTableViewWIFI(ArrayList<WIFIPointDistance> data) {
@@ -1282,14 +1286,6 @@ public class MapController {
         TableColumn<WIFIPointDistance, String> distanceCol = new TableColumn<>("Distance");
         TableColumn<WIFIPointDistance, String> costCol = new TableColumn<>("Cost");
         TableColumn<WIFIPointDistance, String> providerCol = new TableColumn<>("Provider");
-
-
-        //Set the IDs of the columns, not used yet TODO remove if never use
-        ssidCol.setId("ssid");
-        distanceCol.setId("distance");
-        costCol.setId("cost");
-        providerCol.setId("provider");
-
 
         //Clear the default columns, or any columns in the table.
         wifiDistanceTable.getColumns().clear();
@@ -1421,7 +1417,7 @@ public class MapController {
                 }
                 webView.getEngine().executeScript("document.POICluster('" + POI_CLUSTER_ICON_FILENAME +"')");
             } catch (Exception e) {
-                System.out.print(e);
+                AlertGenerator.createExceptionDialog(e);
             }
 
 
@@ -1474,19 +1470,23 @@ public class MapController {
         if (!correct) {
             char gender;
             String genderS;
-                genderS = genderBikeIdTextField.getText().toLowerCase();
-                gender = genderS.charAt(0);
-                results = DataAnalyser.findTripsByGender(bikeTrips, gender);
-                if(results.size() == 0 ){
-                    resultsLabel.setText("No trips found.");
-                    return;
+            genderS = genderBikeIdTextField.getText().toLowerCase();
+            if (genderS.length() >= 1) {
+                //0-length string
+                return;
             }
-                tripsNearPoint = results;
-                ArrayList<Point.Float> points = new ArrayList<>();
-                points.add(tripsNearPoint.get(0).getStartPoint());
-                points.add(tripsNearPoint.get(0).getEndPoint());
-                resultsLabel.setText(tripsNearPoint.get(0).nicerDescription());
-                generateRoute(points);
+            gender = genderS.charAt(0);
+            results = DataAnalyser.findTripsByGender(bikeTrips, gender);
+            if(results.size() == 0 ){
+                resultsLabel.setText("No trips found.");
+                return;
+            }
+            tripsNearPoint = results;
+            ArrayList<Point.Float> points = new ArrayList<>();
+            points.add(tripsNearPoint.get(0).getStartPoint());
+            points.add(tripsNearPoint.get(0).getEndPoint());
+            resultsLabel.setText(tripsNearPoint.get(0).nicerDescription());
+            generateRoute(points);
         } else {
             results = DataAnalyser.findTripsByBikeId(bikeTrips, bikeId);
             if(results.size() == 0 ){
@@ -1512,6 +1512,7 @@ public class MapController {
         resultsLabel.setText("");
         nextButton.setVisible(false);
         previousButton.setVisible(false);
+        webView.getEngine().executeScript("document.clearRouteSearch()");
     }
 
 }
