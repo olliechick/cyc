@@ -257,17 +257,28 @@ public class MapController {
      * If the map is loaded this method resets the map. Reloading wifi and retailer markers.
      */
     @FXML
-    private void resetMap() {
-        webView.getEngine().loadContent("");
-        webEngine.load(getClass().getResource("/html/map.html").toString());
-
-
-
-        // Check the map has been loaded before attempting to add markers to it.
-        if (isMapLoaded) {
-            reloadData();
+    void resetMap() {
+        boolean confirm = true;
+        if (!windowManager.getStagesOpen().isEmpty()) {
+            confirm = AlertGenerator.createChoiceDialog("Reset map", "This will close all tables", "Are you sure?");
         }
+        if (confirm) {
+            try {
+                // Changes to the map GUI
+                windowManager.closeAllTrackedStages();
+                FXMLLoader mapLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+                Parent mapView = mapLoader.load();
+                MapController mapController = mapLoader.getController();
 
+                mapController.setUp(model, stage);
+                stage.setScene(new Scene(mapView));
+                stage.sizeToScene();
+                stage.show();
+
+            } catch (IOException | IllegalStateException e) {
+                AlertGenerator.createExceptionDialog(e); //File not found
+            }
+        }
     }
 
     /**
