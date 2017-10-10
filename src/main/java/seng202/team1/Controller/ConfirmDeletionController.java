@@ -10,6 +10,8 @@ import seng202.team1.UserAccountModel;
 
 
 /**
+ * Asks the user for their password before deleting their account.
+ *
  * Created by jbu71 on 9/10/17.
  */
 public class ConfirmDeletionController {

@@ -229,6 +229,7 @@ function initialise(){
 				document.getElementById('directionsDestinationItem').style.display='';
 				document.getElementById('directionsOriginItem').style.display='';
 				document.getElementById('getDirectionsItem').style.display='';
+                map.setZoom(12);
 				break;
 			case 'get_directions_click':
 				var directionsRequest={};
@@ -646,6 +647,21 @@ function initialise(){
             POIMarkerArray[i].setMap(null);
         }
         POIMarkerArray = new Array();
+    };
+    document.clearRouteSearch = function clearRouteSearch()
+    {
+        directionsRenderer.setMap(null);
+        destinationMarker.setMap(null);
+        originMarker.setMap(null);
+        document.hidePOICluster();
+        document.getElementById('right-panel').style.display='none';
+        app.clearRoute();
+        //	set CSS styles to defaults
+        document.getElementById('clearDirectionsItem').style.display='';
+        document.getElementById('directionsDestinationItem').style.display='';
+        document.getElementById('directionsOriginItem').style.display='';
+        document.getElementById('getDirectionsItem').style.display='';
+        map.setZoom(12);
     };
 
 
