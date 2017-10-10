@@ -154,7 +154,11 @@ public class AddRetailerDialogController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
         stage.setTitle("Add a retailer");
-        stage.setScene(new Scene(root));
+
+        Scene scene = new Scene(root);
+        String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        stage.setScene(scene);
 
 
         ArrayList<Point.Double> userClicks = getUserClicks();

@@ -135,8 +135,12 @@ public class AddWifiDialogController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
         stage.setTitle("Add a WiFi hotspot");
-        stage.setScene(new Scene(root));
 
+        Scene scene = new Scene(root);
+        String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+        scene.getStylesheets().add(css);
+
+        stage.setScene(scene);
         boroComboBox.setItems(boroughs);
         boroComboBox.getSelectionModel().selectFirst();
 

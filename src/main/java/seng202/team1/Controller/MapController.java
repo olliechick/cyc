@@ -271,7 +271,11 @@ public class MapController {
                 MapController mapController = mapLoader.getController();
 
                 mapController.setUp(model, stage);
-                stage.setScene(new Scene(mapView));
+                Scene scene = new Scene(mapView);
+                String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+                scene.getStylesheets().add(css);
+
+                stage.setScene(scene);
                 stage.sizeToScene();
                 stage.show();
 
@@ -1131,7 +1135,11 @@ public class MapController {
             Stage stage1 = windowManager.createTrackedStage();
             listViewController.setUp(model, stage1, this);
 
-            stage1.setScene(new Scene(listView));
+            Scene scene = new Scene(listView);
+            String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+            scene.getStylesheets().add(css);
+
+            stage1.setScene(scene);
             stage1.setTitle("Lists");
             stage1.show();
 
@@ -1173,7 +1181,9 @@ public class MapController {
             Parent loginView = loginLoader.load();
 
             Scene loginScene = new Scene(loginView);
-            //loginScene.getStylesheets().add("/css/loginStyle.css");
+            String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+            loginScene.getStylesheets().add(css);
+
             stage.setScene(loginScene);
             stage.setHeight(loginView.getScene().getHeight());
             stage.setWidth(loginView.getScene().getWidth());
@@ -1199,7 +1209,10 @@ public class MapController {
         Stage stage = new Stage();
         ConfirmDeletionController confirmDeletionController = confirmDeletion.getController();
         confirmDeletionController.init(model, stage);
-        stage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        stage.setScene(scene);
         stage.showAndWait();
         if(model.isToDelete()){
             logout();
@@ -1221,7 +1234,10 @@ public class MapController {
 
         Stage stage1 = new Stage();
         changePasswordController.initModel(model, stage1);
-        stage1.setScene(new Scene(passwordView));
+        Scene scene = new Scene(passwordView);
+        String css = this.getClass().getResource("/css/bootstrap3.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        stage1.setScene(scene);
         stage1.initModality(Modality.APPLICATION_MODAL);
         stage1.showAndWait();
     }
