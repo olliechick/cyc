@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: seng202.team1.DatabaseManagerTest
+-------------------------------------------------------------------------------
+Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.53 sec - in seng202.team1.DatabaseManagerTest

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: seng202.team1.BikeTripTest
+-------------------------------------------------------------------------------
+Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec - in seng202.team1.BikeTripTest
