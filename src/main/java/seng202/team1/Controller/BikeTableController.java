@@ -50,7 +50,7 @@ public class BikeTableController extends TableController {
     private TextField bikeSearchField;
 
     @FXML
-    private ComboBox filterGenderComboBox;
+    private ComboBox<String> filterGenderComboBox;
 
     @FXML
     private TableView<BikeTrip> table;
@@ -557,7 +557,6 @@ public class BikeTableController extends TableController {
 
     /**
      * Creates and links the table columns to their data.
-     * TODO add more relevant columns
      */
     private void setTableViewBike(ArrayList<BikeTrip> data) {
 
@@ -614,13 +613,12 @@ public class BikeTableController extends TableController {
     //endregion
 
     /**
-     * WIP TODO use and potentially move to super class
+     * Confirms if the user wants to import x amounts of points
      *
-     * @param entriesLoaded TODO explain what this is
+     * @param entriesLoaded The number of points about to be imported
      */
     private boolean checkAndAddToList(int entriesLoaded) {
-        boolean confirm = AlertGenerator.createChoiceDialog("Import", entriesLoaded + " entries loaded.", "Do you want to import?");
-        return confirm;
+        return AlertGenerator.createChoiceDialog("Import", entriesLoaded + " entries loaded.", "Do you want to import?");
     }
 
 

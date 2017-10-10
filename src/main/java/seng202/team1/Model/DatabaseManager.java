@@ -93,7 +93,7 @@ public class DatabaseManager {
         System.out.println("Database disconnected.");
     }
 
-    public static boolean inUse() { return inUse; };
+    public static boolean inUse() { return inUse; }
 
     /**
      * Creates all database tables.

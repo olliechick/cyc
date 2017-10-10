@@ -154,13 +154,13 @@ public class MapController {
     private ProgressIndicator progressSpinner;
 
     @FXML
-    private ComboBox filterBoroughComboBox;
+    private ComboBox<String> filterBoroughComboBox;
 
     @FXML
-    private ComboBox filterCostComboBox;
+    private ComboBox<String> filterCostComboBox;
 
     @FXML
-    private ComboBox filterProviderComboBox;
+    private ComboBox<String> filterProviderComboBox;
 
     @FXML
     private Button switchViewButton;
@@ -1183,7 +1183,7 @@ public class MapController {
         try {
             root = confirmDeletion.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            AlertGenerator.createExceptionDialog(e);
         }
         Stage stage = new Stage();
         ConfirmDeletionController confirmDeletionController = confirmDeletion.getController();
@@ -1218,7 +1218,7 @@ public class MapController {
     /**
      * Creates the columns of the table.
      * Sets their value factories so that the data is displayed correctly.
-     * Sets up the lists of data for filtering TODO move out
+     * Sets up the lists of data for filtering
      * Displays the columns
      */
     private void setTableViewRetailer(ArrayList<RetailerPointDistance> data) {
@@ -1229,13 +1229,6 @@ public class MapController {
         TableColumn<RetailerPointDistance, String> nameCol = new TableColumn<>("Name");
         TableColumn<RetailerPointDistance, String> distanceCol = new TableColumn<>("Distance");
         TableColumn<RetailerPointDistance, String> primaryFunctionCol = new TableColumn<>("Primary Function");
-
-
-        //Set the IDs of the columns, not used yet TODO remove if never use
-        nameCol.setId("name");
-        distanceCol.setId("distance");
-        primaryFunctionCol.setId("primaryfunction");
-
 
         //Clear the default columns, or any columns in the table.
         retailerDistanceTable.getColumns().clear();
@@ -1270,7 +1263,7 @@ public class MapController {
     /**
      * Creates the columns of the table.
      * Sets their value factories so that the data is displayed correctly.
-     * Sets up the lists of data for filtering TODO move out
+     * Sets up the lists of data for filtering
      * Displays the columns
      */
     private void setTableViewWIFI(ArrayList<WIFIPointDistance> data) {
@@ -1282,14 +1275,6 @@ public class MapController {
         TableColumn<WIFIPointDistance, String> distanceCol = new TableColumn<>("Distance");
         TableColumn<WIFIPointDistance, String> costCol = new TableColumn<>("Cost");
         TableColumn<WIFIPointDistance, String> providerCol = new TableColumn<>("Provider");
-
-
-        //Set the IDs of the columns, not used yet TODO remove if never use
-        ssidCol.setId("ssid");
-        distanceCol.setId("distance");
-        costCol.setId("cost");
-        providerCol.setId("provider");
-
 
         //Clear the default columns, or any columns in the table.
         wifiDistanceTable.getColumns().clear();
@@ -1421,7 +1406,7 @@ public class MapController {
                 }
                 webView.getEngine().executeScript("document.POICluster('" + POI_CLUSTER_ICON_FILENAME +"')");
             } catch (Exception e) {
-                System.out.print(e);
+                AlertGenerator.createExceptionDialog(e);
             }
 
 
@@ -1512,6 +1497,7 @@ public class MapController {
         resultsLabel.setText("");
         nextButton.setVisible(false);
         previousButton.setVisible(false);
+        webView.getEngine().executeScript("document.clearRouteSearch()");
     }
 
 }

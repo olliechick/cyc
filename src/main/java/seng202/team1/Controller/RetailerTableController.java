@@ -496,8 +496,7 @@ public class RetailerTableController extends TableController {
     }
 
     private boolean checkAndAddToList(int entriesLoaded) {
-        boolean confirm = AlertGenerator.createChoiceDialog("Import", entriesLoaded + " entries loaded.", "Do you want to import?");
-        return confirm;
+        return AlertGenerator.createChoiceDialog("Import", entriesLoaded + " entries loaded.", "Do you want to import?");
     }
 
     private void appendToData(ArrayList<RetailerLocation> importedData) {

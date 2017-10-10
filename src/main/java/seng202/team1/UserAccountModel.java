@@ -158,10 +158,8 @@ public class UserAccountModel implements java.io.Serializable {
         if (PasswordManager.isExpectedPassword(currentPassword, salt, password)) {
             if (!PasswordManager.isExpectedPassword(newPassword, salt, password)) {
                 if (newPassword.equals(confirmPassword)) {
-                    byte[] holdingSalt = PasswordManager.getNextSalt();
-                    this.salt = holdingSalt;
-                    byte[] holdingPassword = PasswordManager.hash(newPassword, salt);
-                    this.password = holdingPassword;
+                    this.salt = PasswordManager.getNextSalt();
+                    this.password = PasswordManager.hash(newPassword, salt);
                     SerializerImplementation.serializeUser(model);
                     return true;
                 } else {

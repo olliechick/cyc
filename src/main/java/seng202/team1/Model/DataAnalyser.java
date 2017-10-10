@@ -157,9 +157,8 @@ public final class DataAnalyser {
                 results.add(hotspot);
             }
         }
-        ObservableList<WifiPoint> resultsObserved = FXCollections.observableArrayList(results);
 
-        return resultsObserved;
+        return FXCollections.observableArrayList(results);
     }
 
     /**
