@@ -30,11 +30,8 @@ unzipped folder.
 
 ## Importing the project into Intellij
 
-To import the source code, clone the git repository
-with the command `git clone https://eng-git.canterbury.ac.nz/jbu71/Seng202group1.git`.
-
 1. On the IntelliJ landing screen, select the option Import Project.
-2. Select the directory it is saved in.
+2. Select the directory of this project.
 3. Select Maven and click import.
 
 The project should now be open. 
